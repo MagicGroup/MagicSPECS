@@ -2,8 +2,8 @@
 %global wrongversion 0.9.8
 
 Name: libindi
-Version: 0.9.8.1
-Release: 7%{?dist}
+Version: 1.1.0
+Release: 8%{?dist}
 Summary: Instrument Neutral Distributed Interface
 
 Group: Development/Libraries
@@ -76,6 +76,9 @@ make install DESTDIR=%{buildroot}
 %{_libdir}/*.a
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.0-8
+- 更新到 1.1.0
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.9.8.1-7
 - 为 Magic 3.0 重建
 

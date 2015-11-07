@@ -1,6 +1,6 @@
 Name: perl-Net-SMTP-SSL
 Version:	1.03
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary: SSL support for Net::SMTP
 Group: Development/Libraries
 License: GPL+ or Artistic
@@ -43,6 +43,9 @@ make %{?_smp_mflags} test
 %{_mandir}/man3/Net::SMTP::SSL.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.03-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-1
 - 更新到 1.03
 

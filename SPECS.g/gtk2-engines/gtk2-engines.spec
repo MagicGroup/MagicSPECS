@@ -1,7 +1,7 @@
 Summary:        Theme engines for GTK+ 2.0
 Name:           gtk2-engines
 Version:        2.20.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 # for details on which engines are GPL vs LGPL, see COPYING
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/gtk-engines-2.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.20.2-7
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.20.2-6
 - 为 Magic 3.0 重建
 

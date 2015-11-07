@@ -1,8 +1,8 @@
 %global srcname paramiko
 
 Name:          python-paramiko
-Version:       1.15.2
-Release:       4%{?dist}
+Version:	1.15.3
+Release:	2%{?dist}
 Summary:       SSH2 protocol library for python
 Summary(zh_CN.UTF-8): python 的 SSH2 协议库
 
@@ -116,6 +116,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.15.3-2
+- 更新到 1.15.3
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.15.2-4
 - 为 Magic 3.0 重建
 

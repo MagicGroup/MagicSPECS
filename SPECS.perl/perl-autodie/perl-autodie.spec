@@ -1,6 +1,6 @@
 Name:           perl-autodie
 Version:	2.29
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Replace functions with ones that succeed or die
 Summary(zh_CN.UTF-8): 把函数替换成执行成功或失败
 License:        GPL+ or Artistic
@@ -88,6 +88,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.29-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.29-1
 - 更新到 2.29
 

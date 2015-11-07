@@ -1,6 +1,6 @@
 Name:       perl-Archive-RPM
 Version:    0.07
-Release:    17%{?dist}
+Release:    18%{?dist}
 Summary:    Work with a RPM
 Summary(zh_CN.UTF-8): 解压 RPM
 # lib/Archive/RPM.pm -> LGPLv2+
@@ -77,6 +77,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.07-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.07-17
 - 为 Magic 3.0 重建
 

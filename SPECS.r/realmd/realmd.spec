@@ -1,6 +1,6 @@
 Name:		realmd
 Version:	0.16.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Kerberos realm enrollment service
 Summary(zh_CN.UTF-8): Kerberos 域注册服务
 License:	LGPLv2+
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/doc/realmd/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.16.2-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.16.2-1
 - 更新到 0.16.2
 

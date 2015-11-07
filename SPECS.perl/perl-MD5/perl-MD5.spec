@@ -1,6 +1,6 @@
 Name:           perl-MD5
 Version:        2.03
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Perl interface to the MD5 Message-Digest Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.03-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.03-17
 - 为 Magic 3.0 重建
 

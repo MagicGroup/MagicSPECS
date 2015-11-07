@@ -2,7 +2,7 @@
 
 Name:           botan
 Version:	1.10.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Crypto library written in C++
 Summary(zh_CN.UTF-8): C++ 编写的加密库
 
@@ -200,6 +200,9 @@ LD_LIBRARY_PATH=%{buildroot}%{_libdir} ./check --validate
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.10.10-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.10.10-1
 - 更新到 1.10.10
 

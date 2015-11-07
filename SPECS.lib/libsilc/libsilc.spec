@@ -2,7 +2,7 @@ Summary: SILC Client Library
 Summary(zh_CN.UTF-8): SILC 客户端库
 Name:    libsilc
 Version: 1.1.10
-Release: 9%{dist}
+Release: 10%{dist}
 License: GPLv2 or BSD
 Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -148,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.10-10
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.1.10-9
 - 为 Magic 3.0 重建
 

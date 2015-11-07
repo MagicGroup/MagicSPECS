@@ -2,7 +2,7 @@ Summary:	Library for manipulating ID3v1 and ID3v2 tags
 Summary(zh_CN.UTF-8):	处理ID3v1和ID3v2标签的库
 Name:		id3lib
 Version:	3.8.3
-Release:	12%{?dist}
+Release:	13%{?dist}
 License:	LGPL
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.8.3-13
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.8.3-12
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@
 
 Name:           libepc
 Version:	0.4.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Easy Publish and Consume library
 Summary(zh_CN.UTF-8): 简易发布和使用库
 
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.4-4
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.4.4-3
 - 更新到 0.4.4
 

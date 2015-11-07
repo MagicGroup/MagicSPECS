@@ -4,7 +4,7 @@
 Summary: A simple library to assist in establishing tunneled Net::SSH connections
 Name: rubygem-%{gem_name}
 Version: 1.2.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/net-ssh/net-scp
@@ -71,6 +71,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.0-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.0-6
 - 为 Magic 3.0 重建
 

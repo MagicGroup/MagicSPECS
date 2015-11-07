@@ -1,6 +1,6 @@
 Name:           perl-Archive-Tar
 Version:	2.04
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A module for Perl manipulation of .tar files
 Summary(zh_CN.UTF-8): 处理 .tar 文件的 Perl 模块
 Group:          Development/Libraries
@@ -79,6 +79,9 @@ make test
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.04-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.04-2
 - 为 Magic 3.0 重建
 

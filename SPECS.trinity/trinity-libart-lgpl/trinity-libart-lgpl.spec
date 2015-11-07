@@ -27,7 +27,7 @@
 
 Name:           trinity-libart-lgpl
 Version:        2.3.22
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:        Library of functions for 2D graphics
 Summary(zh_CN.UTF-8): 2D 图形的函数库
 Group: System Environment/Libraries
@@ -214,6 +214,9 @@ unset QTDIR QTINC QTLIB
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.3.22-1.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2.3.22-1.1
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Object-Deadly
 Version:        0.09
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Perl module providing an object that dies whenever examined
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.09-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-16
 - 为 Magic 3.0 重建
 

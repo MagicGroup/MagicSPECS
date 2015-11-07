@@ -3,8 +3,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           python-lxml
-Version:	3.4.4
-Release:	1%{?dist}
+Version:	3.5.0b1
+Release:	2%{?dist}
 Summary:        ElementTree-like Python bindings for libxml2 and libxslt
 Summary(zh_CN.UTF-8): libxml2 和 libxslt 的 Python 绑定
 
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.5.0b1-2
+- 更新到 3.5.0b1
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.4.4-1
 - 更新到 3.4.4
 

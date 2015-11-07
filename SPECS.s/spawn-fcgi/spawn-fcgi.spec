@@ -2,7 +2,7 @@ Summary: Simple program for spawning FastCGI processes
 Summary(zh_CN.UTF-8): 处理 FastCGI 进程的简单程序
 Name: spawn-fcgi
 Version: 1.6.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -64,6 +64,9 @@ fi
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.6.3-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.6.3-4
 - 为 Magic 3.0 重建
 

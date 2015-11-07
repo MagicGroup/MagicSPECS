@@ -3,7 +3,7 @@
 
 Name:      %{fontname}-fonts
 Version:   20100919
-Release:   7%{?dist}
+Release:   8%{?dist}
 Summary:   Free UCS Outline Fonts
 Summary(zh_CN.UTF-8): 自由的 UCS Outline 字体
 Group:     User Interface/X
@@ -141,6 +141,9 @@ rm -rf %{buildroot}
 %files compat
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20100919-8
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 20100919-7
 - 为 Magic 3.0 重建
 

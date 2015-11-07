@@ -1,6 +1,6 @@
 Name:           lxsession-edit
 Version:        0.2.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple GUI to configure what’s automatically started in LXDE
 Summary(zh_CN.UTF-8): 简单的图形界面来配置 LXDE 中自动启动的程序
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.0-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.2.0-5
 - 为 Magic 3.0 重建
 

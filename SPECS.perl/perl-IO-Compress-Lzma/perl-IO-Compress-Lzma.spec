@@ -1,6 +1,6 @@
 Name:		perl-IO-Compress-Lzma
-Version:	2.068
-Release:	1%{?dist}
+Version:	2.069
+Release:	2%{?dist}
 Summary:	Read and write lzma compressed data
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_mandir}/man3/IO::Uncompress::UnXz.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.069-2
+- 更新到 2.069
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.068-1
 - 更新到 2.068
 

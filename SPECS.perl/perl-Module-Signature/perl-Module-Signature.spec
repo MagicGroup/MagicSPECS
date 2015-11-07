@@ -1,6 +1,6 @@
 Name:           perl-Module-Signature
 Version:	0.79
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        CPAN signature management utilities and modules
 Group:          Development/Libraries
 License:        CC0
@@ -42,7 +42,7 @@ mkdir --mode=0700 gnupghome
 %build
 export GNUPGHOME=$(pwd)/gnupghome
 cd Module-Signature-%{version}
-perl Makefile.PL INSTALLDIRS=vendor --skipdeps
+echo "y" | perl Makefile.PL INSTALLDIRS=vendor --skipdeps
 make %{?_smp_mflags}
 cd -
 
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Signature.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.79-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.79-1
 - 更新到 0.79
 

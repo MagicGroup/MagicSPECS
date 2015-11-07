@@ -1,6 +1,6 @@
 Name:          gssdp
 Version:       0.14.7
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Resource discovery and announcement over SSDP
 
 Group:         System Environment/Libraries
@@ -95,6 +95,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.14.7-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.14.7-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		libprojectM-qt
 Version:	2.0.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	The Qt frontend to the projectM visualization plugin
 Summary(zh_CN.UTF-8): projectM 音乐可视化插件的 Qt 前端
 Group:		Applications/Multimedia
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.0.1-6
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.0.1-5
 - 为 Magic 3.0 重建
 

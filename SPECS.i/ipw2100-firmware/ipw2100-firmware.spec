@@ -6,7 +6,7 @@ Summary: Firmware for Intel PRO/Wireless 2100 network adaptors
 Summary(zh_CN.UTF-8): Intel PRO/Wireless 2100网卡的固件
 Name: ipw2100-firmware
 Version: 1.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Distributable
 Group: System Environment/Kernel
 Group(zh_CN.UTF-8): 系统环境/内核
@@ -52,6 +52,9 @@ Linux. Usage of the firmware is subject to the terms contained in :
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.3-5
 - 为 Magic 3.0 重建
 

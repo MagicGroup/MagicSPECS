@@ -1,6 +1,6 @@
 Name:           harfbuzz
-Version:	0.9.39
-Release:        3%{?dist}
+Version:	1.0.6
+Release:        4%{?dist}
 Summary:        Text shaping library
 Summary(zh_CN.UTF-8): 文本整形库
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_libdir}/libharfbuzz-icu.so.*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.6-4
+- 更新到 1.0.6
+
 * Mon Mar 16 2015 Liu Di <liudidi@gmail.com> - 0.9.39-3
 - 更新到 0.9.39
 

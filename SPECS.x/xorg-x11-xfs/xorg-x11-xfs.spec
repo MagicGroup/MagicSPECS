@@ -11,7 +11,7 @@ Summary:    X.Org X11 xfs font server
 Summary(zh_CN.UTF-8): X.Org X11 xfs 字体服务
 Name:       xorg-x11-xfs
 Version:    1.1.4
-Release:    4%{?dist}
+Release:    5%{?dist}
 Epoch:      1
 License:    MIT
 URL:        http://www.x.org
@@ -159,6 +159,9 @@ exit 0
 %{_mandir}/man1/xfsinfo.1*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:1.1.4-5
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.1.4-4
 - 为 Magic 3.0 重建
 

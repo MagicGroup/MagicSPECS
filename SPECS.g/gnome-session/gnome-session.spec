@@ -4,8 +4,8 @@
 Summary: GNOME session manager
 Summary(zh_CN.UTF-8): GNOME 会话管理器
 Name: gnome-session
-Version:	3.12.0
-Release: 1%{?dist}
+Version:	3.18.1
+Release: 2%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gnome-session
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -168,6 +168,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/wayland-sessions/gnome-wayland.desktop
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

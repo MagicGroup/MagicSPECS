@@ -1,6 +1,6 @@
 Name:           libirman
 Version:        0.4.5
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Library for IRMAN hardware
 Summary(zh_CN.UTF-8): IRMAN 硬件的库
 
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.5-9
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.4.5-8
 - 为 Magic 3.0 重建
 

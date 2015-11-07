@@ -1,6 +1,6 @@
 Name:           perl-Template-Provider-Encoding
 Version:        0.10
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Explicitly declare encodings of your templates
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.10-22
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.10-21
 - 为 Magic 3.0 重建
 

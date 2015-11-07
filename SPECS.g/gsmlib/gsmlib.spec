@@ -2,7 +2,7 @@ Summary: 	Library and utilities to access GSM mobile phones
 Summary(zh_CN.UTF-8): 访问 GSM 手机的库和工具
 Name: 	 	gsmlib
 Version: 	1.11
-Release: 	0.3%{?dist}
+Release: 	0.4%{?dist}
 License:	GPL
 Group:		Application/Communications
 Group(zh_CN.UTF-8): 应用程序/通信
@@ -89,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.11-0.4
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.11-0.3
 - 为 Magic 3.0 重建
 

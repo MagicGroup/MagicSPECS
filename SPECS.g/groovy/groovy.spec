@@ -4,7 +4,7 @@
 
 Name:           groovy
 Version:        1.8.9
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Dynamic language for the Java Platform
 
 # Some of the files are licensed under BSD and CPL terms, but the CPL has been superceded
@@ -132,6 +132,9 @@ desktop-file-install --dir $RPM_BUILD_ROOT%{_datadir}/applications \
 %doc LICENSE.txt LICENSE-2.0.txt NOTICE.txt cpl-v10.txt epl-v10.txt
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.8.9-14
+- 为 Magic 3.0 重建
+
 * Mon Aug 11 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.8.9-13
 - Fix Ivy JAR location
 

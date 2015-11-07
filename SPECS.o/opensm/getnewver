@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://downloads.openfabrics.org/downloads/management/?C=M;O=D"
+url="http://downloads.openfabrics.org/downloads/management/?C=M&O=D"
 new1="opensm-"
 new2=".tar.gz"
 downcommand="wget -q" 

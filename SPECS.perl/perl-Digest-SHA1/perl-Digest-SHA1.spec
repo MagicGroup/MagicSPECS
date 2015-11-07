@@ -1,6 +1,6 @@
 Name:           perl-Digest-SHA1
 Version:        2.13
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Digest-SHA1 Perl module
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.13-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.13-10
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:          celt
 Version:       0.11.3
-Release:       1%{?dist}
+Release:       3%{?dist}
 Summary:       An audio codec for use in low-delay speech and audio communication
 Summary(zh_CN.UTF-8): 一种用于低延迟对话和音频通讯的声音编码
 
@@ -71,6 +71,12 @@ rm %{buildroot}%{_libdir}/*.la
 %{_libdir}/libcelt0.so
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.11.3-3
+- 为 Magic 3.0 重建
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.11.3-2
+- 为 Magic 3.0 重建
+
 * Thu Feb  6 2014 Peter Robinson <pbrobinson@fedoraproject.org> 0.11.3-1
 - 0.11.3 release
 

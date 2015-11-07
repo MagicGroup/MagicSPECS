@@ -1,7 +1,7 @@
 %define real_name libmediaart
 Name:           libmediaart2
 Version:	1.9.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library for managing media art caches
 Summary(zh_CN.UTF-8): 管理媒体缓存的库
 
@@ -78,6 +78,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.9.0-3
+- 为 Magic 3.0 重建
+
 * Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://freedesktop.org/software/libmbim//?C=M;O=D"
+url="http://freedesktop.org/software/libmbim//?C=M&O=D"
 new1="libmbim-"
 new2=".tar.xz"
 downcommand="wget -q" 

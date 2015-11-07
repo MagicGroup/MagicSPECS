@@ -5,7 +5,7 @@
 Summary: Ruby module for interaction with D-Bus
 Name: rubygem-%{gem_name}
 Version: 0.9.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: LGPLv2+
 URL: https://trac.luon.net/ruby-dbus
@@ -79,6 +79,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.9.0-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.0-6
 - 为 Magic 3.0 重建
 

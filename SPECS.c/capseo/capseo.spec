@@ -4,7 +4,7 @@ Summary: realtime encoder/decoder library
 Summary(zh_CN.UTF-8): 实时编码/解码库
 Name: capseo
 Version: 0.3.0
-Release: 0.%{svn_version}.0.2%{?dist}.1
+Release: 0.%{svn_version}.0.2%{?dist}.2
 URL: http://rm-rf.in/captury
 Source: %{name}_%{version}+svn%{svn_version}.orig.tar.bz2
 License: GPL
@@ -73,6 +73,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/capseo.pc
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.3.0-0.20081031.0.2.2
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.3.0-0.20081031.0.2.1
 - 为 Magic 3.0 重建
 

@@ -14,7 +14,7 @@
 
 Name:		po-debconf
 Version:	1.0.16
-Release:	4%{release_posttag}%{?dist}
+Release:	5%{release_posttag}%{?dist}
 Summary:	Tool for managing templates file translations with gettext
 Summary(zh_CN.UTF-8):管理 gettext 使用的模板文件翻译的工具
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.16-5.nmu2
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.0.16-4.nmu2
 - 为 Magic 3.0 重建
 

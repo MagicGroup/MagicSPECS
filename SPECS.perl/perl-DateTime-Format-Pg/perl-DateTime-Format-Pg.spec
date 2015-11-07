@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-Pg
 Version:	0.16011
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Parse and format PostgreSQL dates and times
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.16011-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16011-1
 - 更新到 0.16011
 

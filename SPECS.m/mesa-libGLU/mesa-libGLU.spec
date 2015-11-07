@@ -2,7 +2,7 @@
 
 Name:           mesa-libGLU
 Version:        9.0.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mesa libGLU library
 
 License:        MIT
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/man/man3/gl[A-Z]*
 %{_libdir}/pkgconfig/glu.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 9.0.0-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 18 2012 Adam Jackson <ajax@redhat.com> 9.0.0-1
 - libGLU 9.0
 

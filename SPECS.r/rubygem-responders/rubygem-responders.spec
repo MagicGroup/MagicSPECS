@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.1.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Set of Rails responders to dry up your application
 
 Group:          Development/Languages
@@ -83,6 +83,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.0-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.0-4
 - 为 Magic 3.0 重建
 

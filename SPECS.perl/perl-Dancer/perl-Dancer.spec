@@ -1,6 +1,6 @@
 Name:           perl-Dancer
-Version:	1.3140
-Release:	0%{?dist}
+Version:	1.3142
+Release:	2%{?dist}
 Summary:        Lightweight yet powerful web application framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -102,6 +102,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3142-2
+- 更新到 1.3142
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 1.3091-16
 - 为 Magic 3.0 重建
 

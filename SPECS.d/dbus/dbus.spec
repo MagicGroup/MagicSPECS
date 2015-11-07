@@ -14,7 +14,7 @@ Summary: D-BUS message bus
 Name: dbus
 Epoch: 1
 Version:	1.6.18
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://www.freedesktop.org/software/dbus/
 #VCS: git:git://git.freedesktop.org/git/dbus/dbus
 Source0: http://dbus.freedesktop.org/releases/dbus/%{name}-%{version}.tar.gz
@@ -244,6 +244,9 @@ fi
 %{_includedir}/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.6.18-4
+- 为 Magic 3.0 重建
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1:1.8.0-3
 - 更新到 1.8.0
 

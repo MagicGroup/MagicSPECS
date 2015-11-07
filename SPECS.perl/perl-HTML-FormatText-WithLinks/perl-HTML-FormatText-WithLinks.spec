@@ -1,6 +1,6 @@
 Name:           perl-HTML-FormatText-WithLinks
 Version:	0.15
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        HTML to text conversion with links as footnotes
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.15-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.15-1
 - 更新到 0.15
 

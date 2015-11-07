@@ -1,6 +1,6 @@
 Name:		polkit-pkla-compat
 Version:	0.1
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Rules for polkit to add compatibility with pklocalauthority
 Summary(zh_CN.UTF-8): 与 pk 本地认证兼容的 polkit 规则
 # GPLv2-licensed ltmain.sh and Apache-licensed mocklibc are not shipped in
@@ -53,6 +53,9 @@ make check
 %dir %{_localstatedir}/lib/polkit-1/localauthority/*.d
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.1-8
+- 为 Magic 3.0 重建
+
 * Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 0.1-7
 - 为 Magic 3.0 重建
 

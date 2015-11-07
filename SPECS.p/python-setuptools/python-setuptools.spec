@@ -16,8 +16,8 @@
 %endif
 
 Name:           python-setuptools
-Version:	18.3.1
-Release:	1%{?dist}
+Version:	18.5
+Release:	2%{?dist}
 Summary:        Easily build and distribute Python packages
 Summary(zh_CN.UTF-8): 简便构建和发布 Python 包
 
@@ -207,6 +207,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 18.5-2
+- 更新到 18.5
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 18.3.1-1
 - 更新到 18.3.1
 

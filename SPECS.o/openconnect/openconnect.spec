@@ -13,7 +13,7 @@
 
 Name:		openconnect
 Version: 7.06
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:	Open client for Cisco AnyConnect VPN
 Summary(zh_CN.UTF-8): Cisco AnyConnect VPN 的开源客户端
 
@@ -109,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/openconnect.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 7.06-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 7.06-1
 - 更新到 7.06
 

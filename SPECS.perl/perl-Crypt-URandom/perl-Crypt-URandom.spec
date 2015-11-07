@@ -1,6 +1,6 @@
 Name:           perl-Crypt-URandom
 Version:        0.36
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Non-blocking randomness for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.36-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.36-4
 - 为 Magic 3.0 重建
 

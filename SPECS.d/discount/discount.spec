@@ -1,6 +1,6 @@
 Name:           discount
 Version:	2.1.8a
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A command-line utility for converting Markdown files into HTML
 Summary(zh_CN.UTF-8): 转换 Markdown 文件到 HTML 的命令行工具
 License:        BSD
@@ -105,6 +105,9 @@ make test
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1.8a-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.1.8a-1
 - 更新到 2.1.8a
 

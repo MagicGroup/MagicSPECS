@@ -1,8 +1,8 @@
 Name:       nas 
 Summary:    The Network Audio System (NAS)
 Summary(zh_CN.UTF-8): 网络音频系统 (NAS)
-Version:    1.9.4
-Release:    3%{?dist}
+Version: 匹配到二进制文件
+Release: 2%{?dist}
 URL:        http://radscan.com/nas.html
 # README:               MIT (main license)
 # config/aclocal.m4:    FSFULLR
@@ -189,6 +189,9 @@ echo '  systemd-sysv-convert --apply %{daemon}'
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
+- 更新到 匹配到二进制文件 index.html
+
 * Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 1.9.4-3
 - 为 Magic 3.0 重建
 

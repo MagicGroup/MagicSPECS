@@ -1,6 +1,6 @@
 Name:           libinput
-Version: 1.0.1
-Release:        2%{?dist}
+Version: 1.1.0
+Release:        3%{?dist}
 Summary:        Input device library
 Summary(zh_CN.UTF-8): 输入设备库
 
@@ -69,6 +69,9 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.0-3
+- 更新到 1.1.0
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.0.1-2
 - 更新到 1.0.1
 

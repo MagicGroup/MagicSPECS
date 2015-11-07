@@ -3,7 +3,7 @@
 Summary: Brings clouds to you
 Name: rubygem-%{gem_name}
 Version: 1.28.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/fog/fog
@@ -114,6 +114,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.28.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.28.0-3
 - 为 Magic 3.0 重建
 

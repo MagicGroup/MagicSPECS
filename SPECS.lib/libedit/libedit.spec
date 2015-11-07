@@ -2,7 +2,7 @@ Summary:	The NetBSD Editline library
 Summary(zh_CN.UTF-8): NetBSD 行编辑库
 Name:		libedit
 Version: 3.1.20150325
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/editline/readline.h
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.1.20150325-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.1.20150325-1
 - 更新到 3.1.20150325
 

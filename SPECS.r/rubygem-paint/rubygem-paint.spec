@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Terminal painter
 Group: Development/Languages
 License: MIT
@@ -67,6 +67,9 @@ rm %{buildroot}%{gem_instdir}/{.travis.yml,.rspec}
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.0-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-2
 - 为 Magic 3.0 重建
 

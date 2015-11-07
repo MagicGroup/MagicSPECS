@@ -1,8 +1,8 @@
 Summary:        Library for accessing USB devices
 Summary(zh_CN.UTF-8): 访问 USB 设备的库
 Name:           libusbx
-Version: 1.0.19
-Release: 1%{?dist}
+Version: 1.0.20
+Release: 2%{?dist}
 Source0:        http://downloads.sourceforge.net/libusb/libusb-%{version}.tar.bz2
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.20-2
+- 更新到 1.0.20
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 1.0.19-1
 - 更新到 1.0.19
 

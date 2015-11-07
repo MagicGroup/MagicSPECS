@@ -5,7 +5,7 @@ Summary: Enhanced implementation of the mailx command
 Summary(zh_CN.UTF-8): mailx 命令的增强实现
 Name: mailx
 Version: 12.5
-Release: 9%{?dist}
+Release: 10%{?dist}
 # MPLv1.1 .. nss.c, nsserr.c
 License: BSD with advertising and MPLv1.1
 Group: Applications/Internet
@@ -135,6 +135,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 12.5-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 12.5-9
 - 为 Magic 3.0 重建
 

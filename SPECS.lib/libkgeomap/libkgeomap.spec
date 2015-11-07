@@ -4,8 +4,8 @@
 Name:    libkgeomap
 Summary: A wrapper around different world-map components, to browse and arrange photos over a map
 Summary(zh_CN.UTF-8): 不同的世界地图组件的包装器，可以在地图上浏览和安排图像
-Version: 15.04.0
-Release: 2%{?dist}
+Version: 15.08.2
+Release: 1%{?dist}
 
 License: GPLv2+
 URL:     https://projects.kde.org/projects/kde/kdegraphics/libs/libkgeomap

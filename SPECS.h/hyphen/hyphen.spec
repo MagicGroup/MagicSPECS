@@ -2,7 +2,7 @@ Name:      hyphen
 Summary:   A text hyphenation library
 Summary(zh_CN.UTF-8): 文本断字库
 Version:   2.8.8
-Release:   3%{?dist}
+Release:   4%{?dist}
 Source:    http://downloads.sourceforge.net/hunspell/hyphen-%{version}.tar.gz
 Group:     System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/substrings.pl
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.8.8-4
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 2.8.8-3
 - 为 Magic 3.0 重建
 

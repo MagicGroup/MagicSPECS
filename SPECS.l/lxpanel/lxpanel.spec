@@ -3,8 +3,8 @@
 %global         usegtk3     1
 
 Name:           lxpanel
-Version:	0.8.0
-Release:        1%{?dist}
+Version:	0.8.1
+Release:        2%{?dist}
 Summary:        A lightweight X11 desktop panel
 Summary(zh_CN.UTF-8): 轻量级的 X11 桌面面板
 
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.8.1-2
+- 更新到 0.8.1
+
 * Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 0.8.0-1
 - 更新到 0.8.0
 

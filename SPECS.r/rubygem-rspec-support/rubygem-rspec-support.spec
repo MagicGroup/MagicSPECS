@@ -10,7 +10,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	%{mainver}
-Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}.1
+Release:	%{?prever:0.}%{mainrel}%{?prever:.%{prerpmver}}%{?dist}.2
 
 Summary:	Common functionality to Rspec series
 Group:		Development/Languages
@@ -94,6 +94,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.3.0-2.2
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.0-2.1
 - 为 Magic 3.0 重建
 

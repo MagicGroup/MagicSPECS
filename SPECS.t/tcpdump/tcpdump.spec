@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 网络流量监视工具
 Name: tcpdump
 Epoch: 14
 Version:	4.7.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: BSD with advertising
 URL: http://www.tcpdump.org
 Group: Applications/Internet
@@ -89,6 +89,9 @@ exit 0
 %{_mandir}/man8/tcpdump.8*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 14:4.7.4-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 14:4.7.4-1
 - 更新到 4.7.4
 

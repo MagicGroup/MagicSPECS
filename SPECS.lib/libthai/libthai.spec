@@ -4,7 +4,7 @@ Summary:  Thai language support routines
 Summary(zh_CN.UTF-8): 泰语支持例程
 Name: libthai
 Version: 0.1.18
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 #%{_mandir}/man3/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.18-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.1.18-1
 - 更新到 0.1.18
 

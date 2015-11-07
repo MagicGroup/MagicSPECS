@@ -1,8 +1,8 @@
 %define glib_ver 2.16
 
 Name:		json-glib
-Version:	1.0.0
-Release:	1%{?dist}
+Version:	1.0.4
+Release:	2%{?dist}
 Summary:	Library for JavaScript Object Notation format
 Summary(zh_CN.UTF-8): glib 的 JSON 库
 
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/json-glib-*.1*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.4-2
+- 更新到 1.0.4
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.0.0-1
 - 更新到 1.0.0
 

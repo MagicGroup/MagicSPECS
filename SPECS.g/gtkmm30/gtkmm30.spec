@@ -3,8 +3,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           gtkmm30
-Version:	3.11.10
-Release:        1%{?dist}
+Version:	3.18.0
+Release:        2%{?dist}
 Summary:        C++ interface for the GTK+ library
 Summary(zh_CN.UTF-8): GTK 3 的 C++ 接口
 
@@ -111,6 +111,9 @@ make check %{?_smp_mflags}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
+- 更新到 3.18.0
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 3.11.10-1
 - 更新到 3.11.10
 

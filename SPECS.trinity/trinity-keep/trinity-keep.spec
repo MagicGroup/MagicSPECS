@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.4.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	Backup system for TDE [Trinity]
 Summary(zh_CN.UTF-8): TDE 下的备份系统
 Group:		Applications/Utilities
@@ -149,5 +149,8 @@ update-desktop-database %{tde_tdeappdir} &> /dev/null
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.4.0-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.4.0-1
 - Initial release for TDE 14.0.0

@@ -1,6 +1,6 @@
 Name:           xmedcon
 Version:        0.10.7
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A medical image conversion utility and library
 Summary(zh_CN.UTF-8): 医疗用图像转换工具和库
 
@@ -129,6 +129,9 @@ fi
 %{_datadir}/aclocal/*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.10.7-12
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.10.7-11
 - 为 Magic 3.0 重建
 

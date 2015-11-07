@@ -1,6 +1,6 @@
 Name:           perl-Net-CIDR
 Version:	0.18
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Manipulate IPv4/IPv6 netblocks in CIDR notation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.18-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.18-1
 - 更新到 0.18
 

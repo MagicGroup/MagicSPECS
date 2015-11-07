@@ -1,6 +1,6 @@
 Name:           perl-Crypt-DES
 Version:        2.07
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl DES encryption module
 License:        BSD
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Crypt::DES.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.07-6
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.07-5
 - 为 Magic 3.0 重建
 

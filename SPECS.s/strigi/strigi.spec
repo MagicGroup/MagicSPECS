@@ -5,7 +5,7 @@
 Name:		strigi
 Summary:        A desktop search program
 Version:	0.7.8
-Release:	12%{?dist}
+Release:	13%{?dist}
 
 License:	LGPLv2+
 #URL:            https://projects.kde.org/projects/kdesupport/strigi
@@ -176,6 +176,9 @@ make test -C %{_target_platform} ||:
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.7.8-13
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.7.8-12
 - 为 Magic 3.0 重建
 

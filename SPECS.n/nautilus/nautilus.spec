@@ -10,8 +10,8 @@
 Name:           nautilus
 Summary:        File manager for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的文件管理器
-Version:	3.14.2
-Release:        1%{?dist}
+Version:	3.18.1
+Release:        2%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
@@ -181,6 +181,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %doc %{_datadir}/gtk-doc/html/libnautilus-extension/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 3.14.2-1
 - 更新到 3.14.2
 

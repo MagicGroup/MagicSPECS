@@ -7,7 +7,7 @@ Summary: Encoding files
 Summary(zh_CN.UTF-8): 编码文件
 Name:    poppler-data
 Version:	0.4.7
-Release:	1%{?dist}
+Release:	2%{?dist}
 # The cMap data files installed by the poppler-data package are
 # under the COPYING.adobe license
 # cidToUnicode, nameToUnicode and unicodeMap data files
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/poppler-data.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.4.7-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 0.4.7-1
 - 更新到 0.4.7
 

@@ -1,6 +1,6 @@
 Name:           perl-HTML-SimpleParse
 Version:        0.12
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Bare-bones HTML parser
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-17
 - 为 Magic 3.0 重建
 

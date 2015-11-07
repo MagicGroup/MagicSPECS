@@ -2,7 +2,7 @@ Summary: Utility to set/show the host name or domain name
 Summary(zh_CN.UTF-8): 设置和显示主机名及域名的工具
 Name: hostname
 Version: 3.15
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -36,6 +36,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.15-3
+- 更新到 3.16
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.15-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name: elfutils
 Summary: A collection of utilities and DSOs to handle compiled objects
-Version: 0.158
-%global baserelease 1
+Version: 0.164
+%global baserelease 2
 URL: https://fedorahosted.org/elfutils/
 %global source_url http://fedorahosted.org/releases/e/l/elfutils/%{version}/
 License: GPLv3+ and (GPLv2+ or LGPLv3+)
@@ -329,6 +329,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libelf.a
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.164-2
+- 更新到 0.164
+
 * Mon Jan  6 2014 Mark Wielaard <mjw@redhat.com> - 0.158-1
 - Update to 0.158. Remove all patches now upstream. Add eu-stack.
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.1.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Whitelist-based HTML sanitizer
 Group: Development/Languages
 License: MIT
@@ -71,6 +71,9 @@ popd
 %{gem_instdir}/test/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.0-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.0-6
 - 为 Magic 3.0 重建
 

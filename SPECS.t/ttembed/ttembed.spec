@@ -1,6 +1,6 @@
 Name:       ttembed
 Version:    1.1
-Release:    6%{?dist}
+Release:    7%{?dist}
 Summary:    Remove embedding limitations from TrueType fonts
 Summary(zh_CN.UTF-8): 从 TrueType 字体中移除嵌入限制
 License:    Public Domain
@@ -42,6 +42,9 @@ fi
 rm test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1-7
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.1-6
 - 为 Magic 3.0 重建
 

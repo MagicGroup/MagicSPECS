@@ -1,6 +1,6 @@
 Name:           perl-Compress-LZF
 Version:	3.8
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Extremely light-weight Lempel-Ziv-Free compression
 License:        GPL+ or Artistic
 # patch to address https://fedoraproject.org/wiki/Common_Rpmlint_issues#incorrect-fsf-address has been sent upstream at https://rt.cpan.org/Ticket/Display.html?id=93643
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.8-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.8-1
 - 更新到 3.8
 

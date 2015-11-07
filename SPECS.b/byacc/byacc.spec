@@ -1,10 +1,10 @@
-%define byaccdate 20140101
+%define byaccdate 20150711
 
 Summary: Berkeley Yacc, a parser generator
 Summary(zh_CN.UTF-8): Berkeley Yacc, 语法分析器生成工具
 Name: byacc
 Version: 1.9.%{byaccdate}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Public Domain
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/byacc.1*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.9.20150711-3
+- 更新到 1.9.20150711
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 1.9.20140101-2
 - 更新到 1.9.20140101
 

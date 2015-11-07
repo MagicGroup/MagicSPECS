@@ -7,7 +7,7 @@
 Name: iptables
 Summary: Tools for managing Linux kernel packet filtering capabilities
 Version: 1.4.21
-Release: 8%{?dist}
+Release: 9%{?dist}
 Source: http://www.netfilter.org/projects/iptables/files/%{name}-%{version}.tar.bz2
 Source1: iptables.init
 Source2: iptables-config
@@ -218,6 +218,9 @@ done
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.4.21-9
+- 为 Magic 3.0 重建
+
 * Wed Mar 12 2014 Jiri Popelka <jpopelka@redhat.com> - 1.4.21-8
 - add missing reload and panic actions
 - BuildRequires: pkgconfig(x) instead of x-devel

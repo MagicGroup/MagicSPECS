@@ -1,6 +1,6 @@
 Name:           perl-Digest-MD5
 Version:	2.54
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl interface to the MD5 algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.54-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.54-1
 - 更新到 2.54
 

@@ -8,8 +8,8 @@
 Summary: GLib bindings for D-Bus
 Summary(zh_CN.UTF-8): D-Bus 的 GLib 绑定
 Name: dbus-glib
-Version: 0.102
-Release: 2%{?dist}
+Version: 0.104
+Release: 3%{?dist}
 URL: http://www.freedesktop.org/software/dbus/
 #VCS: git:git://git.freedesktop.org/git/dbus/dbus-glib
 Source0: http://dbus.freedesktop.org/releases/dbus-glib/%{name}-%{version}.tar.gz
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.104-3
+- 更新到 0.104
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.102-2
 - 更新到 0.102
 

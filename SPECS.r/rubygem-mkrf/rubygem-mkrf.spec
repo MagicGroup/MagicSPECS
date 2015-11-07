@@ -8,7 +8,7 @@
 Summary:	Making C extensions for Ruby a bit easier
 Name:		rubygem-%{gem_name}
 Version:	0.2.3
-Release:	14%{?dist}
+Release:	15%{?dist}
 Group:		Development/Languages
 License:	MIT
 URL:		http://mkrf.rubyforge.org/
@@ -111,6 +111,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.3-15
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.2.3-14
 - 为 Magic 3.0 重建
 

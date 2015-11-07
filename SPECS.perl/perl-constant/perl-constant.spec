@@ -2,7 +2,7 @@
 
 Name:           perl-constant
 Version:        1.33
-Release:        348%{?dist}
+Release:        349%{?dist}
 Summary:        Perl pragma to declare constants
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.33-349
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.33-348
 - 为 Magic 3.0 重建
 

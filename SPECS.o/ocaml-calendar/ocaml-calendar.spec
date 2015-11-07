@@ -2,7 +2,7 @@
 
 Name:           ocaml-calendar
 Version:        2.03.2
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Objective Caml library for managing dates and times
 Summary(zh_CN.UTF-8): 管理日期和时间的 OCaml 库
 License:        LGPLv2
@@ -83,6 +83,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.03.2-9
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 2.03.2-8
 - 为 Magic 3.0 重建
 

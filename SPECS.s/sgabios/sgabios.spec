@@ -1,6 +1,6 @@
 Name:           sgabios
 Version:        0
-Release:        0.20110625SVN%{?dist}
+Release:        0.20110626SVN%{?dist}
 Summary:        Open-source serial graphics BIOS option rom
 Summary(zh_CN.UTF-8): 开源的串口图形 BIOS 
 
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0-0.20110626SVN
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0-0.20110625SVN
 - 为 Magic 3.0 重建
 

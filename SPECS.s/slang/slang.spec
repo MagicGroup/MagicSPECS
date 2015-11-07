@@ -2,7 +2,7 @@ Summary: The shared library for the S-Lang extension language
 Summary(zh_CN.UTF-8): S-Lang 扩展语言的共享库
 Name: slang
 Version:	2.3.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -144,6 +144,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libslang*.a
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.3.0-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.3.0-3
 - 为 Magic 3.0 重建
 

@@ -10,7 +10,7 @@ Summary(zh_CN.UTF-8): 管理 GPG 加密
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://www.kde.org/apps
 Source0: http://mirrors.ustc.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -68,6 +68,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/appdata/kgpg.appdata.xml
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

@@ -1,7 +1,7 @@
 Name:		perl-CPAN-Changes
 Summary:	Read and write Changes files
 Version:	0.400002
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/CPAN-Changes/
@@ -57,6 +57,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/CPAN::Changes::Group.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.400002-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.400002-2
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@ Summary: X client for remote desktop into Windows Terminal Server
 Summary(zh_CN.UTF-8): 在 X 中显示 Windows 终端服务器桌面
 Name: rdesktop
 Version:	1.8.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPL
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
@@ -59,6 +59,9 @@ make install DESTDIR=$RPM_BUILD_ROOT STRIP=/bin/true
 %{_datadir}/rdesktop/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.8.3-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.8.3-1
 - 更新到 1.8.3
 

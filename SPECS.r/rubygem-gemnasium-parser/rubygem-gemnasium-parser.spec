@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.9
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Safely parse Gemfiles and gemspecs
 Group: Development/Languages
 License: MIT
@@ -82,6 +82,9 @@ popd
 %exclude %{gem_instdir}/spec
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.1.9-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.9-5
 - 为 Magic 3.0 重建
 

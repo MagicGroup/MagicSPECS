@@ -1,14 +1,14 @@
 %define git 1
-%define vcsdate 20140228
+%define vcsdate 20151028
 
 %define with_gnome 0
 
 Name:           arora
 Version:        0.11.1
 %if 0%{git}
-Release:	0.git%{vcsdate}.%{?dist}.5
+Release:	0.git%{vcsdate}.%{?dist}.7
 %else
-Release:        5%{?dist}
+Release:        7%{?dist}
 %endif
 Summary:        A cross platform web browser
 Summary(zh_CN): 一个跨平台的网页浏览器
@@ -99,6 +99,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/man/man1
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com>
+- 更新到 20151028 日期的仓库源码
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Fri Feb 28 2014 Liu Di <liudidi@gmail.com>
 - 更新到 20140228 日期的仓库源码
 

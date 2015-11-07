@@ -3,7 +3,7 @@
 Summary:       Generate XML for continuous integration systems
 Name:          rubygem-%{gem_name}
 Version:       2.0.0
-Release:       3%{dist}
+Release:       4%{dist}
 License:       MIT
 URL:           http://caldersphere.rubyforge.org/ci_reporter
 Source0:       http://rubygems.org/downloads/%{gem_name}-%{version}.gem
@@ -90,6 +90,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.0-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: File system tree viewer
 Summary(zh_CN.UTF-8): 文件系统树形查看器
 Name: tree
 Version:	1.7.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Group: Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
 License: GPLv2+
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README LICENSE
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.7.0-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.7.0-1
 - 更新到 1.7.0
 

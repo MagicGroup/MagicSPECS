@@ -1,6 +1,6 @@
 Name:		perl-Path-Tiny
-Version:	0.072
-Release:	1%{?dist}
+Version:	0.073-TRIAL
+Release:	2%{?dist}
 Summary:	File path utility
 Group:		Development/Libraries
 License:	ASL 2.0
@@ -99,6 +99,9 @@ make test
 %{_mandir}/man3/Path::Tiny.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com>
+- 更新到 0.073-TRIAL
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.072-1
 - 更新到 0.072
 

@@ -2,7 +2,7 @@
 %global mro_in_core %(perl -e 'print $] > 5.009005 ? 1 : 0;')
 
 Name:		perl-Class-C3
-Version:	0.28
+Version:	0.30
 Release:	2%{?dist}
 Summary:	Pragma to use the C3 method resolution order algorithm
 License:	GPL+ or Artistic
@@ -89,6 +89,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Class::C3::next.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.30-2
+- 更新到 0.30
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.28-2
 - 为 Magic 3.0 重建
 

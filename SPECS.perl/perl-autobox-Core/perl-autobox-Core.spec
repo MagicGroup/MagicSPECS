@@ -1,5 +1,5 @@
 Name:           perl-autobox-Core
-Version:	1.28
+Version:	1.30
 Release:	2%{?dist}
 Summary:        Core functions exposed as methods in primitive types
 Summary(zh_CN.UTF-8): 以原始类型公开方法的核心函数
@@ -47,6 +47,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.30-2
+- 更新到 1.30
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.28-2
 - 为 Magic 3.0 重建
 

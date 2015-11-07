@@ -54,7 +54,7 @@
 Name:          tomcat
 Epoch:         0
 Version:       %{major_version}.%{minor_version}.%{micro_version}
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Apache Servlet/JSP Engine, RI for Servlet %{servletspec}/JSP %{jspspec} API
 
 Group:         System Environment/Daemons
@@ -669,6 +669,9 @@ fi
 %attr(0644,root,root) %{_unitdir}/%{name}-jsvc.service
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0:7.0.54-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:7.0.54-4
 - 为 Magic 3.0 重建
 

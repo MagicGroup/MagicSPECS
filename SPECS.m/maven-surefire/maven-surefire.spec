@@ -1,6 +1,6 @@
 Name:           maven-surefire
 Version:        2.17
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        Test framework project
 License:        ASL 2.0 and CPL
@@ -169,6 +169,9 @@ done
 %doc LICENSE NOTICE cpl-v10.html
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0:2.17-6
+- 为 Magic 3.0 重建
+
 * Thu Jun 19 2014 Michal Srb <msrb@redhat.com> - 0:2.17-5
 - Fix maven-parent BR
 

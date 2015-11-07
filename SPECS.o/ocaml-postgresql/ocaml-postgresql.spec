@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-postgresql
-Version:	3.0.0
-Release:	1%{?dist}
+Version:	3.2.1
+Release:	2%{?dist}
 Summary:        OCaml library for accessing PostgreSQL databases
 Summary(zh_CN.UTF-8): 访问 PostgreSQL 数据库的 OCaml 库
 
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.2.1-2
+- 更新到 3.2.1
+
 * Wed Mar 11 2015 Liu Di <liudidi@gmail.com> - 3.0.0-1
 - 更新到 3.0.0
 

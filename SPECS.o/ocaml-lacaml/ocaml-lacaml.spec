@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-lacaml
-Version: 7.1.5
-Release: 1%{?dist}
+Version: 7.2.6
+Release: 2%{?dist}
 Summary:        BLAS/LAPACK-interface for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 BLAS/LAPACK 接口
 
@@ -96,6 +96,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 7.2.6-2
+- 更新到 7.2.6
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 7.1.5-1
 - 更新到 7.1.5
 

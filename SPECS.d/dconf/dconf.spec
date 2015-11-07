@@ -2,8 +2,8 @@
 %define vala_version 0.11.7
 
 Name:           dconf
-Version:	0.20.0
-Release:        1%{?dist}
+Version:	0.24.0
+Release:        2%{?dist}
 Summary:        A configuration system
 Summary(zh_CN.UTF-8): 一个配置系统
 
@@ -127,6 +127,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/appdata/dconf-editor.appdata.xml
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.24.0-2
+- 更新到 0.24.0
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 0.20.0-1
 - 更新到 0.20.0
 

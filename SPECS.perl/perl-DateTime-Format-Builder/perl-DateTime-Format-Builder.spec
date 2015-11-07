@@ -13,7 +13,7 @@
 Name:           perl-DateTime-Format-Builder
 # 0.80 in reality, but rpm can't get it
 Version:	0.81
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Create DateTime parser classes and objects        
 
 Group:          Development/Libraries
@@ -110,6 +110,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.81-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.81-1
 - 更新到 0.81
 

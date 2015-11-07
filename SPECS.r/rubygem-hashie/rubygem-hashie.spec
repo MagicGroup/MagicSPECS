@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.0.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Your friendly neighborhood hash toolkit
 Group: Development/Languages
 License: MIT
@@ -76,6 +76,9 @@ popd
 %{gem_instdir}/spec/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0.5-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.5-6
 - 为 Magic 3.0 重建
 

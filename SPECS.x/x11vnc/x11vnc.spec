@@ -3,7 +3,7 @@ Summary:		VNC server for the current X11 session
 Summary(zh_CN.UTF-8):  当前 X11 会话的 VNC 服务
 Name:		x11vnc
 Version:		0.9.13
-Release:		9%{?dist}
+Release:		10%{?dist}
 License:		GPLv2
 Group:		User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -138,6 +138,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.9.13-10
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.9.13-9
 - 为 Magic 3.0 重建
 

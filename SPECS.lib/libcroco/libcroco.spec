@@ -2,7 +2,7 @@ Name:             libcroco
 Summary:          A CSS2 parsing library
 Summary(zh_CN.UTF-8): CSS2 解析库
 Version:          0.6.8
-Release:          3%{?dist}
+Release:          4%{?dist}
 License:          LGPLv2
 Group:            System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -70,6 +70,9 @@ make check
 %{_datadir}/gtk-doc/html/libcroco
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.8-4
+- 为 Magic 3.0 重建
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.6.8-3
 - 为 Magic 3.0 重建
 

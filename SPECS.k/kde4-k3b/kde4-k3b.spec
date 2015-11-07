@@ -7,16 +7,16 @@
 %define testver %{nil}
 
 %define git 1
-%define vcsdate 20150417
+%define vcsdate 20151030
 
 Summary:        Excellent CD-Burner for KDE4
 Summary(zh_CN.UTF-8): KDE4 下优秀的 CD/DVD 刻录程序
 Name:           kde4-k3b
 Version:        2.0.2
 %if 0%{?git}
-Release:	11.git%{vcsdate}%{?dist}
+Release:	13.git%{vcsdate}%{?dist}
 %else
-Release:        11%{?dist}
+Release:        13%{?dist}
 %endif
 License:        GPL
 Vendor:         Magic Linux
@@ -148,6 +148,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.2-13.git20151030
+- 更新到 20151030 日期的仓库源码
+
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.2-12.git20150417
+- 为 Magic 3.0 重建
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 2.0.2-11.git20150417
 - 更新到 20150417 日期的仓库源码
 

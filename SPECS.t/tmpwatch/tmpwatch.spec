@@ -2,7 +2,7 @@ Summary: A utility for removing files based on when they were last accessed
 Summary(zh_CN.UTF-8): 按最近访问时间删除文件的工具
 Name: tmpwatch
 Version:	2.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 URL: https://fedorahosted.org/tmpwatch/
 Source0: https://fedorahosted.org/releases/t/m/tmpwatch/tmpwatch-%{version}.tar.bz2
 Source1: tmpwatch.daily
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/cron.daily/tmpwatch
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.11-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 2.11-1
 - 更新到 2.11
 

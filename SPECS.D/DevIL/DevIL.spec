@@ -1,6 +1,6 @@
 Name:           DevIL
 Version:        1.7.8
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A cross-platform image library
 Summary(zh_CN.UTF-8): 一个跨平台的图像库
 Group:          System Environment/Libraries
@@ -164,6 +164,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.7.8-14
+- 为 Magic 3.0 重建
+
 * Sun Mar 01 2015 Liu Di <liudidi@gmail.com> - 1.7.8-13
 - 为 Magic 3.0 重建
 

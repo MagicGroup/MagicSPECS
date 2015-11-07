@@ -32,7 +32,7 @@
 
 Name:		trinity-desktop
 Version:	%{tde_version}
-Release:	2%{?dist}%{?_variant}
+Release:	3%{?dist}%{?_variant}
 License:	GPL
 Summary:	Meta-package to install TDE
 Summary(zh_CN.UTF-8): 安装 TDE 的元包
@@ -319,6 +319,9 @@ Requires:	%{name}-devel = %{version}
 %install
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 14.0.1-3.opt
+- 为 Magic 3.0 重建
+
 * Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 14.0.1-2.opt
 - 为 Magic 3.0 重建
 

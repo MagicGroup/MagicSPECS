@@ -1,6 +1,6 @@
 Name:           perl-Class-Std
 Version:	0.013
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Support for creating standard "inside-out" classes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.013-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.013-1
 - 更新到 0.013
 

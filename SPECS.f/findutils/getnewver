@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://alpha.gnu.org/gnu/findutils/?C=M;O=D"
+url="http://alpha.gnu.org/gnu/findutils/?C=M&O=D"
 new1="findutils-"
 new2=".tar.gz"
 downcommand="wget -q" 

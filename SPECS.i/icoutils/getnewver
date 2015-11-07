@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.twaren.net/Unix/NonGNU//icoutils/?C=M;O=D"
+url="http://ftp.twaren.net/Unix/NonGNU//icoutils/?C=M&O=D"
 new1="icoutils-"
 new2=".tar.bz2"
 downcommand="wget -q" 

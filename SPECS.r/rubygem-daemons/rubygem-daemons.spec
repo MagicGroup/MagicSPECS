@@ -4,7 +4,7 @@
 Summary: A toolkit to create and control daemons in different ways
 Name: rubygem-%{gem_name}
 Version: 1.1.9
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 # The entire source code is MIT except daemonize.rb (GPLv2+ or Ruby)
 License: MIT and (GPLv2+ or Ruby)
@@ -64,6 +64,9 @@ cp -pa .%{gem_dir}/* \
 %doc %{gem_instdir}/TODO
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.9-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.9-5
 - 为 Magic 3.0 重建
 

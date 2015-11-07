@@ -3,8 +3,8 @@
 %global upstream_build 4111
 
 Name:           pcsc-lite-ccid
-Version:	1.4.18
-Release:	1%{?dist}
+Version:	1.4.21
+Release:	2%{?dist}
 Summary:        Generic USB CCID smart card reader driver
 Summary(zh_CN.UTF-8): 通用 USB CCID 智能卡读取器驱动
 
@@ -60,6 +60,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.4.21-2
+- 更新到 1.4.21
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.4.18-1
 - 更新到 1.4.18
 

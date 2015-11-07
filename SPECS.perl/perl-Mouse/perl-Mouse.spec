@@ -1,7 +1,7 @@
 Name:           perl-Mouse
 Summary:        Moose minus the antlers
 Version:        2.4.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Mouse
@@ -169,6 +169,9 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 %{_mandir}/man3/Test::Mouse.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.4.5-2
+- 为 Magic 3.0 重建
+
 * Sun Aug 16 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 2.4.5-1
 - Update to 2.4.5
 - Drop upstreamed patches

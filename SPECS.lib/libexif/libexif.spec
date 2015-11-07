@@ -2,7 +2,7 @@ Summary:	Library for extracting extra information from image files
 Summary(zh_CN.UTF-8): 从图像文件中提取额外信息的库
 Name:		libexif
 Version:	0.6.21
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
@@ -68,6 +68,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/libexif.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.21-3
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.6.21-2
 - 为 Magic 3.0 重建
 

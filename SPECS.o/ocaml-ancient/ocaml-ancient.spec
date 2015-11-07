@@ -4,7 +4,7 @@
 
 Name:           ocaml-ancient
 Version:        0.9.0
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        OCaml library for large memory structures and sharing
 Summary(zh_CN.UTF-8): 大内存结构和共享的 Ocaml 库
 License:        LGPLv2+ with exceptions
@@ -111,6 +111,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.0-17
+- 为 Magic 3.0 重建
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.9.0-16
 - 为 Magic 3.0 重建
 

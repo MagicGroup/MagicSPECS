@@ -1,8 +1,8 @@
 %{!?_licensedir:%global license %%doc}
 
 Name:           autoconf-archive
-Version:        2015.02.24
-Release:        3%{?dist}
+Version:	2015.09.25
+Release:	2%{?dist}
 Summary:        The Autoconf Macro Archive
 Summary(zh_CN.UTF-8): Autoconf 宏文件
 License:        GPLv3+ with exceptions
@@ -51,6 +51,9 @@ fi
 %{_infodir}/autoconf-archive.info*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2015.09.25-2
+- 更新到 2015.09.25
+
 * Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 2015.02.24-3
 - 为 Magic 3.0 重建
 

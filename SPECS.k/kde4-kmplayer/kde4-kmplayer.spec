@@ -3,7 +3,7 @@ Name:    kde4-kmplayer
 Summary: A simple front-end for MPlayer/FFMpeg/Phonon
 Summary(zh_CN): 一个 Mplayer/FFMpeg/Phonon 的简单前端
 Version: 0.11.3d
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group:   Applications/Multimedia
 Group(zh_CN):	应用程序/多媒体
 # The documentation is GFDL.
@@ -139,6 +139,9 @@ update-desktop-database -q &> /dev/null || :
 %{kde4_datadir}/doc/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.11.3d-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.11.3a-2
 - 为 Magic 3.0 重建
 

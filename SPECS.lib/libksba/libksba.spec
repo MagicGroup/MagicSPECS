@@ -1,8 +1,8 @@
 Summary: X.509 library
 Summary(zh_CN.UTF-8): X.509 库
 Name:    libksba
-Version: 1.3.0
-Release: 3%{?dist}
+Version: 1.3.3
+Release: 4%{?dist}
 
 License: GPLv3
 Group:   System Environment/Libraries
@@ -97,6 +97,9 @@ fi
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.3-4
+- 更新到 1.3.3
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.3.0-3
 - 更新到 1.3.0
 

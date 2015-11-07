@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://mercurial.selenic.com/release/?C=M;O=D"
+url="http://mercurial.selenic.com/release/?C=M&O=D"
 new1="mercurial-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://raveit65.fedorapeople.org/Mate/SOURCE/?C=M;O=D"
+url="https://raveit65.fedorapeople.org/Mate/SOURCE/?C=M&O=D"
 new1="mate-themes-extras-"
 new2=".tar.xz"
 downcommand="wget -q" 

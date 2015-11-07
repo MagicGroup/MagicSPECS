@@ -4,7 +4,7 @@ Summary(zh_CN.UTF-8): 打印到 HP PPA 打印机的驱动程序。
 Epoch: 1
 Obsoletes: ppa
 Version: 1.04
-Release: 18%{?dist}
+Release: 19%{?dist}
 URL: http://sourceforge.net/projects/pnm2ppa 
 Source: http://download.sourceforge.net/pnm2ppa/pnm2ppa-%{version}.tar.gz
 Source1: http://www.httptech.com/ppa/files/ppa-0.8.6.tar.gz
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/pbm2ppa.conf
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.04-19
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1:1.04-18
 - 为 Magic 3.0 重建
 

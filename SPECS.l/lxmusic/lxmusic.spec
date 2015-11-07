@@ -1,6 +1,6 @@
 Name:           lxmusic
 Version:        0.4.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Lightweight XMMS2 client with simple user interface
 Summary(zh_CN.UTF-8): 带有简单用户界面的轻量级 XMMS2 客户端
 
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.4-9
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

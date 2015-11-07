@@ -9,7 +9,7 @@ Version: %{baseversion}%{patchleveltag}
 Name: bash
 Summary: The GNU Bourne Again shell
 Summary(zh_CN.UTF-8): GNU Bash
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: System Environment/Shells
 Group(zh_CN.UTF-8): 系统环境/外壳
 License: GPLv3+
@@ -452,6 +452,9 @@ end
 %{_docdir}/bash
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.3.42-4
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 4.3.42-3
 - 为 Magic 3.0 重建
 

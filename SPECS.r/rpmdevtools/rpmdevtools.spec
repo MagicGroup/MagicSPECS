@@ -2,7 +2,7 @@
 
 Name:           rpmdevtools
 Version:	8.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        RPM Development Tools
 Summary(zh_CN.UTF-8): RPM 开发工具
 
@@ -104,6 +104,9 @@ done
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 8.6-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 8.6-4
 - 为 Magic 3.0 重建
 

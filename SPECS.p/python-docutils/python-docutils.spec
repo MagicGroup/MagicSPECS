@@ -11,7 +11,7 @@
 
 Name:           python-%{srcname}
 Version:        0.12
-Release:        0.4.20140510svn7747%{?dist}
+Release:        0.5.20140510svn7747%{?dist}
 Summary:        System for processing plaintext documentation
 Summary(zh_CN.UTF-8): 处理纯文本文档的系统
 
@@ -171,6 +171,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12-0.5.20140510svn7747
+- 为 Magic 3.0 重建
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 0.12-0.4.20140510svn7747
 - 为 Magic 3.0 重建
 

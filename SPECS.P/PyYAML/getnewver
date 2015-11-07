@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://pyyaml.org/download/pyyaml/?C=M;O=D"
+url="http://pyyaml.org/download/pyyaml/?C=M&O=D"
 new1="PyYAML-"
 new2=".tar.gz"
 downcommand="wget -q" 

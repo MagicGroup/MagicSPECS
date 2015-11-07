@@ -6,7 +6,7 @@ Summary:   Xorg X11 i740 video driver
 Summary(zh_CN.UTF-8): Xorg X11 i740 显卡驱动
 Name:      xorg-x11-drv-i740
 Version:	1.3.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/i740.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.3.5-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.3.5-2
 - 更新到 1.3.5
 

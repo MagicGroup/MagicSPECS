@@ -2,7 +2,7 @@
 
 Name:           xhtml1-dtds
 Version:        1.0
-Release:        %{date}.9
+Release:        %{date}.10
 Summary:        XHTML 1.0 document type definitions
 Summary(zh_CN.UTF-8): XHTML 1.0 文档类型定义
 
@@ -122,6 +122,9 @@ cd - >/dev/null
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.0-20020801.10
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.0-20020801.9
 - 为 Magic 3.0 重建
 

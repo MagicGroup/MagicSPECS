@@ -2,7 +2,7 @@ Summary: Window Navigator Construction Kit
 Summary(zh_CN.UTF-8): 窗口导航构建工具包
 Name: libwnck
 Version: 2.31.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://download.gnome.org/sources/libwnck/
 #VCS: git:git://git.gnome.org/libwnck
 Source0: http://download.gnome.org/sources/libwnck/2.31/%{name}-%{version}.tar.xz
@@ -82,6 +82,9 @@ rm -f $RPM_BUILD_ROOT%{_bindir}/wnck-urgency-monitor
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.31.0-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.31.0-4
 - 为 Magic 3.0 重建
 

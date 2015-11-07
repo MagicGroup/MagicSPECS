@@ -49,7 +49,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		mozilla plugin that lanches kaffeine for supported media types [Trinity]
 Summary(zh_CN.UTF-8): Kaffeinie 的 mozilla 插件
 Version:		0.4.3.1
-Release:		%{?!preversion:6}%{?preversion:5_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:6}%{?preversion:5_%{preversion}}%{?dist}%{?_variant}.1
 
 License:		GPLv2+
 Group:			Applications/Multimedia
@@ -145,5 +145,8 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.3.1-6.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 0.4.3.1-6
 - Initial release for TDE 14.0.0

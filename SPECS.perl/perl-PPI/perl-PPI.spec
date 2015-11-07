@@ -7,7 +7,7 @@
 
 Name:           perl-PPI
 Version:	1.220
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Parse, Analyze and Manipulate Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -102,6 +102,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/PPI*.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.220-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.220-2
 - 为 Magic 3.0 重建
 

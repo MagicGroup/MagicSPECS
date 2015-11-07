@@ -6,7 +6,7 @@
 
 Name:		perl-Dist-CheckConflicts
 Version:	0.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Declare version conflicts for your dist
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Dist::CheckConflicts.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.11-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           python-dateutil
 Version:        2.4.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          1
 Summary:        Powerful extensions to the standard datetime module
 Summary(zh_CN.UTF-8): 标准日期时间模块的强力扩展
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 %doc docs/_build/html
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:2.4.2-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 25 2015 Liu Di <liudidi@gmail.com> - 1:2.4.2-4
 - 为 Magic 3.0 重建
 

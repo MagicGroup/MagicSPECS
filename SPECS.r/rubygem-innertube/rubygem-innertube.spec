@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: A thread-safe resource pool
 Group: Development/Languages
 License: ASL 2.0
@@ -87,6 +87,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.0-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.0-5
 - 为 Magic 3.0 重建
 

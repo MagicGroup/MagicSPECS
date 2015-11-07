@@ -2,7 +2,7 @@ Summary:        Utilities for SAS management protocol (SMP)
 Summary(zh_CN.UTF-8): SAS 管理协议 (SMP) 的工具
 Name:           smp_utils
 Version:        0.98
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 Group:          Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -94,6 +94,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.98-4
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.98-3
 - 为 Magic 3.0 重建
 

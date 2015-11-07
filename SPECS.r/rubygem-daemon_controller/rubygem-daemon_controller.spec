@@ -4,7 +4,7 @@
 Summary: A library for implementing daemon management capabilities
 Name: rubygem-%{gem_name}
 Version: 1.2.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/FooBarWidget/daemon_controller/tree/master
@@ -62,6 +62,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.0-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.0-4
 - 为 Magic 3.0 重建
 

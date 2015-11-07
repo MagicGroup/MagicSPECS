@@ -2,7 +2,7 @@ Summary: Shared MIME information database
 Summary(zh_CN.UTF-8): 共享的 MIME 信息数据库
 Name: shared-mime-info
 Version:	1.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man*/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.5-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 1.5-1
 - 更新到 1.5
 

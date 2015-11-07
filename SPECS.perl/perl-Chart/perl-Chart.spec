@@ -1,6 +1,6 @@
 Name:           perl-Chart
 Version:	2.4.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Series of charting modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Chart.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.4.10-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.4.10-1
 - 更新到 2.4.10
 

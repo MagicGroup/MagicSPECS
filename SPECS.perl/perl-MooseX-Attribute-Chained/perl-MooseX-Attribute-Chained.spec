@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Attribute-Chained
 Version:        1.0.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Attribute that returns the instance to allow for chaining
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-10
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0.1-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Math-BigInt-GMP
-Version:	1.41
-Release:	1%{?dist}
+Version:	1.44
+Release:	2%{?dist}
 Summary:        Math::BigInt::GMP Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.44-2
+- 更新到 1.44
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.41-1
 - 更新到 1.41
 

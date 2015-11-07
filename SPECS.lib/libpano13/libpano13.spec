@@ -2,7 +2,7 @@ Summary: Library for manipulating panoramic images
 Summary(zh_CN.UTF-8): 处理全景图像的库
 Name: libpano13
 Version: 2.9.19
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 URL: http://panotools.sourceforge.net/
 Group: Development/Libraries
@@ -111,6 +111,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libpano13.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.9.19-4
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.9.19-3
 - 为 Magic 3.0 重建
 

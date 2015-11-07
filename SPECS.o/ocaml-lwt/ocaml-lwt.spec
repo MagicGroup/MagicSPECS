@@ -3,7 +3,7 @@
 
 Name:           ocaml-lwt
 Version: 2.4.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        OCaml lightweight thread library
 Summary(zh_CN.UTF-8): OCaml 的轻量级线程库
 
@@ -94,6 +94,9 @@ OCAMLPATH=$RPM_BUILD_ROOT%{_libdir}/ocaml ocamlfind query lwt.react
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.4.5-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 2.4.5-1
 - 更新到 2.4.5
 

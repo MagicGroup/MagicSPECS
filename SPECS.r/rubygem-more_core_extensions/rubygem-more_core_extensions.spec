@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Set of core extensions beyond those provided by ActiveSupport
 Group: Development/Languages
 License: MIT
@@ -72,6 +72,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.0-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.0-4
 - 为 Magic 3.0 重建
 

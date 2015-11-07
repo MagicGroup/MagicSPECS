@@ -1,6 +1,6 @@
 Name:          disruptor
 Version:       3.2.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Concurrent Programming Framework
 License:       ASL 2.0
 URL:           http://lmax-exchange.github.io/disruptor/
@@ -101,6 +101,9 @@ rm -r src/test/java/com/lmax/disruptor/dsl/DisruptorTest.java
 %doc LICENCE.txt
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.2.1-3
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

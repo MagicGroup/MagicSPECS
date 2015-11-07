@@ -1,6 +1,6 @@
 Name:		gnome-online-accounts
-Version:	3.12.0
-Release:	1%{?dist}
+Version:	3.19.1
+Release:	2%{?dist}
 Summary:	Single sign-on framework for GNOME
 Summary(zh_CN.UTF-8): GNOME 的单点登录框架
 
@@ -125,6 +125,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/goa-1.0/include
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
+- 更新到 3.19.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

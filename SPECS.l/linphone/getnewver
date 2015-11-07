@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.savannah.gnu.org/releases/linphone/?C=M;O=D"
+url="http://download.savannah.gnu.org/releases/linphone/?C=M&O=D"
 new1="linphone-"
 new2=".tar.gz"
 downcommand="wget -q" 
@@ -7,7 +7,7 @@ pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html
 if [ -f index.html ];then
 	newver1=`cat index.html|grep -o "[0-9].*\.x" |head -n 1 |sed -e 's/^.*>//'`
-	url1="http://download.savannah.gnu.org/releases/linphone/$newver1/sources/?C=M;O=D"
+	url1="http://download.savannah.gnu.org/releases/linphone/$newver1/sources/?C=M&O=D"
 	rm -f index.html && $downcommand "$url1" -O index.html
 	if [ -f index.html ]; then
 		newver=`grep "$new1.*$new2" index.html|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`

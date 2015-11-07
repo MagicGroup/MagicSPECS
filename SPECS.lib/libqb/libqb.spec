@@ -1,6 +1,6 @@
 Name:           libqb
-Version: 0.17.0
-Release: 1%{?dist}
+Version: 0.17.2
+Release: 2%{?dist}
 Summary:        An IPC library for high performance servers
 Summary(zh_CN.UTF-8): 高性能服务的 IPC 库
 
@@ -71,6 +71,9 @@ developing applications that use %{name}.
 %{_mandir}/man8/qb-blackbox.8.gz
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.17.2-2
+- 更新到 0.17.2
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.17.0-1
 - 更新到 0.17.0
 

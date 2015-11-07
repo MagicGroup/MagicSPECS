@@ -4,7 +4,7 @@
 Summary: Library that implements weak, soft, and strong references in Ruby
 Name: rubygem-%{gem_name}
 Version: 1.0.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/bdurand/ref
@@ -80,6 +80,9 @@ popd
 %exclude %{gem_instdir}/test/*.rbc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.5-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
 - 为 Magic 3.0 重建
 

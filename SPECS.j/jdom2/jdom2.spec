@@ -1,6 +1,6 @@
 Name:          jdom2
 Version:       2.0.5
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       Java manipulation of XML made easy
 License:       ASL 1.1 or BSD
 URL:           http://www.jdom.org/
@@ -108,6 +108,9 @@ cp -rp build/apidocs %{buildroot}%{_javadocdir}/%{name}
 %doc LICENSE.txt
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.5-6
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.0.5-5
 - 为 Magic 3.0 重建
 

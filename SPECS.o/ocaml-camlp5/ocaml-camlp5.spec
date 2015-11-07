@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-camlp5
-Version: 6.12
-Release: 1%{?dist}
+Version: 6.14
+Release: 2%{?dist}
 Summary:        Classical version of camlp4 OCaml preprocessor
 Summary(zh_CN.UTF-8): camlp4 OCaml 预处理器的经典版本
 
@@ -117,6 +117,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 6.14-2
+- 更新到 6.14
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 6.12-1
 - 更新到 6.12
 

@@ -2,7 +2,7 @@ Summary: DWARF optimization and duplicate removal tool
 Summary(zh_CN.UTF-8): DWARF 优化和重复移除工具
 Name: dwz
 Version: 0.11
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+ and GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/dwz.1*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 为 Magic 3.0 重建
+
 * Thu Nov 29 2012 Jakub Jelinek <jakub@redhat.com> 0.8-1
 - fix recompute_abbrevs (#880634)
 - optimize DW_FORM_data[48] DW_AT_high_pc that GCC 4.8 produces

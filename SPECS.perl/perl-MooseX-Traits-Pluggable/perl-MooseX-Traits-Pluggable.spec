@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Traits-Pluggable 
 Summary:        A pluggable extension to MooseX::Traits 
 Version:	0.12
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RK/RKITOVER/MooseX-Traits-Pluggable-%{version}.tar.gz 
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.12-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
 - 更新到 0.12
 

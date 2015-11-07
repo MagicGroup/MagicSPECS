@@ -1,6 +1,6 @@
 Name:           libsidplayfp
-Version: 1.4.2
-Release: 1%{?dist}
+Version: 1.8.2
+Release: 2%{?dist}
 Summary:        SID chip music module playing library
 Group:          System Environment/Libraries
 License:        GPLv2+
@@ -93,6 +93,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
+- 更新到 1.8.2
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.4.2-1
 - 更新到 1.4.2
 

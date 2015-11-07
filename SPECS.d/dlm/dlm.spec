@@ -1,6 +1,6 @@
 Name:           dlm
 Version:        4.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2 and GPLv2+ and LGPLv2+
 # For a breakdown of the licensing, see README.license
 Group:          System Environment/Kernel
@@ -110,6 +110,9 @@ developing applications that use %{name}.
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.0.2-2
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

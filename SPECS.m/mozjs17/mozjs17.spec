@@ -2,7 +2,7 @@ Summary:	JavaScript interpreter and libraries
 Summary(zh_CN.UTF-8): Java 脚本解释器和库
 Name:		mozjs17
 Version:	17.0.0
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPLv2+ or LGPLv2+ or MPLv1.1
 Group:		Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -103,6 +103,9 @@ magic_rpm_clean.sh
 %{_includedir}/js-17.0
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 17.0.0-10
+- 为 Magic 3.0 重建
+
 * Mon Dec 01 2014 Liu Di <liudidi@gmail.com> - 17.0.0-9
 - 为 Magic 3.0 重建
 

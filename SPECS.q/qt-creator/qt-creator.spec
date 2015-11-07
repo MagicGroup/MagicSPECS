@@ -5,8 +5,8 @@
 %global _python_bytecompile_errors_terminate_build 0
 
 Name:           qt-creator
-Version: 3.5.0
-Release: 1%{?dist}
+Version: 3.5.1
+Release: 2%{?dist}
 Summary:        Lightweight and cross-platform IDE for Qt
 Summary(zh_CN):	Qt 的跨平台轻量级 IDE
 
@@ -191,6 +191,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.5.1-2
+- 更新到 3.5.1
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 3.5.0-1
 - 更新到 3.5.0
 

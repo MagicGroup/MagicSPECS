@@ -1,6 +1,6 @@
 Name:           perl-Business-ISBN-Data
 Version:	20140910.002
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary(zh_CN.UTF-8): Business::ISBN 的数据包
 Summary:        The data pack for Business::ISBN
 
@@ -60,6 +60,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/Business::ISBN::Data.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 20140910.002-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 20140910.002-2
 - 为 Magic 3.0 重建
 

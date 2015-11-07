@@ -1,8 +1,8 @@
 Summary: Very high compression ratio file archiver
 Summary(zh_CN.UTF-8): 非常高压缩率的文件归档程序
 Name: p7zip
-Version:	9.38.1
-Release:	1%{?dist}
+Version:	15.09
+Release:	2%{?dist}
 # Files under C/Compress/Lzma/ are dual LGPL or CPL
 License: LGPLv2 and (LGPLv2+ or CPL)
 Group: Applications/Archiving
@@ -119,6 +119,9 @@ find contrib -type f -exec chmod -x {} \;
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 15.09-2
+- 更新到 15.09
+
 * Wed Jul 01 2015 Liu Di <liudidi@gmail.com> - 9.38.1-1
 - 更新到 9.38.1
 

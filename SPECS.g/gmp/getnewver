@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/pub/gnu/gmp/?C=M;O=D"
+url="http://ftp.gnu.org/pub/gnu/gmp/?C=M&O=D"
 new1="gmp-"
 new2=".tar.xz"
 downcommand="wget -q" 

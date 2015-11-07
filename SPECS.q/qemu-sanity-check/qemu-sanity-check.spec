@@ -6,7 +6,7 @@
 
 Name:            qemu-sanity-check
 Version:         1.1.5
-Release:         5%{?dist}
+Release:         6%{?dist}
 Summary:         Simple qemu and Linux kernel sanity checker
 Summary(zh_CN.UTF-8): 简单的 qemu 和 Linux 内核完整性检查
 License:         GPLv2+
@@ -127,6 +127,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.5-6
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.1.5-5
 - 为 Magic 3.0 重建
 

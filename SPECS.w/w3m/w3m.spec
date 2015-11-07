@@ -7,7 +7,7 @@
 
 Name:     w3m
 Version:  0.5.3
-Release:  6%{?dist}
+Release:  7%{?dist}
 License:  MIT
 URL:      http://w3m.sourceforge.net/
 BuildRequires:  bzip2 findutils sed ncurses-devel
@@ -188,6 +188,9 @@ magic_rpm_clean.sh
 %{_libexecdir}/w3m/w3mimgdisplay
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.5.3-7
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.5.3-6
 - 为 Magic 3.0 重建
 

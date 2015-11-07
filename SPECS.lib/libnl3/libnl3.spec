@@ -3,7 +3,7 @@ Group: Development/Libraries
 License: LGPLv2
 Name: libnl3
 Version: 3.2.25
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.infradead.org/~tgr/libnl/
 Source: http://www.infradead.org/~tgr/libnl/files/libnl-%{version}.tar.gz
 Source1: http://www.infradead.org/~tgr/libnl/files/libnl-doc-%{version}.tar.gz
@@ -97,6 +97,9 @@ find $RPM_BUILD_ROOT -name \*.la -delete
 %doc libnl-doc-%{version}/api/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.2.25-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 3.2.25-1
 - 更新到 3.2.25
 

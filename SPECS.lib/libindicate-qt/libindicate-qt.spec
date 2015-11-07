@@ -2,7 +2,7 @@
 
 Name:		libindicate-qt
 Version:	0.2.5.91
-Release:	21.1
+Release:	22.1
 License:	LGPL-2.0 and LGPL-3.0
 Summary:	Qt bindings fo libindicate
 Url:		http://launchpad.net/libindicate-qt
@@ -87,6 +87,9 @@ cd build
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.5.91-22.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.2.5.91-21.1
 - 为 Magic 3.0 重建
 

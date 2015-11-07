@@ -2,8 +2,8 @@
 %bcond_without python3
 
 Name:           python-%{pypi_name}
-Version:        0.24.0
-Release:        5%{?dist}
+Version:	0.26.0
+Release:	2%{?dist}
 Summary:        A built-package format for Python
 Summary(zh_CN.UTF-8): Python 的包格式
 
@@ -128,6 +128,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.26.0-2
+- 更新到 0.26.0
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.24.0-5
 - 为 Magic 3.0 重建
 

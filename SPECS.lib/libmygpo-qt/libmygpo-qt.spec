@@ -2,8 +2,8 @@
 Name:    libmygpo-qt
 Summary: Qt Library that wraps the gpodder.net Web API
 Summary(zh_CN.UTF-8): gpodder.net 网页 API 的 Qt 库接口
-Version: 1.0.7
-Release: 1%{?dist}
+Version: 1.0.8
+Release: 2%{?dist}
 
 License: LGPLv2+
 Url:     http://wiki.gpodder.org/wiki/Libmygpo-qt
@@ -72,6 +72,9 @@ make test -C %{_target_platform}
  
  
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.8-2
+- 更新到 1.0.8
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.7-1
 - 更新到 1.0.7
 

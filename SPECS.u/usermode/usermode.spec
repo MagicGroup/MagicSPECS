@@ -2,7 +2,7 @@ Summary: Tools for certain user account management tasks
 Summary(zh_CN.UTF-8): 管理用户使用的工具
 Name: usermode
 Version: 1.111
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/*
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.111-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.111-2
 - 为 Magic 3.0 重建
 

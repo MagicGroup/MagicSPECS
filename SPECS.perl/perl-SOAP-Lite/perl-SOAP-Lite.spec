@@ -1,6 +1,6 @@
 Name:       perl-SOAP-Lite
 Version:	1.19
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:    Client and server side SOAP implementation
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -91,6 +91,9 @@ make test
 %{_mandir}/man1/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.19-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.19-1
 - 更新到 1.19
 

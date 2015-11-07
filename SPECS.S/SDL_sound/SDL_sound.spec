@@ -1,6 +1,6 @@
 Name:           SDL_sound
 Version:        1.0.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Library handling decoding of several popular sound file formats
 Summary(zh_CN.UTF-8): 解码几种流行声音文件格式的库
 Group:          System Environment/Libraries
@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.3-9
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0.3-8
 - 为 Magic 3.0 重建
 

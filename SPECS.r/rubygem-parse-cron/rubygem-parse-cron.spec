@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Parses cron expressions and calculates the next occurrence
 Group: Development/Languages
 License: MIT
@@ -72,6 +72,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.4-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.4-4
 - 为 Magic 3.0 重建
 

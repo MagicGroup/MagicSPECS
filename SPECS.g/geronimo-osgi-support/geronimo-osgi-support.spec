@@ -3,7 +3,7 @@
 
 Name:             geronimo-osgi-support
 Version:          1.0
-Release:          17%{?dist}
+Release:          18%{?dist}
 Summary:          OSGI spec bundle support
 License:          ASL 2.0 and W3C
 URL:              http://geronimo.apache.org/
@@ -67,6 +67,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0-18
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.0-17
 - 为 Magic 3.0 重建
 

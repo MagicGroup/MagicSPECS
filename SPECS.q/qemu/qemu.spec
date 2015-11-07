@@ -40,7 +40,7 @@
 Summary: QEMU is a FAST! processor emulator
 Name: qemu
 Version:	2.4.0.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Epoch: 2
 License: GPLv2+ and LGPLv2+ and BSD
 Group: Development/Tools
@@ -1204,6 +1204,9 @@ getent passwd qemu >/dev/null || \
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2:2.4.0.1-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 2:2.4.0.1-1
 - 更新到 2.4.0.1
 

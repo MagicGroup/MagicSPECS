@@ -2,7 +2,7 @@ Summary: TCP port reservation utility
 Summary(zh_CN.UTF-8): TCP 端口预订工具
 Name: portreserve
 Version: 0.0.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -96,6 +96,9 @@ fi
 %{_mandir}/*/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.0.5-7
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 0.0.5-6
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ Summary: A program which will display a fortune
 Summary(zh_CN.UTF-8): 显示信息的一个程序
 Name: fortune-mod
 Version: 1.99.1
-Release: 16%{?dist}
+Release: 17%{?dist}
 URL: http://www.redellipse.net/code/fortune
 License: BSD
 Group: Amusements/Games
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man*/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.99.1-17
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.99.1-16
 - 为 Magic 3.0 重建
 

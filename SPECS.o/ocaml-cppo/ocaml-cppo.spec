@@ -4,8 +4,8 @@
 %endif
 
 Name:           ocaml-cppo
-Version: 1.1.2
-Release: 1%{?dist}
+Version: 1.3.1
+Release: 2%{?dist}
 Summary:        Equivalent of the C preprocessor for OCaml programs
 Summary(zh_CN.UTF-8): 相当于 C 预处理器的 OCaml 程序
 
@@ -68,6 +68,9 @@ make test
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 更新到 1.3.1
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.1.2-1
 - 更新到 1.1.2
 

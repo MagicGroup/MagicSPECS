@@ -4,7 +4,7 @@
 Name:		gambas2
 Summary:	IDE based on a basic interpreter with object extensions
 Version:	2.24.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	GPL+
 Group:		Development/Tools
 URL:		http://gambas.sourceforge.net/
@@ -1622,6 +1622,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/%{name}/info/gb.xml.xslt.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.24.0-7
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 2.24.0-6
 - 为 Magic 3.0 重建
 

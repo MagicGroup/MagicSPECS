@@ -4,7 +4,7 @@
 Summary: Kernel analysis utility for live systems, netdump, diskdump, kdump, LKCD or mcore dumpfiles
 Name: crash
 Version: 7.1.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3
 Group: Development/Debuggers
 Source: http://people.redhat.com/anderson/crash-%{version}.tar.gz
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %{_includedir}/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 7.1.3-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 7.1.3-1
 - 更新到 7.1.3
 

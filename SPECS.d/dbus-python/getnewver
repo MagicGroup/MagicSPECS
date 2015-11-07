@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://dbus.freedesktop.org/releases/dbus-python/?C=M;O=D"
+url="http://dbus.freedesktop.org/releases/dbus-python/?C=M&O=D"
 new1="dbus-python-"
 new2=".tar.gz"
 downcommand="wget -q" 

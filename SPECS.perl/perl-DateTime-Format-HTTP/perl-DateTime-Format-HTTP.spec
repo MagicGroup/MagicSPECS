@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-HTTP
 Version:	0.42
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        HTTP protocol date conversion routines
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.42-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.42-1
 - 更新到 0.42
 

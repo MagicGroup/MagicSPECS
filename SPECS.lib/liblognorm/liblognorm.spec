@@ -2,7 +2,7 @@
 
 Name:		liblognorm
 Version:	1.1.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Fast samples-based log normalization library
 Summary(zh_CN.UTF-8): 基于快速样本的日志归一库
 
@@ -102,6 +102,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.2-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.1.2-1
 - 更新到 1.1.2
 

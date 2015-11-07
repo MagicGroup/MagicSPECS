@@ -7,7 +7,7 @@ Summary: Macromedia Flash Player 9.0
 Summary(zh_CN.UTF-8): Macromedia Flash 播放器 9.0
 Name: flash-plugin
 Version: 11.2.202.346
-Release: %{?dist}
+Release: %{?dist}.1
 License: Commercial
 BuildArch: i686 x86_64
 Group: Applications/Internet
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 11.2.202.346-.1
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 11-2
 - 为 Magic 3.0 重建
 

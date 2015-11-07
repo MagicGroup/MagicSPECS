@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.osgeo.org/proj/?C=M;O=D"
+url="http://download.osgeo.org/proj/?C=M&O=D"
 new1="proj-"
 new2=".tar.gz"
 downcommand="wget -q" 

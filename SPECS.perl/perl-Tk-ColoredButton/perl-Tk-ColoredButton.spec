@@ -1,6 +1,6 @@
 Name:           perl-Tk-ColoredButton
 Version:        1.05
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Button widget with background gradient color
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.05-7
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.05-6
 - 为 Magic 3.0 重建
 

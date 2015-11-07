@@ -4,7 +4,7 @@
 Summary: RubyGems plugin for patching gems
 Name: rubygem-%{gem_name}
 Version: 0.1.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/strzibny/gem-patch
@@ -73,6 +73,9 @@ EOF
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.1.6-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.6-2
 - 为 Magic 3.0 重建
 

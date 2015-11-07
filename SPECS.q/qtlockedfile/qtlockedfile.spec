@@ -5,7 +5,7 @@ Summary:	QFile extension with advisory locking functions
 Summary(zh_CN.UTF-8): 带有锁定功能的 QFile 扩展
 Name:		qtlockedfile
 Version:	2.4
-Release:	6%{?dist}
+Release:	7%{?dist}
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv3 or LGPLv2 with exceptions
@@ -127,6 +127,9 @@ install -p -D -m644 %{SOURCE1} %{buildroot}%{_qt5_archdatadir}/mkspecs/features/
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.4-7
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.4-6
 - 为 Magic 3.0 重建
 

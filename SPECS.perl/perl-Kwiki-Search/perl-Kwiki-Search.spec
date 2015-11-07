@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-Search
 Version:        0.12
-Release:        30%{?dist}
+Release:        31%{?dist}
 Summary:        Kwiki Search Plugin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12-31
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-30
 - 为 Magic 3.0 重建
 

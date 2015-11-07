@@ -5,7 +5,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	3.1.6
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	RubyGem of Localization Library and Tools for Ruby
 Group:		Development/Languages
 
@@ -159,6 +159,9 @@ popd
 %exclude	%{gem_instdir}/src/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.1.6-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.1.6-3
 - 为 Magic 3.0 重建
 

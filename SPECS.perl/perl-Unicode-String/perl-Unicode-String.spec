@@ -1,6 +1,6 @@
 Name:           perl-Unicode-String
 Version:        2.09
-Release:        29%{?dist}
+Release:        30%{?dist}
 
 Summary:        Perl modules to handle various Unicode issues
 
@@ -64,6 +64,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.09-30
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.09-29
 - 为 Magic 3.0 重建
 

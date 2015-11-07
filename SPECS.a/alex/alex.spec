@@ -9,7 +9,7 @@
 Name:           alex
 # part of haskell-platform
 Version:        3.1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tool for generating lexical analysers in Haskell
 
 License:        BSD
@@ -164,6 +164,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.1.4-4
+- 为 Magic 3.0 重建
+
 * Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 3.1.4-3
 - 为 Magic 3.0 重建
 

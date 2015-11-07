@@ -6,7 +6,7 @@ Summary:			Splashutils - fbsplash utils and miscellaneous framebuffer utilities
 Summary(zh_CN.UTF-8):			Splashutils - fbsplash 的相关程序以及一些帧缓冲工具
 Name:				splashutils
 Version:			1.5.4.4
-Release:			3%{?dist}
+Release:			4%{?dist}
 
 Source:				http://dev.gentoo.org/~spock/projects/gensplash/archive/splashutils-lite-%{version}.tar.bz2
 Source1:			http://dev.gentoo.org/~spock/projects/gensplash/current/miscsplashutils-0.1.8.tar.bz2
@@ -143,6 +143,9 @@ magic_rpm_clean.sh
 %{_datadir}/splashutils/initrd.splash
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.5.4.4-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 14 2012 JiangTao <jiangtao9999@163.com> - 1.5.4.4-2
 - Update to 1.5.4.4 for Magic Linux 3.0
 - Add initrd.splash which is needed by dracut

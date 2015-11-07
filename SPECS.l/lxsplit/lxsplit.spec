@@ -1,6 +1,6 @@
 Name:		lxsplit
 Version:	0.2.4
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	File split / merge utility
 Summary(zh_CN.UTF-8): 文件分割/合并工具
 
@@ -42,6 +42,9 @@ magic_rpm_clean.sh
 %{_bindir}/lxsplit
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.4-8
+- 为 Magic 3.0 重建
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.2.4-7
 - 为 Magic 3.0 重建
 

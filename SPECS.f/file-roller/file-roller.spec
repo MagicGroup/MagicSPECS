@@ -1,8 +1,8 @@
 Summary:        Tool for viewing and creating archives
 Summary(zh_CN.UTF-8): 查看和创建压缩包的工具
 Name:           file-roller
-Version:	3.13.1
-Release:        3%{?dist}
+Version:	3.16.4
+Release:        4%{?dist}
 License:        GPLv2+
 Group:          Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -119,6 +119,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.16.4-4
+- 更新到 3.16.4
+
 * Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 3.13.1-3
 - 更新到 3.13.1
 

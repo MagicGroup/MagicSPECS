@@ -2,7 +2,7 @@
 
 Name:           gtk2hs-buildtools
 Version:        0.13.0.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tools to build the Gtk2Hs suite of User Interface libraries
 
 License:        GPLv2+
@@ -56,6 +56,9 @@ rm %buildroot%{ghc_pkgdocdir}/COPYING
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.13.0.4-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 0.13.0.4-2
 - 为 Magic 3.0 重建
 

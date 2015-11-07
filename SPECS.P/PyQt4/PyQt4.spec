@@ -17,8 +17,8 @@
 Summary: Python bindings for Qt4
 Summary(zh_CN.UTF-8): Qt4 的 Python 绑定
 Name: 	 PyQt4
-Version: 4.11.3
-Release: 1%{?dist}
+Version: 4.11.4
+Release: 2%{?dist}
 
 # GPLv2 exceptions(see GPL_EXCEPTIONS*.txt)
 License: GPLv3 or GPLv2 with exceptions
@@ -392,6 +392,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.11.4-2
+- 更新到 4.11.4
+
 * Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 4.11.3-1
 - 更新到 4.11.3
 

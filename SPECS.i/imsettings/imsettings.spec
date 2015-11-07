@@ -1,6 +1,6 @@
 Name:		imsettings
-Version:	1.6.7
-Release:	2%{?dist}
+Version:	1.6.8
+Release:	3%{?dist}
 License:	LGPLv2+
 URL:		https://tagoh.bitbucket.org/%{name}/
 BuildRequires:	desktop-file-utils
@@ -320,6 +320,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6.8-3
+- 更新到 1.6.8
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1.6.7-2
 - 为 Magic 3.0 重建
 

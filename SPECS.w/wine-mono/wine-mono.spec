@@ -2,7 +2,7 @@
 
 Name:           wine-mono
 Version:	4.5.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Mono library required for Wine
 Summary(zh_CN.UTF-8): Wine 需要的 Mono 库
 
@@ -98,6 +98,9 @@ magic_rpm_clean.sh
 %{_datadir}/wine/mono/wine-mono-%{version}.msi
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.5.6-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 4.5.6-1
 - 更新到 4.5.6
 

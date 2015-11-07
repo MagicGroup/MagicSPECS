@@ -5,7 +5,7 @@ URL:            http://www.compiz.org/
 License:        GPLv2+
 Group:          User Interface/Desktops
 Version:        0.8.8
-Release:        11%{?dist}
+Release:        12%{?dist}
 Epoch:          1
 Summary:        Themeable window decorator and compositing manager for Compiz
 Source0:        http://releases.compiz.org/%{version}/%{name}-%{version}.tar.bz2
@@ -131,6 +131,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:0.8.8-12
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8-11
 - 为 Magic 3.0 重建
 

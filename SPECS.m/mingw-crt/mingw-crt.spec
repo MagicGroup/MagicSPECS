@@ -7,7 +7,7 @@
 
 Name:           mingw-crt
 Version:        3.9.999
-Release:        0.1.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
+Release:        0.2.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
 Summary:        MinGW Windows cross-compiler runtime
 
 License:        Public Domain and ZPLv2.1
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_includedir}/*.c
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.9.999-0.2.trunk.git.b08afb.20140912
+- 为 Magic 3.0 重建
+
 * Fri Sep 12 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.1.trunk.git.b08afb.20140912
 - Update to 20140912 snapshot (git rev b08afb)
 - Bump version as upstream released mingw-w64 v3.2.0 recently (which is not based on the trunk branch)

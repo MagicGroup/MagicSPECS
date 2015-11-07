@@ -5,8 +5,8 @@
 
 Summary: A Clustered Database based on Samba's Trivial Database (TDB)
 Name: ctdb
-Version: 2.5.2
-Release: 1%{?dist}
+Version: 2.5.5
+Release: 2%{?dist}
 License: GPLv3+
 Group: System Environment/Daemons
 URL: http://ctdb.samba.org/
@@ -268,6 +268,9 @@ fi
 %doc tests/README
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.5.5-2
+- 更新到 2.5.5
+
 * Wed Feb 05 2014 Jose A. Rivera <jarrpa@redhat.com> - 2.5.2-1
 - Update to ctdb version 2.5.2
 

@@ -1,7 +1,7 @@
 
 Name:		console-setup
-Version:	1.107
-Release:	2%{?dist}
+Version:	1.134
+Release:	3%{?dist}
 Summary:	Tools for configuring the console using X Window System key maps
 Summary(zh_CN.UTF-8): 使用 X 窗口系统的键盘映射配置控制台的工具
 
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.134-3
+- 更新到 1.134
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 1.107-2
 - 为 Magic 3.0 重建
 

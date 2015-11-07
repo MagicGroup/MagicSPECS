@@ -1,6 +1,6 @@
 Name:		twolame
 Version:	0.3.13
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	TwoLAME is an optimised MPEG Audio Layer 2 encoding library based on tooLAME
 Summary(zh_CN.UTF-8): 基于 tooLAME 优化的 MPEG 音频层 2 编码库
 Group:		Applications/Multimedia
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}.h
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.13-5
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.3.13-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           iptux
-Version:	0.6.2
-Release: 	3%{?dist}
+Version:	0.6.3
+Release: 	4%{?dist}
 Source0:        https://github.com/iptux-src/iptux/archive/v%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  gtk2-devel
@@ -37,6 +37,9 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_datadir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.6.3-4
+- 更新到 0.6.3
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 0.6.2-3
 - 更新到 0.6.2
 

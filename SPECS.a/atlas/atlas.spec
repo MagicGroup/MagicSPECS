@@ -5,7 +5,7 @@ Version:        3.10.2
 %if "%{?enable_native_atlas}" != "0"
 %define dist .native
 %endif
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Automatically Tuned Linear Algebra Software
 
 Group:          System Environment/Libraries
@@ -827,6 +827,9 @@ fi
 %endif
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.10.2-8
+- 为 Magic 3.0 重建
+
 * Sat Sep 05 2015 Liu Di <liudidi@gmail.com> - 3.10.2-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           soundtouch
 Version:	1.4.0
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:        Audio Processing library for changing Tempo, Pitch and Playback Rates
 Summary(zh_CN.UTF-8): 改变节奏、音高和回放采样率的音频处理库
 License:        LGPLv2+
@@ -115,6 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4.0-9
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4.0-7
 - 为 Magic 3.0 重建
 

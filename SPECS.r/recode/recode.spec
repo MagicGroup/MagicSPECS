@@ -2,7 +2,7 @@ Summary: Conversion between character sets and surfaces
 Summary(zh_CN.UTF-8): 字符集和曲面之间的转换
 Name: recode
 Version: 3.6
-Release: 35%{?dist}
+Release: 36%{?dist}
 License: GPLv2+
 Group: Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.6-36
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 3.6-35
 - 为 Magic 3.0 重建
 

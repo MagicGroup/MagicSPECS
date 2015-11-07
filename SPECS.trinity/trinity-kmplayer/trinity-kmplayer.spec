@@ -38,7 +38,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.10.0c
-Release:	%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	Media player for Trinity
 Summary(zh_CN.UTF-8): TDE 下的媒体播放器
 Group:		Applications/Multimedia
@@ -265,5 +265,8 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.10.0c-8.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.10.0c-1
 - Initial release for TDE 14.0.0

@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.0.9
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Simple settings solution for Ruby
 
 Group:          Development/Languages
@@ -77,6 +77,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.9-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.9-6
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           rubygem-%{gem_basename}
 Version:        0.0.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OpenSSL with CMS functions
 Group:          Development/Languages
 
@@ -93,6 +93,9 @@ rm -rf %{buildroot}%{gem_instdir}/ext/
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.3-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.3-3
 - 为 Magic 3.0 重建
 

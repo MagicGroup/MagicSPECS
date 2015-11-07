@@ -9,7 +9,7 @@
 
 Name:           python-feedparser
 Version:	5.2.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Parse RSS and Atom feeds in Python
 Summary(zh_CN.UTF-8): 在 Python 中解析 RSS 和 Atom 种子
 
@@ -160,6 +160,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 5.2.1-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 5.2.1-1
 - 更新到 5.2.1
 

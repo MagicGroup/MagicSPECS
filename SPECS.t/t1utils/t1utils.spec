@@ -1,6 +1,6 @@
 Name:		t1utils
 Version:	1.39
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Summary:	Collection of Type 1 and 2 font manipulation utilities
 Summary(zh_CN.UTF-8): Type 1 和 2 字体处理工具的集合
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.39-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.39-1
 - 更新到 1.39
 

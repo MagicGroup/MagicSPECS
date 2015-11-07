@@ -4,7 +4,7 @@ Summary: GUI support for libgnomeprint
 Summary(zh_CN.UTF-8): libgnomeprint 的图形界面支持
 Name: libgnomeprintui22
 Version: 2.18.6
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source0: http://ftp.gnome.org/pub/gnome/sources/libgnomeprintui/2.18/libgnomeprintui-%{version}.tar.bz2
 URL: http://ftp.gnome.org/pub/gnome/sources/libgnomeprintui/
 License: LGPLv2+
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libgnomeprintui
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.18.6-8
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.18.6-7
 - 为 Magic 3.0 重建
 

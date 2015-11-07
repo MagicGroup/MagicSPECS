@@ -1,6 +1,6 @@
 Name:           perl-libnet
 Version:        3.07
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Perl clients for various network protocols
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -103,6 +103,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.07-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 3.07-2
 - 为 Magic 3.0 重建
 

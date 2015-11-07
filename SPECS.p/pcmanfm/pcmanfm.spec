@@ -24,7 +24,7 @@
 
 Name:		pcmanfm
 Version:	1.2.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Extremly fast and lightweight file manager
 Summary(zh_CN.UTF-8): 非常快速和轻量级的文件管理器
 
@@ -120,6 +120,9 @@ exit 0
 %config(noreplace) %{_sysconfdir}/xdg/%{name}/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.3-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.2.3-1
 - 更新到 1.2.3
 

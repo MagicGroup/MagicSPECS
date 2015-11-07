@@ -1,6 +1,6 @@
 Name: libibcm
 Version: 1.0.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Userspace InfiniBand Connection Manager
 Summary(zh_CN.UTF-8): 用户空间的 InfiniBand 连接管理器
 Group: System Environment/Libraries
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.5-9
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.5-8
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ Summary: Base libraries for GGZ gaming zone
 Summary(zh_CN.UTF-8): GGZ 游戏的基本库
 Name:    ggz-base-libs
 Version: 0.99.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 License: LGPLv2+ and GPLv2+
 Group:   System Environment/Libraries
@@ -162,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.99.5-8
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.99.5-7
 - 为 Magic 3.0 重建
 

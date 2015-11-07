@@ -4,7 +4,7 @@
 Name: rubygem-%{gem_name}
 Epoch: 1
 Version: 4.0.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: REST modeling framework (part of Rails)
 Group: Development/Languages
 License: MIT
@@ -107,6 +107,9 @@ popd
 %doc %{gem_instdir}/README.rdoc
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:4.0.0-9
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1:4.0.0-8
 - 为 Magic 3.0 重建
 

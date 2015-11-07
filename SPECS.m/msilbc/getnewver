@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.twaren.net/Unix/NonGNU//linphone/plugins/sources/?C=M;O=D"
+url="http://ftp.twaren.net/Unix/NonGNU//linphone/plugins/sources/?C=M&O=D"
 new1="msilbc-"
 new2=".tar.gz"
 downcommand="wget -q" 

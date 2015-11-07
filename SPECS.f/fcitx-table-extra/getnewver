@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.fcitx-im.org/fcitx-table-extra/?C=M;O=D"
+url="http://download.fcitx-im.org/fcitx-table-extra/?C=M&O=D"
 new1="fcitx-table-extra-"
 new2=".tar.xz"
 downcommand="wget -q" 

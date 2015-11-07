@@ -1,7 +1,7 @@
 # %global         git_commit 1496e4d
 Name:           libmm-qt
 Version: 1.0.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Qt-only wrapper for ModemManager DBus API
 Summary(zh_CN.UTF-8): ModemMoanager DBus API 的 Qt 接口
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 %{_libdir}/libModemManagerQt.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1:1.0.1-3
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1:1.0.1-2
 - 更新到 1.0.1
 

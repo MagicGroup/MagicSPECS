@@ -1,6 +1,6 @@
 Name:           perl-Test-Log-Dispatch
 Version:        0.03
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Test what you are logging
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.03-16
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.03-15
 - 为 Magic 3.0 重建
 

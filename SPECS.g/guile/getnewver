@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/pub/gnu/guile/?C=M;O=D"
+url="http://ftp.gnu.org/pub/gnu/guile/?C=M&O=D"
 new1="guile-"
 new2=".tar.xz"
 downcommand="wget -q" 

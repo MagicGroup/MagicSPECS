@@ -3,7 +3,7 @@
 Summary:	A command-line issue tracker
 Name:		rubygem-%{gem_name}
 Version:	0.5
-Release:	15%{?dist}
+Release:	16%{?dist}
 Group:		Applications/Productivity
 License:	GPLv3+ with exceptions
 URL:		http://ditz.rubyforge.org/
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5-16
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5-15
 - 为 Magic 3.0 重建
 

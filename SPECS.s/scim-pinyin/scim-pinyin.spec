@@ -1,6 +1,6 @@
 Name:       scim-pinyin
 Version:    0.5.92
-Release:    2%{?dist}
+Release:    3%{?dist}
 Summary:    Smart Pinyin IMEngine for Smart Common Input Method platform
 Summary(zh_CN.UTF-8): SCIM 支持的拼音输入法
 
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.5.92-3
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0.5.92-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           teckit
 Version:        2.5.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Conversion library and mapping compiler
 Summary(zh_CN.UTF-8): 转换库和映射编译器
 License:        LGPLv2+ or CPL
@@ -98,6 +98,9 @@ make check
 %{_libdir}/libTECkit_Compiler.so
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.5.1-10
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.5.1-9
 - 为 Magic 3.0 重建
 

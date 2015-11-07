@@ -1,6 +1,6 @@
 Name:           perl-File-ExtAttr
 Version:        1.09
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Perl extension for accessing extended attributes of files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.09-21
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.09-20
 - 为 Magic 3.0 重建
 

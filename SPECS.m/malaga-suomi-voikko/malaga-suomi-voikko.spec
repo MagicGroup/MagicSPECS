@@ -1,6 +1,6 @@
 Name:           malaga-suomi-voikko
-Version: 1.16
-Release: 1%{?dist}
+Version: 1.19
+Release: 2%{?dist}
 Summary:        A description of Finnish morphology written in Malaga (Voikko edition)
 Summary(zh_CN.UTF-8): 用 Malaga 编写的芬兰语形态描述
 
@@ -50,6 +50,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.19-2
+- 更新到 1.19
+
 * Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.16-1
 - 更新到 1.16
 

@@ -1,6 +1,6 @@
 Name:           libtpcmisc
 Version: 2.2.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Miscellaneous PET functions
 Summary(zh_CN.UTF-8): PET 的杂项函数
 
@@ -98,6 +98,9 @@ popd
 %{_libdir}/%{name}.a
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.2.5-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 2.2.5-1
 - 更新到 2.2.5
 

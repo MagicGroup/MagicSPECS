@@ -2,7 +2,7 @@ Summary: Basic requirement for icon themes
 Summary(zh_CN.UTF-8): 图标主题的基本依赖
 Name: hicolor-icon-theme
 Version: 0.13
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL+
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %{_datadir}/icons/hicolor/icon-theme.cache
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.13-2
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.13-1
 - 更新到 0.13
 

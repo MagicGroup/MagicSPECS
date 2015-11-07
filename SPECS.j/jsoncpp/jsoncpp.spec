@@ -4,7 +4,7 @@
 
 Name:       jsoncpp
 Version:    %{src_release}
-Release:    0.12.%{src_prerelease}%{?dist}
+Release:    0.13.%{src_prerelease}%{?dist}
 Summary:    JSON library implemented in C++
 Summary(zh_CN.UTF-8): C++ 实现的 JSON 库
 Group:      System Environment/Libraries
@@ -103,6 +103,9 @@ magic_rpm_clean.sh
 %{_docdir}/%{name}/
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.6.0-0.13.rc2
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.6.0-0.12.rc2
 - 为 Magic 3.0 重建
 

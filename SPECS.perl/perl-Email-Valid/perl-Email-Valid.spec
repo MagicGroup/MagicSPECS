@@ -1,6 +1,6 @@
 Name:           perl-Email-Valid
-Version:	1.196
-Release:	1%{?dist}
+Version:	1.198
+Release:	2%{?dist}
 Summary:        Check validity of internet email address
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.198-2
+- 更新到 1.198
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.196-1
 - 更新到 1.196
 

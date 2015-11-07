@@ -2,7 +2,7 @@ Summary:	The ASN.1 library used in GNUTLS
 Summary(zh_CN.UTF-8): GNUTLS 使用的 ASN.1 库
 Name:		libtasn1
 Version: 4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # The libtasn1 library is LGPLv2+, utilities are GPLv3+
 License:	GPLv3+ and LGPLv2+
@@ -117,6 +117,9 @@ test "$1" = 0 -a -f %_infodir/%name.info.gz && \
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.0-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 4.0-1
 - 更新到 4.0
 

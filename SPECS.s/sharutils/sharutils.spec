@@ -2,7 +2,7 @@ Summary: The GNU shar utilities for packaging and unpackaging shell archives
 Summary(zh_CN.UTF-8): 包装和解包 shell 归档的 GNU shar 工具
 Name: sharutils
 Version:	4.15.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv3+ and LGPLv2+ and Public Domain
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -75,6 +75,9 @@ fi
 %{_mandir}/man5/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.15.2-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 4.15.2-1
 - 更新到 4.15.2
 

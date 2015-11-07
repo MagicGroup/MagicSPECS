@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.five-ten-sg.com/libpst/packages/?C=M;O=D"
+url="http://www.five-ten-sg.com/libpst/packages/?C=M&O=D"
 new1="libpst-"
 new2=".tar.gz"
 downcommand="wget -q" 

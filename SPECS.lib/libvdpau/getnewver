@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://people.freedesktop.org/~aplattner/vdpau/?C=M;O=D"
+url="http://people.freedesktop.org/~aplattner/vdpau/?C=M&O=D"
 new1="libvdpau-"
 new2=".tar.bz2"
 downcommand="wget -q" 

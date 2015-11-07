@@ -1,6 +1,6 @@
 Name:           perl-URI-Title
 Version:	1.900
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Get the titles of things on the web in a sensible way
 # Mentioned in URI::Title POD
 License:        GPL+ or Artistic
@@ -65,6 +65,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.900-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.900-2
 - 为 Magic 3.0 重建
 

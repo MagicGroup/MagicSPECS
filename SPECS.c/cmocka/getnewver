@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://cmocka.org/files/1.0/?C=M;O=D"
+url="https://cmocka.org/files/1.0/?C=M&O=D"
 new1="cmocka-"
 new2=".tar.xz"
 downcommand="wget -q" 

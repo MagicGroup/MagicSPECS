@@ -2,7 +2,7 @@
 
 Name:           gstreamer1-plugins-base
 Version:	1.6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer streaming media framework base plugins
 
 License:        LGPLv2+
@@ -364,6 +364,9 @@ chrpath --delete $RPM_BUILD_ROOT%{_bindir}/gst-discoverer-1.0
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-1
 - 更新到 1.6.0
 

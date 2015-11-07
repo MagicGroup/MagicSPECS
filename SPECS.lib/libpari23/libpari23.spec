@@ -1,6 +1,6 @@
 Name:		libpari23
 Version:	2.3.5
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	Number Theory-oriented Computer Algebra Library
 Summary(zh_CN.UTF-8): 用于数论的计算机代数库
 Group:		System Environment/Libraries
@@ -182,6 +182,9 @@ make dotest-round4
 %{_datadir}/%{name}/
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.3.5-9
+- 为 Magic 3.0 重建
+
 * Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 2.3.5-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Path-IsDev
 Version:        1.001002
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Determine if a given Path resembles a development source tree
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001002-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.001002-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name: amrwb
 Summary: AMR NarrowBand speech codec
 Summary(zh_CN.UTF-8): AMR 宽带语音编码译码器
 Version: 11.0.0.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -62,6 +62,9 @@ AMR-NB 是一款窄带语音编码译码器，它用于移动电话中。这是�
 %{_libdir}/libamrwb.so
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 11.0.0.0-4
+- 为 Magic 3.0 重建
+
 * Fri Feb 28 2014 Liu Di <liudidi@gmail.com> - 11.0.0.0-3
 - 更新到 11.0.0.0
 

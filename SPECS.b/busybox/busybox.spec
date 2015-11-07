@@ -1,8 +1,8 @@
 Summary: Statically linked binary providing simplified versions of system commands
 Summary(zh_CN.UTF-8): 系统命令的静态链接简单版本
 Name: busybox
-Version: 1.22.1
-Release: 6%{?dist}
+Version: 1.24.1
+Release: 7%{?dist}
 Epoch: 1
 License: GPLv2
 Group: System Environment/Shells
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/busybox.petitboot.1.gz
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:1.24.1-7
+- 更新到 1.24.1
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 1:1.22.1-6
 - 更新到 1.22.1
 

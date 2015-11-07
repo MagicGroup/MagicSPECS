@@ -4,7 +4,7 @@
 Summary: Simply adds a declarative test method syntax to test/unit
 Name: rubygem-%{gem_name}
 Version: 0.0.5
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/svenfuchs/test_declarative
@@ -65,6 +65,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.5-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.5-10
 - 为 Magic 3.0 重建
 

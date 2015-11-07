@@ -2,7 +2,7 @@
 
 Name:           bcel
 Version:        6.0
-Release:        0.3.20140406svn%{svnrev}%{?dist}
+Release:        0.4.20140406svn%{svnrev}%{?dist}
 Epoch:          0
 Summary:        Byte Code Engineering Library
 License:        ASL 2.0
@@ -69,6 +69,9 @@ sed -i '\|lib/dt\.jar|s|javaHome|javaHome.substring(0, javaHome.length() - 4)|' 
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0:6.0-0.4.20140406svn1592769
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:6.0-0.3.20140406svn1592769
 - 为 Magic 3.0 重建
 

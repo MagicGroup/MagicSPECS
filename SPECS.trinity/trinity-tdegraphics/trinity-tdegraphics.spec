@@ -41,7 +41,7 @@
 
 Name:		trinity-%{tde_pkg}
 Version:	%{tde_version}
-Release:	%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:2}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:    Trinity Desktop Environment - Graphics Applications
 Group:      Productivity/Graphics/Viewers
 URL:		http://www.trinitydesktop.org/
@@ -1258,6 +1258,9 @@ popd
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-2.opt.1
+- 为 Magic 3.0 重建
+
 * Mon Feb 02 2015 Francois Andriot <francois.andriot@free.fr> - 14.0.0-2
 - Rebuild on Fedora 21 for updated libgphoto2
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/gnu/patch/?C=M;O=D"
+url="http://ftp.gnu.org/gnu/patch/?C=M&O=D"
 new1="patch-"
 new2=".tar.xz"
 downcommand="wget -q" 

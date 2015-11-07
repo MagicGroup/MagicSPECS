@@ -5,8 +5,8 @@
 %endif
 
 Name:           python-cffi
-Version:	1.2.1
-Release:	1%{?dist}
+Version:	1.3.0
+Release:	2%{?dist}
 Summary:        Foreign Function Interface for Python to call C code
 Summary(zh_CN.UTF-8): Python 调用 C 代码的外部函数接口
 License:        MIT
@@ -111,6 +111,9 @@ magic_rpm_clean.sh
 %doc doc/build/html
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 更新到 1.3.0
+
 * Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1.2.1-1
 - 更新到 1.2.1
 

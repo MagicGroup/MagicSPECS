@@ -4,8 +4,8 @@ Summary: Python module for GNU parted
 Summary(zh_CN.UTF-8): GNU parted 的 Python 模块
 Name:    pyparted
 Epoch:   1
-Version: 3.10.5
-Release: 3%{?dist}
+Version:	3.10.7
+Release:	2%{?dist}
 License: GPLv2+
 Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:3.10.7-2
+- 更新到 3.10.7
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 1:3.10.5-3
 - 为 Magic 3.0 重建
 

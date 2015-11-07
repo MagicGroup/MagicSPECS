@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.1.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Find files in a set of paths
 Group: Development/Languages
 License: MIT
@@ -61,6 +61,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.1.3-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.3-2
 - 为 Magic 3.0 重建
 

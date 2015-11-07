@@ -9,7 +9,7 @@
 Summary: Tools for creating, working with, and running Rails applications
 Name: rubygem-%{gem_name}
 Version: 4.2.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -115,6 +115,9 @@ popd
 %doc %{gem_instdir}/README.rdoc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.2.4-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.2.4-2
 - 为 Magic 3.0 重建
 

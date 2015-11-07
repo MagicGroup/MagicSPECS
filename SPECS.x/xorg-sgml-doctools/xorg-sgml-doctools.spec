@@ -1,7 +1,7 @@
 Summary: X.Org SGML documentation generation tools
 Name: xorg-sgml-doctools
 Version:	1.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: MIT
 Group: Development/Tools
 URL: http://www.x.org
@@ -33,6 +33,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.11-4
+- 为 Magic 3.0 重建
+
 * Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 1.11-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           perl-Pod-POM
 Version:	2.00
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Summary:        Object-oriented interface to Perl POD documents
 
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.00-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.00-2
 - 为 Magic 3.0 重建
 

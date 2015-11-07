@@ -1,6 +1,6 @@
 Name:           perl-accessors
 Version:        1.01
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Create accessor methods in caller's package
 Summary(zh_CN.UTF-8): 在调用者包中创建访问方法
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.01-24
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.01-23
 - 为 Magic 3.0 重建
 

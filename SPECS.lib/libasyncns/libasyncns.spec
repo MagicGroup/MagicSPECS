@@ -1,6 +1,6 @@
 Name: libasyncns
 Version: 0.8
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Asynchronous Name Service Library
 Summary(zh_CN.UTF-8): 异步名称服务库
 Group: System Environment/Libraries
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libasyncns.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.8-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.8-5
 - 为 Magic 3.0 重建
 

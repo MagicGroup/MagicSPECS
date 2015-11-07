@@ -1,6 +1,6 @@
 Name:           exec-maven-plugin
 Version:        1.3.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Exec Maven Plugin
 
 License:        ASL 2.0
@@ -58,6 +58,9 @@ find . -name *.jar -delete
 %doc LICENSE.txt
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3.2-3
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.3.2-2
 - 为 Magic 3.0 重建
 

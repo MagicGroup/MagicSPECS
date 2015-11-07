@@ -20,7 +20,7 @@
 Summary: Simple Ruby config mix-in
 Name: rubygem-%{gem_name}
 Version: 2.1.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: https://github.com/opscode/mixlib-config
@@ -98,6 +98,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.0-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.0-4
 - 为 Magic 3.0 重建
 

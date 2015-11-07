@@ -1,8 +1,8 @@
 Summary: X.Org X11 libXrender runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXrender 运行库
 Name: libXrender
-Version: 0.9.8
-Release: 1%{?dist}
+Version: 0.9.9
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xrender.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.9-2
+- 更新到 0.9.9
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.9.8-1
 - 更新到 0.9.8
 

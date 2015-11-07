@@ -16,7 +16,7 @@
 Summary:	Rspec 2 doubles (mocks and stubs)
 Name:		rubygem-%{rpmgem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.1
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.2
 
 Group:		Development/Languages
 License:	MIT
@@ -89,6 +89,9 @@ ruby -rubygems -Ilib/ -S rspec2 spec/
 %exclude	%{gem_instdir}/spec/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.14.6-5.2
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.14.6-5.1
 - 为 Magic 3.0 重建
 

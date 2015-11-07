@@ -1,8 +1,8 @@
 Summary: Command line tool for setting up authentication from network services
 Summary(zh_CN.UTF-8): 从网络服务上设置认证的命令行工具
 Name: authconfig
-Version: 6.2.8
-Release: 1%{?dist}
+Version: 6.2.10
+Release: 2%{?dist}
 License: GPLv2+
 ExclusiveOS: Linux
 Group: System Environment/Base
@@ -134,6 +134,9 @@ authconfig --update --nostart >/dev/null 2>&1 || :
 %{_datadir}/icons/hicolor/256x256/apps/system-config-authentication.*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 6.2.10-2
+- 更新到 6.2.10
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 6.2.8-1
 - 更新到 6.2.8
 

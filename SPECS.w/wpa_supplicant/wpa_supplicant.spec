@@ -8,7 +8,7 @@ Summary(zh_CN.UTF-8): WPA/WPA2/IEEE 802.1X 支持
 Name: wpa_supplicant
 Epoch: 1
 Version:	2.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: BSD
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -210,6 +210,9 @@ fi
 %endif
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:2.5-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1:2.5-2
 - 为 Magic 3.0 重建
 

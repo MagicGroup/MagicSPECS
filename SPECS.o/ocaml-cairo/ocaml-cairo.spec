@@ -1,7 +1,7 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 %define git 1
-%define vcsdate 20150305
+%define vcsdate 20151101
 
 # Important note!  There are at least two quite separate OCaml cairo
 # projects.  This one is: http://cairographics.org/cairo-ocaml/
@@ -19,7 +19,7 @@
 Name:           ocaml-cairo
 Epoch:          1
 Version:        1.2.0
-Release:        0.22.git%{vcsdate}%{?dist}
+Release:        0.24.git%{vcsdate}%{?dist}
 Summary:        OCaml library for accessing cairo graphics
 
 ExcludeArch:    sparc64 s390 s390x
@@ -119,6 +119,12 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dll*.so
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.24.git20151101
+- 更新到 20151101 日期的仓库源码
+
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.23.git20150305
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.22.git20150305
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Business-CreditCard
 Version:	0.33
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Validate/generate credit card check-sums/names
 Summary(zh_CN.UTF-8): 校验/生成信用卡校验码/名称
 License:        GPL+ or Artistic
@@ -51,6 +51,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.33-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.33-2
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary:	OpenGL Interface for Ruby
 %define gem_name ruby-opengl
 Name:		rubygem-%{gem_name}
 Version:	0.61.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Group:		Development/Languages
 License:	MIT
 URL:		http://ruby-opengl.rubyforge.org/
@@ -64,6 +64,9 @@ rm -rf %{buildroot}%{gem_docdir}
 %{gem_spec}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.61.0-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.61.0-4
 - 为 Magic 3.0 重建
 

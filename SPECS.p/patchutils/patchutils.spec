@@ -2,7 +2,7 @@ Summary: A collection of programs for manipulating patch files
 Summary(zh_CN.UTF-8): 处理补丁文件的一组程序
 Name: patchutils
 Version:	0.3.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -50,6 +50,10 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.3.3-2
+- 更新到 0.3.4.tar..&gt;</a></td><td align="right">2015-04-20 19:41 </td><td
+  align="right">287 </td><td>&nbsp;</td></tr>
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.3.3-1
 - 更新到 0.3.3
 

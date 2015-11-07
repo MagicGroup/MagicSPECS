@@ -58,7 +58,7 @@ Summary(zh_CN.UTF-8): Linux 内核
 # 对非稳定版的 rc 内核这个要添加到 rcX 或 gitX 标签后面，
 # 比如这是 3 的话 release 就是 "0.rcX.gitX.3"
 #
-%global baserelease 5
+%global baserelease 6
 %global fedora_build %{baserelease}
 
 # base_sublevel 是开始打补丁的内核基础版本，对稳定版本内核基本就是内核
@@ -70,7 +70,7 @@ Summary(zh_CN.UTF-8): Linux 内核
 
 # 是否有 -stable 的更新需要应用，一般是内核版本的第 3 个数字，
 # 如果没有，就是 %{nil}
-%define stable_update 21
+%define stable_update 23
 # 是否是 -stable 的 RC 版本，Magic 一般不使用。
 %define stable_rc 0
 # 设置 rpm 包的版本号
@@ -2453,6 +2453,9 @@ fi
 # and build.
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.21-2
+- 更新到 3.18.23
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 3.18.21-1
 - 更新到 3.18.21
 

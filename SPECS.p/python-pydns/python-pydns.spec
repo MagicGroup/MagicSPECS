@@ -2,7 +2,7 @@
 
 Name:           python-pydns
 Version:        2.3.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python module for DNS (Domain Name Service)
 Summary(zh_CN.UTF-8): DNS 的 Python 模块
 
@@ -58,6 +58,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/pydns-%{version}-py*.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.3.6-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.3.6-4
 - 为 Magic 3.0 重建
 

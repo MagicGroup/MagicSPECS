@@ -1,6 +1,6 @@
 Name: libcap
 Version: 2.24
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Library for getting and setting POSIX.1e capabilities
 Summary(zh_CN.UTF-8): 获取和设置 POSIX.1e 能力的库
 #Source: http://mirror.linux.org.au/linux/libs/security/linux-privs/libcap2/%{name}-%{version}.tar.bz2
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 rm -rf %{buildroot}
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.24-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 2.24-6
 - 为 Magic 3.0 重建
 

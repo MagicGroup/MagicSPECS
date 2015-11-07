@@ -2,7 +2,7 @@ Name:		numactl
 Summary:	Library for tuning for Non Uniform Memory Access machines
 Summary(zh_CN.UTF-8): 调整非一致内存访问机的库
 Version: 2.0.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 License:	LGPLv2/GPLv2
 Group:		System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.10-2
+- 为 Magic 3.0 重建
+
 * Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 2.0.10-1
 - 更新到 2.0.10
 

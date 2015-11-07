@@ -4,7 +4,7 @@
 Summary: Run JavaScript code from Ruby
 Name: rubygem-%{gem_name}
 Version: 2.2.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 # Public Domain: %%{gem_libdir}/execjs/support/json2.js
 License: MIT and Public Domain
@@ -65,6 +65,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.0-3
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 Summary: A Ruby interface to the PostgreSQL RDBMS
 Name: rubygem-%{gem_name}
 Version: 0.18.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 # Upstream license clarification (https://bitbucket.org/ged/ruby-pg/issue/72/)
 #
@@ -125,6 +125,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.18.2-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.18.2-2
 - 为 Magic 3.0 重建
 

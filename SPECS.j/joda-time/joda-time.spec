@@ -2,7 +2,7 @@
 
 Name:             joda-time
 Version:          2.3
-Release:          3.%{tzversion}%{?dist}
+Release:          4.%{tzversion}%{?dist}
 Summary:          Java date and time API
 
 License:          ASL 2.0
@@ -62,6 +62,9 @@ tar -xzf %{SOURCE1} -C src/main/java/org/joda/time/tz/src/
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.3-4.tzdata2013g
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 2.3-3.tzdata2013g
 - 为 Magic 3.0 重建
 

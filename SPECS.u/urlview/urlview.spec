@@ -1,6 +1,6 @@
 Name:           urlview
 Version:        0.9
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        URL extractor/launcher
 
 Group:          Applications/Internet
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/urlview.conf.5*
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.9-13
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.9-12
 - 为 Magic 3.0 重建
 

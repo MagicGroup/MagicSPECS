@@ -2,7 +2,7 @@
 
 Name: python-markupsafe
 Version:	0.23
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary: Implements a XML/HTML/XHTML Markup safe string for Python
 Summary(zh_CN.UTF-8): Python 的 XML/HTML/XHTML 标记安全字符串实现
 
@@ -101,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.23-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.23-1
 - 更新到 0.23
 

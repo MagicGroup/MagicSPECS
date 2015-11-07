@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.2.02
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library that contains the classes required to create LogStash events
 
 Group:          Development/Languages
@@ -82,6 +82,9 @@ cp -a .%{gem_dir}/* \
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.02-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.02-4
 - 为 Magic 3.0 重建
 

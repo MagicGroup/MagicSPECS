@@ -1,6 +1,6 @@
 Name:          mutter
-Version:	3.15.3
-Release:       2%{?dist}
+Version:	3.19.1
+Release:       3%{?dist}
 Summary:       Window and compositing manager based on Clutter
 Summary(zh_CN.UTF-8): 基于 Clutter 的窗口管理器
 
@@ -146,6 +146,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
+- 更新到 3.19.1
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 3.15.3-2
 - 为 Magic 3.0 重建
 

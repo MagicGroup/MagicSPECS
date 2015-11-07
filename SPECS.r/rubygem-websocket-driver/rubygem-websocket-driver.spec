@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: WebSocket protocol handler with pluggable I/O
 Group: Development/Languages
 License: MIT
@@ -91,6 +91,9 @@ popd
 %{gem_instdir}/examples
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.4-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.4-4
 - 为 Magic 3.0 重建
 

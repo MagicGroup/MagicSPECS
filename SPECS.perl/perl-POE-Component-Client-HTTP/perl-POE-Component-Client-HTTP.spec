@@ -8,7 +8,7 @@
 
 Name:           perl-POE-Component-Client-HTTP
 Version:	0.949
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A non-blocking/parallel web requests engine for POE
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -96,6 +96,9 @@ sed -i '/#!perl/d;s/\r//' pcchget.perl
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.949-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.949-1
 - 更新到 0.949
 

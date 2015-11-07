@@ -1,6 +1,6 @@
 Name:           perl-Test-Spelling
 Version:	0.20
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Check for spelling errors in POD files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/Test::Spelling.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.20-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.20-1
 - 更新到 0.20
 

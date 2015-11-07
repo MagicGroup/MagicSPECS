@@ -1,6 +1,6 @@
 Name:		SDL_net
 Version:	1.2.8
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	SDL portable network library
 Summary(zh_CN.UTF-8): SDL 可移植网络库
 
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.8-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.2.8-3
 - 为 Magic 3.0 重建
 

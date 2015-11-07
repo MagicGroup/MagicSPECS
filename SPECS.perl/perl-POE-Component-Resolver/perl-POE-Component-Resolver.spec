@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Resolver
 Version:	0.921
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Non-blocking getaddrinfo() resolver
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -f t/01-basic.t
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.921-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.921-1
 - 更新到 0.921
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Universal Ruby library to handle WebSocket protocol
 Group: Development/Languages
 License: MIT
@@ -74,6 +74,9 @@ popd
 %{gem_instdir}/websocket.gemspec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.2-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.2-5
 - 为 Magic 3.0 重建
 

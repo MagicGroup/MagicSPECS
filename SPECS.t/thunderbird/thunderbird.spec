@@ -58,7 +58,7 @@ Summary:        Mozilla Thunderbird mail/newsgroup client
 Summary(zh_CN.UTF-8): 邮件客户端
 Name:           thunderbird
 Version:        38.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 URL:            http://www.mozilla.org/projects/thunderbird/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -584,6 +584,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #===============================================================================
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 38.2.0-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 38.2.0-3
 - 为 Magic 3.0 重建
 

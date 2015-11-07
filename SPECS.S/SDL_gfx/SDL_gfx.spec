@@ -2,7 +2,7 @@ Summary: SDL graphics drawing primitives and other support functions
 Summary(zh_CN.UTF-8): SDL 图形绘制和其它功能的支持
 Name: SDL_gfx
 Version: 2.0.22
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.22-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.22-4
 - 为 Magic 3.0 重建
 

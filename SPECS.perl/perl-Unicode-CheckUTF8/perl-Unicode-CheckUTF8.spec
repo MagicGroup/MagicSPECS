@@ -12,7 +12,7 @@
 Summary:	Checks if scalar is valid UTF-8
 Name:		perl-Unicode-CheckUTF8
 Version:	1.03
-Release:	11%{?dist}
+Release:	12%{?dist}
 License:	UCD and (GPL+ or Artistic)
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Unicode-String/
@@ -68,6 +68,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Unicode::CheckUTF8.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.03-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-11
 - 为 Magic 3.0 重建
 

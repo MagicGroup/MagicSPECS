@@ -1,7 +1,7 @@
 
 Name:    compat-telepathy-farstream
 Version: 0.4.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Telepathy client library to handle Call channels
 
 License: LGPLv2+
@@ -76,6 +76,9 @@ rm -rfv %{buildroot}%{_datadir}/gtk-doc/
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.4.0-6
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.4.0-5
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:             google-%{short_name}
 Version:          2.2.4
-Release:          7%{?dist}
+Release:          8%{?dist}
 Summary:          Java lib for conversion of Java objects into JSON representation
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -60,6 +60,9 @@ sed -i 's/\r//g' LICENSE
 %doc LICENSE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.2.4-8
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.2.4-7
 - 为 Magic 3.0 重建
 

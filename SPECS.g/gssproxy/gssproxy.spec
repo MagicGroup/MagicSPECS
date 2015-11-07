@@ -1,6 +1,6 @@
 Name:		gssproxy
-Version:	0.3.1
-Release:	5%{?dist}
+Version: 0.4.1
+Release: 2%{?dist}
 Summary:	GSSAPI Proxy
 Summary(zh_CN.UTF-8): GSSAPI 代理
 
@@ -121,6 +121,9 @@ rm -rf %{buildroot}
 %systemd_postun_with_restart gssproxy.service
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.4.1-2
+- 更新到 0.4.1
+
 * Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 0.3.1-5
 - 为 Magic 3.0 重建
 

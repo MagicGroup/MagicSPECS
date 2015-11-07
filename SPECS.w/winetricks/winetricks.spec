@@ -1,11 +1,11 @@
 %define git 1
-%define vcsdate 20151020
+%define vcsdate 20151106
 
 Name: winetricks
 Summary: Quick script to install redistributable runtime libraries
 Summary(zh_CN.UTF-8): 快速安装可分发运行库的脚本
 Version: 0.0.1
-Release: 0.git%{vcsdate}.1%{?dist}.4
+Release: 0.git%{vcsdate}.1%{?dist}.6
 License: GPLv2
 URL: http://code.google.com/p/winezeug/
 Group: Applications/Emulators
@@ -50,6 +50,12 @@ rm -rf %{buildroot}
 %{_datadir}/%{name}/*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.0.1-0.git20151106.1.6
+- 更新到 20151106 日期的仓库源码
+
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.0.1-0.git20151020.1.5
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.0.1-0.git20151020.1.4
 - 更新到 20151020 日期的仓库源码
 

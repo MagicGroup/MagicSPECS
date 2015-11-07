@@ -1,6 +1,6 @@
 Name: libgcrypt
 Version: 1.6.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://www.gnupg.org/
 Source0: libgcrypt-%{version}-hobbled.tar.xz
 # The original libgcrypt sources now contain potentially patented ECC
@@ -187,6 +187,9 @@ exit 0
 %doc COPYING
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.6.1-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.6.1-3
 - 为 Magic 3.0 重建
 

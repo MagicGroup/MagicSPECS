@@ -4,7 +4,7 @@
 
 Name:	 liblastfm
 Version: 1.0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Libraries to integrate Last.fm services
 Summary(zh_CN.UTF-8): 集成 Last.fm 服务的库
 
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.3-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0.3-3
 - 更新到 1.0.3
 

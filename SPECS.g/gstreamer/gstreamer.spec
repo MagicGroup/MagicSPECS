@@ -7,7 +7,7 @@
 
 Name:           %{gstreamer}
 Version:        0.10.36
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        GStreamer streaming media framework runtime
 
 Group:          Applications/Multimedia
@@ -244,6 +244,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{_datadir}/gtk-doc/html/gstreamer-plugins-%{majorminor}
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.10.36-8
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.10.36-7
 - 为 Magic 3.0 重建
 

@@ -13,7 +13,7 @@ Name:           python-coverage
 Summary:        Code coverage testing module for Python
 Summary(zh_CN.UTF-8): Python 的代码覆盖测试模块
 Version:        4.0
-Release:        0.2.%{?prever}%{?dist}
+Release:        0.3.%{?prever}%{?dist}
 License:        BSD and (MIT or GPLv2)
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -107,6 +107,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.0-0.3.b2
+- 为 Magic 3.0 重建
+
 * Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 4.0-0.2.b11
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/gnu/bison/?C=M;O=D"
+url="http://ftp.gnu.org/gnu/bison/?C=M&O=D"
 new1="bison-"
 new2=".tar.xz"
 downcommand="wget -q" 

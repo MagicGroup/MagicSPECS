@@ -3,8 +3,8 @@
 Name:     libgtop2
 Summary:  LibGTop library (version 2)
 Summary(zh_CN.UTF-8): LibGTop 库 （版本 2）
-Version:	2.30.0
-Release:  1%{?dist}
+Version:	2.32.0
+Release:  2%{?dist}
 License:  GPLv2+
 URL:      http://download.gnome.org/sources/libgtop/2.28
 Group:    System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %exclude %{_datadir}/info
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.32.0-2
+- 更新到 2.32.0
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.30.0-1
 - 更新到 2.30.0
 

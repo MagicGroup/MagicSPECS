@@ -1,6 +1,6 @@
 Name:           adwaita-icon-theme
 Version:        3.13.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Adwaita icon theme
 Summary(zh_CN.UTF-8): Adwaita 图标主题
 
@@ -79,6 +79,9 @@ gtk-update-icon-cache %{_datadir}/icons/Adwaita &>/dev/null || :
 %{_datadir}/pkgconfig/adwaita-icon-theme.pc
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.13.3-3
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-2
 - 为 Magic 3.0 重建
 

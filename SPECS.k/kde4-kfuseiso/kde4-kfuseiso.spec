@@ -6,7 +6,7 @@ Name: kde4-kfuseiso
 Summary: KDE integration to mount CD-ROM filesystem images
 Summary(zh_CN.UTF-8): KDE 集成的挂载光驱镜像文件
 Version: %{rversion}
-Release: 0.3%{?dist}
+Release: 0.4%{?dist}
 License: GPL v2 or Later
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -66,6 +66,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20090816-0.4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 20090816-0.3
 - 为 Magic 3.0 重建
 

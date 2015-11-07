@@ -1,6 +1,6 @@
 Name:           telepathy-rakia
 Version:	0.8.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        SIP connection manager for Telepathy
 Summary(zh_CN.UTF-8): Telepathy 的 SIP 连接管理器
 
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT%{_includedir}/%{name}-0.7
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.0-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.0-1
 - 更新到 0.8.0
 

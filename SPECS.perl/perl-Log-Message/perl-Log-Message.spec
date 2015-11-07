@@ -2,7 +2,7 @@ Name:           perl-Log-Message
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.08
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Generic message storing mechanism
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:0.08-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.08-7
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 Summary:	A Fast, Enjoyable HTML Parser for Ruby
 Name:		rubygem-%{gem_name}
 Version:	0.8.6
-Release:	11%{?dist}
+Release:	12%{?dist}
 Group:		Development/Languages
 # ext/fast_xs/FastXsService.java is licensed under ASL 2.0
 License:	MIT and ASL 2.0
@@ -147,6 +147,9 @@ popd
 %{gem_docdir}/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.8.6-12
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.6-11
 - 为 Magic 3.0 重建
 

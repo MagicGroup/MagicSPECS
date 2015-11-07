@@ -1,6 +1,6 @@
 Name:           perl-Module-Install
 Version:	1.16
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Standalone, extensible Perl module installer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.16-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.16-1
 - 更新到 1.16
 

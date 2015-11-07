@@ -4,7 +4,7 @@ Summary: A high-level cross-protocol url-grabber
 Summary(zh_CN.UTF-8): 高级的跨协议的 url 抓取器
 Name: python-urlgrabber
 Version: 3.10.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 Source0: http://urlgrabber.baseurl.org/download/urlgrabber-%{version}.tar.gz
 Patch1: urlgrabber-HEAD.patch
 Patch2: BZ-1051554-speed-on-404-mirror.patch
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,root,root) %{_libexecdir}/urlgrabber-ext-down
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.10.1-9
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 3.10.1-8
 - 为 Magic 3.0 重建
 

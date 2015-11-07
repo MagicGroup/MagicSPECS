@@ -1,7 +1,7 @@
 Name:           perl-Module-ScanDeps
 Summary:        Recursively scan Perl code for dependencies
-Version:        1.19
-Release:        4%{?dist}
+Version:	1.20
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSCHUPP/Module-ScanDeps-%{version}.tar.gz 
@@ -84,6 +84,9 @@ make test
 %{_mandir}/man3/Module::ScanDeps.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.20-2
+- 更新到 1.20
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.19-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

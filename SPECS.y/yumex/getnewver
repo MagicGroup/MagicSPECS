@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/releases/y/u/yumex/?C=M;O=D"
+url="https://fedorahosted.org/releases/y/u/yumex/?C=M&O=D"
 new1="yumex-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -3,7 +3,7 @@
 Summary: Simplify the process of integration testing Rack applications
 Name: rubygem-%{gem_name}
 Version: 2.4.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/jnicklas/capybara
@@ -64,6 +64,9 @@ cp -a .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.4.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.4.1-3
 - 为 Magic 3.0 重建
 

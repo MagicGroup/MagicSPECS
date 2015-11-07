@@ -2,7 +2,7 @@ Name:                   libconfig
 Summary:                C/C++ configuration file library
 Summary(zh_CN.UTF-8): 	C/C++ 配置文件库
 Version:                1.4.9
-Release:                2%{?dist}
+Release:                3%{?dist}
 License:                LGPLv2+
 Group:                  System Environment/Libraries
 Group(zh_CN.UTF-8): 	系统环境/库
@@ -84,6 +84,9 @@ fi
 %{_infodir}/libconfig.info*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.9-3
+- 为 Magic 3.0 重建
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 1.4.9-2
 - 为 Magic 3.0 重建
 

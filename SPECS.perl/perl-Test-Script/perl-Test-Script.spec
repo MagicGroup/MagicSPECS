@@ -1,6 +1,6 @@
 Name:           perl-Test-Script
 Version:	1.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Cross-platform basic tests for scripts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.10-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.10-1
 - 更新到 1.10
 

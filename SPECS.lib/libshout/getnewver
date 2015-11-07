@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://downloads.us.xiph.org/releases/libshout/?C=M;O=D"
+url="http://downloads.us.xiph.org/releases/libshout/?C=M&O=D"
 new1="libshout-"
 new2=".tar.gz"
 downcommand="wget -q" 

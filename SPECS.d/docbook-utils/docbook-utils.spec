@@ -1,6 +1,6 @@
 Name: docbook-utils
 Version: 0.6.14
-Release: 33%{?dist}
+Release: 34%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -148,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/docbook2ps.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.6.14-34
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.6.14-33
 - 为 Magic 3.0 重建
 

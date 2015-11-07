@@ -1,6 +1,6 @@
 Name:           iw
-Version:	3.14
-Release:        2%{?dist}
+Version:	4.3
+Release:        3%{?dist}
 Summary:        A nl80211 based wireless configuration tool
 Summary(zh_CN.UTF-8): 无线配置工具
 
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.3-3
+- 更新到 4.3
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.14-2
 - 更新到 3.14
 

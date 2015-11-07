@@ -1,6 +1,6 @@
 Name: create
 Version: 0.1.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Ambiently Sharing Creativity
 Summary(zh_CN.UTF-8): 广泛共享创意
 License: GPLv2
@@ -34,6 +34,9 @@ rm -rf %{buildroot}
 %{_datadir}/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.1.3-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.1.3-3
 - 为 Magic 3.0 重建
 

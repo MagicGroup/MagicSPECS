@@ -1,6 +1,6 @@
 Name: apache-mina
 Version: 2.0.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Apache MINA
 Group: Development/Libraries
 License: ASL 2.0
@@ -94,6 +94,9 @@ sed -i \
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.7-4
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.0.7-3
 - 为 Magic 3.0 重建
 

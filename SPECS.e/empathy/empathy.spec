@@ -16,8 +16,8 @@
 %global gcr_version		2.91.4
 
 Name:		empathy
-Version:	3.12.10
-Release:	2%{?dist}
+Version:	3.12.11
+Release:	3%{?dist}
 Summary:	Instant Messaging Client for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的即时消息客户端
 
@@ -203,6 +203,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/adium/message-styles/PlanetGNOME.AdiumMessageStyle/Contents/Resources/main.css
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.12.11-3
+- 更新到 3.12.11
+
 * Tue Jul 14 2015 Liu Di <liudidi@gmail.com> - 3.12.10-2
 - 更新到 3.12.10
 

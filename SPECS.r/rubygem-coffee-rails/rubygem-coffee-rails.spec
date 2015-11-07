@@ -4,7 +4,7 @@
 Summary: Coffee Script adapter for the Rails asset pipeline
 Name: rubygem-%{gem_name}
 Version: 4.1.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/rails/coffee-rails
@@ -77,6 +77,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.1.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.1.0-3
 - 为 Magic 3.0 重建
 

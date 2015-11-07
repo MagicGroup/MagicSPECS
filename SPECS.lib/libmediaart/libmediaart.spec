@@ -1,6 +1,6 @@
 Name:           libmediaart
 Version:	0.7.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library for managing media art caches
 Summary(zh_CN.UTF-8): 管理媒体缓存的库
 
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.0-2
+- 为 Magic 3.0 重建
+
 * Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 0.7.0-1
 - 更新到 0.7.0
 

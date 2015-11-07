@@ -1,6 +1,6 @@
 Name:           wdiff
 Version:	1.2.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A front-end to GNU diff
 Summary(zh_CN.UTF-8): GNU diff 的前端
 
@@ -68,6 +68,9 @@ fi
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.2.2-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.2.2-1
 - 更新到 1.2.2
 

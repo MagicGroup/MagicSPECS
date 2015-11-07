@@ -1,6 +1,6 @@
 Name: libipt
-Version: 1.4.2
-Release: 2%{?dist}
+Version:	1.4.3
+Release:	2%{?dist}
 Summary: Intel Processor Trace Decoder Library
 Summary(zh_CN.UTF-8): Intel 处理器跟踪信息解码库
 License: BSD
@@ -65,6 +65,9 @@ ctest -V %{?_smp_mflags}
 %{_libdir}/%{name}.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.3-2
+- 更新到 1.4.3
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.4.2-2
 - 为 Magic 3.0 重建
 

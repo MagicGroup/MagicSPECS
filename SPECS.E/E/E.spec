@@ -3,7 +3,7 @@
 
 Name:		E
 Version:	1.8.001
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Equational Theorem Prover
 Group:		Applications/Engineering
 License:	GPLv2+ or LGPLv2+
@@ -89,6 +89,9 @@ diff test-results test-expected-results
 %{_mandir}/man1/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.8.001-2
+- 为 Magic 3.0 重建
+
 * Tue Sep  3 2013 Jerry James <loganjerry@gmail.com> - 1.8.001-1
 - New upstream version
 

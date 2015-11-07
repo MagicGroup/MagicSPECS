@@ -6,7 +6,7 @@
 
 Name:           pygtksourceview
 Version:        2.10.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Python bindings for gtksourceview
 Summary(zh_CN.UTF-8): gtksourceview 的 Python 绑定
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/pygtksourceview2
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.10.1-8
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 2.10.1-7
 - 为 Magic 3.0 重建
 

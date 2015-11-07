@@ -1,6 +1,6 @@
 Name:           libssh
-Version: 0.6.3
-Release: 1%{?dist}
+Version: 0.7.2
+Release: 2%{?dist}
 Summary:        A library implementing the SSH protocol
 Summary(zh_CN.UTF-8): 实现 SSH 协议的库
 License:        LGPLv2+
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 %{_libdir}/libssh_threads.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.2-2
+- 更新到 0.7.2
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.6.3-1
 - 更新到 0.6.3
 

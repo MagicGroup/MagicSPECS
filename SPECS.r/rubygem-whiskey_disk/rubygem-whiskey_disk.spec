@@ -3,7 +3,7 @@
 Summary: Ruby tool for embarrassingly fast deployments
 Name: rubygem-%{gem_name}
 Version: 0.6.24
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/flogic/whiskey_disk
@@ -85,6 +85,9 @@ popd
 %{gem_instdir}/scenarios
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.6.24-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.6.24-10
 - 为 Magic 3.0 重建
 

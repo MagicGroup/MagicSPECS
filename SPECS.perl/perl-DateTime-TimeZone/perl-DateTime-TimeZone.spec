@@ -1,6 +1,6 @@
 Name:           perl-DateTime-TimeZone
-Version:	1.93
-Release:	1%{?dist}
+Version:	1.94
+Release:	2%{?dist}
 Summary:        Time zone object base class and factory
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.94-2
+- 更新到 1.94
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.93-1
 - 更新到 1.93
 

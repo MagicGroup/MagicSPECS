@@ -1,7 +1,7 @@
 Summary: A log file analysis program
 Name: logwatch
 Version: 7.4.0
-Release: 32.20130522svn140%{?dist}
+Release: 33.20130522svn140%{?dist}
 License: MIT
 Group: Applications/System
 URL: http://www.logwatch.org/
@@ -148,6 +148,9 @@ echo "# Configuration overrides for specific logfiles/services may be placed her
 %{_mandir}/man*/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 7.4.0-33.20130522svn140
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 7.4.0-32.20130522svn140
 - 为 Magic 3.0 重建
 

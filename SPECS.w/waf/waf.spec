@@ -11,8 +11,8 @@
 %undefine prerel
 
 Name:           waf
-Version:	1.8.15
-Release:	1%{?dist}
+Version:	1.8.16
+Release:	2%{?dist}
 Summary:        A Python-based build system
 Summary(zh_CN.UTF-8): 基于 Pyhton 的编译构建系统
 Group:          Development/Tools
@@ -210,6 +210,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.8.16-2
+- 更新到 1.8.16
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.8.15-1
 - 更新到 1.8.15
 

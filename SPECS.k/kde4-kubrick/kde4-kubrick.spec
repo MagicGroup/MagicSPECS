@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): 魔方游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+ and GFDL
 URL:     https://projects.kde.org/projects/kde/kdegames/%{name}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -78,6 +78,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

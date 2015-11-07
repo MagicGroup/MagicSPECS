@@ -1,7 +1,7 @@
 %define         realname DBIx-Safe
 Name:           perl-DBIx-Safe
 Version:        1.2.5
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        Safer access to your database through a DBI database handle
 License:        BSD
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.2.5-25
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2.5-24
 - 为 Magic 3.0 重建
 

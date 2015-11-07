@@ -1,6 +1,6 @@
 Name:           babeltrace
-Version:        1.2.4
-Release:        3%{?dist}
+Version:	1.3.0
+Release:	2%{?dist}
 Summary:        Trace Viewer and Converter, mainly for the Common Trace Format
 License:        MIT and GPLv2
 URL:            http://www.efficios.com/babeltrace
@@ -119,6 +119,9 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 更新到 1.3.0
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.4-3
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@ Name:           python-pycparser
 Summary:        C parser and AST generator written in Python
 Summary(zh_CN.UTF-8): Python 编写怕 C 解析器和 AST 生成器
 Version:        2.14
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -120,6 +120,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.14-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.14-5
 - 为 Magic 3.0 重建
 

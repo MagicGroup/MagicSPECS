@@ -2,7 +2,7 @@ Summary: 	Library for reading and writing Quicktime files
 Summary(zh_CN.UTF-8): 读写 QuickTime 文件的库
 Name: 		libquicktime
 Version:	1.2.4
-Release:	7%{?dist}
+Release:	8%{?dist}
 License:	LGPLv2+
 Group: 		System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -148,6 +148,9 @@ rm -rf $RPM_BUILD_ROOT
 # --------------------------------------------------------------------
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.4-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 1.2.4-7
 - 为 Magic 3.0 重建
 

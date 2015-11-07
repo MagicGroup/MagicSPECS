@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.de.debian.org/debian/pool/main/h/hostname/?C=M;O=D"
+url="http://ftp.de.debian.org/debian/pool/main/h/hostname/?C=M&O=D"
 new1="hostname_"
 new2=".tar.gz"
 downcommand="wget -q" 

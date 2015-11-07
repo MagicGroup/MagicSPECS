@@ -2,8 +2,8 @@
 
 Summary: Bluetooth utilities
 Name: bluez
-Version: 5.28
-Release: 1%{?dist}
+Version: 5.35
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/System
 URL: http://www.bluez.org/
@@ -233,6 +233,9 @@ mkdir -p $RPM_BUILD_ROOT/%{_libdir}/bluetooth/
 /lib/udev/rules.d/97-hid2hci.rules
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.35-2
+- 更新到 5.35
+
 * Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 5.28-1
 - 更新到 5.28
 

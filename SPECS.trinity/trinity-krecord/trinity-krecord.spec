@@ -39,7 +39,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		1.16
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 Summary:        Sound recorder for KDE
 Summary(zh_CN.UTF-8): KDE 下的录音机
 
@@ -117,6 +117,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/crystalsvg || :
 %{tde_datadir}/*
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.16-1.3
+- 为 Magic 3.0 重建
+
 * Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2:1.16-1.2
 - 为 Magic 3.0 重建
 

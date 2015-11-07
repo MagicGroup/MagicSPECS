@@ -1,7 +1,7 @@
 Summary: Utilities for managing filesystem extended attributes
 Name: attr
 Version: 2.4.47
-Release: 7%{?dist}
+Release: 8%{?dist}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source: http://download.savannah.gnu.org/releases-noredirect/attr/attr-%{version}.src.tar.gz
 
@@ -132,6 +132,9 @@ magic_rpm_clean.sh
 %config(noreplace) %{_sysconfdir}/xattr.conf
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.4.47-8
+- 为 Magic 3.0 重建
+
 * Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.4.47-7
 - 为 Magic 3.0 重建
 

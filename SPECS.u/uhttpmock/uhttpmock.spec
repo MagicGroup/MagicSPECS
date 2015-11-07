@@ -8,7 +8,7 @@
 
 Name:           uhttpmock
 Version:	0.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        HTTP web service mocking library
 Summary(zh_CN.UTF-8): HTTP 网页服务模仿库
 License:        LGPLv2
@@ -87,6 +87,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.5.0-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.5.0-1
 - 更新到 0.5.0
 

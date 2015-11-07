@@ -1,6 +1,6 @@
 Name:           perl-Carp-Clan
 Version:        6.04
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl module to print improved warning messages
 Summary(zh_CN.UTF-8): 打印增强的警告信息的 Perl 模块
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 6.04-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.04-14
 - 为 Magic 3.0 重建
 

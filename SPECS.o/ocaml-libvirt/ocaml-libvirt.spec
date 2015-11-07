@@ -2,7 +2,7 @@
 
 Name:           ocaml-libvirt
 Version: 0.6.1.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        OCaml binding for libvirt
 Summary(zh_CN.UTF-8): libvirt 的 OCaml 绑定
 License:        LGPLv2+
@@ -90,6 +90,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.6.1.4-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 0.6.1.4-1
 - 更新到 0.6.1.4
 

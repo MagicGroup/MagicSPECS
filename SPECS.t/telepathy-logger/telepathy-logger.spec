@@ -1,6 +1,6 @@
 Name:           telepathy-logger
 Version:	0.8.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Telepathy framework logging daemon
 Summary(zh_CN.UTF-8): Telepathy 框架登录服务
 
@@ -105,6 +105,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &>/dev/null |
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.2-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.8.2-1
 - 更新到 0.8.2
 

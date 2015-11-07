@@ -4,7 +4,7 @@
 Summary:       Scheduler for Ruby (at, cron and every jobs)
 Name:          rubygem-%{gem_name}
 Version:       2.0.4
-Release:       10%{?dist}
+Release:       11%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://openwferu.rubyforge.org/scheduler.html
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.4-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.4-10
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary:        FastCGI Perl bindings
 # needed to properly replace/obsolete fcgi-perl
 Epoch:          1
 Version:	0.77
-Release:	2%{?dist}
+Release:	3%{?dist}
 # same as fcgi
 License:        OML
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:0.77-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:0.77-2
 - 为 Magic 3.0 重建
 

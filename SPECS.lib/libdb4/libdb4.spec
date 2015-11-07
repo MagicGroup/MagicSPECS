@@ -4,7 +4,7 @@
 Summary: The Berkeley DB database library (version 4) for C
 Name: libdb4
 Version: 4.8.30
-Release: 20%{?dist}
+Release: 21%{?dist}
 URL: http://www.oracle.com/database/berkeley-db/
 License: Sleepycat and BSD
 Group: System Environment/Libraries
@@ -392,6 +392,9 @@ chrpath -d ${RPM_BUILD_ROOT}%{_libdir}/*.so ${RPM_BUILD_ROOT}%{_bindir}/*
 %{_libdir}/%{name}/libdb_java.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.8.30-21
+- 为 Magic 3.0 重建
+
 * Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 4.8.30-20
 - 为 Magic 3.0 重建
 

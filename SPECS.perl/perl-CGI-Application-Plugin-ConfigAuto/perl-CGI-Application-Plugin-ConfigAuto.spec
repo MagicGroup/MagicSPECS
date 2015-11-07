@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-ConfigAuto
 Version:        1.33
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Easy configuration file management for CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.33-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.33-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           v4l-utils
 Version:	1.8.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Utilities for video4linux and DVB devices
 Summary(zh_CN.UTF-8): video4linux 和 DVB 设备的工具
 Group:          Applications/System
@@ -220,6 +220,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.8.1-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 1.8.1-1
 - 更新到 1.8.1
 

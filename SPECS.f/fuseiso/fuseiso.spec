@@ -3,7 +3,7 @@ BuildRequires:  fuse-devel glib2-devel
 Summary:        fuseiso is a FUSE module to mount ISO filesystem images
 Summary(zh_CN.UTF-8):	fuseiso 是一个 FUSE 的模块可以挂载 ISO 镜像文件
 Version:        20070708
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        GNU General Public License (GPL)
 Group:          Applications/System
 Group(zh_CN.UTF-8):	应用程序/系统
@@ -44,3 +44,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 
 %changelog -n fuseiso
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20070708-8
+- 为 Magic 3.0 重建
+

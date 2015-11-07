@@ -4,7 +4,7 @@
 Summary: A MIME mail parsing and generation library
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Development/Languages
 License: BSD
 URL: http://rubyforge.org/projects/rubymail
@@ -86,6 +86,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.0-13
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-12
 - 为 Magic 3.0 重建
 

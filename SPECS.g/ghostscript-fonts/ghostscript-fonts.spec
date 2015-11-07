@@ -2,7 +2,7 @@ Summary: Fonts for the Ghostscript PostScript interpreter
 Summary(zh_CN.UTF-8): Ghostscript PostScript 解释器字体
 Name: ghostscript-fonts
 Version: 5.50
-Release: 29%{?dist}
+Release: 30%{?dist}
 # Contacted Kevin Hartig, who agreed to relicense his fonts under the SIL Open Font 
 # License. Hershey fonts are under the "Hershey Font License", which is not what Fontmap 
 # says (Fontmap is wrong).
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %verify(not md5 size mtime) %{fontdir}/fonts.scale
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.50-30
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 5.50-28
 - 为 Magic 3.0 重建
 

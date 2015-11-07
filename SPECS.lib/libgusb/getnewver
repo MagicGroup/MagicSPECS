@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://people.freedesktop.org/~hughsient/releases/?C=M;O=D"
+url="http://people.freedesktop.org/~hughsient/releases/?C=M&O=D"
 new1="libgusb-"
 new2=".tar.xz"
 downcommand="wget -q" 

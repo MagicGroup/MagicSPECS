@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): C 和 C++ 的垃圾回收器
 Name:    gc
 %global base_ver 7.2
 Version: 7.2e
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -159,6 +159,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.2e-3
+- 为 Magic 3.0 重建
+
 * Fri Feb 21 2014 Rex Dieter <rdieter@fedoraproject.org> 7.2e-2
 - update Urls to match upstream project move
 

@@ -1,6 +1,6 @@
 Name:           prison
 Version:        1.1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A Qt-based barcode abstraction library
 Summary(zh_CN.UTF-8): 基于 Qt 的条码抽象库
 
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1.1-4
+- 为 Magic 3.0 重建
+
 * Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 1.1.1-3
 - 为 Magic 3.0 重建
 

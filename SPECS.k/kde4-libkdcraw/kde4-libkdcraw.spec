@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): 一个 LibRaw 库的 C++ 接口
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -83,6 +83,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

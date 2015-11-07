@@ -1,6 +1,6 @@
 Name: cfitsio
-Version: 3.360
-Release: 5%{?dist}
+Version: 3.370
+Release: 6%{?dist}
 Summary: Library for manipulating FITS data files
 Group: Development/Libraries
 License: MIT
@@ -143,6 +143,9 @@ cp -p f{,un}pack %{buildroot}%{_bindir}/
 %{_bindir}/funpack
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.370-6
+- 更新到 3.370
+
 * Sun Mar 09 2014 Liu Di <liudidi@gmail.com> - 3.360-5
 - 更新到 3.360
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://nongnu.org/libntlm/releases/?C=M;O=D"
+url="http://nongnu.org/libntlm/releases/?C=M&O=D"
 new1="libntlm-"
 new2=".tar.gz"
 downcommand="wget -q" 

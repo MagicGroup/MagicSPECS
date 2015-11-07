@@ -1,7 +1,7 @@
 Summary: Line wrapping with support for several locale setups
 Name: perl-Text-WrapI18N
 Version: 0.06
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: GPL+ or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Text-WrapI18N/
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Text::WrapI18N.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.06-22
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-21
 - 为 Magic 3.0 重建
 

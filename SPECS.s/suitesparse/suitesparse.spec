@@ -8,7 +8,7 @@
 
 Name:           suitesparse
 Version:	4.4.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A collection of sparse matrix libraries
 Summary(zh_CN.UTF-8): 稀疏矩阵库的集合
 
@@ -451,6 +451,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc Doc/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.4.5-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 4.4.5-1
 - 更新到 4.4.5
 

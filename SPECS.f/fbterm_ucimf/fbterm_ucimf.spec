@@ -2,7 +2,7 @@ Summary: Ucimf for fbterm
 Summary(zh_CN.UTF-8): Fbterm 的 Ucimf 支持
 Name: fbterm_ucimf
 Version: 0.2.9
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL+
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -38,6 +38,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.9-4
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.9-3
 - 为 Magic 3.0 重建
 

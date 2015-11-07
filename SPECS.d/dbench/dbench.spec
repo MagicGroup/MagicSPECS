@@ -1,6 +1,6 @@
 Name:           dbench
 Version:        4.0 
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Filesystem load benchmarking tool
 Summary(zh_CN.UTF-8): 文件系统载入测试工具
 
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.0-11
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 4.0-10
 - 为 Magic 3.0 重建
 

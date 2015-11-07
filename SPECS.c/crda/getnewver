@@ -2,7 +2,7 @@
 url="http://drvbp1.linux-foundation.org/~mcgrof/rel-html/crda/"
 new1="\\/crda-"
 new2=".tar.xz"
-url1="https://www.kernel.org/pub/software/network/wireless-regdb/?C=M;O=D"
+url1="https://www.kernel.org/pub/software/network/wireless-regdb/?C=M&O=D"
 new3="wireless-regdb-"
 new4=".tar.xz"
 downcommand="wget -q" 

@@ -1,6 +1,6 @@
 Name:		obconf
 Version:	2.0.4
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A graphical configuration editor for the Openbox window manager
 Summary(zh_CN.UTF-8): Openbox 窗口管理器的配置编辑器
 
@@ -71,6 +71,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.4-6
+- 为 Magic 3.0 重建
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 2.0.4-5
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary: Fast Implementation of Gruber's Markdown in C
 Name: rubygem-%{gem_name}
 Version: 2.1.7.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: ASL 1.1
 URL: http://github.com/rtomayko/rdiscount
@@ -163,6 +163,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.7.1-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.7.1-9
 - 为 Magic 3.0 重建
 

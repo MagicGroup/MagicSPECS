@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Words2Nums
 Version:        0.18
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Convert English text to numbers
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Lingua-EN-Words2Nums/
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.18-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.18-4
 - 为 Magic 3.0 重建
 

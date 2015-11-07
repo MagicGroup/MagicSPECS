@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://fribidi.org/download/?C=M;O=D"
+url="http://fribidi.org/download/?C=M&O=D"
 new1="fribidi-"
 new2=".tar.bz2"
 downcommand="wget -q" 

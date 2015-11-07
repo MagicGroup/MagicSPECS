@@ -1,7 +1,7 @@
 %define _hardened_build 1
 Name:             zfs-fuse
 Version:          0.7.0
-Release:          17%{?dist}
+Release:          18%{?dist}
 Summary:          ZFS ported to Linux FUSE
 Summary(zh_CN.UTF-8): ZFS 的 FUSE 移植
 Group:            System Environment/Base
@@ -148,6 +148,9 @@ fi
 %{_mandir}/man8/zstreamdump.8.gz
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.7.0-18
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.7.0-17
 - 为 Magic 3.0 重建
 

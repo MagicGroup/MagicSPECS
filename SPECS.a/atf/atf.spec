@@ -1,7 +1,7 @@
 Summary: Automated Testing Framework
 Name: atf
 Version: 0.20
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Tools
 URL: http://code.google.com/p/kyua/wiki/ATF
@@ -48,6 +48,9 @@ make install DESTDIR=%{buildroot} doc_DATA= \
 rm %{buildroot}%{_libdir}/libatf*.la
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.20-2
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Julio Merino <julio@meroh.net> 0.20-1
 - Update to new upstream version 0.20.
 - The atf binary package, which used to provide the deprecated binary

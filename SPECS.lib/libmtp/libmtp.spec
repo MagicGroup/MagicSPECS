@@ -2,8 +2,8 @@
 # RPM repository.
 
 Name:           libmtp
-Version:	1.1.6
-Release:        3%{?dist}
+Version:	1.1.9
+Release:        4%{?dist}
 Summary:        A software library for MTP media players
 Summary(zh_CN.UTF-8): MTP 媒体播放器的软件库
 URL:            http://libmtp.sourceforge.net/
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.9-4
+- 更新到 1.1.9
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.1.6-3
 - 更新到 1.1.6
 

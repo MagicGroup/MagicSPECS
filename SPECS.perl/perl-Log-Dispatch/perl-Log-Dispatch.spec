@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatch
-Version:	2.50
-Release:	1%{?dist}
+Version:	2.51
+Release:	2%{?dist}
 Summary:        Dispatches messages to one or more outputs
 Group:          Development/Libraries
 License:        Artistic 2.0
@@ -58,6 +58,9 @@ RELEASE_TESTING=1 LOG_DISPATCH_TEST_EMAIL="root@localhost.localdomain" \
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.51-2
+- 更新到 2.51
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.50-1
 - 更新到 2.50
 

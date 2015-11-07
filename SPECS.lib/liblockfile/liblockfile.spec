@@ -1,6 +1,6 @@
 Name:           liblockfile
-Version: 1.09
-Release:        1%{?dist}
+Version: 1.08
+Release:        2%{?dist}
 Summary:        This implements a number of functions found in -lmail on SysV systems
 
 Group:          Applications/System
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.08-2
+- 更新到 1.08
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.09-1
 - 更新到 1.09
 

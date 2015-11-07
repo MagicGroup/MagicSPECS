@@ -3,7 +3,7 @@
 Name:           polkit-kde
 Summary:        PolicyKit integration for KDE Desktop
 Version:        5.3.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 License:        GPLv2+
 URL:            https://projects.kde.org/projects/kde/workspace/polkit-kde-agent-1
@@ -77,6 +77,9 @@ mv %{buildroot}/%{_libexecdir}/polkit-kde-authentication-agent-1 \
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.3.2-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 25 2015 Daniel Vrátil <dvratil@redhat.com> - 5.3.2-1
 - Plasma 5.3.2
 

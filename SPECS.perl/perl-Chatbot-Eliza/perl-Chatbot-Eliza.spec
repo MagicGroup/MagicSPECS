@@ -1,6 +1,6 @@
 Name:           perl-Chatbot-Eliza
-Version:        1.05
-Release:        5%{?dist}
+Version:	1.06
+Release:	2%{?dist}
 Summary:        Implementation of the Eliza algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.06-2
+- 更新到 1.06
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Test-FailWarnings
 Version:        0.008
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Add test failures if warnings are caught
 License:        ASL 2.0 
 
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.008-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.008-4
 - 为 Magic 3.0 重建
 

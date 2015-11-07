@@ -2,7 +2,7 @@ Summary: Programs for accessing MS-DOS disks without mounting the disks
 Summary(zh_CN.UTF-8): 不挂载磁盘访问 MS-DOS 盘的程序
 Name: mtools
 Version: 4.0.18
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -73,6 +73,9 @@ fi
 %{_infodir}/mtools.info*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.0.18-2
+- 为 Magic 3.0 重建
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 4.0.18-1
 - 更新到 4.0.18
 

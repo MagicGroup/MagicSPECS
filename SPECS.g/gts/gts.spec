@@ -2,7 +2,7 @@
 
 Name:           gts
 Version:        0.7.6
-Release:        23.20%{snapshot}%{?dist}
+Release:        24.20%{snapshot}%{?dist}
 Summary:        GNU Triangulated Surface Library
 Summary(zh_CN.UTF-8): GNU 三角曲面库
 Group:          Applications/Engineering
@@ -107,6 +107,9 @@ make check ||:
 %{_mandir}/man1/gts-config.1*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.7.6-24.20111025
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.7.6-23.20111025
 - 为 Magic 3.0 重建
 

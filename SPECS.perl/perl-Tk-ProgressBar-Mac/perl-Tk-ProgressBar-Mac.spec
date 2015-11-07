@@ -1,6 +1,6 @@
 Name:           perl-Tk-ProgressBar-Mac
 Version:        1.2
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Mac ProgressBar for Perl::Tk
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2-15
 - 为 Magic 3.0 重建
 

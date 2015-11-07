@@ -10,7 +10,7 @@
 
 Name:		libpfm
 Version:	4.6.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Summary:	Library to encode performance events for use by perf tool
 Summary(zh_CN.UTF-8): 编码性能事件以使用 Perl 工具的库
@@ -129,6 +129,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.6.0-3
+- 为 Magic 3.0 重建
+
 * Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 4.6.0-2
 - 为 Magic 3.0 重建
 

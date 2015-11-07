@@ -37,7 +37,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:        0.8.1
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:        A FTP client for TDE.
 Summary(zh_CN.UTF-8): TDE 下的 FTP 客户端
 Group:          Applications/Internet
@@ -202,6 +202,9 @@ done
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.8.1-1.2
+- 为 Magic 3.0 重建
+
 * Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 2:0.8.1-1.1
 - 为 Magic 3.0 重建
 

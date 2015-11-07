@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Runtime
 Summary:        Catalyst Framework Runtime
-Version:        5.90101
-Release:        1%{?dist}
+Version:	5.90102
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Catalyst-Runtime-%{version}.tar.gz
@@ -182,6 +182,9 @@ make clean
 %{_mandir}/man1/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 5.90102-2
+- 更新到 5.90102
+
 * Wed Sep 09 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 5.90101-1
 - Update to 5.90101
 

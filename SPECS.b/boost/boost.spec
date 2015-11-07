@@ -36,7 +36,7 @@ Name: boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.55.0
 %define version_enc 1_55_0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{name}_%{version_enc}
@@ -1249,6 +1249,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/bjam.1*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.55.0-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 12 2014 Petr Machata <pmachata@redhat.com> - 1.55.0-5
 - Fix boost::shared_ptr<T>::operator[], which was ill-formed for
   non-array T's.  (boost-1.54.0-smart_ptr-shared_ptr_at.patch)

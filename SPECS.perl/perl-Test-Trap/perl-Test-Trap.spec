@@ -1,6 +1,6 @@
 Name:           perl-Test-Trap
 Version:	0.3.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Trap exit codes, exceptions, output, etc
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.2-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.3.2-1
 - 更新到 0.3.2
 

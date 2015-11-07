@@ -2,8 +2,8 @@
 %global pkgdatadir      %{_datadir}/dpkg
 
 Name:           dpkg
-Version:	1.18.2
-Release:        1%{?dist}
+Version:	1.18.3
+Release:        2%{?dist}
 Summary:        Package maintenance system for Debian Linux
 Group:          System Environment/Base
 # The entire source code is GPLv2+ with exception of the following
@@ -89,7 +89,7 @@ there are the following modules:
   - Dpkg::IPC: spawn sub-processes and feed/retrieve data
   - Dpkg::Substvars: substitute variables in strings
   - Dpkg::Vendor: identify current distribution vendor
-  - Dpkg::Version:	1.18.2
+  - Dpkg::Version:	1.18.3
 
 %package -n dselect
 Summary:  Debian package management front-end
@@ -315,6 +315,9 @@ create_logfile
 %{_datadir}/locale/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.18.3-2
+- 更新到 1.18.3
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.18.2-1
 - 更新到 1.18.2
 

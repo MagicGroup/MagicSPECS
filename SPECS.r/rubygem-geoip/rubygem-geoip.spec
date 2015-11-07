@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.5.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Search a GeoIP database for an IP address
 Group: Development/Languages
 License: LGPLv2+
@@ -95,6 +95,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.5.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.5.0-3
 - 为 Magic 3.0 重建
 

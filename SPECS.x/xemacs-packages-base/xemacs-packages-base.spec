@@ -4,7 +4,7 @@
 
 Name:           xemacs-packages-base
 Version:        20150919
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Base lisp packages for XEmacs
 
 Group:          Applications/Editors
@@ -97,6 +97,9 @@ sed -i -e 's/^\(.*\(\.ja\|-ja\.texi\)\)$/%lang(ja) \1/' base-files
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 20150919-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 20150919-2
 - 为 Magic 3.0 重建
 

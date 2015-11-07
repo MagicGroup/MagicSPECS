@@ -1,6 +1,6 @@
 Name:          gjs
-Version:	1.40.0
-Release:       1%{?dist}
+Version:	1.44.0
+Release:       2%{?dist}
 Summary:       Javascript Bindings for GNOME
 Summary(zh_CN.UTF-8): GNOME 的 Javascipt 绑定
 
@@ -87,6 +87,9 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.44.0-2
+- 更新到 1.44.0
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1.40.0-1
 - 更新到 1.40.0
 

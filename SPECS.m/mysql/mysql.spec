@@ -1,6 +1,6 @@
 Name: mysql
 Version: 5.5.25a
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -693,6 +693,9 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.5.25a-7
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 5.5.25a-6
 - 为 Magic 3.0 重建
 

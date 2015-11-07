@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.thekelleys.org.uk/dnsmasq/?C=M;O=D"
+url="http://www.thekelleys.org.uk/dnsmasq/?C=M&O=D"
 new1="dnsmasq-"
 new2=".tar.xz"
 downcommand="wget -q" 

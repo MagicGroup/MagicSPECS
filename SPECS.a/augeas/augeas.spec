@@ -1,6 +1,6 @@
 Name:           augeas
 Version:	1.4.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library for changing configuration files
 Summary(zh_CN.UTF-8): 一个更改配置文件的库
 
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/augeas.pc
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.4.0-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.4.0-1
 - 更新到 1.4.0
 

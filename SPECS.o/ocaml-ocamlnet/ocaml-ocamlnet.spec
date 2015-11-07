@@ -11,7 +11,7 @@
 
 Name:           ocaml-ocamlnet
 Version: 4.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Network protocols for OCaml
 Summary(zh_CN.UTF-8): OCaml 的网络协议库
 License:        BSD
@@ -246,6 +246,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.0.2-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 4.0.2-1
 - 更新到 4.0.2
 

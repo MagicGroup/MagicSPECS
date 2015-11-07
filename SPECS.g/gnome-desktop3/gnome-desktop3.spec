@@ -7,8 +7,8 @@
 Summary: Shared code among gnome-panel, gnome-session, nautilus, etc
 Summary(zh_CN.UTF-8): gnome-panel, gnome-session, nautils 等包共享的代码
 Name: gnome-desktop3
-Version:	3.12.0
-Release: 1%{?dist}
+Version:	3.19.1
+Release: 2%{?dist}
 URL: http://www.gnome.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0: http://download.gnome.org/sources/gnome-desktop/%{majorver}/gnome-desktop-%{version}.tar.xz
@@ -112,6 +112,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc/html/gnome-desktop3/
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
+- 更新到 3.19.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

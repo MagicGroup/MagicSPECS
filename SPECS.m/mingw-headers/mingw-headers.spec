@@ -20,7 +20,7 @@
 
 Name:           mingw-headers
 Version:        3.9.999
-Release:        0.2.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
+Release:        0.3.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
 Summary:        Win32/Win64 header files
 
 License:        Public Domain and LGPLv2+ and ZPLv2.1
@@ -124,6 +124,9 @@ rm -f $RPM_BUILD_ROOT%{mingw64_includedir}/pthread_unistd.h
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.9.999-0.3.trunk.git.b08afb.20140912
+- 为 Magic 3.0 重建
+
 * Mon Oct 13 2014 Liu Di <liudidi@gmail.com> - 3.9.999-0.2.trunk.git.b08afb.20140912
 - 为 Magic 3.0 重建
 

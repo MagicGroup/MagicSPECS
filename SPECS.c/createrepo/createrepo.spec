@@ -16,7 +16,7 @@ Summary: Creates a common metadata repository
 Summary(zh_CN.UTF-8): 建立 YUM 仓库的程序
 Name: createrepo
 Version: 0.10.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/createrepo
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.10.3-2
+- 为 Magic 3.0 重建
+
 * Wed Jan 29 2014 Zdenek Pavlas <zpavlas@redhat.com> - 0.10.3-1
 - Update to latest HEAD
 - Support API users that set pkglist=<package sack>. BZ 1058975

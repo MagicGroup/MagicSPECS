@@ -4,7 +4,7 @@ Summary: X.Org X11 X authority utilities
 Summary(zh_CN.UTF-8): X.Org X11 X 认证工具
 Name: xorg-x11-%{pkgname}
 Version:	1.0.9
-Release:	2%{?dist}
+Release:	3%{?dist}
 # NOTE: Remove Epoch line if package gets renamed
 Epoch: 1
 License: MIT
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xauth.1*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:1.0.9-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:1.0.9-2
 - 更新到 1.0.9
 

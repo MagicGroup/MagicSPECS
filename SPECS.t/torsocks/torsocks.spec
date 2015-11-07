@@ -1,6 +1,6 @@
 Name:              torsocks
 Version:           2.1.0
-Release:           3%{?dist}
+Release:           4%{?dist}
 
 Summary:           Use SOCKS-friendly applications with Tor
 Summary(zh_CN.UTF-8): 利用 Tor 使用可用 SOCKS 代理的应用程序
@@ -69,6 +69,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.0-4
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 2.1.0-3
 - 为 Magic 3.0 重建
 

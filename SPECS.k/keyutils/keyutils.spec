@@ -9,7 +9,7 @@
 Summary: Linux Key Management Utilities
 Name: keyutils
 Version: %{version}
-Release: 2%{?buildid}%{?dist}
+Release: 3%{?buildid}%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Base
 ExclusiveOS: Linux
@@ -108,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.5.9-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.5.9-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           dtc
 Version:        1.3.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Device Tree Compiler
 Summary(zh_CN.UTF-8): 设备树编译器
 Group:          Development/Tools
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/ldconfig
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3.0-6
+- 为 Magic 3.0 重建
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

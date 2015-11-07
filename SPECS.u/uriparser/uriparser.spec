@@ -4,7 +4,7 @@
 
 Name:           uriparser
 Version:	0.8.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        URI parsing library - RFC 3986
 Summary(zh_CN.UTF-8): URI 解析库 - RFC 3986
 
@@ -95,6 +95,9 @@ fi
 %{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.8.4-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0.8.4-1
 - 更新到 0.8.4
 

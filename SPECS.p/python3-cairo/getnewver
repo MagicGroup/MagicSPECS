@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://cairographics.org/releases/?C=M;O=D"
+url="http://cairographics.org/releases/?C=M&O=D"
 new1="pycairo-"
 new2=".tar.bz2"
 downcommand="wget -q" 

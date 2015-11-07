@@ -1,6 +1,6 @@
 Name:           perl-MCE
 Version:        1.608
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Many-core Engine for Perl providing parallel processing capabilities
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/MCE/
@@ -94,6 +94,9 @@ make test
 %{_bindir}/mce_grep
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.608-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.608-4
 - 为 Magic 3.0 重建
 

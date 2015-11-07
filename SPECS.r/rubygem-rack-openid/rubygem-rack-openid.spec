@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.4.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Provides a more HTTPish API around the ruby-openid library
 Group: Development/Languages
 License: MIT
@@ -90,6 +90,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4.2-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.2-4
 - 为 Magic 3.0 重建
 

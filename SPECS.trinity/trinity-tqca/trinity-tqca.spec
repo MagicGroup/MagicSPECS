@@ -31,7 +31,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	TQt Cryptographic Architecture
 Summary(zh_CN.UTF-8): TQt 加密架构
 Group:		Development/Libraries
@@ -170,6 +170,9 @@ unset QTDIR QTINC QTLIB
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.0-1.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:1.0-1.1
 - 为 Magic 3.0 重建
 

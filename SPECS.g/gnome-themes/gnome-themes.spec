@@ -2,7 +2,7 @@ Summary: Themes for GNOME
 Summary(zh_CN.UTF-8): GNOME 主题 
 Name: gnome-themes
 Version: 2.32.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 URL: http://download.gnome.org/sources/gnome-themes/
 #VCS: git:git://git.gnome.org/gnome-themes
 Source: http://download.gnome.org/sources/gnome-themes/2.32/%{name}-%{version}.tar.bz2
@@ -140,6 +140,9 @@ done
 %files legacy -f legacy.txt
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.32.0-9
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.32.0-8
 - 为 Magic 3.0 重建
 

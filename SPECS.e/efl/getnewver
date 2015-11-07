@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://download.enlightenment.org/rel/libs/efl/?C=M;O=D"
+url="https://download.enlightenment.org/rel/libs/efl/?C=M&O=D"
 new1="efl-"
 new2=".tar.xz"
 downcommand="wget -q" 

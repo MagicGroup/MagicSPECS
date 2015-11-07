@@ -1,6 +1,6 @@
 Name:           scim-anthy
 Version:        1.2.7
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 License:        GPLv2+
 URL:            http://scim-imengine.sourceforge.jp/
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.7-10
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.2.7-9
 - 为 Magic 3.0 重建
 

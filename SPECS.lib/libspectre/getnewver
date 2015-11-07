@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://libspectre.freedesktop.org/releases/?C=M;O=D"
+url="http://libspectre.freedesktop.org/releases/?C=M&O=D"
 new1="libspectre-"
 new2=".tar.gz"
 downcommand="wget -q" 

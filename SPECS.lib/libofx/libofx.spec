@@ -1,7 +1,7 @@
 Summary: A library for supporting Open Financial Exchange (OFX)
 Name: libofx
 Version: 0.9.9
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://libofx.sourceforge.net/
 Group:	System Environment/Libraries
 License: GPLv2+
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/lib*.la $RPM_BUILD_ROOT%{_datadir}/doc
 %{_libdir}/libofx.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.9-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 0.9.9-4
 - 更新到 0.9.9
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/libevdev/?C=M;O=D"
+url="http://www.freedesktop.org/software/libevdev/?C=M&O=D"
 new1="libevdev-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,6 +1,6 @@
 Name: docbook5-style-xsl
-Version: 1.78.1
-Release: 1%{?dist}
+Version: 1.79.0
+Release: 2%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -90,6 +90,9 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.79.0-2
+- 更新到 1.79.0
+
 * Fri Mar 21 2014 Liu Di <liudidi@gmail.com> - 1.78.1-1
 - 更新到 1.78.1
 

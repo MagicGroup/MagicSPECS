@@ -1,6 +1,6 @@
 Name:           mate-sensors-applet
-Version:        1.8.0
-Release:        4%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 Summary:        MATE panel applet for hardware sensors
 Summary(zh_CN.UTF-8): 硬件传感器的 MATE 面板小部件
 Group:          User Interface/Desktops
@@ -110,6 +110,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-4
 - 为 Magic 3.0 重建
 

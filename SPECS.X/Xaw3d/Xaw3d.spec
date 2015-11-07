@@ -2,7 +2,7 @@ Summary: A version of the MIT Athena widget set for X
 Summary(zh_CN.UTF-8): X 下的 MIT Athena 部件集合
 Name: Xaw3d
 Version:	1.6.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Source: http://xorg.freedesktop.org/archive/individual/lib/libXaw3d-%{version}.tar.bz2
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/X11/Xaw3d
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.6.2-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.6.2-1
 - 更新到 1.6.2
 

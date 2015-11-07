@@ -41,7 +41,7 @@
 
 Name:			trinity-%{tde_pkg}
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:		Internationalization support for Trinity
 Summary(zh_CN.UTF-8):   Trinity 的国际化支持
 Group:			User Interface/Desktops
@@ -198,6 +198,9 @@ find "%{buildroot}%{tde_tdedocdir}/HTML" -size 0 -exec rm -f {} \;
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.2
+- 为 Magic 3.0 重建
+
 * Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 14.0.0-1.1
 - 为 Magic 3.0 重建
 

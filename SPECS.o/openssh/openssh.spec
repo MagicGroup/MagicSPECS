@@ -73,7 +73,7 @@
 Summary: An open source implementation of SSH protocol versions 1 and 2
 Name: openssh
 Version: %{openssh_ver}
-Release: %{openssh_rel}%{?dist}%{?rescue_rel}.2
+Release: %{openssh_rel}%{?dist}%{?rescue_rel}.3
 URL: http://www.openssh.com/portable.html
 #URL1: http://pamsshagentauth.sourceforge.net
 Source0: ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
@@ -314,7 +314,7 @@ Requires: openssh = %{version}-%{release}
 Summary: PAM module for authentication with ssh-agent
 Group: System Environment/Base
 Version: %{pam_ssh_agent_ver}
-Release: %{pam_ssh_agent_rel}.%{openssh_rel}%{?dist}%{?rescue_rel}.3
+Release: %{pam_ssh_agent_rel}.%{openssh_rel}%{?dist}%{?rescue_rel}.4
 License: BSD
 
 %description
@@ -770,6 +770,9 @@ getent passwd sshd >/dev/null || \
 %endif
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 6.8p1-3.3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 6.8p1-3.2
 - 为 Magic 3.0 重建
 

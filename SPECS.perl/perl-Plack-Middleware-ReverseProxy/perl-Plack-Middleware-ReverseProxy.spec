@@ -1,6 +1,6 @@
 Name:           perl-Plack-Middleware-ReverseProxy
 Version:        0.15
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Supports app to run as a reverse proxy back-end
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.15-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.15-7
 - 为 Magic 3.0 重建
 

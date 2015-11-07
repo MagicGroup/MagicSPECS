@@ -1,6 +1,6 @@
 Name:           perl-Variable-Magic
-Version:	0.58
-Release:	1%{?dist}
+Version:	0.59
+Release:	2%{?dist}
 Summary:        Associate user-defined magic to variables from Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.59-2
+- 更新到 0.59
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.58-1
 - 更新到 0.58
 

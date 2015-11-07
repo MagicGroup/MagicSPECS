@@ -5,11 +5,11 @@
 %define JAVA 0
 
 Name:           libbluray
-Version: 0.6.0
+Version: 0.9.0
 %if %{snapshot}
-Release:        0.9.%{tarball_date}git%{git_short}%{?dist}
+Release:        0.10.%{tarball_date}git%{git_short}%{?dist}
 %else
-Release:        3%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        Library to access Blu-Ray disks for video playback 
 Summary(zh_CN.UTF-8): 为视频回放访问蓝光光盘的库
@@ -179,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.0-4
+- 更新到 0.9.0
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.6.0-3
 - 更新到 0.6.0
 

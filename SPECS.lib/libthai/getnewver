@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://linux.thai.net/pub/thailinux/software/libthai/?C=M;O=D"
+url="http://linux.thai.net/pub/thailinux/software/libthai/?C=M&O=D"
 new1="libthai-"
 new2=".tar.gz"
 downcommand="wget -q" 

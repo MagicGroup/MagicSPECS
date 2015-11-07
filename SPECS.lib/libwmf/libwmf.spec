@@ -2,7 +2,7 @@ Summary: Windows MetaFile Library
 Summary(zh_CN.UTF-8): Windows 元文件库
 Name: libwmf
 Version: 0.2.8.4
-Release: 33%{?dist}
+Release: 34%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 #libwmf is under the LGPLv2+, however...
@@ -179,6 +179,9 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.2.8.4-34
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.2.8.4-33
 - 为 Magic 3.0 重建
 

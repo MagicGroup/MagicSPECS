@@ -1,7 +1,7 @@
 # %global         git_commit f2ca6ae
 Name:           kde-plasma-nm
 Version:        0.9.3.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Plasma applet written in QML for managing network connections
 License:        LGPLv2+ and GPLv2+
 URL:            https://projects.kde.org/projects/kde/workspace/plasma-nm/
@@ -237,6 +237,9 @@ fi
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.9.3.5-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 04 2015 Liu Di <liudidi@gmail.com> - 0.9.3.5-5
 - 为 Magic 3.0 重建
 

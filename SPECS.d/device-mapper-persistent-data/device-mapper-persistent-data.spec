@@ -4,8 +4,8 @@
 Summary: Device-mapper thin provisioning tools
 Summary(zh_CN.UTF-8):  设备映射器自动精简配置工具
 Name: device-mapper-persistent-data
-Version: 0.3.2
-Release: 3%{?dist}
+Version: 0.5.6
+Release: 4%{?dist}
 License: GPLv3+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 %{_datadir}/man/man8/thin_rmap.8.gz
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.6-4
+- 更新到 0.5.6
+
 * Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.3.2-3
 - 更新到 0.3.2
 

@@ -5,7 +5,7 @@
 Summary: Ruby interface to the VMware vSphere API
 Name: rubygem-%{gem_name}
 Version: 1.8.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/vmware/rbvmomi
@@ -103,6 +103,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.8.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.8.1-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Fast Assembly MPEG Encoding library
 Summary(zh_CN.UTF-8): 快速汇编MPEG编码库
 Name: libfame
 Version: 0.9.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -127,6 +127,9 @@ autoreconf --force --install
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.1-7
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.9.1-6
 - 为 Magic 3.0 重建
 

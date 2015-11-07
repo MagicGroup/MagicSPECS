@@ -20,8 +20,8 @@
 
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
-Version: 2.3.3
-Release: 1%{?gitver}%{?dist}
+Version: 2.3.5
+Release: 2%{?gitver}%{?dist}
 License: BSD
 Group: System Environment/Base
 URL: http://www.corosync.org/
@@ -331,6 +331,9 @@ The Corosync Cluster Engine APIs.
 %{_mandir}/man8/quorum_overview.8*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.3.5-2
+- 更新到 2.3.5
+
 * Tue Jan 14 2014 Jan Friesse <jfriesse@redhat.com> - 2.3.3-1
 - New upstream release
 

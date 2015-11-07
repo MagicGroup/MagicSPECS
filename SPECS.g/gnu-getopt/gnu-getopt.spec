@@ -30,7 +30,7 @@
 
 Name:           gnu-getopt
 Version:        1.0.14
-Release:        8%{?dist}
+Release:        9%{?dist}
 Epoch:          0
 Summary:        Java getopt implementation
 License:        LGPLv2+
@@ -99,6 +99,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 %{_javadocdir}/%{name}
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0:1.0.14-9
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0:1.0.14-8
 - 为 Magic 3.0 重建
 

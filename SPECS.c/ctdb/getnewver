@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://ftp.samba.org/pub/ctdb/?C=M;O=D"
+url="https://ftp.samba.org/pub/ctdb/?C=M&O=D"
 new1="ctdb-"
 new2=".tar.gz"
 downcommand="wget -q" 

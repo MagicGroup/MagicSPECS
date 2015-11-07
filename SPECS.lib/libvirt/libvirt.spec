@@ -382,8 +382,8 @@
 
 Summary: Library providing a simple virtualization API
 Name: libvirt
-Version: 1.2.20
-Release: 3%{?dist}
+Version: 1.2.21-rc1
+Release: 2%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -2236,6 +2236,9 @@ exit 0
 %doc examples/systemtap
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
+- 更新到 1.2.21-rc1
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 1.2.20-3
 - 为 Magic 3.0 重建
 

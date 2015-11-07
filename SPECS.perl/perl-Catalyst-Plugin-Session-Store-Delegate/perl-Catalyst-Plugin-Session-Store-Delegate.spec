@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Session-Store-Delegate
 Version:        0.06
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Delegate session storage to an application model object
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-17
 - 为 Magic 3.0 重建
 

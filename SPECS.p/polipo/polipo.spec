@@ -1,6 +1,6 @@
 Name:           polipo
 Version:	1.1.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Lightweight caching web proxy
 Summary(zh_CN.UTF-8): 轻量级的 Web 缓存代理
 License:        MIT
@@ -148,6 +148,9 @@ fi
 %attr(0755,%{name},%{name}) %dir %{_localstatedir}/run/%{name}
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.1-2
+- 为 Magic 3.0 重建
+
 * Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 1.1.1-1
 - 更新到 1.1.1
 

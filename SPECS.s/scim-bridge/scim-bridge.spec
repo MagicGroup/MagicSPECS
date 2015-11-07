@@ -6,7 +6,7 @@
 Name:           scim-bridge
 
 Version:        0.4.16
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        SCIM Bridge Gtk IM module
 Summary(zh_CN.UTF-8): SCIM 桥椄 Gtk 输入法模块
 
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.16-14
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 0.4.16-13
 - 为 Magic 3.0 重建
 

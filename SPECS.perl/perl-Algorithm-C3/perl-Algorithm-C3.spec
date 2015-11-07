@@ -1,6 +1,6 @@
 Name:		perl-Algorithm-C3
 Version:	0.10
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Module for merging hierarchies using the C3 algorithm
 Summary(zh_CN.UTF-8): 使用 C3 算法合并层次的模块
 License:	GPL+ or Artistic
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Algorithm::C3.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.10-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-3
 - 为 Magic 3.0 重建
 

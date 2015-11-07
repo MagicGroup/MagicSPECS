@@ -5,7 +5,7 @@
 
 Name:           perl-AnyEvent
 Version:	7.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Framework for multiple event loops
 Summary(zh_CN.UTF-8): 多种事件循环的框架
 Group:          Development/Libraries
@@ -153,6 +153,9 @@ export PERL_ANYEVENT_LOOP_TESTS=1
 %{_mandir}/man3/AnyEvent::Impl::UV.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 7.11-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 7.11-3
 - 为 Magic 3.0 重建
 

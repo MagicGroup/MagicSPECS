@@ -1,7 +1,7 @@
 Name:           perl-Module-Starter
 Epoch:          1
 Version:	1.71
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A simple starter kit for any module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -64,6 +64,9 @@ make test
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:1.71-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:1.71-1
 - 更新到 1.71
 

@@ -4,7 +4,7 @@
 Summary: Free reimplementation of the OpenDivX video codec
 Name: xvidcore
 Version: 1.3.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: XviD
 Group: System Environment/Libraries
 Source0: http://downloads.xvid.org/downloads/%{name}-%{version}.tar.gz
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 %{_includedir}/xvid.h
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.3.3-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.3-2
 - 为 Magic 3.0 重建
 

@@ -8,8 +8,8 @@
 %global pylib_version 1.4.17
 
 Name:           pytest
-Version:	2.7.2
-Release:	1%{?dist}
+Version:	2.8.2
+Release:	2%{?dist}
 Summary:        Simple powerful testing with Python
 Summary(zh_CN.UTF-8): Python 的简单强力的测试模块
 
@@ -177,6 +177,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.8.2-2
+- 更新到 2.8.2
+
 * Mon Aug 17 2015 Liu Di <liudidi@gmail.com> - 2.7.2-1
 - 更新到 2.7.2
 

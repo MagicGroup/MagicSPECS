@@ -3,8 +3,8 @@
 %define WITH_SELINUX 0
 
 Name: libuser
-Version: 0.60
-Release: 1%{?dist}
+Version: 0.62
+Release: 2%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: LGPLv2+
@@ -129,6 +129,9 @@ python -c "import libuser"
 %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.62-2
+- 更新到 0.62
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.60-1
 - 更新到 0.60
 

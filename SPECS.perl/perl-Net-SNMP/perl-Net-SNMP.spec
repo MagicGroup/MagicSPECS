@@ -1,6 +1,6 @@
 Name:           perl-Net-SNMP
 Version:	6.0.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:        Object oriented interface to SNMP
 
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.0.1-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 6.0.1-7
 - 为 Magic 3.0 重建
 

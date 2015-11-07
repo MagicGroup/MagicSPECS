@@ -1,6 +1,6 @@
 Name:		xcb-util-renderutil
 Version:	0.3.9
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Convenience functions for the Render extension
 Summary(zh_CN.UTF-8): 基于 libxcb 的 Render 扩展
 Group:		System Environment/Libraries
@@ -67,6 +67,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.3.9-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.3.9-1
 - 更新到 0.3.9
 

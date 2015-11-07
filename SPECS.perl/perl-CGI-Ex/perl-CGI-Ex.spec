@@ -1,6 +1,6 @@
 Name:           perl-CGI-Ex
-Version:	2.42
-Release:	1%{?dist}
+Version:	2.44
+Release:	2%{?dist}
 Summary:        CGI utility suite - makes powerful application writing fun and easy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.44-2
+- 更新到 2.44
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.42-1
 - 更新到 2.42
 

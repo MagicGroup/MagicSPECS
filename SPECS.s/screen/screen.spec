@@ -4,7 +4,7 @@ Summary: A screen manager that supports multiple logins on one terminal
 Summary(zh_CN.UTF-8): 在一个终端支持多重登录的屏幕管理器
 Name: screen
 Version:	4.3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 系统环境/库
@@ -140,6 +140,9 @@ fi
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.3.1-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 4.3.1-1
 - 更新到 4.3.1
 

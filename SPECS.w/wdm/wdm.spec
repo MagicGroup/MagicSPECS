@@ -1,6 +1,6 @@
 Name:           wdm
 Version:        1.28
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        WINGs Display Manager
 Summary(zh_CN.UTF-8): WINGs 会话管理器
 
@@ -175,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.28-15
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.28-14
 - 为 Magic 3.0 重建
 

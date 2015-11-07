@@ -1,6 +1,6 @@
 Name:           vamp-plugin-sdk
 Version:	2.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        An API for audio analysis and feature extraction plugins
 Summary(zh_CN.UTF-8): 音频分析和特征提取插件的 API
 
@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.6-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 2.6-1
 - 更新到 2.6
 

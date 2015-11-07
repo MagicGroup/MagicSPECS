@@ -4,8 +4,8 @@
 %global  _python_bytecompile_errors_terminate_build 0
 
 Name:      geany
-Version:	1.23.1
-Release:   1%{?dist}
+Version:	1.25
+Release:   2%{?dist}
 Summary:   A fast and lightweight IDE using GTK2
 Summary(zh_CN.UTF-8): 一个使用 GTK2 开发的快速轻量级 IDE
  
@@ -160,6 +160,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/geany.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.25-2
+- 更新到 1.25
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 1.23.1-1
 - 更新到 1.23.1
 

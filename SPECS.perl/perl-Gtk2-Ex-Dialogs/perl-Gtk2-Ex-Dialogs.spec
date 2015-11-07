@@ -1,6 +1,6 @@
 Name:           perl-Gtk2-Ex-Dialogs
 Version:        0.11
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Useful tools for Gnome2/Gtk2 Perl GUI design
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-20
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-19
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ Summary(zh_CN.UTF-8): 多重包的工具
 Name:		scl-utils
 Epoch:		1
 Version:	2.0.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
@@ -89,6 +89,9 @@ rm -rf %buildroot
 %{_rpmconfigdir}/brp-scl-python-bytecompile
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1:2.0.1-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1:2.0.1-1
 - 更新到 2.0.1
 

@@ -3,7 +3,7 @@
 %define version 3.6.2
 %define testver %{nil}
 %if 0%{testver}
-%define release 0.%{testver}.1%{?dist}.5
+%define release 0.%{testver}.1%{?dist}.6
 %else
 %define release 1%{?dist}
 %endif
@@ -63,6 +63,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/locale/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.6.2-1
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 3.6.2-1
 - 为 Magic 3.0 重建
 

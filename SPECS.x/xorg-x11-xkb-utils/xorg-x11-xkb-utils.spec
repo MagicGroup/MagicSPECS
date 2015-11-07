@@ -9,7 +9,7 @@ Summary: X.Org X11 xkb utilities
 Summary(zh_CN.UTF-8): X.Org X11 xkb 工具
 Name: xorg-x11-xkb-utils
 Version: 7.5
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -121,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xkbwatch.*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.5-10
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 7.5-9
 - 为 Magic 3.0 重建
 

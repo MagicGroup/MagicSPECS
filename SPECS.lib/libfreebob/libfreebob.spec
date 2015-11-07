@@ -2,7 +2,7 @@ Summary:       FreeBoB firewire audio driver library
 Summary(zh_CN.UTF-8): FreeBoB 火线音频驱动
 Name:          libfreebob
 Version:       1.0.11
-Release:       11%{?dist}
+Release:       12%{?dist}
 License:       GPLv2+
 Group:         System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.11-12
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.0.11-11
 - 为 Magic 3.0 重建
 

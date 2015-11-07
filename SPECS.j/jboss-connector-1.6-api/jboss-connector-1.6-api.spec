@@ -3,7 +3,7 @@
 
 Name:             jboss-connector-1.6-api
 Version:          1.0.1
-Release:          0.7%{namedreltag}%{?dist}
+Release:          0.8%{namedreltag}%{?dist}
 Summary:          Connector Architecture 1.6 API
 Group:            Development/Libraries
 License:          CDDL or GPLv2 with exceptions
@@ -77,6 +77,9 @@ cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc LICENSE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.1-0.8.20120310git9dc9a5
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0.1-0.7.20120310git9dc9a5
 - 为 Magic 3.0 重建
 

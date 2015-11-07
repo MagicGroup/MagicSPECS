@@ -2,7 +2,7 @@ Summary:	Decode camera RAW files
 Summary(zh_CN.UTF-8): 解码数码相机的 RAW 文件
 Name:		libopenraw
 Version: 	0.0.9
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv3+
 URL:		http://libopenraw.freedesktop.org/wiki
 Source0:	http://libopenraw.freedesktop.org/download/%{name}-%{version}.tar.bz2
@@ -147,6 +147,9 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 %{_libdir}/gdk-pixbuf-2.0/*/loaders/*.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.9-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.0.9-2
 - 为 Magic 3.0 重建
 

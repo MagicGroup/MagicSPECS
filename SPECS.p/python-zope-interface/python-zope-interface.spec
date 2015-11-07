@@ -7,8 +7,8 @@
 
 
 Name:		python-zope-interface
-Version:	4.1.2
-Release:	3%{?dist}
+Version:	4.1.3
+Release:	2%{?dist}
 Summary:	Zope 3 Interface Infrastructure
 Summary(zh_CN.UTF-8): Zope 3 界面
 Group:		Development/Libraries
@@ -137,6 +137,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.1.3-2
+- 更新到 4.1.3
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.1.2-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           libhbaapi
 Version:        2.2.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        SNIA HBAAPI library
 Summary(zh_CN.UTF-8): SNIA HBAAPI 库
 Group:          System Environment/Libraries
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.2.9-9
+- 为 Magic 3.0 重建
+
 * Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 2.2.9-8
 - 为 Magic 3.0 重建
 

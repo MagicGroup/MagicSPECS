@@ -1,6 +1,6 @@
 Name:           libevent
-Version: 2.0.21
-Release:        2%{?dist}
+Version: 2.0.22
+Release:        3%{?dist}
 Summary:        Abstract asynchronous event notification library
 Summary(zh_CN.UTF-8): 抽象异步事件通知库
 
@@ -104,6 +104,9 @@ magic_rpm_clean.sh
 %{_docdir}/%{name}-devel-%{version}/sample/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.0.22-3
+- 更新到 2.0.22
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.0.21-2
 - 更新到 2.0.21
 

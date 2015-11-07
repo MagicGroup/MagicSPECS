@@ -2,8 +2,8 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
 Name:    libzip
-Version: 0.11.2
-Release: 1%{?dist}
+Version: 1.0.1
+Release: 2%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 Summary(zh_CN.UTF-8): 读取、创建和修改 zip 文档的 C 库
 
@@ -95,6 +95,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.1-2
+- 更新到 1.0.1
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.11.2-1
 - 更新到 0.11.2
 

@@ -6,7 +6,7 @@
 
 Name:           gstreamer1
 Version:	1.6.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GStreamer streaming media framework runtime
 Summary(zh_CN.UTF-8): GStreamer 流媒体框架运行库
 
@@ -211,6 +211,9 @@ install -m0644 -D %{SOURCE2} $RPM_BUILD_ROOT%{_rpmconfigdir}/fileattrs/gstreamer
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6.0-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
 - 为 Magic 3.0 重建
 

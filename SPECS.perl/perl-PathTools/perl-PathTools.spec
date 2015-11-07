@@ -1,7 +1,7 @@
 %global cpan_version 3.47
 Name:           perl-PathTools
 Version:        %(echo '%{cpan_version}' | tr _ .)
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        PathTools Perl module (Cwd, File::Spec)
 License:        (GPL+ or Artistic) and BSD
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.47-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.47-4
 - 为 Magic 3.0 重建
 

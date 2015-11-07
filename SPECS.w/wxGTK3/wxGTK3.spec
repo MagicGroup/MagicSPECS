@@ -7,7 +7,7 @@
 
 Name:           %{wxgtkname}
 Version:	3.0.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        GTK port of the wxWidgets GUI library
 Summary(zh_CN.UTF-8): wxWidgets 图形库的 GTK 移植
 License:        wxWidgets
@@ -254,6 +254,9 @@ popd
 %doc html
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.0.2-2
+- 更新到
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 3.0.2-1
 - 更新到 3.0.2
 

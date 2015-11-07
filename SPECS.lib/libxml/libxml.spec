@@ -3,7 +3,7 @@ Summary:	Old XML library for Gnome-1 application compatibility
 Summary(zh_CN.UTF-8): Gnome-1 应用程序兼容的旧 XML 库
 Epoch:		1
 Version:	1.8.17
-Release:	33%{?dist}
+Release:	34%{?dist}
 License:	LGPLv2+ or W3C
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -117,6 +117,9 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/libxml.la
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.8.17-34
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1:1.8.17-33
 - 为 Magic 3.0 重建
 

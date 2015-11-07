@@ -1,6 +1,6 @@
 Name:           perl-Tk-ToolBar
 Version:	0.12
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Toolbar widget for Perl/Tk
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.12-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.12-2
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@
 
 Name: pycairo
 Version:	1.10.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: MPLv1.1 or LGPLv2
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/pycairo.pc
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.10.0-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 1.10.0-1
 - 更新到 1.10.0
 

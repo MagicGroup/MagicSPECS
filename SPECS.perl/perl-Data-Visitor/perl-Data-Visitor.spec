@@ -1,6 +1,6 @@
 Name:           perl-Data-Visitor
 Version:	0.30
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Visitor style traversal of Perl data structures
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.30-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.30-1
 - 更新到 0.30
 

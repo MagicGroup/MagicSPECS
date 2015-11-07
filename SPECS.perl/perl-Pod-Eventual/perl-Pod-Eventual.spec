@@ -1,6 +1,6 @@
 Name:           perl-Pod-Eventual
 Version:	0.094001
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Read a POD document as a series of trivial events
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.094001-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.094001-1
 - 更新到 0.094001
 

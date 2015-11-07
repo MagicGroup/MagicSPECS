@@ -2,7 +2,7 @@
 
 Name:           python-straight-plugin
 Version:        1.4.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Python plugin loader
 Summary(zh_CN.UTF-8): Python 插件载入器
 
@@ -110,6 +110,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.4.0-7
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.4.0-6
 - 为 Magic 3.0 重建
 

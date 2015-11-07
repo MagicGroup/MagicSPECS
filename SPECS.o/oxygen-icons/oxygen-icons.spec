@@ -7,8 +7,8 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.14.3
-Release: 1%{?dist}
+Version: 4.3
+Release: 2%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 Source10: 16-start-here-magic.png
@@ -68,6 +68,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/oxygen
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.3-2
+- 更新到 4.3
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

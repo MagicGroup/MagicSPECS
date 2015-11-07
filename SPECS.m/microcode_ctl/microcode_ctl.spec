@@ -4,7 +4,7 @@ Summary:        Tool to transform and deploy CPU microcode update for x86.
 Summary(zh_CN.UTF-8): 部署和更改针对 x86 CPU 微码更新的工具
 Name:           microcode_ctl
 Version:        2.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          2
 Group:          System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2:2.1-8
+- 为 Magic 3.0 重建
+
 * Thu Aug 28 2014 Liu Di <liudidi@gmail.com> - 2:2.1-7
 - 为 Magic 3.0 重建
 

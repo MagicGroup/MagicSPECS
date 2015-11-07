@@ -76,7 +76,7 @@
 
 Name:           samba
 Version:        %{samba_version}
-Release:        %{samba_release}.1
+Release:        %{samba_release}.2
 
 %if 0%{?rhel}
 Epoch:          0
@@ -1977,6 +1977,9 @@ rm -rf %{buildroot}
 %endif # with_clustering_support
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:4.3.0-1.2
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2:4.3.0-1.1
 - 为 Magic 3.0 重建
 

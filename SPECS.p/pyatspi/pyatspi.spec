@@ -3,8 +3,8 @@
 %global debug_package %{nil}
 
 Name:           pyatspi
-Version:	2.16.0
-Release:	1%{?dist}
+Version:	2.18.0
+Release:	2%{?dist}
 Summary:        Python bindings for at-spi
 Summary(zh_CN.UTF-8): at-spi 的 Python 绑定
 
@@ -58,6 +58,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.18.0-2
+- 更新到 2.18.0
+
 * Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 2.16.0-1
 - 更新到 2.16.0
 

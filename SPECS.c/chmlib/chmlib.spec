@@ -2,7 +2,7 @@ Name: chmlib
 Summary: Library for dealing with ITSS/CHM format files
 Summary(zh_CN.UTF-8): 处理 ITSS/CHM 格式文件的库
 Version: 0.40
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPL
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -87,6 +87,9 @@ Files needed for developing apps using chmlib.
 /usr/bin/test_chmLib
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.40-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.40-3
 - 为 Magic 3.0 重建
 

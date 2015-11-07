@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-ssl
-Version:	0.4.7
-Release:	1%{?dist}
+Version:	0.5.1
+Release:	2%{?dist}
 Summary:        SSL bindings for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 SSL 绑定
 
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5.1-2
+- 更新到 0.5.1
+
 * Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 0.4.7-1
 - 更新到 0.4.7
 

@@ -1,6 +1,6 @@
 Name:           jettison
 Version:        1.3.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A JSON StAX implementation
 License:        ASL 2.0
 URL:            http://jettison.codehaus.org/
@@ -54,6 +54,9 @@ This package contains the API documentation for %{name}.
 %doc src/main/resources/META-INF/LICENSE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3.4-6
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.3.4-5
 - 为 Magic 3.0 重建
 

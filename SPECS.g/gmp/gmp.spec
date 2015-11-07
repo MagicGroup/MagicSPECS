@@ -7,7 +7,7 @@ Summary: A GNU arbitrary precision library
 Summary(zh_CN.UTF-8): GNU 任意精度库
 Name: gmp
 Version: 6.0.0a
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 URL: http://gmplib.org/
 Source0: http://ftp.gnu.org/pub/gnu/gmp/gmp-%{version}.tar.xz
@@ -247,6 +247,9 @@ exit 0
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:6.0.0a-2
+- 为 Magic 3.0 重建
+
 * Tue Apr 08 2014 Liu Di <liudidi@gmail.com> - 1:6.0.0a-1
 - 更新到 6.0.0a
 

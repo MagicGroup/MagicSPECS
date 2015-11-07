@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://dri.freedesktop.org/libdrm//?C=M;O=D"
+url="http://dri.freedesktop.org/libdrm//?C=M&O=D"
 new1="libdrm-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -3,7 +3,7 @@
 
 Name:           mtdev
 Version:        1.1.5
-Release:        2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:        3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 Summary:        Multitouch Protocol Translation Library
 Summary(zh_CN.UTF-8): 多点触摸协议转换库
 
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 %{_bindir}/mtdev-test
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.1.5-2
 - 为 Magic 3.0 重建
 

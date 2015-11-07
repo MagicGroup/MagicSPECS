@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://freedesktop.org/software/pulseaudio/releases/?C=M;O=D"
+url="http://freedesktop.org/software/pulseaudio/releases/?C=M&O=D"
 new1="pulseaudio-"
 new2=".tar.gz"
 downcommand="wget -q" 

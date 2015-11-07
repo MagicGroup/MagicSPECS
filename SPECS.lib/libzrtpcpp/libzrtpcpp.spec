@@ -1,6 +1,6 @@
 Name:           libzrtpcpp
 Version: 4.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        ZRTP support library for the GNU ccRTP stack
 Summary(zh_CN.UTF-8): GNU ccRTP stack 的 ZRTP 支持库
 
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.4.0-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 4.4.0-1
 - 更新到 4.4.0
 

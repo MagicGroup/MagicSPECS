@@ -8,7 +8,7 @@
 Name:		gambas3
 Summary:	IDE based on a basic interpreter with object extensions
 Version:	3.8.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+
 Group:		Development/Tools
 URL:		http://gambas.sourceforge.net/
@@ -1530,6 +1530,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datadir}/%{name}/info/gb.xml.xslt.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.8.1-3
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.8.1-2
 - 为 Magic 3.0 重建
 

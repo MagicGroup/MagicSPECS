@@ -1,6 +1,6 @@
 Name:           libconfuse
 Version:        2.7
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A configuration file parser library
 Summary(zh_CN.UTF-8): 一个配置文件解析库
 
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.7-9
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.7-8
 - 为 Magic 3.0 重建
 

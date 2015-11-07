@@ -1,6 +1,6 @@
 Name:		samtools
 Version:	0.1.19
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Tools for nucleotide sequence alignments in the SAM format
 Summary(zh_CN.UTF-8): 以 SAM 格式进行核苷酸序列比对的工具 
 
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.19-3
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.1.19-2
 - 为 Magic 3.0 重建
 

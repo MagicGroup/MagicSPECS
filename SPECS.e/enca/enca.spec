@@ -1,8 +1,8 @@
 Name: enca
 Summary: Character set analyzer and detector
 Summary(zh_CN.UTF-8): 字符集分析和检测程序
-Version: 1.15
-Release: 1%{?dist}
+Version: 1.16
+Release: 2%{?dist}
 License: GPLv2
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.16-2
+- 更新到 1.16
+
 * Mon Mar 31 2014 Liu Di <liudidi@gmail.com> - 1.15-1
 - 更新到 1.15
 

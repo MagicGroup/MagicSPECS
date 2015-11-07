@@ -2,7 +2,7 @@ Summary:      Real-time software synthesizer
 Summary(zh_CN.UTF-8): 实时软件合成器
 Name:         fluidsynth
 Version:      1.1.6
-Release:      1%{?dist}
+Release:      2%{?dist}
 URL:          http://www.fluidsynth.org/
 Source0:      http://downloads.sourceforge.net/fluidsynth/fluidsynth-%{version}.tar.bz2
 License:      LGPLv2+
@@ -122,6 +122,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.6-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 21 2012 Orcan Ogetbil <oget[dot]fedora[at]gmail[dot]com> - 1.1.6-1
 - Update to 1.1.6
 

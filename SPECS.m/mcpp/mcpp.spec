@@ -4,7 +4,7 @@ Summary:    Alternative C/C++ preprocessor
 Summary(zh_CN.UTF-8): 可选的 C/C++ 预处理器
 Name:       mcpp
 Version:    2.7.2
-Release:    8%{?dist}
+Release:    9%{?dist}
 License:    BSD
 Group:      Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -103,6 +103,9 @@ This package provides an html manual for mcpp.
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.7.2-9
+- 为 Magic 3.0 重建
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 2.7.2-8
 - 为 Magic 3.0 重建
 

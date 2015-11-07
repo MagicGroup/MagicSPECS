@@ -1,7 +1,7 @@
 %global cpan_version 2.154
 Name:           perl-Data-Dumper
 Version:	2.154
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Stringify perl data structures, suitable for printing and eval
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.154-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.154-2
 - 为 Magic 3.0 重建
 

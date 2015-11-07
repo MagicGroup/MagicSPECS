@@ -1,6 +1,6 @@
 Name:           caribou
-Version:	0.4.13
-Release:        2%{?dist}
+Version:	0.4.19
+Release:        3%{?dist}
 Summary:        A simplified in-place on-screen keyboard
 License:        LGPLv2+
 URL:            http://live.gnome.org/Caribou
@@ -157,6 +157,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.4.19-3
+- 更新到 0.4.19
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 0.4.13-2
 - 更新到 0.4.13
 

@@ -22,7 +22,7 @@ Name:      xorg-x11-drv-qxl
 
 Version:	0.1.4
 
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 
@@ -129,6 +129,9 @@ rm -f $RPM_BUILD_ROOT%{_sysconfdir}/X11/spiceqxl.xorg.conf
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.1.4-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.1.4-2
 - 更新到 0.1.4
 

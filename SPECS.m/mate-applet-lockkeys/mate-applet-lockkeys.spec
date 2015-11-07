@@ -2,8 +2,8 @@
 Summary:  MATE Keyboard LED indicator 
 Summary(zh_CN.UTF-8): MATE 桌面的键盘 LED 指示
 Name:     mate-applet-lockkeys
-Version: 0.2.3
-Release: 1%{?dist}
+Version: 0.2.4
+Release: 2%{?dist}
 Group:    Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License:  GPLv2+
@@ -72,6 +72,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.2.4-2
+- 更新到 0.2.4
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.2.3-1
 - 更新到 0.2.3
 

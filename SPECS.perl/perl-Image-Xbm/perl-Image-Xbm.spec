@@ -1,6 +1,6 @@
 Name:           perl-Image-Xbm
-Version:        1.08
-Release:        21%{?dist}
+Version:	1.09
+Release:	2%{?dist}
 Summary:        Load, create, manipulate and save xbm image files in Perl
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.09-2
+- 更新到 1.09
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-21
 - 为 Magic 3.0 重建
 

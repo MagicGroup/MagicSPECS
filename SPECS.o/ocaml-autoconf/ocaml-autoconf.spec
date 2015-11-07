@@ -1,6 +1,6 @@
 Name:           ocaml-autoconf
 Version:        1.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Autoconf macros for OCaml
 Summary(zh_CN.UTF-8): Ocaml 的 Autoconf 宏
 
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-13
+- 为 Magic 3.0 重建
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 1.1-12
 - 为 Magic 3.0 重建
 

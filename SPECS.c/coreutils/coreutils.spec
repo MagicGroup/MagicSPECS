@@ -4,7 +4,7 @@ Summary: A set of basic GNU tools commonly used in shell scripts
 Summary(zh_CN.UTF-8): Shell 脚本使用的基本 GNU 工具
 Name:    coreutils
 Version:	8.24
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv3+
 Group:   System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -389,6 +389,9 @@ fi
 %{_sbindir}/chroot
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 8.24-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 14 2015 Liu Di <liudidi@gmail.com> - 8.24-1
 - 更新到 8.24
 

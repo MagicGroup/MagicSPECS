@@ -5,7 +5,7 @@
 Summary: A fast and extensible eRuby implementation
 Name: rubygem-%{gem_name}
 Version: 2.7.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.kuwata-lab.com/erubis/
@@ -117,6 +117,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.7.0-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.7.0-10
 - 为 Magic 3.0 重建
 

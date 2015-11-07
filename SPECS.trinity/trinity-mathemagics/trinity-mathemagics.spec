@@ -41,7 +41,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		Mathemagics is a RPN Calculator.
 Summary(zh_CN.UTF-8): 这是一个 RPN 计算器
 Version:		1.1
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Group:			Applications/Utilities
 Group(zh_CN.UTF-8): 应用程序/工具
 URL:			http://www.trinitydesktop.org/
@@ -142,6 +142,9 @@ done
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.1-1.opt.2
+- 为 Magic 3.0 重建
+
 * Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 1.1-1.opt.1
 - 为 Magic 3.0 重建
 

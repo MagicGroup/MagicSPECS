@@ -1,6 +1,6 @@
 Name:           compiz-manager
 Version:        0.6.0
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        A wrapper script to start compiz with proper options
 
 Group:          Applications/System
@@ -47,6 +47,9 @@ cp -p compiz-manager %{buildroot}/%{_bindir}/
 %{_bindir}/compiz-manager
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.0-21
+- 为 Magic 3.0 重建
+
 * Wed May 07 2014 Liu Di <liudidi@gmail.com> - 0.6.0-20
 - 为 Magic 3.0 重建
 

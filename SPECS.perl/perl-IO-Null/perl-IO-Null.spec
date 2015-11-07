@@ -1,6 +1,6 @@
 Name:           perl-IO-Null
 Version:        1.01
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Class for null filehandles
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.01-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.01-16
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://download.enlightenment.org/rel/apps/enlightenment/?C=M;O=D"
+url="https://download.enlightenment.org/rel/apps/enlightenment/?C=M&O=D"
 new1="enlightenment-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,8 +1,8 @@
 %global _pkgdocdir %{_docdir}/%{name}
 
 Name:		midori
-Version:	0.5.8
-Release:	3%{?dist}
+Version: 0.5.11
+Release: 2%{?dist}
 Summary:	A lightweight GTK+ web browser 
 Summary(zh_CN.UTF-8): 一个轻量级的 GTK+ 网页浏览器
 
@@ -120,6 +120,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/libmidori-core.*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5.11-2
+- 更新到 0.5.11
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.8-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

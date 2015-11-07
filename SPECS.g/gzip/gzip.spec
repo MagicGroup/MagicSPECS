@@ -2,7 +2,7 @@ Summary: The GNU data compression program
 Summary(zh_CN.UTF-8): GNU 数据压缩程序
 Name: gzip
 Version: 1.6
-Release: 3%{?dist}
+Release: 4%{?dist}
 # info pages are under GFDL license
 License: GPLv3+ and GFDL
 Group: Applications/File
@@ -92,6 +92,9 @@ fi
 %{_infodir}/gzip.info*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6-4
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.6-3
 - 更新到 1.6
 

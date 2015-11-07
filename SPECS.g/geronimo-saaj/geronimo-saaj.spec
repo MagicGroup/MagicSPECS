@@ -3,7 +3,7 @@
 
 Name:             geronimo-saaj
 Version:          1.1
-Release:          16%{?dist}
+Release:          17%{?dist}
 Summary:          Java EE: SOAP with Attachments API Package v1.3
 License:          ASL 2.0 and W3C
 
@@ -57,6 +57,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1-17
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.1-16
 - 为 Magic 3.0 重建
 

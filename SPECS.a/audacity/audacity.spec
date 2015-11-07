@@ -4,7 +4,7 @@
 Name: audacity
 
 Version: 2.0.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Multitrack audio editor
 Summary(zh_CN.UTF-8): 多音轨音频编辑器
 Group:   Applications/Multimedia
@@ -194,6 +194,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{realname}/help/
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.5-2
+- 为 Magic 3.0 重建
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 2.0.5-1
 - 更新到 2.0.5
 

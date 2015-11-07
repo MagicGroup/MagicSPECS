@@ -1,6 +1,6 @@
 Name:           hiredis
 Version:        0.11.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A minimalistic C client library for Redis
 Summary(zh_CN.UTF-8): Redis 的简约 C 客户端库
 
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_libdir}/libhiredis.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.11.0-3
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.11.0-2
 - 为 Magic 3.0 重建
 

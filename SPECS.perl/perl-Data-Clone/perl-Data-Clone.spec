@@ -1,6 +1,6 @@
 Name:           perl-Data-Clone
 Version:        0.004
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Polymorphic data cloning
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.004-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.004-6
 - 为 Magic 3.0 重建
 

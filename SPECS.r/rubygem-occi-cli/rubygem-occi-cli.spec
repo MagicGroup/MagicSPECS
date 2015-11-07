@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        4.3.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Executable OCCI client
 
 Group:          Development/Languages
@@ -103,6 +103,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.3.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.3.1-3
 - 为 Magic 3.0 重建
 

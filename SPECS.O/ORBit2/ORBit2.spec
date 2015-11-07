@@ -4,7 +4,7 @@
 Summary: A high-performance CORBA Object Request Broker
 Name: ORBit2
 Version: 2.14.19
-Release: 11%{?dist}
+Release: 12%{?dist}
 #VCS: git:git://git.gnome.org/ORBit2
 Source: http://download.gnome.org/sources/ORBit2/2.14/%{name}-%{version}.tar.bz2
 Group: System Environment/Daemons
@@ -131,6 +131,9 @@ EOF
 %{_datadir}/gtk-doc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.14.19-12
+- 为 Magic 3.0 重建
+
 * Tue Dec 10 2013 Petr Pisar <ppisar@redhat.com> - 2.14.19-11
 - Correct __isa_bits macro name
 

@@ -1,6 +1,6 @@
 Name:           perl-Net-IP-Match-Regexp
 Version:        1.01
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Efficiently match IP addresses against ranges
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.01-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.01-11
 - 为 Magic 3.0 重建
 

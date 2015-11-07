@@ -11,7 +11,7 @@
 
 Name: satyr
 Version:	0.20
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary: Tools to create anonymous, machine-friendly problem reports
 Summary(zh_CN.UTF-8): 创建匿名，机器友好的问题报告
 Group: System Environment/Libraries
@@ -134,6 +134,9 @@ make check
 %endif
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.20-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.20-1
 - 更新到 0.20
 

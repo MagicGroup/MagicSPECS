@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           pytz
-Version:	2015.4
-Release:	1%{?dist}
+Version:	2015.7
+Release:	2%{?dist}
 Summary:        World Timezone Definitions for Python
 Summary(zh_CN.UTF-8): Python 下的世界时区定义
 
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2015.7-2
+- 更新到 2015.7
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 2015.4-1
 - 更新到 2015.4
 

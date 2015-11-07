@@ -3,7 +3,7 @@
 
 Name:           %{fontname}-fonts
 Version:        2.015
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A sanserif typeface family
 
 Group:          User Interface/X
@@ -79,6 +79,9 @@ install -Dm 0644 -p %{SOURCE2} \
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.015-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.015-2
 - 为 Magic 3.0 重建
 

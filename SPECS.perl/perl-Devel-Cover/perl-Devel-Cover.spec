@@ -1,6 +1,6 @@
 Name:           perl-Devel-Cover
-Version:	1.20
-Release:	1%{?dist}
+Version:	1.21
+Release:	2%{?dist}
 Summary:        Code coverage metrics for Perl
 
 Group:          Development/Libraries
@@ -83,6 +83,9 @@ make test
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.21-2
+- 更新到 1.21
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20-1
 - 更新到 1.20
 

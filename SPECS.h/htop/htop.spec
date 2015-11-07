@@ -1,6 +1,6 @@
 Name:           htop
 Version:	1.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Interactive process viewer
 Summary(zh_CN.UTF-8): 交互式进程查看器
 
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.3-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.0.3-1
 - 更新到 1.0.3
 

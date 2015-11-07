@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.4.4.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Unicode normalization library for Ruby
 License:        Ruby
 URL:            http://www.yoshidam.net/Ruby.html#unicode
@@ -60,6 +60,9 @@ ruby-mri -I.%{gem_instdir}/lib:.%{gem_extdir_mri} test/test.rb
 %{gem_spec}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.4.1-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.4.1-6
 - 为 Magic 3.0 重建
 

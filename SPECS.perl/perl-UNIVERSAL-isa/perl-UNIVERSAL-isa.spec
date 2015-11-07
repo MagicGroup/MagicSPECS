@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-isa
 Version:	1.20150614
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Hack around module authors using UNIVERSAL::isa as a function
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.20150614-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.20150614-2
 - 为 Magic 3.0 重建
 

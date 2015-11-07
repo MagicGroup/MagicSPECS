@@ -9,7 +9,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.0.3.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 
 Summary:	Converter from RT into various formats
 # See rttool.en.rd
@@ -109,6 +109,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.3.0-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.3.0-6
 - 为 Magic 3.0 重建
 

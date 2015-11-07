@@ -35,7 +35,7 @@ Version: 7.8.4
 #   (sometimes after a major release)
 # - minor release numbers for a branch should be incremented monotonically
 # xhtml moved from haskell-platform to ghc-7.8.3
-Release: 49%{?dist}
+Release: 50%{?dist}
 Summary: Glasgow Haskell Compiler
 
 License: %BSDHaskellReport
@@ -577,6 +577,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.8.4-50
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 7.8.4-49
 - 为 Magic 3.0 重建
 

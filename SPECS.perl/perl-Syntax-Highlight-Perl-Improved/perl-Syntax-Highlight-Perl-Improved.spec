@@ -1,6 +1,6 @@
 Name:           perl-Syntax-Highlight-Perl-Improved
 Version:        1.01
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Highlighting of Perl Syntactical Structures
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Syntax-Highlight-Perl-Improved/
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.01-20
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.01-19
 - 为 Magic 3.0 重建
 

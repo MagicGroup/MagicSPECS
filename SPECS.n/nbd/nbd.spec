@@ -1,6 +1,6 @@
 Name:           nbd
-Version: 3.8
-Release: 1%{?dist}
+Version: 3.11
+Release: 2%{?dist}
 Summary:        Network Block Device user-space tools (TCP version)
 Summary(zh_CN.UTF-8): 网络块设备的用户空间工具 (TCP 版本)
 
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/nbd-client
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.11-2
+- 更新到 3.11
+
 * Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 3.8-1
 - 更新到 3.8
 

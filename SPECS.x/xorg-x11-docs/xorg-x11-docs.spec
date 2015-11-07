@@ -4,7 +4,7 @@ Summary: X.Org X11 documentation
 Summary(zh_CN.UTF-8): X.Org X11 文档
 Name: xorg-x11-docs
 Version:	1.7.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: MIT
 Group: Documentation
 Group(zh_CN.UTF-8): 文档
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man7/Xsecurity.7*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.7.1-3
+- 为 Magic 3.0 重建
+
 * Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 1.7.1-2
 - 更新到 1.7.1
 

@@ -1,7 +1,7 @@
 Name:           perl-MooseX-MethodAttributes
 Summary:        Introspect your method code attributes
-Version:	0.30
-Release:	1%{?dist}
+Version:	0.31
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-MethodAttributes-%{version}.tar.gz
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.31-2
+- 更新到 0.31
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.30-1
 - 更新到 0.30
 

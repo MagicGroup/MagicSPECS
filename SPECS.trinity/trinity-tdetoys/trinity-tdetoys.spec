@@ -44,7 +44,7 @@
 Name:		trinity-%{tde_pkg}
 Summary:	Trinity Desktop Environment - Toys and Amusements
 Version:	%{tde_version}
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Group:		Amusements/Graphics
 URL:		http://www.trinitydesktop.org/
 
@@ -481,5 +481,8 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
 - Initial release for TDE 14.0.0

@@ -7,7 +7,7 @@
 Name:           anticodeluxe
 BuildRequires:  gcc-c++ %{breq}
 Version:        0.1.96
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPL v2 or later
 #Source:         %{name}-git%{date}.tar.bz2
 Source0:		http://anticodeluxe.googlecode.com/files/%{name}-%{version}.tar.bz2
@@ -79,6 +79,9 @@ rm -rf %{buiddir}/%{buildsubdir}
 %_datadir/apps/kdm/sessions/%{name}.desktop
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.1.96-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.1.96-3
 - 为 Magic 3.0 重建
 

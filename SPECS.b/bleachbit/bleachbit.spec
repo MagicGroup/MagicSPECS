@@ -1,6 +1,6 @@
 Name:           bleachbit
-Version:	1.0
-Release:        2%{?dist}
+Version:	1.2
+Release:        3%{?dist}
 Summary:        Remove unnecessary files, free space, and maintain privacy
 Summary(zh_CN): 清除不需要的文件，释放空间的软件
 License:        GPLv3+
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2-3
+- 更新到 1.2
+
 * Tue Mar 04 2014 Liu Di <liudidi@gmail.com> - 1.0-2
 - 更新到 1.0
 

@@ -6,7 +6,7 @@ Summary: Qt WebKit bindings
 Summary(zh_CN.UTF-8): Webkit 的 Qt 绑定
 
 Version: 2.3.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 
 License: LGPLv2 with exceptions or GPLv3 with exceptions
 URL: http://trac.webkit.org/wiki/QtWebKit
@@ -226,6 +226,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.4-10
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.3.4-9
 - 为 Magic 3.0 重建
 

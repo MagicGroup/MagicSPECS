@@ -6,7 +6,7 @@ Summary:  The Advanced Linux Sound Architecture (ALSA) library
 Summary(zh_CN.UTF-8): 高级 Linux 声音架构 (ALSA) 库
 Name:     alsa-lib
 Version:	1.0.29
-Release:  1%{?prever_dot}%{?dist}
+Release:  2%{?prever_dot}%{?dist}
 License:  LGPLv2+
 Group:    System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -127,6 +127,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/aclocal/alsa.m4
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.29-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.29-1
 - 更新到 1.0.29
 

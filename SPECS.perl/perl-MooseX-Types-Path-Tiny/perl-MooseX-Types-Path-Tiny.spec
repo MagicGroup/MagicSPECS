@@ -1,7 +1,7 @@
 Name:		perl-MooseX-Types-Path-Tiny
 Summary:	Path::Tiny types and coercions for Moose
 Version:	0.011
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	ASL 2.0
 URL:		http://search.cpan.org/dist/MooseX-Types-Path-Tiny/
 Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-Path-Tiny-%{version}.tar.gz
@@ -63,6 +63,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/MooseX::Types::Path::Tiny.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.011-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.011-5
 - 为 Magic 3.0 重建
 

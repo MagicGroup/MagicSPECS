@@ -5,7 +5,7 @@
 
 Name:           perl-Tk
 Version:        804.033
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
@@ -176,6 +176,9 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 804.033-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 804.033-4
 - 为 Magic 3.0 重建
 

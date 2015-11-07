@@ -4,7 +4,7 @@
 
 Name: gnome-doc-utils
 Version: 0.20.10
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2+ and LGPLv2+ and GFDL
 Group: Development/Tools
 Summary: Documentation utilities for GNOME
@@ -106,6 +106,9 @@ magic_rpm_clean.sh
 %{_datadir}/xml/mallard
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.20.10-5
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.20.10-4
 - 为 Magic 3.0 重建
 

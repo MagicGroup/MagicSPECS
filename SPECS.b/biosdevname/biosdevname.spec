@@ -1,6 +1,6 @@
 Name:		biosdevname
 Version:	0.6.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Udev helper for naming devices per BIOS names
 Summary(zh_CN.UTF-8): 通过 BIOS 名称命名设备的 Udev 辅助程序
 
@@ -63,6 +63,9 @@ make install install-data DESTDIR=%{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.2-3
+- 为 Magic 3.0 重建
+
 * Mon Aug 31 2015 Liu Di <liudidi@gmail.com> - 0.6.2-2
 - 为 Magic 3.0 重建
 

@@ -8,7 +8,7 @@ Name: unixODBC-gui-qt
 # There has not been a formal upstream release yet and we're not
 # sure what the first formal release version number will be, so using 0
 Version: 0
-Release: 0.7.%{checkout}%{?dist}
+Release: 0.8.%{checkout}%{?dist}
 Group: Applications/Databases
 Group(zh_CN.UTF-8): 应用程序/数据库
 URL: http://sourceforge.net/projects/unixodbc-gui-qt/
@@ -113,6 +113,9 @@ magic_rpm_clean.sh
 %postun -p /sbin/ldconfig
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0-0.8.20120105svn98
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 0-0.7.20120105svn98
 - 为 Magic 3.0 重建
 

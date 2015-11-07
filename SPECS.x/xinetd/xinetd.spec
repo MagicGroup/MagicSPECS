@@ -2,7 +2,7 @@ Summary: A secure replacement for inetd
 Summary(zh_CN.UTF-8): inetd 的一个安全替代程序
 Name: xinetd
 Version: 2.3.15
-Release: 17%{?dist}
+Release: 18%{?dist}
 License: xinetd
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -164,6 +164,9 @@ magic_rpm_clean.sh
 %{_mandir}/*/*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2:2.3.15-18
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 2:2.3.15-17
 - 为 Magic 3.0 重建
 

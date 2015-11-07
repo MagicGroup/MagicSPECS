@@ -79,7 +79,7 @@
 Summary: Cross C compiler
 Name: %{cross}-gcc
 Version: %{gcc_version}
-Release: %{cross_gcc_release}%{?dist}.1
+Release: %{cross_gcc_release}%{?dist}.3
 # libgcc, libgfortran, libmudflap, libgomp, libstdc++ and crtstuff have
 # GCC Runtime Exception.
 License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD
@@ -922,6 +922,12 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.2.1-3.3
+- 为 Magic 3.0 重建
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.2.1-3.2
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 5.2.1-3.1
 - 为 Magic 3.0 重建
 

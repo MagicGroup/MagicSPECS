@@ -1,6 +1,6 @@
 Name: libcanberra
 Version: 0.30
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Portable Sound Event Library
 Summary(zh_CN.UTF-8): 可移植的声音事件库
 Group: System Environment/Libraries
@@ -166,6 +166,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/libcanberra.vapi
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.30-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.30-4
 - 更新到 0.30
 

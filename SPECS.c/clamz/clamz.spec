@@ -1,6 +1,6 @@
 Name:           clamz
 Version:        0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Amazon Downloader
 Summary(zh_CN.UTF-8): 亚马逊下载器
 Group:          Applications/Internet
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_datadir}/mime/packages/%{name}.xml
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.5-5
+- 为 Magic 3.0 重建
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

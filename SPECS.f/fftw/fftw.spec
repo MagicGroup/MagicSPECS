@@ -1,6 +1,6 @@
 Name:           fftw
 Version:        3.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A Fast Fourier Transform library
 Summary(zh_CN.UTF-8): 快速傅里叶变换库
 Group:          System Environment/Libraries
@@ -269,6 +269,9 @@ fi
 %{_libdir}/libfftw3*.a
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.3-6
+- 更新到 3.3.4
+
 * Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 3.3-5
 - 更新到 3.3.4
 

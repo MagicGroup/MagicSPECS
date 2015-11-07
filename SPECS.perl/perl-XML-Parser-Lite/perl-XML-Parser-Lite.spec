@@ -2,7 +2,7 @@ Name:           perl-XML-Parser-Lite
 # Use three digits since 0.719 -> 0.72
 %global cpan_version 0.721
 Version:        %{cpan_version}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Lightweight regexp-based XML parser
 License:        (GPL+ or Artistic) and REX
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.721-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.721-3
 - 为 Magic 3.0 重建
 

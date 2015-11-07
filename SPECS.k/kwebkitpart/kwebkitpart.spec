@@ -2,7 +2,7 @@
 Name:    kwebkitpart
 Summary: A KPart based on QtWebKit
 Version: 1.3.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: LGPLv2+
 URL:     https://projects.kde.org/projects/extragear/base/kwebkitpart
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3.3-4
+- 为 Magic 3.0 重建
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.3.3-3
 - 为 Magic 3.0 重建
 

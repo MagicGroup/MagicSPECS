@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.3.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Sprockets Rails integration
 Group: Development/Languages
 License: MIT
@@ -71,6 +71,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.3.2-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.3.2-2
 - 为 Magic 3.0 重建
 

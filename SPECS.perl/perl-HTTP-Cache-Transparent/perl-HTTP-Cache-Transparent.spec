@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Cache-Transparent
 Version:	1.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Cache the result of http get-requests persistently
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.1-1
 - 更新到 1.1
 

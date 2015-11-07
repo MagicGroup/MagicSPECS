@@ -1,6 +1,6 @@
 Name:           libXNVCtrl
 Version:        169.12
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Library providing the NV-CONTROL API
 Summary(zh_CN.UTF-8): 提供 NV 显卡控制 API 的库
 Group:          System Environment/Libraries
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 169.12-10
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 169.12-9
 - 为 Magic 3.0 重建
 

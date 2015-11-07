@@ -47,7 +47,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.18.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	TQt bindings for Python
 Summary(zh_CN.UTF-8): TQt 的 Python 绑定
 Group:		Development/Libraries
@@ -252,6 +252,9 @@ echo yes | %__python ../configure.py \
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-1.opt.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-1.opt.1
 - 为 Magic 3.0 重建
 

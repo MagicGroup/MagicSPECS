@@ -1,8 +1,8 @@
 Summary: The GNU line editor
 Summary(zh_CN.UTF-8): GNU 行编辑器
 Name: ed
-Version: 1.10
-Release: 2%{?dist}
+Version: 1.12
+Release: 3%{?dist}
 License: GPLv3+
 Group:  Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.12-3
+- 更新到 1.12
+
 * Thu Mar 27 2014 Liu Di <liudidi@gmail.com> - 1.10-2
 - 更新到 1.10
 

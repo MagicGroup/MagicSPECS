@@ -1,6 +1,6 @@
 Name:           perl-Pod-MinimumVersion
 Version:        50
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl version for POD directives used
 License:        GPLv3+
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man1/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 50-13
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 50-12
 - 为 Magic 3.0 重建
 

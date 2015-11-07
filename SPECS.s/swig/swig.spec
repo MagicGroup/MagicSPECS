@@ -41,7 +41,7 @@ Summary: Connects C/C++/Objective C to some high-level programming languages
 Summary(zh_CN.UTF-8): 帮助使用C或者C++编写的软件能与其它各种高级编程语言进行嵌入联接的开发工具
 Name:    swig
 Version: 3.0.7
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv3+ and BSD
 URL:     http://swig.sourceforge.net/
 Source0: http://downloads.sourceforge.net/project/swig/swig/swig-%{version}/swig-%{version}.tar.gz
@@ -223,6 +223,9 @@ ln -fs ../../bin/ccache-swig %{buildroot}%{_libdir}/ccache/swig
 %doc Doc Examples LICENSE LICENSE-GPL LICENSE-UNIVERSITIES COPYRIGHT
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.0.7-7
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.0.7-6
 - 为 Magic 3.0 重建
 

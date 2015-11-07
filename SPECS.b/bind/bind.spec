@@ -30,7 +30,7 @@ Summary:  The Berkeley Internet Name Domain (BIND) DNS (Domain Name System) serv
 Name:     bind
 License:  ISC
 Version:  9.9.5
-Release:  1%{?PATCHVER}%{?PREVER}%{?dist}
+Release:  2%{?PATCHVER}%{?PREVER}%{?dist}
 Epoch:    32
 Url:      http://www.isc.org/products/BIND/
 Buildroot:%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -930,6 +930,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 32:9.9.5-2
+- 为 Magic 3.0 重建
+
 * Thu Feb 13 2014 Tomas Hozza <thozza@redhat.com> 32:9.9.5-1
 - Update to 9.9.5 stable
 

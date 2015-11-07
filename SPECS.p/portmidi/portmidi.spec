@@ -3,7 +3,7 @@ Summary:        Real-time Midi I/O Library
 Summary(zh_CN.UTF-8): 实时 Midi I/O 库
 Name:           portmidi
 Version:        217
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -224,6 +224,9 @@ magic_rpm_clean.sh
 %{_libdir}/lib*.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 217-9
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Liu Di <liudidi@gmail.com> - 217-8
 - 为 Magic 3.0 重建
 

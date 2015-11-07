@@ -5,7 +5,7 @@
 
 Name:            Falcon
 Version:         0.9.6.8
-Release:         2%{?dist}
+Release:         3%{?dist}
 Summary:         The Falcon Programming Language
 Summary(zh_CN.UTF-8):     Falcon 程序语言
 
@@ -143,6 +143,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9.6.8-3
+- 为 Magic 3.0 重建
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.6.8-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

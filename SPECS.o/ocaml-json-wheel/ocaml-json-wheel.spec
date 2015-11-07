@@ -2,7 +2,7 @@
 
 Name:           ocaml-json-wheel
 Version:        1.0.6
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        OCaml library for parsing JSON
 Summary(zh_CN.UTF-8): 解析 JSON 的 OCaml 库
 License:        BSD
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.6-17
+- 为 Magic 3.0 重建
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 1.0.6-16
 - 为 Magic 3.0 重建
 

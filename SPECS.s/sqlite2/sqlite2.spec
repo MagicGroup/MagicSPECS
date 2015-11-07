@@ -3,7 +3,7 @@
 
 Name:           sqlite2
 Version:        2.8.17
-Release:        16%{?dist}
+Release:        17%{?dist}
 
 Summary:        Embeddable SQL engine in a C library
 Summary(zh_CN.UTF-8): 嵌入式 SQL 引擎的 C 库
@@ -140,6 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 %{tcl_sitearch}/sqlite2/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.8.17-17
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.8.17-16
 - 为 Magic 3.0 重建
 

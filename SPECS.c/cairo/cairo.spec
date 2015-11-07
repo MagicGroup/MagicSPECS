@@ -4,8 +4,8 @@
 
 Summary:	A 2D graphics library
 Name:		cairo
-Version:	1.14.0
-Release:	3%{?dist}
+Version:	1.14.2
+Release:	4%{?dist}
 URL:		http://cairographics.org
 Source0:	http://cairographics.org/releases/%{name}-%{version}.tar.xz
 License:	LGPLv2 or MPLv1.1
@@ -181,6 +181,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/cairo/
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.14.2-4
+- 更新到 1.14.2
+
 * Sat Feb 21 2015 Till Maas <opensource@till.name> - 1.14.0-3
 - Rebuilt for Fedora 23 Change
   https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code

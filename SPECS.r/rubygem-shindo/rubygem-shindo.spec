@@ -5,7 +5,7 @@
 Summary: Simple depth first Ruby testing
 Name: rubygem-%{gem_name}
 Version: 0.3.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/geemus/shindo
@@ -75,6 +75,9 @@ popd
 %{gem_instdir}/shindo.gemspec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.8-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.8-4
 - 为 Magic 3.0 重建
 

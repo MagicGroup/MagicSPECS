@@ -1,5 +1,5 @@
 Name:           perl-File-Path
-Version:	2.11_003
+Version:	2.12
 Release:	2%{?dist}
 Summary:        Create or remove directory trees
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.12-2
+- 更新到 2.12
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.11_003-2
 - 为 Magic 3.0 重建
 

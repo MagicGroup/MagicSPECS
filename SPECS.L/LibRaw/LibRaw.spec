@@ -1,8 +1,8 @@
 Summary: Library for reading RAW files obtained from digital photo cameras
 Summary(zh_CN.UTF-8): 从数码相机中获取 RAW 文件的库
 Name: LibRaw
-Version: 0.16.0
-Release: 2%{?dist}
+Version: 0.17.0
+Release: 3%{?dist}
 License: GPLv3+
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -111,6 +111,9 @@ make install DESTDIR=%{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.17.0-3
+- 更新到 0.17.0
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.16.0-2
 - 为 Magic 3.0 重建
 

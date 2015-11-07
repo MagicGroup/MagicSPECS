@@ -8,8 +8,8 @@
 Name:           qt5-%{qt_module}
 Summary:        Qt5 - module with set of QtQuick controls
 Summary(zh_CN.UTF-8): Qt5 - QtQuick 控件集的模块
-Version: 5.5.0
-Release: 1%{?dist}
+Version: 5.5.1
+Release: 2%{?dist}
 
 License:        BSD and (LGPLv2 with exceptions or GPLv3 with exceptions) and GFDL
 Url:            http://qt-project.org/
@@ -105,6 +105,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
+- 更新到 5.5.1
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
 - 更新到 5.5.0
 

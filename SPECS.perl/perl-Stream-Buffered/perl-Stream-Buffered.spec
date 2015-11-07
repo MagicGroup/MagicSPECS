@@ -1,6 +1,6 @@
 Name:           perl-Stream-Buffered
 Version:        0.03
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Temporary buffer to save bytes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.03-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.03-5
 - 为 Magic 3.0 重建
 

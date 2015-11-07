@@ -1,6 +1,6 @@
 Name:           lzma-sdk
 Version:        4.6.5
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        SDK for lzma compression
 Summary(zh_CN.UTF-8): lzma 压缩的 SDK
 
@@ -109,6 +109,9 @@ magic_rpm_clean.sh
 %{_libdir}/liblzmasdk.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.6.5-10
+- 为 Magic 3.0 重建
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 4.6.5-9
 - 为 Magic 3.0 重建
 

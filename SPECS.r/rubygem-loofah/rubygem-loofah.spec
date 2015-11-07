@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.0.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Manipulate and transform HTML/XML documents and fragments
 Group: Development/Languages
 License: MIT
@@ -87,6 +87,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0.2-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.2-3
 - 为 Magic 3.0 重建
 

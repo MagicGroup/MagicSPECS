@@ -2,7 +2,7 @@ Summary: Hardware graphics acceleration for the framebuffer device
 Summary(zh_CN.UTF-8): 帧缓存设备的硬件图形加速
 Name: directfb
 Version: 1.7.4
-Release: 17%{?dist}
+Release: 18%{?dist}
 License: GPL
 Group: System/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.7.4-18
+- 为 Magic 3.0 重建
+
 * Sun May  4 2014 Axel Thimm <Axel.Thimm@ATrpms.net> - 1.7.4-17
 - Update to 1.7.4.
 

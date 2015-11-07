@@ -1,8 +1,8 @@
 Summary: Off-The-Record Messaging library and toolkit
 Summary(zh_CN.UTF-8): Off-The-Record (OTR) 消息库和工具
 Name: libotr
-Version: 4.0.0
-Release: 1%{?dist}
+Version: 4.1.0
+Release: 2%{?dist}
 License: GPLv2 and LGPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.1.0-2
+- 更新到 4.1.0
+
 * Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 4.0.0-1
 - 更新到 4.0.0
 

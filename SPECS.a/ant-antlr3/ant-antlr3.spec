@@ -1,6 +1,6 @@
 Name: ant-antlr3
 Version: 20110110
-Release: 10%{?dist}
+Release: 11%{?dist}
 Summary: Antlr3 task for Ant
 Group: Development/Tools	
 License: ASL 2.0
@@ -71,6 +71,9 @@ EOF
 %{_javadocdir}/ant-antlr3
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 20110110-11
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 20110110-10
 - 为 Magic 3.0 重建
 

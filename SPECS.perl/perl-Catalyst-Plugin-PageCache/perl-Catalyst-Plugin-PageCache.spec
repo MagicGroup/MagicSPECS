@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-PageCache
 Version:        0.31
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Cache the output of entire pages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ TEST_POD=yep
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.31-20
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.31-19
 - 为 Magic 3.0 重建
 

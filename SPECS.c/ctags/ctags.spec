@@ -1,7 +1,7 @@
 Summary: A C programming language indexing and/or cross-reference tool
 Name: ctags
 Version: 5.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2+ or Public Domain
 Group: Development/Tools
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/etags.%{name}.1*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.8-5
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 5.8-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           gnome-common
-Version:	3.12.0
-Release:        2%{?dist}
+Version:	3.18.0
+Release:        3%{?dist}
 Summary:        Useful things common to building gnome packages from scratch
 Summary(zh_CN.UTF-8): 从源码构建 gnome 包所需要的通用包
 
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{_datadir}/%{name}
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 更新到 3.18.0
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 更新到 3.12.0
 

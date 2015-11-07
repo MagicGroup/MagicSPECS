@@ -1,6 +1,6 @@
 Name:           kde-plasma-cwp
-Version:	1.11.0
-Release:        1%{?dist}
+Version:	1.12.0
+Release:        2%{?dist}
 Summary:        Customizable Weather Plasmoid
 Summary(zh_CN.UTF-8):	可定制的天气 Plasmoid
 Group:          User Interface/Desktops
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 更新到 1.12.0
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 1.11.0-1
 - 更新到 1.11.0
 

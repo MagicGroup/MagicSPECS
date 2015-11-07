@@ -1,6 +1,6 @@
 Name:           perl-SQL-Translator
 Summary:        Manipulate structured data definitions (SQL and more)
-Version:	0.11021
+Version:	0.11021_01
 Release:	2%{?dist}
 License:        GPLv2
 Group:          Development/Libraries
@@ -108,6 +108,9 @@ make test
 %{_mandir}/man[13]/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.11021_01-2
+- 更新到 0.11021_01
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.11021-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 %define cpan_version 1.112870
 Name:           perl-%{cpan_name}
 Version:	1.151940
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Look up the country of an IPv4 Address
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.151940-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.151940-1
 - 更新到 1.151940
 

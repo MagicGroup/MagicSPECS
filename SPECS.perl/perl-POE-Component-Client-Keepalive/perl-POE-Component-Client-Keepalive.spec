@@ -3,7 +3,7 @@ Name:           perl-POE-Component-Client-Keepalive
 # Keep four digits to stay above the unfortunate 0.0901,
 # so that epoch need not be changed.
 Version:	0.2720
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Manages and keeps alive client connections
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -76,6 +76,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.2720-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.2720-3
 - 为 Magic 3.0 重建
 

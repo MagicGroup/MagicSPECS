@@ -10,7 +10,7 @@ Summary: A program for synchronizing files over a network
 Summary(zh_CN.UTF-8): 通过网络同步文件的程序
 Name: rsync
 Version:	3.1.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://rsync.samba.org/
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 %systemd_postun_with_restart rsyncd.service
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.1.1-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 3.1.1-1
 - 更新到 3.1.1
 

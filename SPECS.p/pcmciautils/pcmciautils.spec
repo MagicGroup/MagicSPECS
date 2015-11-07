@@ -3,7 +3,7 @@ Summary: PCMCIA utilities and initialization programs
 Summary(zh_CN.UTF-8): PCMCIA 工具和初始化程序
 License: GPLv2
 Version: 018
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 ExclusiveArch: i386 i586 i686 x86_64 ia64 ppc ppc64 %{?arm} mips64el
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %{_mandir}/man*/pccardctl*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 018-5
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 018-4
 - 为 Magic 3.0 重建
 

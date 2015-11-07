@@ -10,7 +10,7 @@
 Summary:   Xorg X11 omapdrm driver
 Name:      xorg-x11-drv-omap
 Version:   0.4.3
-Release:   13%{?dist}
+Release:   14%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -62,6 +62,9 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 %{_mandir}/man4/omap.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.4.3-14
+- 更新到
+
 * Mon Jan 13 2014 Adam Jackson <ajax@redhat.com> - 0.4.3-13
 - 1.15 ABI rebuild
 

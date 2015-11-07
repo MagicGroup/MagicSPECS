@@ -49,7 +49,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		A pacman game for the Trinity Desktop.
 Summary(zh_CN.UTF-8): TDE 下的吃豆人游戏
 Version:		0.3.2
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 
 License:		GPLv2+
 Group:			Applications/Utilities
@@ -162,6 +162,9 @@ done
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.3.2-1.opt.2
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 0.3.2-1.opt.1
 - 为 Magic 3.0 重建
 

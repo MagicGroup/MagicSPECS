@@ -1,6 +1,6 @@
 Name:           perl-Test-Dir
 Version:        1.014
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Some simple tests on directories and folders
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.014-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.014-7
 - 为 Magic 3.0 重建
 

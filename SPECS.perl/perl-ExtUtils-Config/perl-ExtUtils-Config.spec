@@ -3,7 +3,7 @@
 
 Name:		perl-ExtUtils-Config
 Version:	0.007
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	A wrapper for perl's configuration
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::Config.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.007-14
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.007-13
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary:        Module to format an Array as an Array of String aligned in columns
 Name:           rubygem-%{gem_name}
 Version:        0.8.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Languages
 License:        Ruby or GPLv2
 URL:            https://github.com/rocky/columnize
@@ -88,6 +88,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.8.9-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.9-3
 - 为 Magic 3.0 重建
 

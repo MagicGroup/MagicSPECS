@@ -3,7 +3,7 @@
 Summary:        Access to pristine object state
 Name:           rubygem-%{gem_name}
 Version:        1.1.0
-Release:        14%{?dist}
+Release:        15%{?dist}
 Group:          Development/Languages
 License:        Ruby
 URL:            http://codeforpeople.com/lib/ruby/pervasives/
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.0-15
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.0-14
 - 为 Magic 3.0 重建
 

@@ -8,8 +8,8 @@
 Summary: A declarative language for describing user interfaces in Qt5
 Summary(zh_CN.UTF-8): 描述 Qt5 用户界面的声明语言
 Name:    qt5-%{qt_module}
-Version: 5.5.0
-Release: 1%{?dist}
+Version: 5.5.1
+Release: 2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -162,6 +162,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
+- 更新到 5.5.1
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
 - 更新到 5.5.0
 

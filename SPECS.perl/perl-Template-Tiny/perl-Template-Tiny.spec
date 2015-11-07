@@ -1,6 +1,6 @@
 Name:           perl-Template-Tiny
 Version:        1.12
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Template Toolkit re-implemented in as little code as possible
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.12-13
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.12-12
 - 为 Magic 3.0 重建
 

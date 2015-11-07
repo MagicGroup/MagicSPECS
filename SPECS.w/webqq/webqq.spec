@@ -1,7 +1,7 @@
 Summary: WebQQ 2.0 tray
 Name: webqq
 Version: 0.2
-Release: 3%{dist}
+Release: 4%{dist}
 License: GPL
 URL: http://ftp.magiclinux.org.cn/haulm
 Group: Applications/Internet
@@ -45,6 +45,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/applications/webqq.desktop
 %{_bindir}/webqq
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.2-4
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.2-3
 - 为 Magic 3.0 重建
 

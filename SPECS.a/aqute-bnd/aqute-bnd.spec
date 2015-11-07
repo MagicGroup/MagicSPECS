@@ -30,7 +30,7 @@
 
 Name:           aqute-bnd
 Version:        0.0.363
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        BND Tool
 License:        ASL 2.0
 URL:            http://www.aQute.biz/Code/Bnd
@@ -166,6 +166,9 @@ cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.0.363-16
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0.0.363-15
 - 为 Magic 3.0 重建
 

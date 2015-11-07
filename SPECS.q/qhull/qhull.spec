@@ -2,7 +2,7 @@ Summary: General dimension convex hull programs
 Summary(zh_CN.UTF-8): 一般维度的凸包程序
 Name: qhull
 Version:	2012.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: Qhull
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %_includedir/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2012.1-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 2012.1-1
 - 更新到 2012.1
 

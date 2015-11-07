@@ -3,7 +3,7 @@ Summary: Library for reading and converting WordPerfect documents
 Summary(zh_CN.UTF-8): 读取和转换 WordPerfect 文档的库
 Version: 0.10.0
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libwpd-%{majorver}
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.10.0-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.10.0-1
 - 更新到 0.10.0
 

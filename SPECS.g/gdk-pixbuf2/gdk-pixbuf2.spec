@@ -1,8 +1,8 @@
 %global glib2_version 2.37.2
 
 Name:           gdk-pixbuf2
-Version:	2.30.7
-Release:        1%{?dist}
+Version:	2.33.1
+Release:        2%{?dist}
 Summary:        An image loading library
 Summary(zh_CN.UTF-8): 图像装载库
 
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.33.1-2
+- 更新到 2.33.1
+
 * Sat Apr 05 2014 Liu Di <liudidi@gmail.com> - 2.30.7-1
 - 更新到 2.30.7
 

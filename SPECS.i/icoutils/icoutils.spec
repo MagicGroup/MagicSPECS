@@ -1,6 +1,6 @@
 Name:           icoutils
 Version:	0.31.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Utility for extracting and converting Microsoft icon and cursor files
 Summary(zh_CN.UTF-8): 解压和转换微软图标和光标文件的工具
 
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.31.0-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 0.31.0-1
 - 更新到 0.31.0
 

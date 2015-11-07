@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://www.openfabrics.org/downloads/management/?C=M;O=D"
+url="https://www.openfabrics.org/downloads/management/?C=M&O=D"
 new1="libibumad-"
 new2=".tar.gz"
 downcommand="wget -q" 

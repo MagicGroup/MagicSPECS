@@ -2,7 +2,7 @@ Summary:	C library for parsing command line parameters
 Summary(zh_CN.UTF-8):	用来解析命令行参数的 C 库。
 Name:		popt
 Version:	1.16
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	MIT
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -115,6 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpopt.a
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.16-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2015 Liu Di <liudidi@gmail.com> - 1.16-5
 - 为 Magic 3.0 重建
 

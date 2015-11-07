@@ -3,7 +3,7 @@
 
 Name:           libxfce4ui
 Version:	4.12.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary:        Commonly used Xfce widgets
 Summary(zh_CN.UTF-8): xfce 通用的部件
 
@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/48x48/apps/xfce4-logo.png
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.12.1-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.12.1-3
 - 为 Magic 3.0 重建
 

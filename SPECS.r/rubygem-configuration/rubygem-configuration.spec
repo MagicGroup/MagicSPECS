@@ -3,7 +3,7 @@
 Summary:        Pure Ruby scoped configuration files
 Name:           rubygem-%{gem_name}
 Version:        1.3.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Group:          Development/Languages
 License:        Ruby or BSD
 URL:            http://codeforpeople.com/lib/ruby/configuration/
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %doc %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.3.2-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.2-5
 - 为 Magic 3.0 重建
 

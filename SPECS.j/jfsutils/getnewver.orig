@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://jfs.sourceforge.net/source.html"
+url="https://sourceforge.net/projects/jfs"
 new1="jfsutils-"
 new2=".tar.gz"
 downcommand="wget -q" 

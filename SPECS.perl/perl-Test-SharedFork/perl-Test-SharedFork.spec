@@ -1,6 +1,6 @@
 Name:           perl-Test-SharedFork
 Summary:        Fork test
-Version:	0.33
+Version:	0.34
 Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.34-2
+- 更新到 0.34
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.33-2
 - 为 Magic 3.0 重建
 

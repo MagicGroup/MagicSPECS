@@ -1,6 +1,6 @@
 Name:           perl-gettext
-Version:        1.05
-Release:        35%{?dist}
+Version:	1.07
+Release:	2%{?dist}
 Summary:        Interface to gettext family of functions
 
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ make test
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.07-2
+- 更新到 1.07
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.05-35
 - 为 Magic 3.0 重建
 

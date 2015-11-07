@@ -4,7 +4,7 @@
 
 Name:    fontpackages
 Version: 1.44
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Common directory and macro definitions used by font packages
 Summary(zh_CN.UTF-8): 字体包使用的通用目录和宏定义
 
@@ -146,6 +146,9 @@ rm -fr %{buildroot}
 %{_bindir}/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.44-6
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.44-5
 - 为 Magic 3.0 重建
 

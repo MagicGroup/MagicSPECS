@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.7.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: A scheduler process to replace cron
 Group: Development/Languages
 License: MIT
@@ -97,6 +97,9 @@ install -m 0644 %{SOURCE2} %{buildroot}%{gem_instdir}/
 %{gem_instdir}/example.rb
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.7-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.7-5
 - 为 Magic 3.0 重建
 

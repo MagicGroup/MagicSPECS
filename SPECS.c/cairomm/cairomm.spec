@@ -1,10 +1,10 @@
 %global apiver 1.0
-%define cairover 1.12.14
+%define cairover 1.14.0
 
 Summary:          C++ API for the cairo graphics library
 Name:             cairomm
-Version:	1.11.2
-Release:          3%{?dist}
+Version:	1.12.0
+Release:          4%{?dist}
 URL:              http://www.cairographics.org
 License:          LGPLv2+
 Group:            System Environment/Libraries
@@ -81,6 +81,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 %doc %{_datadir}/devhelp/
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.12.0-4
+- 更新到 1.12.0
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 1.11.2-3
 - 更新到 1.11.2
 

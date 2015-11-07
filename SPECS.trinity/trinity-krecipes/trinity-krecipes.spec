@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0beta2
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	Recipes manager for TDE
 Summary(zh_CN.UTF-8): TDE 下的食谱管理程序
 Group:		Applications/Utilities
@@ -169,6 +169,9 @@ done
 %lang(en) %{tde_tdedocdir}/HTML/en/
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.0beta2-1.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2:1.0beta2-1.1
 - 为 Magic 3.0 重建
 

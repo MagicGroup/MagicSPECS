@@ -1,11 +1,11 @@
 # There's not been a release in a long time for dvb-apps
 # We use a Release based on the ChangeSet number and hash
 %define hgm 1
-%define vcsdate 20140324
+%define vcsdate 20151029
 
 Name:    dvb-apps
 Version: 1.1.2
-Release: 0.hg%{vcsdate}%{?dist}.2
+Release: 0.hg%{vcsdate}%{?dist}.4
 Summary: Utility, demo and test applications using the Linux DVB API
 Summary(zh_CN.UTF-8): 使用 Linux DVB API 的工具、示例和测试程序
 
@@ -90,6 +90,12 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 %exclude %{_includedir}/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20151029.4
+- 更新到 20151029 日期的仓库源码
+
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20140324.3
+- 为 Magic 3.0 重建
+
 * Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20140324.2
 - 更新到 20140324 日期的仓库源码
 

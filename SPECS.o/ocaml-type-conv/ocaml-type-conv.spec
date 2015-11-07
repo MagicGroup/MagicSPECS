@@ -4,7 +4,7 @@
 
 Name:           ocaml-type-conv
 Version:        3.0.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        OCaml base library for type conversion
 Summary(zh_CN.UTF-8): 类型转换的 OCaml 基本库
 License:        LGPLv2+ with exceptions and BSD
@@ -64,6 +64,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.0.5-11
+- 为 Magic 3.0 重建
+
 * Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 3.0.5-10
 - 为 Magic 3.0 重建
 

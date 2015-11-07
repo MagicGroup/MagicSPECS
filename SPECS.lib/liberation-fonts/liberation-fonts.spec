@@ -13,7 +13,7 @@ Name:             %{fontname}-fonts
 Summary:          Fonts to replace commonly used Microsoft Windows fonts
 Summary(zh_CN.UTF-8): 替换微软视察字体的字体
 Version:          1.07.4
-Release:          2%{?dist}
+Release:          3%{?dist}
 Epoch:          1
 # The license of the Liberation Fonts is a EULA that contains GPLv2 and two
 # exceptions:
@@ -150,6 +150,9 @@ mkfontscale %{buildroot}%{_fontdir}
 mkfontdir %{buildroot}%{_fontdir}
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1:1.07.4-3
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1:1.07.4-2
 - 为 Magic 3.0 重建
 

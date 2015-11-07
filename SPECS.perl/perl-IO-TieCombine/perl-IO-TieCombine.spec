@@ -1,6 +1,6 @@
 Name:       perl-IO-TieCombine 
-Version:	1.004
-Release:	1%{?dist}
+Version:	1.005
+Release:	2%{?dist}
 # see lib/IO/TieCombine.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.005-2
+- 更新到 1.005
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.004-1
 - 更新到 1.004
 

@@ -3,7 +3,7 @@
 
 Name:           python-%{modulename}
 Version:	0.5.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        An ISO 8601 date/time/duration parser and formatter
 Summary(zh_CN.UTF-8): ISO 8601 日期时间解析器
 Group:          Development/Languages
@@ -126,6 +126,9 @@ popd
 %endif 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.4-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.5.4-1
 - 更新到 0.5.4
 

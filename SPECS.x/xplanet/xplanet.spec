@@ -1,7 +1,7 @@
 Summary:	Render a planetary image into an X window
 Name:		xplanet
 Version:	1.3.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 License:	GPLv2+
 Group:		Amusements/Graphics
@@ -49,6 +49,9 @@ ln -sf ../fonts/gnu-free/FreeMonoBold.ttf \
 %{_datadir}/xplanet
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.3.0-4
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3
 - 为 Magic 3.0 重建
 

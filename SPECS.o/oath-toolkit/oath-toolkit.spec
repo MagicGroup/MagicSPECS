@@ -1,6 +1,6 @@
 Name:          oath-toolkit
-Version: 2.4.1
-Release: 1%{?dist}
+Version: 2.6.1
+Release: 2%{?dist}
 License:       GPLv3+
 Group:         System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -205,6 +205,9 @@ mkdir -p -m 0600 %{buildroot}%{_sysconfdir}/liboath
 %{_libdir}/security/pam_oath.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.6.1-2
+- 更新到 2.6.1
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 2.4.1-1
 - 更新到 2.4.1
 

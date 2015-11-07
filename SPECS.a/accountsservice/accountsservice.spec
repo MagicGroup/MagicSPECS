@@ -1,7 +1,7 @@
 
 Name:           accountsservice
-Version:	0.6.35
-Release:        1%{?dist}
+Version:	0.6.40
+Release:        2%{?dist}
 Summary:        D-Bus interfaces for querying and manipulating user account information
 Summary(zh_CN.UTF-8): 查询和处理用户账户信息的 D-Bus 接口
 
@@ -115,6 +115,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libaccountsservice/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.40-2
+- 更新到 0.6.40
+
 * Tue Apr 16 2013 Matthias Clasen <mclasen@redhat.com> - 0.6.31-1
 - Update to 0.6.31
 

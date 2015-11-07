@@ -13,7 +13,7 @@ Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
 Version:	1.3.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define majorver %(echo %{version} | awk -F. '{print $2"."$3}')
 Source0: http://ktorrent.pwsp.net/downloads/4.%{majorver}/%{real_name}-%{version}.tar.bz2
 
@@ -123,6 +123,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 1.3.1-1
 - 更新到 1.3.1
 

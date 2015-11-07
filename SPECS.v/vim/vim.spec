@@ -1,4 +1,4 @@
-%define patchlevel 898
+%define patchlevel 909
 %define WITH_SELINUX 0
 %define desktop_file 1
 %if %{desktop_file}
@@ -19,8 +19,8 @@ Summary: The VIM editor
 Summary(zh_CN.UTF-8): VIM 编辑器
 URL:     http://www.vim.org/
 Name: vim
-Version: 7.4.898
-Release:	3%{?dist}
+Version: 7.4.909
+Release:	2%{?dist}
 License: Vim
 Group: Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/工程
@@ -947,6 +947,17 @@ Patch895: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.895
 Patch896: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.896
 Patch897: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.897
 Patch898: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.898
+Patch899: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.899
+Patch900: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.900
+Patch901: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.901
+Patch902: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.902
+Patch903: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.903
+Patch904: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.904
+Patch905: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.905
+Patch906: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.906
+Patch907: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.907
+Patch908: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.908
+Patch909: ftp://ftp.vim.org/pub/vim/patches/7.4/7.4.909
 
 Patch1559: 7.4.559.rhpatched
 Patch3000: vim-7.4-syntax.patch
@@ -2028,6 +2039,17 @@ perl -pi -e "s,bin/nawk,bin/awk,g" runtime/tools/mve.awk
 %patch896 -p0
 %patch897 -p0
 %patch898 -p0
+%patch899 -p0
+%patch900 -p0
+%patch901 -p0
+%patch902 -p0
+%patch903 -p0
+%patch904 -p0
+%patch905 -p0
+%patch906 -p0
+%patch907 -p0
+%patch908 -p0
+%patch909 -p0
 
 # install spell files
 %if %{withvimspell}
@@ -2582,6 +2604,9 @@ rm -rf %{buildroot}
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:7.4.909-2
+- 更新到 7.4.909
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 2:7.4.898-3
 - 为 Magic 3.0 重建
 

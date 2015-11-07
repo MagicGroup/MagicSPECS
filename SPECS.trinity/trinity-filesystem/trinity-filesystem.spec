@@ -40,7 +40,7 @@
 
 Name:		trinity-filesystem
 Version:	%{tde_version}
-Release:	2%{?dist}%{?_variant}
+Release:	3%{?dist}%{?_variant}
 Summary:	Trinity Directory Layout
 Summary(zh_CN.UTF-8): Trinity 的目录结构
 Group:          System Environment/Libraries
@@ -611,6 +611,9 @@ done
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 14.0.1-3.opt
+- 为 Magic 3.0 重建
+
 * Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-2.opt
 - 为 Magic 3.0 重建
 

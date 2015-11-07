@@ -3,7 +3,7 @@
 
 Name:           ocaml-pa-monad
 Version:        6.0
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        OCaml syntax extension for monads
 Summary(zh_CN.UTF-8): monads 的 OCaml 语法扩展
 License:        LGPLv2+ with exceptions
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 6.0-17
+- 为 Magic 3.0 重建
+
 * Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 6.0-16
 - 为 Magic 3.0 重建
 

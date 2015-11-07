@@ -2,7 +2,7 @@ Summary: Tools to support ATM networking under Linux
 Summary(zh_CN.UTF-8): 在 Linux 下支持 ATM 网络的工具
 Name: linux-atm
 Version: 2.5.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD, GPLv2+, LGPLv2+
 URL: http://linux-atm.sourceforge.net/
 Group: System Environment/Daemons
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libatm.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.5.2-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.5.2-3
 - 为 Magic 3.0 重建
 

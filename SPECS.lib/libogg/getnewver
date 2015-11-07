@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://downloads.xiph.org/releases/ogg/?C=M;O=D"
+url="http://downloads.xiph.org/releases/ogg/?C=M&O=D"
 new1="libogg-"
 new2=".tar.xz"
 downcommand="wget -q" 

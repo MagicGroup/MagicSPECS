@@ -1,6 +1,6 @@
 Name:           perl-Class-Adapter
 Version:        1.08
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Perl implementation of the "Adapter" Design Pattern
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ find $RPM_BUILD_ROOT -depth -type d -empty -exec rmdir {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.08-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-POE-Filter-Transparent-SMTP
 Version:        0.2
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A POE filter for SMTP
 
 # note license definition in Makefile.PL
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.2-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.2-17
 - 为 Magic 3.0 重建
 

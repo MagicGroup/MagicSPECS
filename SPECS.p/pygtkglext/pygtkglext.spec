@@ -3,7 +3,7 @@
 
 Name:           pygtkglext
 Version:        1.1.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Python bindings for GtkGLExt
 Summary(zh_CN.UTF-8): GtkGLExt 的 Python 绑定
 License:        LGPLv2+
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1.0-10
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.1.0-9
 - 为 Magic 3.0 重建
 

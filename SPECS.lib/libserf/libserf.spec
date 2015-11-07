@@ -1,6 +1,6 @@
 Name:           libserf
 Version:        1.3.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        High-Performance Asynchronous HTTP Client Library
 Summary(zh_CN.UTF-8): 高性能的异步 HTTP 客户端库
 License:        ASL 2.0
@@ -72,6 +72,9 @@ scons %{?_smp_mflags} check || true
 %{_libdir}/pkgconfig/serf*.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.6-3
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.3.6-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           libuninameslist
 Version:        20091231
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 Summary:        A library providing Unicode character names and annotations
 Summary(zh_CN.UTF-8): 提供 Unicode 字符名称和说明的库
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 20091231-6
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 20091231-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: A real mode 80x86 assembler and linker
 Summary(zh_CN.UTF-8): 实模式 80x86 汇编器和链接器
 Name: dev86
 Version: 0.16.21
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL+ and GPLv2+ and LGPLv2+
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -91,6 +91,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.16.21-3
+- 为 Magic 3.0 重建
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 0.16.21-2
 - 更新到 0.16.21
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://origin-download.mono-project.com/sources/mono-basic/?C=M;O=D"
+url="http://origin-download.mono-project.com/sources/mono-basic/?C=M&O=D"
 new1="mono-basic-"
 new2=".tar.bz2"
 downcommand="wget -q" 

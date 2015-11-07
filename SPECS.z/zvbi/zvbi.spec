@@ -3,7 +3,7 @@
 
 Name:               zvbi
 Version:            0.2.33
-Release:            14%{?dist}
+Release:            15%{?dist}
 Summary:            Raw VBI, Teletext and Closed Caption decoding library
 Summary(zh_CN.UTF-8): Raw VBI，Teletext 和 Closed Caption 解码库
 Group:              System Environment/Libraries
@@ -219,6 +219,9 @@ fi
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.2.33-15
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.33-14
 - 为 Magic 3.0 重建
 

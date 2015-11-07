@@ -1,6 +1,6 @@
 Name:           perl-Dist-Zilla
-Version:	5.039
-Release:	1%{?dist}
+Version:	5.041
+Release:	2%{?dist}
 Summary:        Distribution builder; installer not included!
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -185,6 +185,9 @@ make test
 %{_sysconfdir}/bash_completion.d
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 5.041-2
+- 更新到 5.041
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 5.039-1
 - 更新到 5.039
 

@@ -14,7 +14,7 @@
 
 Name:           qpid-proton
 Version:        0.10
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A high performance, lightweight messaging library
 
 License:        ASL 2.0
@@ -208,6 +208,9 @@ make test
 popd
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.10-4
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 0.10-3
 - 为 Magic 3.0 重建
 

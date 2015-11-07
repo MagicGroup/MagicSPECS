@@ -7,7 +7,7 @@
 Summary: dmraid (Device-mapper RAID tool and library)
 Name: dmraid
 Version: 1.0.0.rc16
-Release: 19%{?dist}
+Release: 20%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 URL: http://people.redhat.com/heinzm/sw/dmraid
@@ -182,6 +182,9 @@ rm -rf $RPM_BUILD_ROOT
 %ghost /var/cache/logwatch/dmeventd/syslogpattern.txt
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0.0.rc16-20
+- 为 Magic 3.0 重建
+
 * Wed Nov 28 2012 Peter Rajnoha <prajnoha@redhat.com> - 1.0.0.rc16-19
 - Fix postun scriptlet to run ldconfig properly.
 

@@ -1,6 +1,6 @@
 Name:           gmime
 Version:	2.6.20
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library for creating and parsing MIME messages
 Summary(zh_CN.UTF-8): 创建和解析 MIME 信息的库
 
@@ -136,6 +136,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.6.20-3
+- 为 Magic 3.0 重建
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 2.6.20-2
 - 更新到 2.6.20
 

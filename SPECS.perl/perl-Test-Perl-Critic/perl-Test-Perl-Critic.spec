@@ -1,7 +1,7 @@
 Name:		perl-Test-Perl-Critic
 Summary:	Use Perl::Critic in test programs
 Version:	1.03
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-Perl-Critic/
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Perl::Critic.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.03-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.03-2
 - 为 Magic 3.0 重建
 

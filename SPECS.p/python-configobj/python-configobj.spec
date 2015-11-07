@@ -8,7 +8,7 @@
 
 Name:           python-configobj
 Version:	5.0.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Config file reading, writing, and validation
 Summary(zh_CN.UTF-8): 配置文件读取、写入和校验
 
@@ -159,6 +159,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 5.0.6-2
+- 为 Magic 3.0 重建
+
 * Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 5.0.6-1
 - 更新到 5.0.6
 

@@ -7,7 +7,7 @@ Summary:	Cryptography library for Python
 Summary(zh_CN.UTF-8): Python 的加密算法库
 Name:		python-crypto
 Version:	2.6.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 # Mostly Public Domain apart from parts of HMAC.py and setup.py, which are Python
 License:	Public Domain and Python
 Group:		Development/Libraries
@@ -131,6 +131,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.6.1-2
+- 为 Magic 3.0 重建
+
 * Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 2.6.1-1
 - 更新到 2.6.1
 

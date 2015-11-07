@@ -2,7 +2,7 @@ Summary:	Library for manipulating GIF format image files
 Summary(zh_CN.UTF-8): 处理 GIF 格式图像文件的库
 Name:		giflib
 Version:	4.1.6
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	MIT
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.1.6-9
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 4.1.6-7
 - 为 Magic 3.0 重建
 

@@ -10,7 +10,7 @@
 Summary: Journey is a router
 Name: rubygem-%{gem_name}
 Version: 1.0.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/rails/journey
@@ -76,6 +76,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.4-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.4-9
 - 为 Magic 3.0 重建
 

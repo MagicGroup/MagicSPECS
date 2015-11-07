@@ -11,8 +11,8 @@
 Summary: System for layout and rendering of internationalized text
 Summary(zh_CN.UTF-8): 国际化文本的布局和渲染系统
 Name: pango
-Version:	1.38.0
-Release:	1%{?dist}
+Version:	1.38.1
+Release:	2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -154,6 +154,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.38.1-2
+- 更新到 1.38.1
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.38.0-1
 - 更新到 1.38.0
 

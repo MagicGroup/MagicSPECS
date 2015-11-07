@@ -43,7 +43,7 @@
 Summary: Lightning fast webserver with light system requirements
 Name: lighttpd
 Version: 1.4.35
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: http://www.lighttpd.net/
@@ -315,6 +315,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.4.35-3
+- 更新到 1.4.37
+
 * Sun Jun 08 2014 Liu Di <liudidi@gmail.com> - 1.4.35-2
 - 为 Magic 3.0 重建
 

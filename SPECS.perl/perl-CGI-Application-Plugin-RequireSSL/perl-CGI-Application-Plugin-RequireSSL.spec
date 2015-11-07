@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-RequireSSL
 Version:        0.04
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Force SSL in specified pages or modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-14
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:	Tray applet that disables touchpad automatically while you are typing t
 Summary(zh_CN): 管理触摸板的面板小程序
 Name:		touchfreeze
 Version:	0.2.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group:          Applications/Utilities
 Group(zh_CN.UTF-8):   应用程序/工具
 License:	GPL v3
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/touchfreeze
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.3-4
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.2.3-3
 - 为 Magic 3.0 重建
 

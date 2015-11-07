@@ -4,7 +4,7 @@
 
 Name:           crypto-policies
 Version:        %{git_date}
-Release:        4.git%{git_commit_hash}%{?dist}
+Release:        5.git%{git_commit_hash}%{?dist}
 Summary:        Crypto policies package for Fedora
 Summary(zh_CN.UTF-8): Fedora 提供的加密策略包
 
@@ -74,6 +74,9 @@ make check %{?_smp_mflags}
 %license COPYING.LESSER
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20150305-5.git2eeb03b
+- 为 Magic 3.0 重建
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 20150305-4.git2eeb03b
 - 为 Magic 3.0 重建
 

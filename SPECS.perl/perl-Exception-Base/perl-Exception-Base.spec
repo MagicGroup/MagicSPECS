@@ -1,6 +1,6 @@
 Name:           perl-Exception-Base
 Version:	0.25
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Lightweight exceptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.25-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.25-1
 - 更新到 0.25
 

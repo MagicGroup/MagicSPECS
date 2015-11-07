@@ -5,7 +5,7 @@
 Summary: A clean, simple, and unobtrusive ruby authentication solution
 Name: rubygem-%{gem_name}
 Version: 3.4.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/binarylogic/authlogic
@@ -91,6 +91,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.4.2-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.4.2-2
 - 为 Magic 3.0 重建
 

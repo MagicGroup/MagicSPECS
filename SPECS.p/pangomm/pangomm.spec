@@ -3,8 +3,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           pangomm
-Version:	2.36.0
-Release:	1%{?dist}
+Version:	2.38.1
+Release:	2%{?dist}
 Summary:        C++ interface for Pango
 Summary(zh_CN.UTF-8): Pango 的 C++ 接口
 
@@ -103,6 +103,9 @@ magic_rpm_clean.sh
 %{_datadir}/devhelp/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.38.1-2
+- 更新到 2.38.1
+
 * Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 2.36.0-1
 - 更新到 2.36.0
 

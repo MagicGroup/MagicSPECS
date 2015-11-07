@@ -11,7 +11,7 @@ Summary: Assistive Technology Service Provider Interface
 Summary(zh_CN.UTF-8): 辅助技术服务提供者接口
 Name: at-spi
 Version: 1.32.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 URL: http://developer.gnome.org/projects/gap/
 #VCS: git:git://git.gnome.org/at-spi
 Source0: http://download.gnome.org/sources/at-spi/1.32/%{name}-%{version}.tar.bz2
@@ -155,6 +155,9 @@ mv $RPM_BUILD_ROOT%{_datadir}/doc/%{name}-%{version} \
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.32.0-10
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.32.0-8
 - 为 Magic 3.0 重建
 

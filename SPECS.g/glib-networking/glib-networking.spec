@@ -1,8 +1,8 @@
 %define glib2_version 2.35.8
 
 Name:           glib-networking
-Version:	2.40.0
-Release:        1%{?dist}
+Version:	2.47.1
+Release:        2%{?dist}
 Summary:        Networking support for GLib
 Summary(zh_CN.UTF-8): GLib 的网络支持
 
@@ -69,6 +69,9 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.47.1-2
+- 更新到 2.47.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 2.40.0-1
 - 更新到 2.40.0
 

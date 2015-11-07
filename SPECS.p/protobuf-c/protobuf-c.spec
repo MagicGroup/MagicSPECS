@@ -1,6 +1,6 @@
 Name:           protobuf-c
 Version:        1.1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        C bindings for Google's Protocol Buffers
 Summary(zh_CN.UTF-8): 谷歌 Protocol Buffers 的 C 绑定
 
@@ -69,6 +69,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/libprotobuf-c.pc
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1.1-4
+- 为 Magic 3.0 重建
+
 * Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.1.1-3
 - 为 Magic 3.0 重建
 

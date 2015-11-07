@@ -1,6 +1,6 @@
 Name:           iasl
 Version:        20100528
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Intel ASL compiler/decompiler
 Summary(zh_CN.UTF-8): Intel ASL 编译器/反编译器
 
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20100528-7
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 20100528-6
 - 为 Magic 3.0 重建
 

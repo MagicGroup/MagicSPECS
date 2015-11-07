@@ -1,6 +1,6 @@
 Name:           dia
-Version:        0.97.2
-Release:        2%{?dist}
+Version:	0.97.3
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Diagram drawing program
 Summary(zh_CN.UTF-8): 图像绘制程序
@@ -94,6 +94,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:0.97.3-3
+- 更新到 0.97.3
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1:0.97.2-2
 - 为 Magic 3.0 重建
 

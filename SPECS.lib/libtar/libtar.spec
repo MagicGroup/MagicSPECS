@@ -2,7 +2,7 @@ Summary:        Tar file manipulation API
 Summary(zh_CN.UTF-8): Tar 文件处理 API
 Name:           libtar
 Version:        1.2.11
-Release:        14%{?dist}
+Release:        15%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.11-15
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.2.11-14
 - 为 Magic 3.0 重建
 

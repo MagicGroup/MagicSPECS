@@ -1,6 +1,6 @@
 Name:		pciutils
-Version:	3.3.1
-Release:	1%{?dist}
+Version:	3.4.0
+Release:	2%{?dist}
 Source:		ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/%{name}-%{version}.tar.gz
 Source1:        multilibconfigh
 
@@ -144,6 +144,9 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.4.0-2
+- 更新到 3.4.0
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 3.3.1-1
 - 更新到 3.3.1
 

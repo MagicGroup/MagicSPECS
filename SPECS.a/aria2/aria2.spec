@@ -1,8 +1,8 @@
 %define binname aria2c
 
 Name:           aria2
-Version:        1.18.3
-Release:        3%{?dist}
+Version:	1.19.0
+Release:        4%{?dist}
 Summary:        High speed download utility with resuming and segmented downloading
 Summary(zh_CN): 可续传和分段下载的高速下载工具
 Group:          Applications/Internet
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.19.0-4
+- 更新到 1.19.0
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.13.0-2
 - 为 Magic 3.0 重建
 

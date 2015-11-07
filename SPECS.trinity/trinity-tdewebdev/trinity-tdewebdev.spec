@@ -48,7 +48,7 @@ Summary(zh_CN.UTF-8): 网页开发程序
 Group:		Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/编辑器
 Version:	%{tde_version}
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
@@ -591,5 +591,8 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 14.0.0-1
 - Initial release for TDE 14.0.0

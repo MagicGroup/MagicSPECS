@@ -1,6 +1,6 @@
 Name:           perl-Class-Factory
 Version:        1.06
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Base class for dynamic factory classes
 # see lib/Class/Factory.pm
 License:        GPL+ or Artistic
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.06-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.06-14
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@
 #%%define prerelease dr1
 
 Name:           strongswan
-Release:	1%{?dist}
+Release:	2%{?dist}
 Version:	5.3.3
 Summary:        An OpenSource IPsec-based VPN and TNC solution
 Summary(zh_CN.UTF-8): 开源的基于 IPsec 的 VPN 和 TNC 解决方案
@@ -358,6 +358,9 @@ magic_rpm_clean.sh
 %{_libexecdir}/%{name}/charon-nm
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.3.3-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 5.3.3-1
 - 更新到 5.3.3
 

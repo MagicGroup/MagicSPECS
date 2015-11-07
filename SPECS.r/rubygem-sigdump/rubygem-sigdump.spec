@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.2.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Ruby signal handler which dumps running threads and number of allocated objects
 License: MIT
 URL: https://github.com/frsyuki/sigdump
@@ -69,6 +69,9 @@ rm -f %{buildroot}%{gem_instdir}/.gitignore
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.2-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.2.2-2
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name:             apache-%{short_name}
 Version:          1.6
-Release:          10%{?dist}
+Release:          11%{?dist}
 Summary:          Apache Commons Pool Package
 License:          ASL 2.0
 URL:              http://commons.apache.org/%{base_name}/
@@ -51,6 +51,9 @@ This package contains the API documentation for %{name}.
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.6-11
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.6-10
 - 为 Magic 3.0 重建
 

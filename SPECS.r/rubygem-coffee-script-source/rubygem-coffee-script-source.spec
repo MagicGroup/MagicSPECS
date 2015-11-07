@@ -8,7 +8,7 @@
 Summary:        The CoffeeScript Compiler
 Name:           rubygem-%{gem_name}
 Version:        %{coffee_script_version}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://jashkenas.github.com/coffee-script/
@@ -70,6 +70,9 @@ ln -sf %{_datadir}/coffee-script/extras/coffee-script.js \
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.6.3-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.3-3
 - 为 Magic 3.0 重建
 

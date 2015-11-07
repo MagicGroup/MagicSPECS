@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.5b
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	A video thumbnail generator for TDE file managers
 Summary(zh_CN.UTF-8): TDE 文件管理器的视频缩略图生成器
 Group:		Applications/Multimedia
@@ -139,6 +139,9 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.5b-1.2
+- 为 Magic 3.0 重建
+
 * Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 2:0.5b-1.1
 - 为 Magic 3.0 重建
 

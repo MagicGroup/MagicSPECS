@@ -1,8 +1,8 @@
 ### Abstract ###
 
 Name: python-ldap
-Version:	2.4.20
-Release:	1%{?dist}
+Version:	2.4.22
+Release:	2%{?dist}
 Epoch: 0
 License: Python
 Group: System Environment/Libraries
@@ -66,6 +66,9 @@ magic_rpm_clean.sh
 %{python_sitearch}/python_ldap-%{version}-*.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0:2.4.22-2
+- 更新到 2.4.22
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0:2.4.20-1
 - 更新到 2.4.20
 

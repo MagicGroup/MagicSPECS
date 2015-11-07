@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Recorder
 Version:	0.07
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Record interaction with web sites
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/httprecorder.1*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.07-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.07-2
 - 为 Magic 3.0 重建
 

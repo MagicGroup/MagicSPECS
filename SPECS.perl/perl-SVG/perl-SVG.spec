@@ -1,6 +1,6 @@
 Name:           perl-SVG
 Version:	2.64
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        An extension to generate stand-alone or inline SGV
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.64-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.64-1
 - 更新到 2.64
 

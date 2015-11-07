@@ -1,6 +1,6 @@
 Name:           perl-Biblio-EndnoteStyle
 Version:        0.05
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Reference formatting using Endnote-like templates
 Summary(zh_CN.UTF-8): 采用类尾注模板的参考格式
 License:        GPL+ or Artistic
@@ -50,6 +50,9 @@ magic_rpm_clean.sh
 %{_bindir}/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.05-10
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-9
 - 为 Magic 3.0 重建
 

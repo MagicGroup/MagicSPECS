@@ -5,7 +5,7 @@
 Summary: Haml-rails provides Haml generators for Rails 3
 Name: rubygem-%{gem_name}
 Version: 0.5.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT or Ruby
 URL: http://github.com/indirect/haml-rails
@@ -85,6 +85,9 @@ popd
 %{gem_instdir}/Appraisals
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.3-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.3-4
 - 为 Magic 3.0 重建
 

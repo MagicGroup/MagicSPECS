@@ -4,7 +4,7 @@
 Name:		perl-Test-CheckChanges
 Summary:	Check that the Changes file matches the distribution
 Version:	0.14
-Release:	15%{?dist}
+Release:	16%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-CheckChanges/
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::CheckChanges.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.14-16
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.14-15
 - 为 Magic 3.0 重建
 

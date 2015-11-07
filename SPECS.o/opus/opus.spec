@@ -1,6 +1,6 @@
 Name:          opus
 Version:       1.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       An audio codec for use in low-delay speech and audio communication
 Summary(zh_CN.UTF-8): 低延迟语音通信使用的音频编码
 
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 %{_docdir}/opus/html/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 1.1-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Cursor management library
 Summary(zh_CN.UTF-8): 光标管理库
 Name: libXcursor
 Version: 1.1.14
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Xcursor*.3*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.14-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1.14-1
 - 更新到 1.1.14
 

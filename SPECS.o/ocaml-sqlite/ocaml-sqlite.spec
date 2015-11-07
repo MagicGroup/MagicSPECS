@@ -4,8 +4,8 @@
 %endif
 
 Name:           ocaml-sqlite
-Version:	2.0.9
-Release:	1%{?dist}
+Version:	4.0.0
+Release:	2%{?dist}
 Summary:        OCaml library for accessing SQLite3 databases
 Summary(zh_CN.UTF-8): 访问 SQLite3 数据库的 OCaml 库
 License:        BSD
@@ -82,6 +82,9 @@ make install
 %{_docdir}/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.0.0-2
+- 更新到 4.0.0
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 2.0.9-1
 - 更新到 2.0.9
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://ftp.gnu.org/gnu/nettle/?C=M;O=D"
+url="https://ftp.gnu.org/gnu/nettle/?C=M&O=D"
 new1="nettle-"
 new2=".tar.gz"
 downcommand="wget -q" 

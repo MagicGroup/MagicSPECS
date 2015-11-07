@@ -30,7 +30,7 @@
 
 Name:           checkstyle
 Version:        5.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Java source code checker
 URL:            http://checkstyle.sourceforge.net/
 # src/checkstyle/com/puppycrawl/tools/checkstyle/grammars/java.g is GPLv2+
@@ -172,6 +172,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.7-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 5.7-4
 - 为 Magic 3.0 重建
 

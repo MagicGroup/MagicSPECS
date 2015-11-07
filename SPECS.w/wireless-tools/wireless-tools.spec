@@ -10,7 +10,7 @@ Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL+
 Name: wireless-tools
 Version: 29
-Release: 10.1%{?pre_version}%{?dist}
+Release: 11.1%{?pre_version}%{?dist}
 Epoch: 1
 URL: http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html
 Source: http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.%{version}%{?pre_version}.tar.gz
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:29-11.1
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1:29-10.1
 - 为 Magic 3.0 重建
 

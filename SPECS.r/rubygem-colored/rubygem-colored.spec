@@ -4,7 +4,7 @@
 Summary: Extends ruby string class in order to colorize terminal output
 Name: rubygem-%{gem_name}
 Version: 1.2
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/defunkt/colored
@@ -73,6 +73,9 @@ popd
 %{gem_instdir}/test/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2-12
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2-11
 - 为 Magic 3.0 重建
 

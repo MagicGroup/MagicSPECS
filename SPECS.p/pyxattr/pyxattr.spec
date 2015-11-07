@@ -3,7 +3,7 @@ Name:		pyxattr
 Summary:	Extended attributes library wrapper for Python
 Summary(zh_CN.UTF-8): Python 的扩展属性库
 Version:	0.5.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -94,6 +94,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.5-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.5.5-1
 - 更新到 0.5.5
 

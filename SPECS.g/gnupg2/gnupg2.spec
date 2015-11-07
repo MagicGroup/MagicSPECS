@@ -1,7 +1,7 @@
 Summary: Utility for secure communication and data storage
 Name:    gnupg2
 Version: 2.0.22
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: GPLv3+
 Group:   Applications/System
@@ -193,6 +193,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.22-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.0.22-2
 - 为 Magic 3.0 重建
 

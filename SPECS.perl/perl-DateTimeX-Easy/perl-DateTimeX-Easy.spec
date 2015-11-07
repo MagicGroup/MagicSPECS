@@ -1,6 +1,6 @@
 Name:       perl-DateTimeX-Easy
 Version:    0.089
-Release:    16%{?dist}
+Release:    17%{?dist}
 # see lib/DateTimeX/Easy.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -62,6 +62,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.089-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.089-16
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 Summary: Text file format converters
 Summary(zh_CN.UTF-8): 文本文件格式转换工具
 Name: dos2unix
-Version: 6.0.4
-Release: 2%{?dist}
+Version: 7.3.1
+Release: 3%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 License: BSD
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT%{_docdir}
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.3.1-3
+- 更新到 7.3.1
+
 * Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 6.0.4-2
 - 更新到 6.0.4
 

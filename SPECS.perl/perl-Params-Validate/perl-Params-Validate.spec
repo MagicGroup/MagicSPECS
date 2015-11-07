@@ -1,7 +1,7 @@
 Summary: 	Params-Validate Perl module
 Name: 		perl-Params-Validate
 Version:	1.21
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: 	Artistic2.0
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/Params-Validate/
@@ -78,6 +78,9 @@ RELEASE_TESTING=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.21-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.21-1
 - 更新到 1.21
 

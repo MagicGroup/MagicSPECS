@@ -71,7 +71,7 @@
 
 Name:        torque
 Version:     4.2.10
-Release:     8%{?dist}
+Release:     9%{?dist}
 Summary:     Tera-scale Open-source Resource and QUEue manager
 Source0:     http://www.adaptivecomputing.com/download/%{name}/%{name}-%{version}.tar.gz
 Source2:     xpbs.desktop
@@ -875,6 +875,9 @@ fi
 %endif
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.2.10-9
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 4.2.10-8
 - 为 Magic 3.0 重建
 

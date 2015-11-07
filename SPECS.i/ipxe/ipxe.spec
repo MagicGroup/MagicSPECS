@@ -35,12 +35,12 @@
 # And then change these two:
 
 %define git 1
-%define vcsdate 20140418
+%define vcsdate 20151030
 %global hash c4bce43
 
 Name:    ipxe
 Version: %{vcsdate}
-Release: 7.git%{hash}%{?dist}
+Release: 8.git%{hash}%{?dist}
 Summary: A network boot loader
 
 Group:   System Environment/Base
@@ -217,6 +217,9 @@ done
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20151030-8.gitc4bce43
+- 更新到 20151030 日期的仓库源码
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 20140418-7.gitc4bce43
 - 更新到 20140418 日期的仓库源码
 

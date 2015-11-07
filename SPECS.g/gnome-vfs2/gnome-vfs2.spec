@@ -11,7 +11,7 @@ Summary: The GNOME virtual file-system libraries
 Summary(zh_CN.UTF-8): GNOME 虚拟文件系统库
 Name: gnome-vfs2
 Version: 2.24.4
-Release: 16%{?dist}
+Release: 17%{?dist}
 License: LGPLv2+ and GPLv2+
 # the daemon and the library are LGPLv2+
 # the modules are LGPLv2+ and GPLv2+
@@ -245,6 +245,9 @@ magic_rpm_clean.sh
 %config %{_sysconfdir}/gnome-vfs-2.0/modules/smb-module.conf
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.24.4-17
+- 为 Magic 3.0 重建
+
 * Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 2.24.4-16
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-More
 Version:        1.003
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Supplemental policies for Perl::Critic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.003-7
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.003-6
 - 为 Magic 3.0 重建
 

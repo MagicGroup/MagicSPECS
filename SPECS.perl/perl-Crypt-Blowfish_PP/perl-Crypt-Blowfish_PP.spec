@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Blowfish_PP
 Version:        1.12
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Blowfish encryption algorithm implemented purely in Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -49,6 +49,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.12-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.12-8
 - 为 Magic 3.0 重建
 

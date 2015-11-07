@@ -1,6 +1,6 @@
 Name:          ehcache-core
 Version:       2.6.7
-Release:       6%{?dist}
+Release:       7%{?dist}
 Summary:       Easy Hibernate Cache
 License:       ASL 2.0
 URL:           http://ehcache.org/
@@ -106,6 +106,9 @@ This package contains javadoc for %{name}.
 %doc src/assemble/EHCACHE-CORE-LICENSE.txt
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.6.7-7
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 2.6.7-6
 - 为 Magic 3.0 重建
 

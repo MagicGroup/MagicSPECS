@@ -1,6 +1,6 @@
 Name:           perl-File-Find-Rule-PPI
 Version:	1.06
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Add support for PPI queries to File::Find::Rule
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.06-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.06-1
 - 更新到 1.06
 

@@ -3,7 +3,7 @@
 
 Name:           python-paste
 Version:	2.0.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Tools for using a Web Server Gateway Interface stack
 Summary(zh_CN.UTF-8): 使用网页服务器网关接口的工具
 Group:          System Environment/Libraries
@@ -140,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0.2-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.0.2-1
 - 更新到 2.0.2
 

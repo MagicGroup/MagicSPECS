@@ -1,6 +1,6 @@
 Name:       perl-MooseX-Types-DateTime
-Version:	0.11
-Release:	1%{?dist}
+Version:	0.13
+Release:	2%{?dist}
 # see, e.g., lib/MooseX/Types/DateTime.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.13-2
+- 更新到 0.13
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
 - 更新到 0.11
 

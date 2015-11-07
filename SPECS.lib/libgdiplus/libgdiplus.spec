@@ -1,6 +1,6 @@
 Name:           libgdiplus
 Version: 2.10.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        An Open Source implementation of the GDI+ API
 Summary(zh_CN.UTF-8): GDI+ API 的开源实现
 
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_libdir}/lib*.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.10.9-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.10.9-1
 - 更新到 2.10.9
 

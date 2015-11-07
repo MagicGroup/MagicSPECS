@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://espeak.sourceforge.net/test/latest.html"
+url="https://sourceforge.net/projects/espeak"
 new1="espeak-"
 new2=".zip"
 downcommand="wget -q" 

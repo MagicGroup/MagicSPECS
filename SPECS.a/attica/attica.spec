@@ -1,7 +1,7 @@
 
 Name:           attica
 Version:        0.4.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Implementation of the Open Collaboration Services API
 Summary(zh_CN.UTF-8): 开放协作服务 API 的实现
 
@@ -73,6 +73,9 @@ test "$(pkg-config --modversion libattica)" = "%{version}"
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.4.2-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

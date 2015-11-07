@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/gnu/sharutils/?C=M;O=D"
+url="http://ftp.gnu.org/gnu/sharutils/?C=M&O=D"
 new1="sharutils-"
 new2=".tar.xz"
 downcommand="wget -q" 

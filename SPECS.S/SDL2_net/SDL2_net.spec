@@ -1,6 +1,6 @@
 Name:		SDL2_net
 Version:	2.0.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	SDL portable network library
 Summary(zh_CN.UTF-8): SDL 可移植网络库
 License:	zlib
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.0-7
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-6
 - 为 Magic 3.0 重建
 

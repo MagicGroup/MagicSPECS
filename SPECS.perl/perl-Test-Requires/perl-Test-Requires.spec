@@ -4,7 +4,7 @@
 Name:		perl-Test-Requires
 Summary:	Checks to see if a given module can be loaded
 Version:	0.10
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-Requires
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Requires.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.10-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
 - 更新到 0.10
 

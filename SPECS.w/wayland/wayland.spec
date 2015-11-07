@@ -2,7 +2,7 @@
 
 Name:           wayland
 Version:	1.9.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Wayland Compositor Infrastructure
 Summary(zh_CN.UTF-8): Wayland 显示服务
 
@@ -187,6 +187,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/wayland-server.pc
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.9.0-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 1.9.0-1
 - 更新到 1.9.0
 

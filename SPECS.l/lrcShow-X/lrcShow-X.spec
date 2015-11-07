@@ -2,7 +2,7 @@ Name: lrcShow-X
 Summary: lrcShow-X script
 Summary(zh_CN.UTF-8): lrcShow-X 动态歌词显示脚本
 Version:	 2.1.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License:	 GPL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -77,6 +77,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.1-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 2.1.1-3
 - 为 Magic 3.0 重建
 

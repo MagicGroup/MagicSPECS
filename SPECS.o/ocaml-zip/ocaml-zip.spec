@@ -2,7 +2,7 @@
 
 Name:           ocaml-zip
 Version:        1.05
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        OCaml library for reading and writing zip, jar and gzip files
 Summary(zh_CN.UTF-8): 读写 zip, jar 和 gzip 文件的 OCaml 库
 License:        LGPLv2 with exceptions
@@ -98,6 +98,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.05-5
+- 为 Magic 3.0 重建
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 1.05-4
 - 为 Magic 3.0 重建
 

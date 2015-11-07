@@ -2,7 +2,7 @@ Summary: An Enchanting Spell Checking Library
 Summary(zh_CN.UTF-8): 一个更好的拼写检查库
 Name: enchant
 Version: 1.6.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -106,6 +106,9 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.6.0-6
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1:1.6.0-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           kde-plasma-daisy
 Version:        0.0.4.26
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A simple application launcher for Plasma
 Summary(zh_CN.UTF-8): Plasma 的简单程序载入器
 Group:          User Interface/Desktops
@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 %{kde4_localedir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.0.4.26-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.0.4.25-2
 - 为 Magic 3.0 重建
 

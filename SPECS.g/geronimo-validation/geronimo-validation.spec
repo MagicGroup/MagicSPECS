@@ -3,7 +3,7 @@
 
 Name:           geronimo-validation
 Version:        1.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Geronimo implementation of JSR 303
 License:        ASL 2.0
 # should be http://geronimo.apache.org/
@@ -51,6 +51,9 @@ Javadoc for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1-13
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.1-12
 - 为 Magic 3.0 重建
 

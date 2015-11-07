@@ -5,7 +5,7 @@
 
 Name: docbook-dtds
 Version: 1.0
-Release: 62%{?dist}
+Release: 63%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -482,6 +482,9 @@ do
 done
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0-63
+- 为 Magic 3.0 重建
+
 * Mon Aug 19 2013 Ondrej Vasik <ovasik@redhat.com> - 1.0-62
 - package Relax NG schema format (#839665)
 - package W3C XML (XSD) schema format

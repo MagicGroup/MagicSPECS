@@ -1,6 +1,6 @@
 Name: libmlx4
 Version: 1.0.6
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Mellanox ConnectX InfiniBand HCA Userspace Driver
 Summary(zh_CN.UTF-8): Mellanox ConnectX InfiniBand HCA 用户空间驱动
 Provides: libibverbs-driver.%{_arch}
@@ -80,6 +80,9 @@ magic_rpm_clean.sh
 %{_libdir}/libmlx4.a
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.6-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.6-5
 - 更新到 1.0.6
 

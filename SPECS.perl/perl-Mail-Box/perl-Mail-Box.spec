@@ -1,6 +1,6 @@
 Name:           perl-Mail-Box
 Version:	2.118
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Manage a mailbox, a folder with messages
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.118-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.118-1
 - 更新到 2.118
 

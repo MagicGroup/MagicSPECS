@@ -3,7 +3,7 @@
 Summary:        A package for using Git in Ruby code
 Name:           rubygem-%{gem_name}
 Version:        1.2.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://rubyforge.org/projects/git/
@@ -41,6 +41,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.5-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.5-10
 - 为 Magic 3.0 重建
 

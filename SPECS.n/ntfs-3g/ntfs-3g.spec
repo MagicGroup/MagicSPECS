@@ -8,8 +8,8 @@
 Name:		ntfs-3g
 Summary:	Linux NTFS userspace driver
 Summary(zh_CN.UTF-8): Linux 下的用户空间 NTFS 驱动
-Version:	2014.2.15
-Release:	9%{?dist}
+Version: 2015.3.14
+Release: 2%{?dist}
 License:	GPLv2+
 Group:		System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -184,6 +184,9 @@ magic_rpm_clean.sh
 %exclude %{_mandir}/man8/ntfs-3g*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2:2015.3.14-2
+- 更新到 2015.3.14
+
 * Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 2:2014.2.15-9
 - 为 Magic 3.0 重建
 

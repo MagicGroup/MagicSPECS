@@ -3,7 +3,7 @@
 
 Name:           ocaml-deriving
 Version:        0.1.1a
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Extension to OCaml for deriving functions from types
 Summary(zh_CN.UTF-8): 从类型中派生函数的 OCaml 扩展
 License:        MIT
@@ -140,6 +140,9 @@ install -m 0755 syntax/deriving $RPM_BUILD_ROOT%{_bindir}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.1.1a-24
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.1.1a-23
 - 为 Magic 3.0 重建
 

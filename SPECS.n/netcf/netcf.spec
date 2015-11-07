@@ -1,6 +1,6 @@
 Name:           netcf
-Version: 0.2.6
-Release: 1%{?dist}
+Version: 0.2.8
+Release: 2%{?dist}
 Summary:        Cross-platform network configuration library
 Summary(zh_CN.UTF-8): 跨平台的网络配置库
 
@@ -185,6 +185,9 @@ fi
 %{_libdir}/pkgconfig/netcf.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.2.8-2
+- 更新到 0.2.8
+
 * Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 0.2.6-1
 - 更新到 0.2.6
 

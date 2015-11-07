@@ -3,7 +3,7 @@
 Name: 		rubygem-%{gem_name}
 Summary: 	Arrayfields RubyGem
 Version: 	4.7.4
-Release: 	11%{?dist}
+Release: 	12%{?dist}
 Group:		Development/Languages
 License: 	GPLv2+ or Ruby
 URL: 		http://codeforpeople.com/lib/ruby/%{gem_name}/
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{gem_spec}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.7.4-12
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.7.4-11
 - 为 Magic 3.0 重建
 

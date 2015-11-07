@@ -1,6 +1,6 @@
 Name:           libspiro
 Version:        20071029
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Library to simplify the drawing of beautiful curves
 Summary(zh_CN.UTF-8): 简单描绘优美曲线的库
 
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 20071029-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 20071029-4
 - 为 Magic 3.0 重建
 

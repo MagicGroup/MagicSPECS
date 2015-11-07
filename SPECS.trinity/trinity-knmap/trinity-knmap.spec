@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	2.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	An NMAP frontend for TDE
 Summary(zh_CN.UTF-8): TDE 下的 NMAP 前端
 Group:		Applications/Internet
@@ -179,6 +179,9 @@ done
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:2.1-1.2
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 2:2.1-1.1
 - 为 Magic 3.0 重建
 

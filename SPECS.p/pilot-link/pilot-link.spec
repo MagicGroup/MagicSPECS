@@ -2,7 +2,7 @@
 
 Name: pilot-link
 Version: 0.12.5
-Release: 15%{?dist}
+Release: 16%{?dist}
 Epoch: 2
 # libpisock/md5.c       Public Domain
 # libpisock/blob.c      LGPLv2+
@@ -215,6 +215,9 @@ rm -rf %{buildroot}
 /usr/lib/udev/rules.d/69-pilot-link.rules
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2:0.12.5-16
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2:0.12.5-15
 - 为 Magic 3.0 重建
 

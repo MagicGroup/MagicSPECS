@@ -2,7 +2,7 @@ Name:           tclap
 Summary:        Template-Only Command Line Argument Parser
 Summary(zh_CN.UTF-8): 只有模板的命令行参数解析器
 Version:	1.2.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:        MIT
 URL:            http://%{name}.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 %{_defaultdocdir}/%{name}/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.1-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1.2.1-1
 - 更新到 1.2.1
 

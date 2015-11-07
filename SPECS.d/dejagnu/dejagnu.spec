@@ -1,8 +1,8 @@
 Summary: A front end for testing other programs
 Summary(zh_CN.UTF-8): 测试其它程序的前端
 Name: dejagnu
-Version: 1.5.1
-Release: 3%{?dist}
+Version: 1.5.3
+Release: 4%{?dist}
 Epoch: 1
 License: GPLv3+
 Source: ftp://ftp.gnu.org/gnu/dejagnu/dejagnu-%{version}.tar.gz
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/dejagnu*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.5.3-4
+- 更新到 1.5.3
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 1:1.5.1-3
 - 更新到 1.5.1
 

@@ -3,7 +3,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.0.2
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 Summary:	Ruby library to handle HTTP Cookies based on RFC 6265
 Group:	Development/Languages
@@ -99,6 +99,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.2-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.2-5
 - 为 Magic 3.0 重建
 

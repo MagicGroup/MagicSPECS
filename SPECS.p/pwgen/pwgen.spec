@@ -1,6 +1,6 @@
 Name:           pwgen
 Version:        2.07
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Automatic password generation
 Summary(zh_CN.UTF-8): 自动密码生成器
 
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.07-4
+- 为 Magic 3.0 重建
+
 * Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 2.07-3
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 Summary:	Calculates the Levenshtein distance between two byte strings
 Name:		rubygem-%{gem_name}
 Version:	0.2.2
-Release:	9%{?dist}
+Release:	10%{?dist}
 
 Group:		Development/Languages
 # LICENSE file
@@ -124,6 +124,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.2.2-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.2.2-9
 - 为 Magic 3.0 重建
 

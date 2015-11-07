@@ -1,6 +1,6 @@
 Name:           telepathy-filesystem
 Version:        0.0.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Telepathy filesystem layout
 Summary(zh_CN.UTF-8): Telepathy 的文件系统结构
 
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.2-7
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.0.2-6
 - 为 Magic 3.0 重建
 

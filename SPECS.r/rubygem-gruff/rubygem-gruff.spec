@@ -5,7 +5,7 @@
 Summary:	Beautiful graphs for one or multiple datasets
 Name:		rubygem-%{gem_name}
 Version:	0.3.6
-Release:	9%{?dist}
+Release:	10%{?dist}
 Group:		Development/Languages
 License:	MIT
 URL:		http://nubyonrails.com/pages/gruff
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.6-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.6-9
 - 为 Magic 3.0 重建
 

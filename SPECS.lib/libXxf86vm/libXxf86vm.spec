@@ -1,8 +1,8 @@
 Summary: X.Org X11 libXxf86vm runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXxf86vm 运行库
 Name: libXxf86vm
-Version: 1.1.3
-Release: 1%{?dist}
+Version: 1.1.4
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -59,6 +59,9 @@ magic_rpm_clean.sh
 %{_includedir}/X11/extensions/xf86vmode.h
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.4-2
+- 更新到 1.1.4
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1.3-1
 - 更新到 1.1.3
 

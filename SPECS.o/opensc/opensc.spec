@@ -1,6 +1,6 @@
 Name:           opensc
-Version: 0.14.0
-Release: 1%{?dist}
+Version: 0.15.0
+Release: 2%{?dist}
 Summary:        Smart card library and applications
 Summary(zh_CN.UTF-8): 智能卡的库和应用程序
 
@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.15.0-2
+- 更新到 0.15.0
+
 * Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 0.14.0-1
 - 更新到 0.14.0
 

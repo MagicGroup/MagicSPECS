@@ -2,7 +2,7 @@ Name:           perl-Pod-Escapes
 # Compete with perl.spec
 Epoch:          1
 Version:        1.07
-Release:        349%{?dist}
+Release:        350%{?dist}
 Summary:        Resolve POD escape sequences
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:1.07-350
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1:1.07-349
 - 为 Magic 3.0 重建
 

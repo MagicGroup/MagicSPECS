@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.7.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A library for consuming and serving OpenID identities
 Group: Development/Languages
 # License breakdown:
@@ -110,6 +110,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.7.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.7.0-3
 - 为 Magic 3.0 重建
 

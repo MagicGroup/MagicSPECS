@@ -2,8 +2,8 @@ Name:           highlight
 Summary:        Universal source code to formatted text converter
 Summary(zh_CN.UTF-8): 通用源代码格式文本转换器
 
-Version:	3.18
-Release:        1%{?dist}
+Version:	3.23
+Release:        2%{?dist}
 
 Group:          Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -86,6 +86,9 @@ desktop-file-install \
 %{_datadir}/pixmaps/highlight.xpm
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.23-2
+- 更新到 3.23
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.18-1
 - 更新到 3.18
 

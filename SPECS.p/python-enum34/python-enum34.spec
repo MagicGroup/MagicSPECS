@@ -4,7 +4,7 @@
 
 Name:           python-enum34
 Version:        1.0.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 Summary:        Backport of Python 3.4 Enum
@@ -110,6 +110,9 @@ magic_rpm_clean.sh
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0.4-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 1.0.4-4
 - 为 Magic 3.0 重建
 

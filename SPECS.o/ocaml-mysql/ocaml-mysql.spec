@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-mysql
-Version:	1.1.3
-Release:	1%{?dist}
+Version:	1.2.0
+Release:	2%{?dist}
 Summary:        OCaml library for accessing MySQL databases
 Summary(zh_CN.UTF-8): 访问 MySQL 数据库的 OCaml 库
 License:        LGPLv2+ with exceptions
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.0-2
+- 更新到 1.2.0
+
 * Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.1.3-1
 - 更新到 1.1.3
 

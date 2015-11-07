@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-RSA
 Version:        0.28
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Perl interface to OpenSSL for RSA
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.28-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.28-8
 - 为 Magic 3.0 重建
 

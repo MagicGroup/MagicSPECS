@@ -1,8 +1,8 @@
 %define		live_soversion 0
 
 Name:		live555
-Version:	2014.06.28
-Release:	1%{?dist}
+Version:	2015.10.29
+Release:	2%{?dist}
 Summary:	Live555.com streaming libraries
 
 Group:		System Environment/Libraries
@@ -204,6 +204,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2015.10.29-2
+- 更新到 2015.10.29
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 2014.06.28-1
 - 更新到 2014.06.28
 

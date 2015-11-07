@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Powerful, flexible and configurable coercion library
 Group: Development/Languages
 License: MIT
@@ -82,6 +82,9 @@ popd
 %exclude %{gem_instdir}/config
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.0-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-4
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Name:           libxcb
-Version: 1.11
-Release: 1%{?dist}
+Version: 1.11.1
+Release: 2%{?dist}
 Summary:        A C binding to the X11 protocol
 Summary(zh_CN.UTF-8): X11 协议的 C 绑定
 
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgdocdir}
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.1-2
+- 更新到 1.11.1
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.11-1
 - 更新到 1.11
 

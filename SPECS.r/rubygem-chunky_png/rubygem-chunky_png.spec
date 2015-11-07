@@ -4,7 +4,7 @@
 Summary: Pure ruby library for read/write, chunk-level access to PNG files
 Name: rubygem-%{gem_name}
 Version: 1.2.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://wiki.github.com/wvanbergen/chunky_png
@@ -79,6 +79,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.7-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.7-4
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:           perl-Digest-SHA
 Epoch:          1
 Version:	5.95
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl extension for SHA-1/224/256/384/512
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -75,6 +75,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:5.95-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:5.95-1
 - 更新到 5.95
 

@@ -1,7 +1,7 @@
 Summary: X.Org X11 SM runtime library
 Summary(zh_CN.UTF-8): X.Org X11 SM 运行库
 Name: libSM
-Version: 1.2.1
+Version: 1.2.2
 Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/sm.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.2-2
+- 更新到 1.2.2
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.1-2
 - 为 Magic 3.0 重建
 

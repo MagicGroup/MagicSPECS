@@ -1,6 +1,6 @@
 Name:           cobertura-maven-plugin
 Version:        2.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Plugin providing the features of Cobertura within Maven
 
 Group:          Development/Libraries
@@ -81,6 +81,9 @@ rm -Rf src/it/mcobertura-65
 %doc LICENSE
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.6-3
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.6-2
 - Use Requires: java-headless rebuild (#1067528)
 

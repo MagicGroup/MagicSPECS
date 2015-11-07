@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/releases/c/m/cmake-fedora/?C=M;O=D"
+url="https://fedorahosted.org/releases/c/m/cmake-fedora/?C=M&O=D"
 new1="cmake-fedora-"
 new2="-Source.tar.xz"
 downcommand="wget -q" 

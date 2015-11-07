@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.8.2
-Release:        102%{?dist}
+Release:        103%{?dist}
 
 Summary:        A JSON implementation in Ruby
 
@@ -130,6 +130,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.8.2-103
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.8.2-102
 - 为 Magic 3.0 重建
 

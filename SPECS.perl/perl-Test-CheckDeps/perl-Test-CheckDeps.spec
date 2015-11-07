@@ -1,7 +1,7 @@
 Name:		perl-Test-CheckDeps
 Summary:	Check for presence of dependencies
 Version:	0.010
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		https://metacpan.org/release/Test-CheckDeps
@@ -55,6 +55,9 @@ make test RELEASE_TESTING=1
 %{_mandir}/man3/Test::CheckDeps.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.010-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.010-3
 - 为 Magic 3.0 重建
 

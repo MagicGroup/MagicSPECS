@@ -3,7 +3,7 @@
 Summary: A lightweight mail library written in ruby
 Name: rubygem-%{gem_name}
 Version: 1.0.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD
 URL: http://sup.rubyforge.org/
 Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
@@ -58,6 +58,9 @@ mv .%{gem_dir}/* %{buildroot}%{gem_dir}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.1-4
 - 为 Magic 3.0 重建
 

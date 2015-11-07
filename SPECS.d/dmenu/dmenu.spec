@@ -1,6 +1,6 @@
 Name:           dmenu
 Version:        4.5
-Release:        9.20140425git%{?dist}
+Release:        10.20140425git%{?dist}
 Summary:        Generic menu for X
 License:        MIT
 URL:            http://tools.suckless.org/dmenu
@@ -58,6 +58,9 @@ make %{?_smp_mflags}
 %{_mandir}/man*/stest.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.5-10.20140425git
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.5-9.20140425git
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 Summary: 	Perl bindings for GNU LibIDN
 Name: 		perl-Net-LibIDN
 Version: 	0.12
-Release: 	15%{?dist}
+Release: 	16%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/%{pkgname}/
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/auto/Net
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.12-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-15
 - 为 Magic 3.0 重建
 

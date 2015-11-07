@@ -11,8 +11,8 @@
 %global with_tests   %{?_with_tests:1}%{!?_with_tests:0}
 
 Name:              redis
-Version:	3.0.4
-Release:	1%{?dist}
+Version:	3.0.5
+Release:	2%{?dist}
 Summary:           A persistent key-value database
 Summary(zh_CN.UTF-8): 键-值 数据库
 License:           BSD
@@ -246,6 +246,9 @@ fi
 %endif
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.0.5-2
+- 更新到 3.0.5
+
 * Mon Sep 07 2015 Christopher Meng <rpm@cicku.me> - 3.0.4-1
 - Update to 3.0.4
 

@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.90.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Twin-panel (commander-style) file manager for TDE (and other desktops)
 Summary(zh_CN.UTF-8): TDe 下的双面板文件管理器
 Group:		Applications/Utilities
@@ -173,5 +173,8 @@ done
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.90.0-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.90.0-1
 - Initial release for TDE 14.0.0

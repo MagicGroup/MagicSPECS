@@ -6,7 +6,7 @@ Summary(zh_CN.UTF-8): GNU 文件归档程序
 Name: tar
 Epoch: 2
 Version:	1.28
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv3+
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -117,6 +117,9 @@ fi
 %{_infodir}/tar.info*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:1.28-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2:1.28-1
 - 更新到 1.28
 

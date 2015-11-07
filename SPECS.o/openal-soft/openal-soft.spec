@@ -1,6 +1,6 @@
 Name:           openal-soft
 Version: 1.16.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Open Audio Library
 Summary(zh_CN.UTF-8): 开放音频库
 
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.16.0-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 1.16.0-1
 - 更新到 1.16.0
 

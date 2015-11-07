@@ -1,6 +1,6 @@
 Name:           perl-Test-TempDir
 Version:        0.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Temporary files support for testing
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-TempDir/
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/Test::TempDir*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.10-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.10-4
 - 为 Magic 3.0 重建
 

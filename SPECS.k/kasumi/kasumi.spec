@@ -1,6 +1,6 @@
 Name:    kasumi
 Version: 2.5
-Release: 10%{?dist}
+Release: 11%{?dist}
 
 License: GPLv2+
 URL:     http://kasumi.sourceforge.jp/
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.5-11
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 2.5-10
 - 为 Magic 3.0 重建
 

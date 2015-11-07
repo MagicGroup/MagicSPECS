@@ -1,6 +1,6 @@
 Name:           perl-Config-IniFiles
 Version:	2.88
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A module for reading .ini-style configuration files
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.88-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.88-1
 - 更新到 2.88
 

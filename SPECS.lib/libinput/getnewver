@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/libinput/?C=M;O=D"
+url="http://www.freedesktop.org/software/libinput/?C=M&O=D"
 new1="libinput-"
 new2=".tar.xz"
 downcommand="wget -q" 

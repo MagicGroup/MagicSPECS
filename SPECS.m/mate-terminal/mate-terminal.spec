@@ -1,8 +1,8 @@
 Summary:        Terminal emulator for MATE
 Summary(zh_CN.UTF-8): MATE 的终端模拟器
 Name:           mate-terminal
-Version:        1.9.0
-Release:        2%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 License:        GPLv3+
 URL:            http://mate-desktop.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -75,6 +75,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
 - 为 Magic 3.0 重建
 

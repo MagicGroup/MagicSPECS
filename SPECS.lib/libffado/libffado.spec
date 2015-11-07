@@ -2,7 +2,7 @@ Summary:        Free firewire audio driver library
 Summary(zh_CN.UTF-8): 自由的火线音频驱动库
 Name:           libffado
 Version: 2.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 # src/libutil/float_cast.h is LGPLv2+.
 # The rest is (GPLv2 or GPLv3)
 License:        LGPLv2+ and (GPLv2 or GPLv3)
@@ -153,6 +153,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.2.1-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.2.1-1
 - 更新到 2.2.1
 

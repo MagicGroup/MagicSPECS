@@ -1,8 +1,8 @@
 Summary:	Map view for Clutter
 Summary(zh_CN.UTF-8): Clutter 的地图查看
 Name:		libchamplain
-Version:	0.12.8
-Release:	1%{?dist}
+Version:	0.12.11
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -173,6 +173,9 @@ magic_rpm_clean.sh
 %doc demos/*.osm
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.12.11-2
+- 更新到 0.12.11
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.12.8-1
 - 更新到 0.12.8
 

@@ -2,7 +2,7 @@
 
 Name: btparser
 Version: 0.25
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Parser and analyzer for backtraces produced by GDB
 Group: Development/Libraries
 License: GPLv2+
@@ -96,6 +96,9 @@ make check
 %{python_sitearch}/%{name}/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.25-3
+- 为 Magic 3.0 重建
+
 * Wed Mar 06 2013 Martin Milata <mmilata@redhat.com> - 0.25-2
 - Fix strict aliasing warning
 

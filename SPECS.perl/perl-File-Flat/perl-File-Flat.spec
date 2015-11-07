@@ -1,6 +1,6 @@
 Name: 		perl-File-Flat
 Version: 	1.04
-Release: 	21%{?dist}
+Release: 	22%{?dist}
 Summary: 	Implements a flat filesystem
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -63,6 +63,9 @@ rm -rf t/99_pmv.t
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.04-22
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-21
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:           apache-%{short_name}
 Version:        1.0
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        The Apache Commons Extension Language
 License:        ASL 1.1
 URL:            http://commons.apache.org/%{base_name}
@@ -91,6 +91,9 @@ cp -pr dist/docs/api/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0-33
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0-32
 - 为 Magic 3.0 重建
 

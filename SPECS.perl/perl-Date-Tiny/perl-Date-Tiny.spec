@@ -1,6 +1,6 @@
 Name:           perl-Date-Tiny
 Version:        1.04
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Date object with as little code as possible
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.04-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.04-11
 - 为 Magic 3.0 重建
 

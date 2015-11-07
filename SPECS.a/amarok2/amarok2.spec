@@ -14,11 +14,11 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://amarok.kde.org/
-Version:	2.8.0
+Version:	2.8.90
 %if %{svn}
-Release: 0.svn%rversion.1%{?dist}.6
+Release: 0.svn%rversion.1%{?dist}.7
 %else
-Release: 5%{?dist}
+Release: 6%{?dist}
 %endif
 
 %if %{svn}
@@ -275,6 +275,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/mime/packages/amzdownloader.xml
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.8.90-6
+- 更新到 2.8.90
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.8.0-5
 - 为 Magic 3.0 重建
 

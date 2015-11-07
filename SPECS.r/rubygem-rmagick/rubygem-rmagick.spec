@@ -9,7 +9,7 @@ Requires:		ImageMagick%{?_isa} = %2\
 
 Name:		rubygem-%{gem_name}
 Version:	2.15.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Summary:	Ruby binding to ImageMagick
 License:	MIT
@@ -224,6 +224,9 @@ popd
 %doc	%{gem_instdir}/examples/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.15.4-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.15.4-2
 - 为 Magic 3.0 重建
 

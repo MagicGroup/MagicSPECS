@@ -1,6 +1,6 @@
 Name:           perl-DBD-SQLite
-Version:	1.49_01
-Release:	1%{?dist}
+Version:	1.49_02
+Release:	2%{?dist}
 Summary:        SQLite DBI Driver
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -60,6 +60,9 @@ find %{buildroot} -depth -type d -empty -exec rmdir {} ';'
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.49_02-2
+- 更新到 1.49_02
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.49_01-1
 - 更新到 1.49_01
 

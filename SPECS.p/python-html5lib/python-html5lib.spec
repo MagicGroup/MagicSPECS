@@ -4,8 +4,8 @@
 Name:		python-%{modulename}
 Summary:	A python based HTML parser/tokenizer
 Summary(zh_CN.UTF-8): Python 的 HTML 解析器
-Version:	0.999999
-Release:	1%{?dist}
+Version:	0.9999999
+Release:	2%{?dist}
 Epoch:		1
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -102,6 +102,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:0.9999999-2
+- 更新到 0.9999999
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1:0.999999-1
 - 更新到 0.999999
 

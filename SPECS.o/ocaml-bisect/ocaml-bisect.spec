@@ -2,7 +2,7 @@
 
 Name:           ocaml-bisect
 Version:        1.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        OCaml code coverage tool
 Summary(zh_CN.UTF-8): OCaml 代理覆盖工具
 License:        GPLv3+
@@ -98,6 +98,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3-5
+- 为 Magic 3.0 重建
+
 * Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.3-4
 - 为 Magic 3.0 重建
 

@@ -45,7 +45,7 @@
 
 Name:			trinity-%{tde_pkg}
 Version:		%{tde_version}
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.4
 Summary:		TDE Libraries
 Summary(zh_CN.UTF-8): TDE 基本库
 Group:			System/GUI/Other
@@ -542,6 +542,9 @@ EOF
 %__rm -rf "%{?buildroot}"
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.4
+- 为 Magic 3.0 重建
+
 * Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.3
 - 为 Magic 3.0 重建
 

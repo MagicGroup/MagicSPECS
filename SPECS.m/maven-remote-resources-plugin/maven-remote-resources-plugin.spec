@@ -1,6 +1,6 @@
 Name:           maven-remote-resources-plugin
 Version:        1.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Maven Remote Resources Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-remote-resources-plugin/
@@ -75,6 +75,9 @@ rm -f src/main/resources/META-INF/plexus/components.xml
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.4-10
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

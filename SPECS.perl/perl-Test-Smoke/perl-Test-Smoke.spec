@@ -1,6 +1,6 @@
 Name:           perl-Test-Smoke
 Version:	1.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl core test smoke suite
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ rm -rf %{buildroot}/%{perl_vendorlib}/inc/Mail/Sendmail.pm
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.6-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6-1
 - 更新到 1.6
 

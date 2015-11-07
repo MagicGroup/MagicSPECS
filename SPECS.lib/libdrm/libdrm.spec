@@ -3,8 +3,8 @@
 Summary: Direct Rendering Manager runtime library
 Summary(zh_CN.UTF-8): 直接渲染管理运行库
 Name: libdrm
-Version: 2.4.64
-Release: 1%{?dist}
+Version: 2.4.65
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -222,6 +222,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/drm*.7*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.4.65-2
+- 更新到 2.4.65
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 2.4.64-1
 - 更新到 2.4.64
 

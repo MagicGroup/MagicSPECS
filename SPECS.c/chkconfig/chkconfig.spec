@@ -1,8 +1,8 @@
 Summary: A system tool for maintaining the /etc/rc*.d hierarchy
 Summary(zh_CN.UTF-8): 处理 /etc/rc*.d 层次结构的系统工具
 Name: chkconfig
-Version: 1.3.61
-Release: 1%{?dist}
+Version: 1.3.62
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/ntsysv.8*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3.62-2
+- 更新到 1.3.62
+
 * Wed Jul 31 2013 Lukáš Nykrýn <lnykryn@redhat.com> - 1.3.61-1
 - try to make install_initd work
 - fix permission issues with xinetd services

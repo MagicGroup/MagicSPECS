@@ -1,6 +1,6 @@
 Name:          lightcouch
 Version:       0.1.2
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       CouchDB Java API
 License:       ASL 2.0
 URL:           http://www.lightcouch.org/
@@ -107,6 +107,9 @@ sed -i "s|public Response save() {|public Response save() throws java.io.Unsuppo
 %doc LICENSE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.1.2-4
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 0.1.2-3
 - 为 Magic 3.0 重建
 

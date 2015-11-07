@@ -25,7 +25,7 @@ Summary:        A simple, lightweight interface to Amazon Web Services
 Summary(zh_CN.UTF-8): Amazon 网页服务的简单轻量级接口
 Name:           python-boto
 Version:        2.38.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        MIT
 Group:          Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -180,6 +180,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.38.0-5
+- 为 Magic 3.0 重建
+
 * Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 2.38.0-4
 - 为 Magic 3.0 重建
 

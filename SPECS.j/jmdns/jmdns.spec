@@ -1,6 +1,6 @@
 Name:           jmdns
 Version:        3.4.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Java implementation of multi-cast DNS
 
 # The project was originally developed under the GNU
@@ -64,6 +64,9 @@ sed -i 's/\r//' LICENSE-LGPL.txt
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.4.1-9
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 3.4.1-8
 - 为 Magic 3.0 重建
 

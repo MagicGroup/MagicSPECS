@@ -1,8 +1,8 @@
 %global framework attica
 
 Name:           kf5-attica
-Version:	5.12.0
-Release:	1%{?dist}
+Version:	5.15.0
+Release:	2%{?dist}
 Summary:        KDE Frameworks Tier 1 Addon with Open Collaboration Services API
 Summary(zh_CN.UTF-8): 开放协作服务 API 的 KDE 框架实现
 
@@ -78,6 +78,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.15.0-2
+- 更新到 5.15.0
+
 * Thu Jul 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.12.0-1
 - 5.12.0, update URL, .spec cosmetics
 

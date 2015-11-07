@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.16
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: An atomic reference implementation for JRuby, Rubinius, and MRI
 Group: Development/Languages
 License: ASL 2.0
@@ -72,6 +72,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.16-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.16-4
 - 为 Magic 3.0 重建
 

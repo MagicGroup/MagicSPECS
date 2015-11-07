@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Random-Seed
 Version:        0.03
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Simple method to get strong randomness
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.03-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.03-4
 - 为 Magic 3.0 重建
 

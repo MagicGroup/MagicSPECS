@@ -19,7 +19,7 @@
 Summary: Run external commands on Unix or Windows
 Name: rubygem-%{gem_name}
 Version: 2.0.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: https://github.com/chef/mixlib-shellout
@@ -95,6 +95,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0.1-3
 - 为 Magic 3.0 重建
 

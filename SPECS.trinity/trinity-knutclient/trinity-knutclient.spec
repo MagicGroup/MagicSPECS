@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.9.5
-Release:	%{?!preversion:0}%{?preversion:1_%{preversion}}%{?dist}
+Release:	%{?!preversion:0}%{?preversion:1_%{preversion}}%{?dist}.1
 Summary:	A TDE GUI that displays UPS statistics from NUT's upsd [Trinity]
 Summary(zh_CN.UTF-8): 从 NUT 的 upsd 服务中显示 UPS 统计信息的程序
 Group:		Applications/Utilities
@@ -153,5 +153,8 @@ done
 %{tde_datadir}/icons/locolor/*/apps/*.png
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.9.5-0.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.9.5-1
 - Initial release for TDE 14.0.0

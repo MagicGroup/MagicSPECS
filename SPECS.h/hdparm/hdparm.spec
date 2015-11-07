@@ -1,8 +1,8 @@
 Summary: A utility for displaying and/or setting hard disk parameters
 Summary(zh_CN.UTF-8): 显示或设置硬盘参数的工具
 Name: hdparm
-Version: 9.39
-Release: 2%{?dist}
+Version: 9.48
+Release: 3%{?dist}
 License: BSD
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/hdparm.8*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 9.39-3
+- 更新到 9.48
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 9.39-2
 - 更新到 9.43
 

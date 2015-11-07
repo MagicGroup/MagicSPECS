@@ -1,6 +1,6 @@
 Name:           glpk
 Version:        4.47
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GNU Linear Programming Kit
 Summary(zh_CN.UTF-8): GNU 线性编程工具
 
@@ -130,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.47-3
+- 更新到 4.56
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 4.47-2
 - 更新到 4.54
 

@@ -6,8 +6,8 @@
 Summary: Apache Portable Runtime library
 Summary(zh_CN.UTF-8): Apache 可移植运行库
 Name: apr
-Version: 1.5.0
-Release: 2%{?dist}
+Version: 1.5.2
+Release: 3%{?dist}
 # ASL 2.0: everything
 # ISC: network_io/apr-1.4.6/network_io/unix/inet_?to?.c
 # BSD with advertising: strings/apr_snprintf.c, strings/apr_fnmatch.c,
@@ -140,6 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*.m4
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.2-3
+- 更新到 1.5.2
+
 * Tue Nov 26 2013 Joe Orton <jorton@redhat.com> - 1.5.0-2
 - update to 1.5.0
 

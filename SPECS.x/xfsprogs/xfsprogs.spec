@@ -2,7 +2,7 @@ Summary:	Utilities for managing the XFS filesystem
 Summary(zh_CN.UTF-8): 管理 XFS 文件系统的工具
 Name:		xfsprogs
 Version:	4.2.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 # Licensing based on generic "GNU GENERAL PUBLIC LICENSE"
 # in source, with no mention of version.
 # doc/COPYING file specifies what is GPL and what is LGPL
@@ -118,6 +118,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.2.0-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.2.0-2
 - 更新到 4.2.0
 

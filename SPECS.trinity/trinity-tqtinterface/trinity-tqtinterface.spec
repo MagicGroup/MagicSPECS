@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.2.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	The Trinity Qt Interface Libraries
 Summary(zh_CN.UTF-8): Trinity Qt 接口库
 Group: System Environment/Libraries
@@ -227,5 +227,8 @@ done
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:4.2.0-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 1:4.2.0-1
 - Initial release for TDE 14.0.0

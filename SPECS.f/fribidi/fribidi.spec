@@ -1,8 +1,8 @@
 Summary: Library implementing the Unicode Bidirectional Algorithm
 Summary(zh_CN.UTF-8): Unicode 双向算法实现库
 Name: fribidi
-Version:	0.19.6
-Release: 5%{?dist}
+Version: 0.19.7
+Release: 6%{?dist}
 URL: http://fribidi.org
 Source0: http://fribidi.org/download/%{name}-%{version}.tar.bz2
 License: LGPLv2+
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/%{name}_*.gz
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.19.7-6
+- 更新到 0.19.7
+
 * Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 0.19.6-5
 - 更新到 0.19.6
 

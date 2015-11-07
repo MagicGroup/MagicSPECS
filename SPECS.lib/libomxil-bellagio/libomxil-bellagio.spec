@@ -1,6 +1,6 @@
 Name:           libomxil-bellagio
 Version:        0.9.3
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        OpenMAX Integration Layer
 Summary(zh_CN.UTF-8): OpenMAX 集成层
 
@@ -132,6 +132,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.3-13
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 0.9.3-12
 - 为 Magic 3.0 重建
 

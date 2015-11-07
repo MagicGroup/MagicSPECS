@@ -1,8 +1,8 @@
 %define         clutter_version 1.0
 
 Name:           clutter-gtk
-Version:	1.5.2
-Release:        1%{?dist}
+Version:	1.6.6
+Release:        2%{?dist}
 Summary:        A basic GTK clutter widget
 Summary(zh_CN.UTF-8): 基本的 GTK clutter 组件
 
@@ -74,6 +74,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/clutter-gtk-1.0
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.6.6-2
+- 更新到 1.6.6
+
 * Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.5.2-1
 - 更新到 1.5.2
 

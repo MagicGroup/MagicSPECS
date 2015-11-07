@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://www.openfabrics.org/downloads/mlx4//?C=M;O=D"
+url="https://www.openfabrics.org/downloads/mlx4//?C=M&O=D"
 new1="libmlx4-"
 new2=".tar.gz"
 downcommand="wget -q" 

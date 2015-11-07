@@ -10,7 +10,7 @@
 
 Name:           webkitgtk3
 Version:        2.4.9
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GTK+ Web content engine library
 Summary(zh_CN.UTF-8): GTK+ 网页渲染引擎库
 
@@ -223,6 +223,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/webkitdomgtk
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.4.9-5
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 2.4.9-4
 - 为 Magic 3.0 重建
 

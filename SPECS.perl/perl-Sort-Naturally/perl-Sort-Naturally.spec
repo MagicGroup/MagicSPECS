@@ -1,6 +1,6 @@
 Name:       perl-Sort-Naturally 
 Version:    1.03
-Release:    5%{?dist}
+Release:    6%{?dist}
 # see lib/Sort/Naturally.pm 
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.03-6
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-5
 - 为 Magic 3.0 重建
 

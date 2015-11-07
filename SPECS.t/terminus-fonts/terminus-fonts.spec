@@ -30,7 +30,7 @@ The font is available for the Linux console and for X11.
 
 Name:		%{fontname}-fonts
 Version:	4.39
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Clean fixed width font
 
 Group:		User Interface/X
@@ -372,6 +372,9 @@ ln -s %{_fontdir} %{buildroot}%{catalog}/%{fontname}:unscaled
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.39-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 4.39-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           ocaml-bitstring
 Version:        2.0.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        OCaml library for matching and constructing bitstrings
 Summary(zh_CN.UTF-8): 匹配和构建位串的库
 License:        LGPLv2+ with exceptions and GPLv2+
@@ -126,6 +126,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.4-7
+- 为 Magic 3.0 重建
+
 * Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 2.0.4-6
 - 为 Magic 3.0 重建
 

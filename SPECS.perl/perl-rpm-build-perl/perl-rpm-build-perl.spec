@@ -1,6 +1,6 @@
 Name:       perl-rpm-build-perl 
 Version:    0.82
-Release:    13%{?dist}
+Release:    14%{?dist}
 # README: GPLv2+
 # perl.prov: LGPLv2+
 License:    GPLv2+
@@ -86,6 +86,9 @@ make test
 %{_mandir}/man1/*.1*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.82-14
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.82-13
 - 为 Magic 3.0 重建
 

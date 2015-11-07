@@ -1,6 +1,6 @@
 Name: libfli
 Version: 1.7
-Release: 10%{?dist}
+Release: 11%{?dist}
 Summary: Library for FLI CCD Camera & Filter Wheels
 Summary(zh_CN.UTF-8): FLI CCE 相机和滤光轮库
 
@@ -69,6 +69,9 @@ rm -fr %{buildroot}
 %{_libdir}/*.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.7-11
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 1.7-10
 - 为 Magic 3.0 重建
 

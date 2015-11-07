@@ -2,7 +2,7 @@ Summary:	A GNU tool for automatically configuring source code.
 Summary(zh_CN.UTF-8): 一套自动配置源代码的GNU工具。
 Name:		autoconf213
 Version:	2.13
-Release:   	15%{?dist}
+Release:   	16%{?dist}
 License:	GPL
 Group:		Development/Tools
 Group(zh_CN.UTF-8):   开发/工具
@@ -102,6 +102,9 @@ fi
 %doc AUTHORS COPYING NEWS README TODO
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.13-16
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.13-15
 - 为 Magic 3.0 重建
 

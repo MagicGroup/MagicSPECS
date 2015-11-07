@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.savannah.gnu.org/releases/acl/?C=M;O=D"
+url="http://download.savannah.gnu.org/releases/acl/?C=M&O=D"
 new1="a href=\"acl\-"
 new2=".src.tar.gz"
 downcommand="wget -q" 

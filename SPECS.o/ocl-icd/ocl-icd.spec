@@ -5,7 +5,7 @@
 
 Name:		ocl-icd
 Version:	2.2.7
-Release:	3%{?gitversion}%{?dist}
+Release:	4%{?gitversion}%{?dist}
 Summary:	OpenCL ICD Bindings
 
 License:	BSD
@@ -71,6 +71,9 @@ make check
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.2.7-4.git20150606.ebbc4c1
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 2.2.7-3.git20150606.ebbc4c1
 - 为 Magic 3.0 重建
 

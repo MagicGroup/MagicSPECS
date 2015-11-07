@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://tecnocode.co.uk/downloads/uhttpmock/?C=M;O=D"
+url="https://tecnocode.co.uk/downloads/uhttpmock/?C=M&O=D"
 new1="uhttpmock-"
 new2=".tar.xz"
 downcommand="wget -q" 

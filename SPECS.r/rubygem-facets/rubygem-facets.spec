@@ -3,7 +3,7 @@
 Name:           rubygem-%{gem_name}
 Summary:        The single most extensive additions and extensions library available for Ruby
 Version:        2.8.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Group:          Development/Languages
 License:        Ruby
 URL:            http://rubyforge.org/projects/facets/
@@ -76,6 +76,9 @@ popd
 %{gem_spec}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.8.0-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.8.0-10
 - 为 Magic 3.0 重建
 

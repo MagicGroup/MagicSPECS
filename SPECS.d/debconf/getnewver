@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.de.debian.org/debian/pool/main/d/debconf/?C=M;O=D"
+url="http://ftp.de.debian.org/debian/pool/main/d/debconf/?C=M&O=D"
 new1="debconf_"
 new2=".tar.gz"
 downcommand="wget -q" 

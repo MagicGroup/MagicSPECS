@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 从 FAT 文件系统启动内核的简单载入器
 Name: syslinux
 Version: 6.03
 %define tarball_version 6.03
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -261,6 +261,9 @@ elif [ -f /boot/extlinux.conf ]; then \
 fi
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 6.03-7
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 6.03-6
 - 为 Magic 3.0 重建
 

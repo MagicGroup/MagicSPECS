@@ -1,7 +1,7 @@
 %define _missing_build_ids_terminate_build %{nil}
 Name: codec
 Version: 20110131
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: package of win32 codec and linux codec for mplayer and xine
 Summary(zh_CN.UTF-8): mplayer 和 xine 的 win32 和 linux 编解码器
 Group: Applications/Multimedia
@@ -51,6 +51,9 @@ rm -rf ${RPM_BUILD_DIR}/all-%{version}
 %{_libdir}/codecs/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 20110131-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 20110131-2
 - 为 Magic 3.0 重建
 

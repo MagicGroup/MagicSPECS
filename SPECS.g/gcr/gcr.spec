@@ -1,6 +1,6 @@
 Name:           gcr
-Version:	3.12.0
-Release:        2%{?dist}
+Version:	3.18.0
+Release:        3%{?dist}
 Summary:        A library for bits of crypto UI and parsing
 Summary(zh_CN.UTF-8): 一种位密码界面和解析库
 
@@ -131,6 +131,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/vala/vapi/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 更新到 3.18.0
+
 * Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 更新到 3.12.0
 

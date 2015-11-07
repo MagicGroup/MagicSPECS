@@ -1,8 +1,8 @@
 Summary: Library for error values used by GnuPG components
 Summary(zh_CN.UTF-8): GnuPG 组件使用的错误值
 Name: libgpg-error
-Version: 1.19
-Release: 1%{?dist}
+Version: 1.20
+Release: 2%{?dist}
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
@@ -103,6 +103,9 @@ exit 0
 %{_mandir}/man1/gpg-error-config.*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.20-2
+- 更新到 1.20
+
 * Thu Jul 23 2015 Liu Di <liudidi@gmail.com> - 1.19-1
 - 更新到 1.19
 

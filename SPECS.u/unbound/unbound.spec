@@ -8,8 +8,8 @@
 Summary: Validating, recursive, and caching DNS(SEC) resolver
 Summary(zh_CN.UTF-8): DNS 服务程序
 Name: unbound
-Version:	1.5.5
-Release:	1%{?dist}
+Version:	1.5.6
+Release:	2%{?dist}
 License: BSD
 Url: http://www.nlnetlabs.nl/unbound/
 Source: http://www.unbound.net/downloads/%{name}-%{version}.tar.gz
@@ -245,6 +245,9 @@ fi
 /bin/systemctl try-restart unbound-keygen.service >/dev/null 2>&1 || :
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.5.6-2
+- 更新到 1.5.6
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.5.5-1
 - 更新到 1.5.5
 

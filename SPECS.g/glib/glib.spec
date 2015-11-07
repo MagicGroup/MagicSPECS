@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 方便的实用程序函数库
 Name:		glib
 Epoch:		1
 Version:	1.2.10
-Release:	39%{?dist}
+Release:	40%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 %{_datadir}/aclocal/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-40
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-39
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: PPP Over Ethernet (xDSL support)
 Summary(zh_CN.UTF-8): 以太网客户机上的 PPP(用于 xDSL 支持)
 Name: rp-pppoe
 Version:	3.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPL
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -91,6 +91,9 @@ rm -rf %{buildroot}/etc/ppp/pppoe.conf \
 %{_docdir}/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.11-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.11-1
 - 更新到 3.11
 

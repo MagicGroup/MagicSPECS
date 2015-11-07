@@ -36,7 +36,7 @@ Name: ca-certificates
 # because all future versions will start with 2013 or larger.)
 
 Version: 2013.1.96
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Public Domain
 
 Group: System Environment/Base
@@ -299,6 +299,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2013.1.96-4
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Kai Engert <kaie@redhat.com> - 2013.1.96-3
 - Remove openjdk build dependency
 

@@ -39,7 +39,7 @@
 
 Name:           golang
 Version:        1.2.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        The Go Programming Language
 
 License:        BSD
@@ -966,6 +966,9 @@ GOROOT=%{goroot} GOOS=openbsd GOARCH=amd64 go install std
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.2.2-10
+- 为 Magic 3.0 重建
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 1.2.2-9
 - 为 Magic 3.0 重建
 

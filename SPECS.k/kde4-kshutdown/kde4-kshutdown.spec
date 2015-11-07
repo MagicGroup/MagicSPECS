@@ -3,8 +3,8 @@
 Name: kde4-kshutdown
 Summary: An advanced shut down utility for KDE
 Summary(zh_CN.UTF-8): KDE 下的高级关机工具
-Version:	3.2
-Release: 1%{?beta}%{?dist}
+Version:	3.99beta
+Release: 2%{?beta}%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -76,6 +76,9 @@ rm -fr $RPM_BUILD_DIR/kshutdown
 %{kde4_xdgappsdir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.99beta-2
+- 更新到 3.99beta
+
 * Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 3.2-1
 - 更新到 3.2
 

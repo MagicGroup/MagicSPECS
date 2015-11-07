@@ -1,6 +1,6 @@
 Name:		iniparser
 Version:	3.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	C library for parsing "INI-style" files
 Summary(zh_CN.UTF-8): 解析 "INI" 风格文件的 C 库
 
@@ -64,6 +64,9 @@ magic_rpm_clean.sh
 %{_includedir}/*.h
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.1-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 10 2012 Jaromir Capik <jcapik@redhat.com> - 3.1-1
 - Update to 3.1
 - Minor spec file changes according to the latest guidelines

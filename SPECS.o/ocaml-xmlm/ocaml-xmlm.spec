@@ -5,7 +5,7 @@
 
 Name:           ocaml-xmlm
 Version:        1.2.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A streaming XML codec
 Summary(zh_CN.UTF-8): 流式 XML 编码器
 
@@ -109,6 +109,9 @@ grep expected invalid-err.log >/dev/null
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.0-8
+- 为 Magic 3.0 重建
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 1.2.0-7
 - 为 Magic 3.0 重建
 

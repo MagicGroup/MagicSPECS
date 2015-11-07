@@ -2,7 +2,7 @@ Summary:	Reference implementation of the iCalendar data type and serialization f
 Summary(zh_CN.UTF-8): iCalendar 数据类型和序列格式的实现
 Name:		libical
 Version: 1.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv2 or MPLv1.1
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/vobject.h
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0-3
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.0-2
 - 更新到 1.0
 

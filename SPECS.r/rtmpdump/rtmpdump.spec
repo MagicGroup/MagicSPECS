@@ -4,7 +4,7 @@
 
 Name:           rtmpdump
 Version:        2.4
-Release:        4.%{gitdate}.git%{shortcommit}%{?dist}
+Release:        5.%{gitdate}.git%{shortcommit}%{?dist}
 Summary:        Toolkit for RTMP streams
 Summary(zh_CN.UTF-8): RTMP 流媒体工具
 
@@ -89,6 +89,9 @@ rm -f %{buildroot}%{_libdir}/librtmp.a
 %{_mandir}/man3/librtmp.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.4-5.20131205.gitdc76f0a
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 2.4-4.20131205.gitdc76f0a
 - 为 Magic 3.0 重建
 

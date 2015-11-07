@@ -1,6 +1,6 @@
 Name: deadbeef
 Version: 0.6.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Summary: mp3/ogg/flac/sid/mod/nsf music player based on GTK2
 Summary(zh_CN.UTF-8): 基于 GTK2 的音乐播放器
@@ -47,6 +47,9 @@ rm %{buildroot}%{_libdir}/deadbeef/*.la
 %_datadir/locale/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.6.2-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0.6.2-2
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://fedorahosted.org/releases/i/m/im-chooser/?C=M;O=D"
+url="http://fedorahosted.org/releases/i/m/im-chooser/?C=M&O=D"
 new1="im-chooser-"
 new2=".tar.bz2"
 downcommand="wget -q" 

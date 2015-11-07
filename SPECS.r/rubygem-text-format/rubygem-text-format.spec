@@ -4,7 +4,7 @@
 Summary: Text::Format formats fixed-width text nicely
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 14%{?dist}
+Release: 15%{?dist}
 Group: Development/Languages
 License: Ruby
 URL: https://github.com/halostatue/text-format
@@ -72,6 +72,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.0-15
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-14
 - 为 Magic 3.0 重建
 

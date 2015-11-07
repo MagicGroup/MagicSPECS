@@ -1,7 +1,7 @@
 Name:           perl-Pod-Simple
 # Epoch to compete with perl.spec
 Epoch:          1
-Version:	3.31
+Version:	3.32
 Release:	2%{?dist}
 Summary:        Framework for parsing POD documentation
 License:        GPL+ or Artistic
@@ -66,6 +66,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:3.32-2
+- 更新到 3.32
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:3.31-2
 - 为 Magic 3.0 重建
 

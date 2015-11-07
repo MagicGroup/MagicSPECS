@@ -7,7 +7,7 @@
 Summary:	A module for encoding and decoding (X)HTML entities
 Name:		rubygem-%{gem_name}
 Version:	4.3.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		Development/Languages
 License:	MIT
 URL:		https://github.com/threedaymonk/htmlentities
@@ -84,6 +84,9 @@ ruby -Ilib:. -e 'Dir.glob("test/*.rb").each{|f| require f}'
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.3.4-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.3.4-2
 - 为 Magic 3.0 重建
 

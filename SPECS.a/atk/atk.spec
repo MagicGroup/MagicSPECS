@@ -4,8 +4,8 @@
 Summary: Interfaces for accessibility support
 Summary(zh_CN.UTF-8): 可访问性支持的接口
 Name: atk
-Version: 2.15.4
-Release: 1%{?dist}
+Version: 2.18.0
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -78,6 +78,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.18.0-2
+- 更新到 2.18.0
+
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 2.15.4-1
 - 更新到 2.15.4
 

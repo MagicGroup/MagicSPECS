@@ -4,7 +4,7 @@
 
 Name: gpsd
 Version: 3.15
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Service daemon for mediating access to a GPS
 
 Group: System Environment/Daemons
@@ -227,6 +227,9 @@ rm %{buildroot}%{_libdir}/pkgconfig/libgpsd.pc
 %{_datadir}/gpsd/gpsd-logo.png
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.15-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.15-1
 - 更新到 3.15
 

@@ -1,6 +1,6 @@
 Name:           libgee06
 Version:        0.6.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        GObject collection library
 Summary(zh_CN.UTF-8): GObject 集合库
 
@@ -114,6 +114,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.1-8
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.6.1-7
 - 为 Magic 3.0 重建
 

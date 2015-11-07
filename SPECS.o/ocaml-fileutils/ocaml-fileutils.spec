@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-fileutils
-Version:        0.4.5
-Release:        4%{?dist}
+Version: 0.5.0
+Release: 2%{?dist}
 Summary:        OCaml library for common file and filename operations
 Summary(zh_CN.UTF-8): 通用的文件和文件名操作 OCaml 库
 
@@ -102,6 +102,9 @@ make test
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5.0-2
+- 更新到 0.5.0
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.4.5-4
 - 为 Magic 3.0 重建
 

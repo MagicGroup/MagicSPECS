@@ -1,6 +1,6 @@
 Name:           libp11
 Version:        0.2.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library for using PKCS#11 modules
 Summary(zh_CN.UTF-8): 使用 PCS#11 模块的库
 
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libp11.h
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.8-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 25 2014 Liu Di <liudidi@gmail.com> - 0.2.8-4
 - 为 Magic 3.0 重建
 

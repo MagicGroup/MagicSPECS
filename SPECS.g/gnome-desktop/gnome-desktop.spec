@@ -4,7 +4,7 @@ Summary: Shared code among gnome-panel, gnome-session, nautilus, etc
 Summary(zh_CN.UTF-8): gnome-panel, gnome-session, nautilus 等包共享的代码
 Name: gnome-desktop
 Version: 2.32.0
-Release: 11%{?dist}
+Release: 12%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gnome-desktop
 Source0: http://download.gnome.org/sources/gnome-desktop/2.32/%{name}-%{version}.tar.bz2
@@ -101,6 +101,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.32.0-12
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2.32.0-11
 - 为 Magic 3.0 重建
 

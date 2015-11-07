@@ -1,6 +1,6 @@
 Name:           perl-HTML-Table
 Version:        2.08a
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Create HTML tables using simple interface
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.08a-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.08a-13
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 # Main package bundles it at a gem
 Name:           rubygem-%{gem_name}
 Version:        1.5.4
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Ruby bindings for pam
 Group:          Development/Languages
 
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{gem_dir}/doc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.5.4-24
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.5.4-23
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Data-JavaScript
 Version:        1.13
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Dump perl data structures into JavaScript code
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Data-JavaScript/
@@ -40,6 +40,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.13-18
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.13-17
 - 为 Magic 3.0 重建
 

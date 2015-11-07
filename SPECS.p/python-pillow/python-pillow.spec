@@ -22,8 +22,8 @@
 %endif
 
 Name:           python-pillow
-Version:        2.9.0
-Release:        5%{?snap}%{?dist}
+Version:	3.0.0
+Release:	2%{?dist}
 Summary:        Python image processing library
 Summary(zh_CN.UTF-8): Python 图像处理库
 
@@ -341,6 +341,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.0.0-2
+- 更新到 3.0.0
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.9.0-5
 - 为 Magic 3.0 重建
 

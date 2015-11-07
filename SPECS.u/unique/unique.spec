@@ -1,6 +1,6 @@
 Name:           unique
 Version:        1.1.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Single instance support for applications
 Summary(zh_CN.UTF-8):	应用程序的单一实例支持
 
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.so
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.1.6-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.1.6-4
 - 为 Magic 3.0 重建
 

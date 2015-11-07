@@ -1,6 +1,6 @@
 Name: libmthca
 Version: 1.0.6
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Mellanox InfiniBand HCA Userspace Driver
 Summary(zh_CN.UTF-8): Mellanox InfiniBand HCA 用户空间驱动
 Provides: libibverbs-driver.%{_arch}
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libmthca.a
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.6-8
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.0.6-7
 - 为 Magic 3.0 重建
 

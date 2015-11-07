@@ -1,6 +1,6 @@
 Name:           paps
 Version:        0.6.8
-Release:        33%{?dist}
+Release:        34%{?dist}
 
 License:        LGPLv2+
 URL:            http://paps.sourceforge.net/
@@ -145,6 +145,9 @@ magic_rpm_clean.sh
 %{_libdir}/libpaps.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.6.8-34
+- 为 Magic 3.0 重建
+
 * Mon Mar  2 2015 Akira TAGOH <tagoh@redhat.com> - 0.6.8-33
 - Support A3 paper size.
 

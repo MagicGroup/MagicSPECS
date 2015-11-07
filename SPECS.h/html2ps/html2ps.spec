@@ -1,7 +1,7 @@
 %define my_subversion b7
 Name:           html2ps
 Version:        1.0
-Release:        0.9.%{my_subversion}%{?dist}
+Release:        0.10.%{my_subversion}%{?dist}
 Summary:        HTML to PostScript converter
 Summary(zh_CN.UTF-8): HTML 到 PostScript 的转换器
 
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/*xhtml2ps.desktop
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0-0.10.b7
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.0-0.9.b7
 - 为 Magic 3.0 重建
 

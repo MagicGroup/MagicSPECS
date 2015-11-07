@@ -5,7 +5,7 @@
 
 Name:           ocaml-zarith
 Version:	1.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        OCaml interface to GMP
 
 # The license has a static linking exception
@@ -108,6 +108,9 @@ make tests
 %{_libdir}/ocaml/zarith/*.h
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3-2
+- 为 Magic 3.0 重建
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 1.3-1
 - 更新到 1.3
 

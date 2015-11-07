@@ -6,7 +6,7 @@
 
 Name:          ocaml-labltk
 Version:       8.06.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 
 Summary:       Tcl/Tk interface for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 Tcl/Tk 接口
@@ -106,6 +106,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 8.06.0-3
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 8.06.0-2
 - 为 Magic 3.0 重建
 

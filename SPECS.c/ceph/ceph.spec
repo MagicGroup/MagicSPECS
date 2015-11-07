@@ -6,8 +6,8 @@
 # common
 #################################################################################
 Name:		ceph
-Version:	0.94.3
-Release:	3%{?dist}
+Version:	0.94.5
+Release:	5%{?dist}
 Epoch:		1
 Summary:	User space components of the Ceph file system
 License:	GPLv2
@@ -929,6 +929,12 @@ ln -sf %{_libdir}/librbd.so.1 /usr/lib64/qemu/librbd.so.1
 # actually build this meta package.
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.94.5-5
+- 为 Magic 3.0 重建
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.94.5-4
+- 更新到 0.94.5
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1:0.94.3-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           media-player-info
-Version: 21
-Release: 1%{?dist}
+Version: 22
+Release: 2%{?dist}
 Summary:        Data files describing media player capabilities
 Summary(zh_CN.UTF-8): 媒体播放器的描述数据文件
 
@@ -47,6 +47,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 /usr/lib/udev/hwdb.d/20-usb-media-players.hwdb
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 22-2
+- 更新到 22
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 21-1
 - 更新到 21
 

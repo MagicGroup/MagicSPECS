@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.savannah.gnu.org/releases/osip/?C=M;O=D"
+url="http://download.savannah.gnu.org/releases/osip/?C=M&O=D"
 new1="libosip2-"
 new2=".tar.gz"
 downcommand="wget -q" 

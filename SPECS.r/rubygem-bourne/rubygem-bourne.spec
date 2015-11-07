@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.6.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Adds test spies to mocha
 Group: Development/Languages
 License: MIT
@@ -98,6 +98,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.6.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.0-3
 - 为 Magic 3.0 重建
 

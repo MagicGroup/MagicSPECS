@@ -2,7 +2,7 @@ Summary: SGML and XML parser
 Summary(zh_CN.UTF-8): SGML和XML解析器
 Name: opensp
 Version: 1.5.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 Requires: sgml-common >= 0.5
 URL: http://openjade.sourceforge.net/
 Source: http://download.sourceforge.net/openjade/OpenSP-%{version}.tar.gz
@@ -109,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.2-8
+- 为 Magic 3.0 重建
+
 * Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 1.5.2-7
 - 为 Magic 3.0 重建
 

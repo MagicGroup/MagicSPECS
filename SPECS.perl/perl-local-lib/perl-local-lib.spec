@@ -1,6 +1,6 @@
 Name:           perl-local-lib
-Version:        2.000015
-Release:        4%{?dist}
+Version:	2.000018
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Summary:        Create and use a local lib/ for perl modules
@@ -99,6 +99,9 @@ make test
 %{_sysconfdir}/profile.d/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.000018-2
+- 更新到 2.000018
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.000015-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

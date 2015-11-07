@@ -1,7 +1,7 @@
 Name:           junit
 Epoch:          1
 Version:        4.11
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Java regression test package
 License:        CPL
 URL:            http://www.junit.org/
@@ -107,6 +107,9 @@ cp -pr %{name}%{version}/%{name}/* %{buildroot}%{_datadir}/%{name}/demo/%{name}
 %doc junit%{version}/doc/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:4.11-20
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1:4.11-19
 - 为 Magic 3.0 重建
 

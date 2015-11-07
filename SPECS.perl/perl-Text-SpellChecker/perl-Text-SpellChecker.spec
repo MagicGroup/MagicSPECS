@@ -1,7 +1,7 @@
 Summary:	OO interface for spell-checking a block of text 
 Name:		perl-Text-SpellChecker
 Version:	0.14
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Text-SpellChecker/
@@ -60,6 +60,9 @@ LANG=en_US make test TEST_VERBOSE=1
 %{_mandir}/man3/Text::SpellChecker.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.14-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

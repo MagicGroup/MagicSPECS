@@ -1,6 +1,6 @@
 Name:           perl-Authen-Simple
 Version:        0.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Simple Authentication
 Summary(zh_CN.UTF-8): 简单的认证模块
 License:        GPL+ or Artistic
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.5-7
 - 为 Magic 3.0 重建
 

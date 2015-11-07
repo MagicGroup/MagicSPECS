@@ -3,7 +3,7 @@ Summary: Utility for modifying/upgrading files
 Summary(zh_CN.UTF-8): 修改/更新文件的工具
 Name: patch
 Version:	2.7.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+
 URL: http://www.gnu.org/software/patch/patch.html
 Group: Development/Tools
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.7.5-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 2.7.5-1
 - 更新到 2.7.5
 

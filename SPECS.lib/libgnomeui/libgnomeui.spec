@@ -4,7 +4,7 @@ Summary: GNOME base GUI library
 Summary(zh_CN.UTF-8): GNOME 基本图形界面库
 Name: libgnomeui
 Version: 2.24.5
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://www.gnome.org
 Source0: http://download.gnome.org/sources/libgnomeui/2.24/%{name}-%{version}.tar.bz2
 
@@ -108,6 +108,9 @@ magic_rpm_clean.sh
 %{_includedir}/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.24.5-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.24.5-5
 - 为 Magic 3.0 重建
 

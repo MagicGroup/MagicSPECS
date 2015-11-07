@@ -1,6 +1,6 @@
 Name:          glassfish-fastinfoset
 Version:       1.2.12
-Release:       12%{?dist}
+Release:       13%{?dist}
 Summary:       Fast Infoset
 License:       ASL 2.0
 URL:           https://fi.dev.java.net
@@ -71,6 +71,9 @@ This package contains javadoc for %{name}.
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.2.12-13
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.2.12-12
 - 为 Magic 3.0 重建
 

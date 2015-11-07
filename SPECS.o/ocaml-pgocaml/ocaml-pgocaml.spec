@@ -6,7 +6,7 @@
 
 Name:           ocaml-pgocaml
 Version:        1.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        OCaml library for type-safe access to PostgreSQL databases
 Summary(zh_CN.UTF-8): 类型安全的访问 PostgreSQL 数据库的 OCaml 库
 License:        LGPLv2+ with exceptions
@@ -95,6 +95,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6-9
+- 为 Magic 3.0 重建
+
 * Wed Mar 11 2015 Liu Di <liudidi@gmail.com> - 1.6-8
 - 为 Magic 3.0 重建
 

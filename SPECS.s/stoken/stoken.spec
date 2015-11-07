@@ -1,6 +1,6 @@
 Name:           stoken
 Version:	0.90
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Token code generator compatible with RSA SecurID 128-bit (AES) token
 Summary(zh_CN.UTF-8): 使用 RSA SecurID 128 位 (AES) 算法的令牌码生成器
 
@@ -121,6 +121,9 @@ find %{buildroot} -type f -name "*.a" -delete
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.90-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.90-1
 - 更新到 0.90
 

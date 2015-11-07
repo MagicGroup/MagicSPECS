@@ -1,6 +1,6 @@
 Name:           libtiger
 Version:        0.3.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Rendering library for Kate streams using Pango and Cairo
 Summary(zh_CN.UTF-8): 使用 Pango 和 Cairo 的 Kate 流渲染库
 
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.3.4-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.3.4-4
 - 为 Magic 3.0 重建
 

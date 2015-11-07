@@ -1,6 +1,6 @@
 Name:           cpptest
 Version:        1.1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A portable and powerful and simple unit testing framework for C++
 Summary(zh_CN.UTF-8): C++ 的测试框架
 
@@ -68,6 +68,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.1.2-5
+- 为 Magic 3.0 重建
+
 * Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 1.1.2-4
 - 为 Magic 3.0 重建
 

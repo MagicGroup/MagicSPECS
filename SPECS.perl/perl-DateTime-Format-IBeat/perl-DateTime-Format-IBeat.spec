@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-IBeat
 Version:	0.161
-Release:	22%{?dist}
+Release:	23%{?dist}
 Summary:        Format times in .beat notation 
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.161-23
+- 为 Magic 3.0 重建
+
 * Mon Jun 16 2014 Liu Di <liudidi@gmail.com> - 0.161-21
 - 为 Magic 3.0 重建
 

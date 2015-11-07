@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://icon-theme.freedesktop.org/releases/?C=M;O=D"
+url="http://icon-theme.freedesktop.org/releases/?C=M&O=D"
 new1="hicolor-icon-theme-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -1,8 +1,8 @@
 Summary:   Library for AppStream metadata
 Summary(zh_CN.UTF-8): 应用程序流元数据的库
 Name:      libappstream-glib
-Version: 0.4.1
-Release: 1%{?dist}
+Version: 0.5.2
+Release: 2%{?dist}
 License:   LGPLv2+
 URL:       http://people.freedesktop.org/~hughsient/appstream-glib/
 Source0:   http://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-%{version}.tar.xz
@@ -145,6 +145,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/AppStreamBuilder-1.0.gir
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.5.2-2
+- 更新到 0.5.2
+
 * Thu Jul 30 2015 Liu Di <liudidi@gmail.com> - 0.4.1-1
 - 更新到 0.4.1
 

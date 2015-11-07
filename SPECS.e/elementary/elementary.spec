@@ -1,6 +1,6 @@
 Name:           elementary
-Version:	1.15.1
-Release:        1%{?dist}
+Version:	1.16.0-beta3
+Release:        2%{?dist}
 Summary:        Basic widget set that is easy to use based on EFL
 Summary(zh_CN.UTF-8): 易于使用基于 EFL 系统的基本部件集
 License:        LGPLv2+
@@ -99,6 +99,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com>
+- 更新到 1.16.0-beta3
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.1-1
 - 更新到 1.15.1
 

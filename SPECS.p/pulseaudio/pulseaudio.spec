@@ -1,4 +1,4 @@
-%global pa_major   7.0
+%global pa_major   7.1
 #global pa_minor   0
 
 #global snap       20141103
@@ -20,7 +20,7 @@ Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Summary(zh_CN.UTF-8): 增强的 Linux 声音服务
 Version:        %{pa_major}%{?pa_minor}
-Release:        9%{?dist}
+Release:        10%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -566,6 +566,9 @@ exit 0
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 7.1-10
+- 更新到 7.1
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com>
 - 更新到 7.0
 

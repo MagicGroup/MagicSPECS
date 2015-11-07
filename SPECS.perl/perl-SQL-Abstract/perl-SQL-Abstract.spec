@@ -1,6 +1,6 @@
 Name:           perl-SQL-Abstract
 Version:	1.81
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Generate SQL from Perl data structures
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -63,6 +63,9 @@ SQLATEST_TESTER=1 make test
 %{_mandir}/man3/DBIx::Class::Storage::Debug::PrettyPrint.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.81-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.81-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:           ocaml-sexplib
 Version:        7.0.5
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        OCaml library for converting OCaml values to S-expressions
 Summary(zh_CN.UTF-8): 转换 OCaml 值到 S 表达式的 OCaml 库
 License:        LGPLv2+ with exceptions and BSD
@@ -108,6 +108,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 7.0.5-12
+- 为 Magic 3.0 重建
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 7.0.5-11
 - 为 Magic 3.0 重建
 

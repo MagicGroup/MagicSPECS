@@ -2,7 +2,7 @@
 
 Name:      ruijieclient
 Version:   1.0
-Release:   %{build_number}%{?dist}.2
+Release:   %{build_number}%{?dist}.3
 Summary:   a ruijie network supplicant for GNU/Linux
 Summary(zh_CN.UTF-8): Linux 下的锐捷认证支持
 
@@ -61,6 +61,9 @@ update-desktop-database %{_datadir}/applications &>/dev/null || :
 %{_docdir}/ruijieclient/README
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0-0.rc1.3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0-0.rc1.2
 - 为 Magic 3.0 重建
 

@@ -8,8 +8,8 @@ License: LGPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.6.0
-Release: 1%{?dist}
+Version: 4.7.2
+Release: 2%{?dist}
 Source0: http://mirror.bjtu.edu.cn/kde/stable/kdevelop/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -91,6 +91,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_htmldir}/en/kdevelop/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.7.2-2
+- 更新到 4.7.2
+
 * Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 4.6.0-1
 - 更新到 4.6.0
 

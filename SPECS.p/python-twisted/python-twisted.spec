@@ -1,6 +1,6 @@
 Name:           python-twisted
 Version:	15.4.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Twisted is a networking engine written in Python
 Summary(zh_CN.UTF-8): Twisted 是一个 Python 编写的网络引擎
 License:        MIT
@@ -157,6 +157,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 15.4.0-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 15.4.0-1
 - 更新到 15.4.0
 

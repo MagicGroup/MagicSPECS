@@ -1,6 +1,6 @@
 Name:           qmmp-plugin-pack
-Version:	0.9.0
-Release:	1%{?dist}
+Version:	0.9.2
+Release:	2%{?dist}
 Summary:        A set of extra plugins for Qmmp
 Summary(zh_CN.UTF-8): Qmmp 的额外插件集合
 
@@ -46,6 +46,9 @@ magic_rpm_clean.sh
 %{_libdir}/qmmp/Input/*.so
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.9.2-2
+- 更新到 0.9.2
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.9.0-1
 - 更新到 0.9.0
 

@@ -1,8 +1,8 @@
 Summary:        Library providing low-level IEEE-1394 access
 Summary(zh_CN.UTF-8): 低级的 IEEE-1394 访问库
 Name:           libraw1394
-Version: 2.1.0
-Release: 1%{?dist}
+Version: 2.1.1
+Release: 2%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.1-2
+- 更新到 2.1.1
+
 * Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 2.1.0-1
 - 更新到 2.1.0
 

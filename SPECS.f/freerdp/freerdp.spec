@@ -4,7 +4,7 @@
 
 Name:           freerdp
 Version:        1.2.0
-Release:        0.10%{?shortcommit:.git.%{shortcommit}}%{?dist}
+Release:        0.11%{?shortcommit:.git.%{shortcommit}}%{?dist}
 Epoch:          2
 Summary:        Free implementation of the Remote Desktop Protocol (RDP)
 Summary(zh_CN.UTF-8): 远程桌面协议 (RDP) 的自由实现
@@ -237,6 +237,9 @@ find %{buildroot} -name "*.a" -delete
 %{_libdir}/pkgconfig/winpr.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2:1.2.0-0.11.git.24a752a
+- 为 Magic 3.0 重建
+
 * Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 2:1.2.0-0.10.git.24a752a
 - 为 Magic 3.0 重建
 

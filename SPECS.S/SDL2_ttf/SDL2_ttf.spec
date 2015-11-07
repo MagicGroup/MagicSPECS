@@ -1,6 +1,6 @@
 Name:		SDL2_ttf
 Version:	2.0.12
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	TrueType font rendering library for SDL2
 Summary(zh_CN.UTF-8): SDL2 的 TrueType 字体渲染库
 Group:		System Environment/Libraries
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.12-8
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.12-7
 - 为 Magic 3.0 重建
 

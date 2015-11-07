@@ -1,7 +1,7 @@
 Summary: A library for handling different graphics file formats
 Name: netpbm
 Version: 10.66.02
-Release: 6%{?dist}
+Release: 7%{?dist}
 # See copyright_summary for details
 License: BSD and GPLv2 and IJG and MIT and Public Domain
 Group: System Environment/Libraries
@@ -268,6 +268,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc userguide/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 10.66.02-7
+- 为 Magic 3.0 重建
+
 * Wed Jan 28 2015 Liu Di <liudidi@gmail.com> - 10.66.02-6
 - 为 Magic 3.0 重建
 

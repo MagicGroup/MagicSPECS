@@ -1,6 +1,6 @@
 Name:           perl-Thread-Queue
-Version:	3.06
-Release:	1%{?dist}
+Version:	3.07
+Release:	2%{?dist}
 Summary:        Thread-safe queues
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.07-2
+- 更新到 3.07
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.06-1
 - 更新到 3.06
 

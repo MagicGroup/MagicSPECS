@@ -1,6 +1,6 @@
 Name: yajl
 Version: 2.0.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Yet Another JSON Library (YAJL)
 Summary(zh_CN.UTF-8): 另一个 JSON 库 (YAJL)
 
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.0.4-4
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.0.4-3
 - 为 Magic 3.0 重建
 

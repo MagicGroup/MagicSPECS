@@ -1,6 +1,6 @@
 Name:           libgnome-media-profiles
 Version:        3.0.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        GNOME Media Profiles library
 
 Group:          System Environment/Libraries
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.0.0-7
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.0.0-6
 - 为 Magic 3.0 重建
 

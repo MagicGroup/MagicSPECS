@@ -1,6 +1,6 @@
 Name:           telepathy-farstream
 Version:	0.6.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Telepathy client library to handle Call channels
 Summary(zh_CN.UTF-8): 处理呼叫频道的 Telepathy 客户端库
 
@@ -97,6 +97,9 @@ make check
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.6.2-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.6.2-1
 - 更新到 0.6.2
 

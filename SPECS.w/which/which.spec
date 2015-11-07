@@ -2,7 +2,7 @@ Summary: Displays where a particular program in your path is located
 Summary(zh_CN.UTF-8): 显示特定的程序在你的路径中的位置
 Name: which
 Version: 2.20
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv3
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.20-6
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 2.20-5
 - 为 Magic 3.0 重建
 

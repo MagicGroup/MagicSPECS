@@ -1,6 +1,6 @@
 Name:           kcometen4
 Version:        1.0.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An OpenGL screensaver with exploding comets for KDE4
 Summary(zh_CN): KDE 4 的一个彗星 OpenGL 屏幕保护程序
 Group:          Amusements/Graphics
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/%{name}.kss.1.gz
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.7-3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.7-2
 - 为 Magic 3.0 重建
 

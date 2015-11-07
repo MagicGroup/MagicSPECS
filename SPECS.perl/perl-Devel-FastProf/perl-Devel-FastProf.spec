@@ -1,6 +1,6 @@
 Name:           perl-Devel-FastProf
 Version:        0.08
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Fast perl per-line profiler
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-24
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-23
 - 为 Magic 3.0 重建
 

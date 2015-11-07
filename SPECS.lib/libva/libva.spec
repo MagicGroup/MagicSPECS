@@ -2,8 +2,8 @@
 #需要细分包
 
 Name:      libva
-Version: 1.3.1
-Release: 1%{?dist}
+Version: 1.6.1
+Release: 2%{?dist}
 Summary:   Video Acceleration (VA) API for Linux
 Summary(zh_CN.UTF-8): Linux 下的视频加速 (VA) API
 Group:     System Environment/Libraries
@@ -116,6 +116,9 @@ rm -rf %{buildroot}
 %{_includedir}/va/*.h
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6.1-2
+- 更新到 1.6.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 1.3.1-1
 - 更新到 1.3.1
 

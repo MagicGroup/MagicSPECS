@@ -1,6 +1,6 @@
 Name:		perl-Net-SSLeay
-Version:	1.70
-Release:	1%{?dist}
+Version:	1.72
+Release:	2%{?dist}
 Summary:	Perl extension for using OpenSSL
 Group:		Development/Libraries
 License:	OpenSSL
@@ -92,6 +92,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Net::SSLeay::Handle.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.72-2
+- 更新到 1.72
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.70-1
 - 更新到 1.70
 

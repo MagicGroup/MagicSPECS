@@ -1,6 +1,6 @@
 Name: libcdio-paranoia
 Version: 10.2+0.93+1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: CD paranoia on top of libcdio
 Summary(zh_CN.UTF-8): 基于 libcdio 的 CD 抓轨工具
 Group: System Environment/Libraries
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 10.2+0.93+1-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 10.2+0.93+1-1
 - 更新到 10.2+0.93+1
 

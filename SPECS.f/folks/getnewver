@@ -17,7 +17,7 @@ else
 	newver1=$(echo $specver | cut -d"." -f1).$(echo $specver | cut -d"." -f2)
 fi	
 rm -f index.html
-url1="http://ftp.acc.umu.se/pub/GNOME/sources/folks/$newver1/?C=M;O=D"
+url1="http://ftp.acc.umu.se/pub/GNOME/sources/folks/$newver1/?C=M&O=D"
 $downcommand $url1 -O index.html
 new3="folks-"
 new4=".tar.xz"

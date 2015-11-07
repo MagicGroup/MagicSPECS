@@ -1,6 +1,6 @@
 Name:       opencc
-Version:	1.0.2
-Release:	1%{?dist}
+Version:	1.0.3
+Release:	2%{?dist}
 Summary:    Libraries for Simplified-Traditional Chinese Conversion
 Summary(zh_CN.UTF-8): 简繁体中文转换的库
 License:    ASL 2.0
@@ -116,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.3-2
+- 更新到 1.0.3
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.2-1
 - 更新到 1.0.2
 

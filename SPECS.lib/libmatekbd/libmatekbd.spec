@@ -1,6 +1,6 @@
 Name:           libmatekbd
-Version:	1.9.1
-Release:        2%{?dist}
+Version:	1.11.0
+Release:        3%{?dist}
 Summary:        Libraries for mate kbd
 Summary(zh_CN.UTF-8): mate kbd 的库
 License:        LGPLv2+
@@ -87,6 +87,9 @@ fi
 %{_libdir}/libmatekbd.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3
+- 更新到 1.11.0
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.9.1-2
 - 更新到 1.9.1
 

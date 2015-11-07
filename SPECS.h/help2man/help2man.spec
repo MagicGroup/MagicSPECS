@@ -5,8 +5,8 @@
 Name:           help2man
 Summary:        Create simple man pages from --help output
 Summary(zh_CN.UTF-8): 从 --help 的输出中生成简单的手册页 (man)
-Version: 1.45.1
-Release:        2%{?dist}
+Version: 1.47.2
+Release:        3%{?dist}
 Group:          Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv3+
@@ -67,6 +67,9 @@ fi
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.47.2-3
+- 更新到 1.47.2
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.45.1-2
 - 更新到 1.45.1
 

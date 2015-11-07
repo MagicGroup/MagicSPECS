@@ -3,7 +3,7 @@
 Summary: Tiny mocking library
 Name: rubygem-%{gem_name}
 Version: 0.5.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/chuyeow/facon/
@@ -74,6 +74,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.0-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-9
 - 为 Magic 3.0 重建
 

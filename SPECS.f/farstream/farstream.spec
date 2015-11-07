@@ -5,7 +5,7 @@
 
 Name:           farstream
 Version:        0.1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Libraries for videoconferencing
 Summary(zh_CN.UTF-8): 视频会议库
 
@@ -139,6 +139,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.1.2-5
+- 为 Magic 3.0 重建
+
 * Mon Jul 13 2015 Liu Di <liudidi@gmail.com> - 0.1.2-4
 - 为 Magic 3.0 重建
 

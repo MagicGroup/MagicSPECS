@@ -1,6 +1,6 @@
 Name:           perl-CPAN-Inject
 Version:	1.14
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Base class for injecting distributions into CPAN sources
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.14-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.14-2
 - 为 Magic 3.0 重建
 

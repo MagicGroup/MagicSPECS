@@ -1,6 +1,6 @@
 Name:           splint
 Version:        3.1.2
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        An implementation of the lint program
 Summary(zh_CN.UTF-8): lint 程序的实现
 
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.1.2-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.1.2-5
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary: A portable x86 assembler which uses Intel-like syntax
 Summary(zh_CN.UTF-8): 使用类 Intel 语法的可移植 x86 汇编语言
 Name: nasm
 Version: 2.11.08
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -107,6 +107,9 @@ fi
 %{_bindir}/rdf2srec
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.11.08-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 2.11.08-1
 - 更新到 2.11.08
 

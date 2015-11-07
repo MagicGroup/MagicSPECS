@@ -1,7 +1,7 @@
 Name:		perl-XML-LibXSLT
 # NOTE: also update perl-XML-LibXML to a compatible version.  See below why.
 Version:	1.94
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Perl module for interfacing to GNOME's libxslt
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.94-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.94-1
 - 更新到 1.94
 

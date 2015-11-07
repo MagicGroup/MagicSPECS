@@ -1,6 +1,6 @@
 Name:           glitz
 Version:        0.5.6
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        OpenGL image compositing library
 Summary(zh_CN.UTF-8): OpenGL 图像合成库
 Group:          System Environment/Libraries
@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/glitz-glx.3.gz
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.5.6-12
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.6-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

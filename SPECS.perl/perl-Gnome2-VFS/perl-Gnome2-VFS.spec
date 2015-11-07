@@ -1,6 +1,6 @@
 Name:           perl-Gnome2-VFS
 Version:	1.082
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to the 2.x series of the GNOME VFS library
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.082-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.082-2
 - 为 Magic 3.0 重建
 

@@ -47,7 +47,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		A TDE usenet news grabber for Linux.
 Summary(zh_CN.UTF-8): TDE 下的新闻组抓取器
 Version:		0.2.5
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 
 License:		GPL
 Group:			Applications/Network
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.5-1.opt.2
+- 为 Magic 3.0 重建
+
 * Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 0.2.5-1.opt.1
 - 为 Magic 3.0 重建
 

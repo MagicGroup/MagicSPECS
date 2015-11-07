@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.6.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Backports of Ruby features for older Ruby
 Group: Development/Languages
 License: MIT
@@ -97,6 +97,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.6.4-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.6.4-2
 - 为 Magic 3.0 重建
 

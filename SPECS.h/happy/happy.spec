@@ -6,7 +6,7 @@
 Name:           happy
 # part of haskell-platform
 Version:        1.19.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Parser Generator for Haskell
 
 License:        BSD
@@ -167,6 +167,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.19.5-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 21 2015 Liu Di <liudidi@gmail.com> - 1.19.5-4
 - 为 Magic 3.0 重建
 

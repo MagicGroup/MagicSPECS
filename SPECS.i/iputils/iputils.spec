@@ -3,7 +3,7 @@
 Summary: Network monitoring tools including ping
 Name: iputils
 Version: 20121221
-Release: 10%{?dist}
+Release: 11%{?dist}
 # some parts are under the original BSD (ping.c)
 # some are under GPLv2+ (tracepath.c)
 License: BSD and GPLv2+
@@ -162,6 +162,9 @@ mv -f RELNOTES.tmp RELNOTES
 %attr(644,root,root) %{_mandir}/man8/ninfod.8.gz
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20121221-11
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Jan Synáček <jsynacek@redhat.com> - 20121221-10
 - Fix arping hang if SIGALRM is blocked (#1085971)
 

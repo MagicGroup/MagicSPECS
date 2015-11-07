@@ -4,7 +4,7 @@
 Name: quota
 Epoch: 1
 Version: 4.02
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: System administration tools for monitoring users' disk usage
 # quota_nld.c, quotaio_xfs.h:       GPLv2
 # bylabel.c copied from util-linux: GPLv2+
@@ -229,6 +229,9 @@ install -p -m644 -D %{SOURCE4} \
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:4.02-6
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 1:4.02-5
 - 为 Magic 3.0 重建
 

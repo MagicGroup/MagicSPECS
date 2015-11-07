@@ -1,6 +1,6 @@
 Name:		perl-aliased
 Version:	0.34
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Use shorter versions of class names
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/aliased/
@@ -52,6 +52,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/aliased.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.34-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.34-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

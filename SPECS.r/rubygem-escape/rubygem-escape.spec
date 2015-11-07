@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.4
-Release: 11%{?dist}
+Release: 12%{?dist}
 Summary: HTML/URI/shell escaping utilities
 Group: Development/Languages
 License: BSD
@@ -52,6 +52,9 @@ rm %{buildroot}/%{gem_instdir}/Readme
 %doc %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.4-12
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.4-11
 - 为 Magic 3.0 重建
 

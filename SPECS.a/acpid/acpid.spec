@@ -8,8 +8,8 @@
 Summary: ACPI Event Daemon
 Summary(zh_CN.UTF-8): ACPI 事件服务
 Name: acpid
-Version: 2.0.21
-Release: 1%{?dist}
+Version: 2.0.25
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
@@ -108,6 +108,9 @@ fi
 %systemd_postun_with_restart %{name}.socket %{name}.service
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.25-2
+- 更新到 2.0.25
+
 * Thu Feb 27 2014 Liu Di <liudidi@gmail.com> - 2.0.21-1
 - 升级到 2.0.21
 - 去掉 sysvinit 包

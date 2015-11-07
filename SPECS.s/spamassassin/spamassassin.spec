@@ -37,7 +37,7 @@ Summary(zh_CN.UTF-8): 电子邮件的垃圾过滤器
 Name: spamassassin
 Version: 3.4.1
 #Release: 0.8.%{prerev}%{?dist}
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: ASL 2.0
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -328,6 +328,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.4.1-8
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 3.4.1-7
 - 为 Magic 3.0 重建
 

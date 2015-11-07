@@ -1,6 +1,6 @@
 Name:           goocanvas
 Version:        1.0.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A new canvas widget for GTK+ that uses cairo for drawing
 Summary(zh_CN.UTF-8): 使用 cairo 绘画的 GTK+ 下的新画布控件
 
@@ -72,6 +72,9 @@ These are the files used for development.
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.0-5
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.0.0-4
 - 为 Magic 3.0 重建
 

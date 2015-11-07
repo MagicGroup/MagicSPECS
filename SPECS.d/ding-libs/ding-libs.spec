@@ -1,6 +1,6 @@
 Name: ding-libs
-Version: 0.4.0
-Release: 25%{?dist}
+Version: 0.5.0
+Release: 2%{?dist}
 Summary: "Ding is not GLib" assorted utility libraries
 Group: Development/Libraries
 License: LGPLv3+
@@ -68,7 +68,7 @@ libdhash, libini_config, librefarray and libpath_utils.
 Summary: Filesystem Path Utilities
 Group: Development/Libraries
 License: LGPLv3+
-Version: %{path_utils_version}
+Version: 0.5.0
 
 %description -n libpath_utils
 Utility functions to manipulate filesystem pathnames
@@ -78,7 +78,7 @@ Summary: Development files for libpath_utils
 Group: Development/Libraries
 Requires: libpath_utils = %{path_utils_version}-%{release}
 License: LGPLv3+
-Version: %{path_utils_version}
+Version: 0.5.0
 
 %description -n libpath_utils-devel
 Utility functions to manipulate filesystem pathnames
@@ -106,7 +106,7 @@ Utility functions to manipulate filesystem pathnames
 Group: Development/Libraries
 Summary: Dynamic hash table
 License: LGPLv3+
-Version: %{dhash_version}
+Version: 0.5.0
 
 %description -n libdhash
 A hash table which will dynamically resize to achieve optimal storage & access
@@ -117,7 +117,7 @@ Summary: Development files for libdhash
 Group: Development/Libraries
 Requires: libdhash = %{dhash_version}-%{release}
 License: LGPLv3+
-Version: %{dhash_version}
+Version: 0.5.0
 
 %description -n libdhash-devel
 A hash table which will dynamically resize to achieve optimal storage & access
@@ -145,7 +145,7 @@ time properties
 Summary: Collection data-type for C
 Group: Development/Libraries
 License: LGPLv3+
-Version: %{collection_version}
+Version: 0.5.0
 
 %description -n libcollection
 A data-type to collect data in a hierarchical structure for easy iteration
@@ -156,7 +156,7 @@ Summary: Development files for libcollection
 Group: Development/Libraries
 License: LGPLv3+
 Requires: libcollection = %{collection_version}-%{release}
-Version: %{collection_version}
+Version: 0.5.0
 
 %description -n libcollection-devel
 A data-type to collect data in a hierarchical structure for easy iteration
@@ -189,7 +189,7 @@ and serialization
 Summary: A refcounted array for C
 Group: Development/Libraries
 License: LGPLv3+
-Version: %{ref_array_version}
+Version: 0.5.0
 
 %description -n libref_array
 A dynamically-growing, reference-counted array
@@ -199,7 +199,7 @@ Summary: Development files for libref_array
 Group: Development/Libraries
 Requires: libref_array = %{ref_array_version}-%{release}
 License: LGPLv3+
-Version: %{ref_array_version}
+Version: 0.5.0
 
 %description -n libref_array-devel
 A dynamically-growing, reference-counted array
@@ -228,7 +228,7 @@ A dynamically-growing, reference-counted array
 Summary: Basic object types for C
 Group: Development/Libraries
 License: GPLv3+
-Version: %{basicobjects_version}
+Version: 0.5.0
 
 %description -n libbasicobjects
 Basic object types
@@ -237,7 +237,7 @@ Basic object types
 Summary: Development files for libbasicobjects
 Group: Development/Libraries
 License: GPLv3+
-Version: %{basicobjects_version}
+Version: 0.5.0
 Requires: libbasicobjects = %{basicobjects_version}-%{release}
 
 %description -n libbasicobjects-devel
@@ -264,7 +264,7 @@ Basic object types
 Summary: INI file parser for C
 Group: Development/Libraries
 License: LGPLv3+
-Version: %{ini_config_version}
+Version: 0.5.0
 
 %description -n libini_config
 Library to process config files in INI format into a libcollection data
@@ -278,7 +278,7 @@ Requires: libini_config = %{ini_config_version}-%{release}
 Requires: libcollection-devel = %{collection_version}-%{release}
 Requires: libref_array-devel = %{ref_array_version}-%{release}
 Requires: libbasicobjects-devel = %{basicobjects_version}-%{release}
-Version: %{ini_config_version}
+Version: 0.5.0
 
 %description -n libini_config-devel
 Library to process config files in INI format into a libcollection data
@@ -337,6 +337,9 @@ rm -f \
 rm -f */doc/html/installdox
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.0-2
+- 更新到 0.5.0
+
 * Fri Feb 13 2015 Liu Di <liudidi@gmail.com> - 0.4.0-25
 - 为 Magic 3.0 重建
 

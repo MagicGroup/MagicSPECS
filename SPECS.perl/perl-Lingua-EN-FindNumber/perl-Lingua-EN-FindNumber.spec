@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-FindNumber
 Version:        1.31
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Locate (written) numbers in English text
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Lingua-EN-FindNumber/
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.31-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.31-2
 - 为 Magic 3.0 重建
 

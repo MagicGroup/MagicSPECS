@@ -30,7 +30,7 @@
 
 Name:           httpunit
 Version:        1.7
-Release:        16%{?dist}
+Release:        17%{?dist}
 Epoch:          0
 Summary:        Automated web site testing toolkit
 License:        MIT and ASL 2.0
@@ -161,6 +161,9 @@ popd
 %doc doc/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0:1.7-17
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:1.7-16
 - 为 Magic 3.0 重建
 

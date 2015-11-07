@@ -1,6 +1,6 @@
 Name:           perl-File-ShareDir-ProjectDistDir
 Version:        1.000008
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Simple set-and-forget using of a '/share' directory in your projects root
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.000008-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.000008-2
 - 为 Magic 3.0 重建
 

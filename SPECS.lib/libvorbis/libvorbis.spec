@@ -3,8 +3,8 @@
 Summary:	The Vorbis General Audio Compression Codec
 Summary(zh_CN.UTF-8): Vorbis 通用音频压缩编码库
 Name:		libvorbis
-Version:	1.3.4
-Release:	1%{?dist}
+Version: 1.3.5
+Release: 2%{?dist}
 Epoch:		1
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -102,6 +102,9 @@ make check
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.3.5-2
+- 更新到 1.3.5
+
 * Wed Jan 22 2014 Peter Robinson <pbrobinson@fedoraproject.org> 1.3.4-1
 - libvorbis 1.3.4
 

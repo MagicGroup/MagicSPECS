@@ -1,8 +1,8 @@
 %global srcname bottle
 
 Name:           python-%{srcname}
-Version:	0.12.8
-Release:	1%{?dist}
+Version:	0.12.9
+Release:	2%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 Summary(zh_CN.UTF-8): 小网页程序使用的快速简单 WSGI 框架
 
@@ -77,6 +77,9 @@ magic_rpm_clean.sh
 %{python3_sitelib}/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12.9-2
+- 更新到 0.12.9
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.12.8-1
 - 更新到 0.12.8
 

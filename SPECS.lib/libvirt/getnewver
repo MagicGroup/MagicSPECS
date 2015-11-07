@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://libvirt.org/sources/?C=M;O=D"
+url="http://libvirt.org/sources/?C=M&O=D"
 new1="libvirt-"
 new2=".tar.gz"
 downcommand="wget -q" 

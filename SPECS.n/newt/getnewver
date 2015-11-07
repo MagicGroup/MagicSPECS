@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/released/newt/?C=M;O=D"
+url="https://fedorahosted.org/released/newt/?C=M&O=D"
 new1="newt-"
 new2=".tar.gz"
 downcommand="wget -q" 

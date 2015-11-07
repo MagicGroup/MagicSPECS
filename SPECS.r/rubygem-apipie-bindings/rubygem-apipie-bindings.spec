@@ -6,7 +6,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.14
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: The Ruby bindings for Apipie documented APIs
 Group: Development/Languages
 License: MIT
@@ -97,6 +97,9 @@ popd
 %exclude %{gem_instdir}/test/dummy/.gitignore
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.14-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.14-2
 - 为 Magic 3.0 重建
 

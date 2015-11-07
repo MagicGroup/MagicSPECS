@@ -2,7 +2,7 @@ Name:           perl-IPC-Cmd
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.92
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Finding and running system commands made easy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:0.92-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.92-4
 - 为 Magic 3.0 重建
 

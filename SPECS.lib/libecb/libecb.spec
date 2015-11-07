@@ -1,7 +1,7 @@
 %global snapshot 20130509
 Name:       libecb
 Version:    0.%{snapshot}
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    Compiler built-ins
 Summary(zh_CN.UTF-8): 编译器插件
 Group:      Development/Libraries
@@ -37,6 +37,9 @@ magic_rpm_clean.sh
 %{_includedir}/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.20130509-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.20130509-5
 - 为 Magic 3.0 重建
 

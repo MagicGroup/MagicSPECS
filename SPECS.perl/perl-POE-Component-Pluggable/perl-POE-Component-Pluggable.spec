@@ -1,6 +1,6 @@
 Name:       perl-POE-Component-Pluggable
 Version:    1.26
-Release:    6%{?dist}
+Release:    7%{?dist}
 # lib/POE/Component/Pluggable.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -50,6 +50,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.26-7
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.26-6
 - 为 Magic 3.0 重建
 

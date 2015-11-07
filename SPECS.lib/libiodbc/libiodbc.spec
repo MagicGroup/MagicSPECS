@@ -5,8 +5,8 @@
 Summary: iODBC Driver Manager
 Summary(zh_CN.UTF-8): iODBC 驱动管理器
 Name: libiodbc
-Version: 3.52.9
-Release: 1%{?dist}
+Version: 3.52.10
+Release: 2%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2 or BSD
@@ -130,6 +130,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.52.10-2
+- 更新到 3.52.10
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 3.52.9-1
 - 更新到 3.52.9
 

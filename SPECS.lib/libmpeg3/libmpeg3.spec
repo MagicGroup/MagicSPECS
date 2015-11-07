@@ -2,7 +2,7 @@ Summary: Decoder of various derivatives of MPEG standards
 Summary(zh_CN.UTF-8): 多种 MPEG 衍生标准的解码器
 Name: libmpeg3
 Version: 1.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -107,6 +107,9 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_libdir}/pkgconfig/libmpeg3.pc
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.8-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.7-3
 - 为 Magic 3.0 重建
 

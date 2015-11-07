@@ -3,7 +3,7 @@
 
 Name:		xdg-user-dirs
 Version:	0.15
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Handles user special directories
 Summary(zh_CN.UTF-8): 处理用户指定的目录
 
@@ -61,6 +61,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.15-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.15-5
 - 为 Magic 3.0 重建
 

@@ -17,8 +17,8 @@
 Summary: A GNU collection of binary utilities
 Summary(zh_CN.UTF-8): 一组 GNU 二进制工具
 Name: %{?cross}binutils%{?_with_debug:-debug}
-Version: 2.25
-Release: 3%{?dist}
+Version: 2.25.1
+Release: 2%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -501,6 +501,9 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.25.1-2
+- 更新到 2.25.1
+
 * Fri Mar 20 2015 Liu Di <liudidi@gmail.com> - 2.25-3
 - 为 Magic 3.0 重建
 

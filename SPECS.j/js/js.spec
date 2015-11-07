@@ -5,7 +5,7 @@ Summary(zh_CN.UTF-8):  	JavaScript 解释器和库
 Name:		js
 Epoch:		1
 Version:		1.8.5
-Release:		14%{?hgdate:.hg%{hgdate}}%{?dist}
+Release:		15%{?hgdate:.hg%{hgdate}}%{?dist}
 License:		GPLv2+ or LGPLv2+ or MPLv1.1
 Group:		Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -148,6 +148,9 @@ rm -rf %{buildroot}
 %{_includedir}/js
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:1.8.5-15
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1:1.8.5-14
 - 为 Magic 3.0 重建
 

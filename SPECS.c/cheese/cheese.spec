@@ -1,7 +1,7 @@
 Name:           cheese
 Epoch:          2
-Version:	3.12.1
-Release:        3%{?dist}
+Version:	3.18.1
+Release:        4%{?dist}
 Summary:        Application for taking pictures and movies from a webcam
 Summary(zh_CN.UTF-8): 从网络摄像头中抓取图像和视频的程序
 
@@ -159,6 +159,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/Cheese-3.0.gir
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-4
+- 更新到 3.18.1
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 2:3.12.1-3
 - 为 Magic 3.0 重建
 

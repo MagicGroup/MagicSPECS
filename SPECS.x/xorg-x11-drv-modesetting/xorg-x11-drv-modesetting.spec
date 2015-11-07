@@ -6,7 +6,7 @@ Summary:   Xorg X11 modesetting video driver
 Summary(zh_CN.UTF-8): Xorg X11 modesetting 显卡驱动
 Name:      xorg-x11-drv-modesetting
 Version:	0.9.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -62,6 +62,9 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 %doc COPYING README
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.9.0-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.9.0-2
 - 更新到 0.9.0
 

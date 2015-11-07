@@ -1,6 +1,6 @@
 Name:           perl-Proc-WaitStat
 Version:        1.00
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Interpret and act on wait() status values
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.00-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-10
 - 为 Magic 3.0 重建
 

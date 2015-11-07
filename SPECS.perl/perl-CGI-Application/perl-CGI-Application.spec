@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application
 Version:        4.50
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Framework for building reusable web-applications
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.50-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.50-13
 - 为 Magic 3.0 重建
 

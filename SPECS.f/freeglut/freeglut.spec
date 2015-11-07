@@ -2,7 +2,7 @@ Summary:        A freely licensed alternative to the GLUT library
 Summary(zh_CN.UTF-8): 一个 GLUT 库的自由授权版本
 Name:           freeglut
 Version:        2.8.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 URL:            http://freeglut.sourceforge.net
 Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 # For the manpages
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.8.1-2
+- 为 Magic 3.0 重建
+
 * Mon Apr 08 2013 Tomas Smetana <tsmetana@redhat.com> - 2.8.1-1
 - fix #948696: new upstream bugfix release, drop patches
 - fix #925363: aarch64 support

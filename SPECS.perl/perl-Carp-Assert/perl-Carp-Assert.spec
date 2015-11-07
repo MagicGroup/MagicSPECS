@@ -1,6 +1,6 @@
 Name:           perl-Carp-Assert
 Version:	0.21
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Executable comments
 Summary(zh_CN.UTF-8): 可执行注释
 
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.21-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.21-2
 - 为 Magic 3.0 重建
 

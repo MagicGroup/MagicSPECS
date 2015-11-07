@@ -8,7 +8,7 @@ Summary:  A collection of Python software tools
 Summary(zh_CN.UTF-8): Python 软件工具集合
 Name: mx%{pybasever}
 Version: 3.2.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://www.lemburg.com/files/python/eGenix-mx-Extensions.html
 Source0: http://www.lemburg.com/python/egenix-mx-base-%{version}.tar.gz
 #Patch1: mx-3.1.1-lib64.patch
@@ -119,6 +119,9 @@ rm -rf %{buildroot}
 %{_includedir}/mx/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.2.5-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 03 2015 Liu Di <liudidi@gmail.com> - 3.2.5-2
 - 为 Magic 3.0 重建
 

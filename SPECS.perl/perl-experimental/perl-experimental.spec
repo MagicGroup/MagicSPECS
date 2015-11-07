@@ -1,6 +1,6 @@
 Name:           perl-experimental
 Version:        0.014
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Experimental features made easy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.014-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.014-2
 - 为 Magic 3.0 重建
 

@@ -3,8 +3,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           atkmm
-Version: 2.22.7
-Release:        3%{?dist}
+Version: 2.24.1
+Release:        4%{?dist}
 Summary:        C++ interface for the ATK library
 Summary(zh_CN.UTF-8): ATK 库的 C++ 接口
 
@@ -100,6 +100,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.24.1-4
+- 更新到 2.24.1
+
 * Sat Mar 01 2014 Liu Di <liudidi@gmail.com> - 2.22.7-3
 - 更新到 2.22.7
 

@@ -38,7 +38,7 @@ Summary: Scanner access software
 Summary(zh_CN.UTF-8): 扫描仪访问软件
 Name: sane-backends
 Version: 1.0.24
-Release: 16%{?dist}
+Release: 17%{?dist}
 # lib/ is LGPLv2+, backends are GPLv2+ with exceptions
 # Tools are GPLv2+, docs are public domain
 # see LICENSE for details
@@ -348,6 +348,9 @@ udevadm hwdb --update >/dev/null 2>&1 || :
 %{_libdir}/sane/*gphoto2.so*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.24-17
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.24-16
 - 为 Magic 3.0 重建
 

@@ -23,7 +23,7 @@
 
 Name:		fonts-japanese
 Version:	0.20090710
-Release: 	3%{?dist}
+Release: 	4%{?dist}
 License:	Distributable
 Group:		User Interface/X
 Group(zh_CN):   用户界面/X
@@ -387,6 +387,9 @@ rm -rf $RPM_BUILD_ROOT
 %{cidmapdir}/cidfmap.ja
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.20090710-4
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.20090710-3
 - 为 Magic 3.0 重建
 

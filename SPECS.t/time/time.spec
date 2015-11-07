@@ -2,7 +2,7 @@ Summary: A GNU utility for monitoring a program's use of system resources.
 Summary(zh_CN.UTF-8): 一个用来监视程序对系统资源使用的 GNU 工具。
 Name: time
 Version: 1.7
-Release: 31%{?dist}
+Release: 32%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -53,6 +53,9 @@ fi
 %{_infodir}/time.info*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.7-32
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.7-31
 - 为 Magic 3.0 重建
 

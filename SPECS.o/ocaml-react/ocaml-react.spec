@@ -2,7 +2,7 @@
 
 Name:           ocaml-react
 Version: 0.9.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary:        OCaml framework for Functional Reactive Programming (FRP)
 Summary(zh_CN.UTF-8): 函数响应式编程 (FRP) 的 OCaml 框架
 
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.4-9
+- 为 Magic 3.0 重建
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 0.9.4-8
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 Summary: LittlePlugger is a module that provides Gem based plugin management
 Name: rubygem-%{gem_name}
 Version: 1.1.3
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://rubygems.org/gems/little-plugger
@@ -69,6 +69,9 @@ popd
 %doc %{gem_instdir}/History.txt
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.3-12
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.3-11
 - 为 Magic 3.0 重建
 

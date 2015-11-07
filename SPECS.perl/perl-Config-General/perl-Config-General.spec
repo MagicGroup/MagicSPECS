@@ -1,6 +1,6 @@
 Name:           perl-Config-General
-Version:	2.58
-Release:	1%{?dist}
+Version:	2.60
+Release:	2%{?dist}
 Summary:        Generic configuration module for Perl
 
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.60-2
+- 更新到 2.60
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.58-1
 - 更新到 2.58
 

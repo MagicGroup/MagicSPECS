@@ -2,7 +2,7 @@ Summary: A library for accessing various audio file formats
 Summary(zh_CN.UTF-8): 访问多种音频文件格式的库
 Name: audiofile
 Version: 0.3.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.3.6-2
+- 为 Magic 3.0 重建
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 1:0.3.6-1
 - 更新到 0.3.6
 

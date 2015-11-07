@@ -1,6 +1,6 @@
 Name:		rt73usb-firmware
 Version:	1.8
-Release:	12%{?dist}
+Release:	13%{?dist}
 Summary:	Firmware for Ralink® RT2571W/RT2671 A/B/G network adaptors
 Summary(zh_CN.UTF-8): Ralink® RT2571W/RT2671 A/B/G 无线网卡的固件
 Group:		System Environment/Kernel
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.8-13
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.8-12
 - 为 Magic 3.0 重建
 

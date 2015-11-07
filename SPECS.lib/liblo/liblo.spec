@@ -1,8 +1,8 @@
 Summary:      Open Sound Control library
 Summary(zh_CN.UTF-8): 开放声音控制库
 Name:         liblo
-Version:      0.26
-Release:      1%{?dist}
+Version: 0.28
+Release:      2%{?dist}
 License:      LGPLv2+
 Group:        System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.28-2
+- 更新到 0.28
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.26-3
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary: Images for package groups
 Name: comps-extras
 Version: 23
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://git.fedorahosted.org/git/?p=comps-extras.git;a=summary
 Source0: http://fedorahosted.org/releases/c/o/comps-extras/%{name}-%{version}.tar.gz
 # while GPL isn't normal for images, it is the case here
@@ -41,6 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/comps/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 23-2
+- 为 Magic 3.0 重建
+
 * Fri Oct  4 2013 Bill Nottingham <notting@redhat.com> - 23-1
 - add Cinnamon logo (#1015319)
 

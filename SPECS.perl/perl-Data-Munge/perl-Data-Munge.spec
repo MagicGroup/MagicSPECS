@@ -1,6 +1,6 @@
 Name:           perl-Data-Munge
 Version:        0.095
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Utility functions for working with perl data structures and code references
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.095-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.095-2
 - 为 Magic 3.0 重建
 

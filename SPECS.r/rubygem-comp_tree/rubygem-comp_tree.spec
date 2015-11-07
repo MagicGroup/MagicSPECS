@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.1.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A simple framework for automatic parallelism
 
 Group:          Development/Libraries
@@ -78,6 +78,9 @@ rake test
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.3-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.3-5
 - 为 Magic 3.0 重建
 

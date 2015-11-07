@@ -13,8 +13,8 @@
 # binfmt macros for RHEL
 
 Name:           wine
-Version:	1.7.53
-Release:        1%{?dist}
+Version:	1.7.54
+Release:        2%{?dist}
 Summary:        A compatibility layer for windows applications
 Summary(zh_CN.UTF-8): windows 程序的兼容层
 
@@ -1857,6 +1857,9 @@ fi
 %{_libdir}/wine/opencl.dll.so
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.7.54-2
+- 更新到 1.7.54
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.7.53-1
 - 更新到 1.7.53
 

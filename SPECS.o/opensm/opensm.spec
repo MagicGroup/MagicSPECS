@@ -1,6 +1,6 @@
 Name:    opensm
 Version: 3.3.19
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: OpenIB InfiniBand Subnet Manager and management utilities
 Summary(zh_CN.UTF-8): OpenIB InfiniBand 子网管理器和管理工具
 Group:   System Environment/Daemons
@@ -138,6 +138,9 @@ fi
 %{_libdir}/lib*.a
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.3.19-2
+- 为 Magic 3.0 重建
+
 * Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 3.3.19-1
 - 更新到 3.3.19
 

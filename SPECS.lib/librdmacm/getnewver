@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.openfabrics.org/downloads/rdmacm/?C=M;O=D"
+url="http://www.openfabrics.org/downloads/rdmacm/?C=M&O=D"
 new1="librdmacm-"
 new2=".tar.gz"
 downcommand="wget -q" 

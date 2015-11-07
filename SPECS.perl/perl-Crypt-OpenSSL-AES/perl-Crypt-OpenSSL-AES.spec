@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-AES
 Version:        0.02
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Perl interface to OpenSSL for AES
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.02-21
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.02-20
 - 为 Magic 3.0 重建
 

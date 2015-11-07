@@ -1,15 +1,15 @@
 %define testingtag RC
 %define git 1
-%define vcsdate 20140304
+%define vcsdate 20151028
 
 Name:		bangarang
 Group:		Applications/Multimedia
 Group(zh_CN.UTF-8):   应用程序/多媒体
 Version:	2.1.1
 %if 0%{?git}
-Release:	0.%{vcsdate}.%{?dist}.1
+Release:	0.%{vcsdate}.%{?dist}.3
 %else
-Release:	2%{dist}
+Release:	4%{dist}
 %endif
 License:	GPL v3
 Summary:	A KDE media player
@@ -72,6 +72,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_localedir}/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com>
+- 更新到 20151028 日期的仓库源码
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Liu Di <liudidi@gmail.com>
 - 更新到 20140304 日期的仓库源码
 

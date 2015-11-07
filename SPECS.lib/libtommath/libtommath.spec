@@ -1,6 +1,6 @@
 Name:           libtommath
 Version:        0.42.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A portable number theoretic multiple-precision integer library
 Summary(zh_CN.UTF-8): 可移植的数论高精度整数库
 License:        Public Domain
@@ -101,6 +101,9 @@ magic_rpm_clean.sh
 %doc bn.pdf poster.pdf tommath.pdf
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.42.0-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.42.0-4
 - 为 Magic 3.0 重建
 

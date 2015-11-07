@@ -1,7 +1,7 @@
 Name:           perl-Hash-MultiValue
 Summary:        Store multiple values per key
 Version:	0.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/A/AR/ARISTOTLE/Hash-MultiValue-%{version}.tar.gz
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.16-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.16-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 Summary:	Ruby binding of gtksourceview-3.x
 License:	LGPLv2+
@@ -97,6 +97,9 @@ popd
 %doc	%{gem_instdir}/sample/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2.5-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-3
 - 为 Magic 3.0 重建
 

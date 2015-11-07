@@ -3,7 +3,7 @@
 
 Name:           system-config-keyboard
 Version:        1.4.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A graphical interface for modifying the keyboard
 Summary(zh_CN.UTF-8): 修改键盘布局的图形界面
 
@@ -101,6 +101,9 @@ fi
 %{python2_sitelib}/system_config_keyboard
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4.0-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.4.0-2
 - 为 Magic 3.0 重建
 

@@ -9,7 +9,7 @@ Name:    qwt
 Summary: Qt Widgets for Technical Applications
 Summary(zh_CN.UTF-8): 技术程序用的 Qt 部件
 Version: 6.1.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: LGPLv2 with exceptions
 URL:     http://qwt.sourceforge.net
@@ -197,6 +197,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.1.2-6
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 6.1.2-5
 - 为 Magic 3.0 重建
 

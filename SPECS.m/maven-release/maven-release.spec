@@ -1,6 +1,6 @@
 Name:           maven-release
 Version:        2.2.1
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Release a project updating the POM and tagging in the SCM
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-release-plugin/
@@ -99,6 +99,9 @@ EOT
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.2.1-15
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.2.1-14
 - 为 Magic 3.0 重建
 

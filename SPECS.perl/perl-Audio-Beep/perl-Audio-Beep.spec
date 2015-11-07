@@ -1,6 +1,6 @@
 Name:		perl-Audio-Beep
 Version:	0.11
-Release:	15%{?dist}
+Release:	16%{?dist}
 Summary:	Audio::Beep Perl module
 Summary(zh_CN.UTF-8): Audio::Beep Perl 模块
 License:	GPL+ or Artistic
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-15
 - 为 Magic 3.0 重建
 

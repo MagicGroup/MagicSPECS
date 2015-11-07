@@ -1,6 +1,6 @@
 Name:           inotify-tools
 Version:        3.14
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Command line utilities for inotify
 Summary(zh_CN.UTF-8): inotify 的命令行工具
 
@@ -86,6 +86,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.14-8
+- 为 Magic 3.0 重建
+
 * Fri May 09 2014 Liu Di <liudidi@gmail.com> - 3.14-7
 - 为 Magic 3.0 重建
 

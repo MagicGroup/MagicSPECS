@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://www.kernel.org/pub/linux/libs/klibc/2.0/?C=M;O=D"
+url="https://www.kernel.org/pub/linux/libs/klibc/2.0/?C=M&O=D"
 new1="klibc-"
 new2=".tar.bz2"
 downcommand="wget -q" 

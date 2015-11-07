@@ -3,8 +3,8 @@
 Summary: 	Library for MPEG TS and DVB PSI tables decoding and generation
 Summary(zh_CN.UTF-8): MPEG TS 和 DVB PSI 表解码和生成库
 Name: 		libdvbpsi
-Version:	1.2.0
-Release: 	1%{?dist}
+Version:	1.3.0
+Release: 	2%{?dist}
 License: 	GPLv2+
 Group: 		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 # -----------------------------------------------------------------------------
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 更新到 1.3.0
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.2.0-1
 - 更新到 1.2.0
 

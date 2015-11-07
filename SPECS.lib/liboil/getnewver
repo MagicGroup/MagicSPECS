@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://liboil.freedesktop.org/download/?C=M;O=D"
+url="http://liboil.freedesktop.org/download/?C=M&O=D"
 new1="liboil-"
 new2=".tar.gz"
 downcommand="wget -q" 

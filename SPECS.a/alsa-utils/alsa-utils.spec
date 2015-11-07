@@ -5,7 +5,7 @@ Summary: Advanced Linux Sound Architecture (ALSA) utilities
 Summary(zh_CN.UTF-8): 高级 Linux 声音架构 (ALSA) 的常用工具
 Name:    alsa-utils
 Version:	1.0.29
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group:   Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -119,6 +119,9 @@ if [ -s /etc/asound.state -a ! -s /var/lib/alsa/asound.state ] ; then
 fi
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.0.29-2
 - 为 Magic 3.0 重建
 

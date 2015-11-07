@@ -1,6 +1,6 @@
 Name:           glew
-Version:	1.10.0
-Release:        1%{?dist}
+Version:	1.13.0
+Release:        2%{?dist}
 Summary:        The OpenGL Extension Wrangler Library
 Summary(zh_CN.UTF-8): OpenGL 的扩展库
 Group:          System Environment/Libraries
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.13.0-2
+- 更新到 1.13.0
+
 * Tue May 27 2014 Liu Di <liudidi@gmail.com> - 1.10.0-1
 - 更新到 1.10.0
 

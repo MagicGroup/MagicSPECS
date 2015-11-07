@@ -2,7 +2,7 @@ Name: dosfstools
 Summary: Utilities for making and checking MS-DOS FAT filesystems on Linux
 Summary(zh_CN.UTF-8): 在 Linux 上创建和检查 MS-DOS FAT 文件系统的工具 
 Version: 3.0.26
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -40,6 +40,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.0.26-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 24 2014 Liu Di <liudidi@gmail.com> - 3.0.26-1
 - 更新到 3.0.26
 

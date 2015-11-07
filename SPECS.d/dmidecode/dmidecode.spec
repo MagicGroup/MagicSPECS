@@ -1,8 +1,8 @@
 Summary:        Tool to analyse BIOS DMI data
 Summary(zh_CN.UTF-8): 分析 BIOS DMI 数据的工具
 Name:           dmidecode
-Version:        2.12
-Release:        4%{?dist}
+Version:	3.0
+Release:        5%{?dist}
 Epoch:          1
 Group:          System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -54,6 +54,9 @@ rm -rf ${buildroot}
 %{_mandir}/man8/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:3.0-5
+- 更新到 3.0
+
 * Thu May 09 2013 Anton Arapov <anton@redhat.com> - 1:2.12-3
 - Accomodate few more necesary, to enable SMBIOS v2.8, changes from upstream.
 

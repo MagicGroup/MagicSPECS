@@ -2,7 +2,7 @@ Summary: A MPEG-4 encoder
 Summary(zh_CN.UTF-8): MPEG-4 编码器
 Name: faac
 Version: 1.28
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -72,6 +72,9 @@ make %{?_smp_mflags} CXXFLAGS="-O3 -pipe" CFLAGS="-O3 -pipe"
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.28-4
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.28-3
 - 为 Magic 3.0 重建
 

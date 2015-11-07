@@ -1,7 +1,7 @@
 Name:		ethtool
 Epoch:		2
-Version:	3.6
-Release:	2%{?dist}
+Version:	4.2
+Release:	3%{?dist}
 Summary:	Settings tool for Ethernet NICs
 Summary(zh_CN.UTF-8): 以太网卡的设置工具
 
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %{_mandir}/man8/%{name}.8*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2:4.2-3
+- 更新到 4.2
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 2:3.6-2
 - 为 Magic 3.0 重建
 

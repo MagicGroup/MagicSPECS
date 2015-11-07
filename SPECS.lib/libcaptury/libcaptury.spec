@@ -4,7 +4,7 @@ Summary: X11/GLX Video Capturing Framework
 Summary(zh_CN.UTF-8): X11/GLX 视频捕捉构架
 Name: libcaptury
 Version: 0.3.0
-Release: 0.%{svn_version}.0.1%{?dist}.2
+Release: 0.%{svn_version}.0.1%{?dist}.3
 URL: http://rm-rf.in/captury
 Source: libcaptury-%{version}-%{svn_version}.tar.bz2
 License: GPL
@@ -69,6 +69,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/libcaptury.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.3.0-0.20080323.0.1.3
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.3.0-0.20080323.0.1.2
 - 为 Magic 3.0 重建
 

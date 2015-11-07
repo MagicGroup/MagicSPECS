@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.kernel.org/pub/linux/docs/man-pages/?C=M;O=D"
+url="http://www.kernel.org/pub/linux/docs/man-pages/?C=M&O=D"
 new1="man-pages-"
 new2=".tar.xz"
 downcommand="wget -q" 

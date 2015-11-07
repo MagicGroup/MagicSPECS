@@ -4,7 +4,7 @@
 Summary: Ruby Bindings for the GNU LibIDN library
 Name: rubygem-%{gem_name}
 Version: 0.0.2
-Release: 16%{?dist}
+Release: 17%{?dist}
 Group: Development/Languages
 
 # ASL license for ext/idn.c, ext/idn.h, ext/punycode.c and ext/stringprep.c
@@ -106,6 +106,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.2-17
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.2-16
 - 为 Magic 3.0 重建
 

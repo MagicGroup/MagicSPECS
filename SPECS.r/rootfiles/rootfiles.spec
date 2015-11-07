@@ -2,7 +2,7 @@ Summary: The basic required files for the root user's directory.
 Summary(zh_CN.UTF-8): root 用户目录的基本需要文件
 Name: rootfiles
 Version: 8.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Public Domain
 Group: System Environment/Base
 Source0: dot-bashrc
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) /root/.[A-Za-z]*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 8.1-6
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 8.1-5
 - 为 Magic 3.0 重建
 

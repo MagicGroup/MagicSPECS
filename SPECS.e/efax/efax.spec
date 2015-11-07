@@ -2,7 +2,7 @@ Summary: A program for faxing using a Class 1, 2 or 2.0 fax modem
 Summary(zh_CN.UTF-8): 使用 Class 1, 2 或 2.0 传真猫进行传真的程序
 Name: efax
 Version: 0.9a
-Release: 11.001114%{?dist}
+Release: 12.001114%{?dist}
 License: GPLv2+
 Group: Applications/Communications
 Group(zh_CN.UTF-8): 应用程序/通信
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 %dir %{_localstatedir}/log/fax
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9a-12.001114
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.9a-11.001114
 - 为 Magic 3.0 重建
 

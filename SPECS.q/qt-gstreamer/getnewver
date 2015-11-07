@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://gstreamer.freedesktop.org/src/qt-gstreamer/?C=M;O=D"
+url="http://gstreamer.freedesktop.org/src/qt-gstreamer/?C=M&O=D"
 new1="qt-gstreamer-"
 new2=".tar.xz"
 downcommand="wget -q" 

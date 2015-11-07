@@ -4,7 +4,7 @@
 
 Name:		webrtc
 Version:	0.1
-Release:	0.11.%{svndate}svn%{svnrev}%{?dist}
+Release:	0.12.%{svndate}svn%{svnrev}%{?dist}
 Summary:	Libraries to provide Real Time Communications via the web
 Summary(zh_CN.UTF-8): 通过网页实时通信的库
 License:	BSD
@@ -171,6 +171,9 @@ magic_rpm_clean.sh
 %{_libdir}/libwebrtc_vp8.so
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.1-0.12.20130531svn3704
+- 为 Magic 3.0 重建
+
 * Fri May 31 2013 Tom Callaway <spot@fedoraproject.org> - 0.1-0.11.20130531svn3704
 - chromium 27
 

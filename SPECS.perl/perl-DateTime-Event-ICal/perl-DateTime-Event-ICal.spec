@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Event-ICal
-Version:	0.12
-Release:	1%{?dist}
+Version:	0.13
+Release:	2%{?dist}
 Summary:        Perl DateTime extension for computing rfc2445 recurrences
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.13-2
+- 更新到 0.13
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
 - 更新到 0.12
 

@@ -2,7 +2,7 @@
 
 Name:		json-c
 Version:	0.11
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A JSON implementation in C
 Summary(zh_CN.UTF-8): C 语言的 JSON 实现
 Group:		Development/Libraries
@@ -120,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.11-12
+- 为 Magic 3.0 重建
+
 * Wed Apr 23 2014 Liu Di <liudidi@gmail.com> - 0.11-11
 - 为 Magic 3.0 重建
 

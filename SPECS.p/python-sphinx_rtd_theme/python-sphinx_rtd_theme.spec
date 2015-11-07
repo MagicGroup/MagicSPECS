@@ -3,8 +3,8 @@
 %global pkgname sphinx_rtd_theme
 
 Name:           python-%{pkgname}
-Version:        0.1.8
-Release:        4%{?dist}
+Version:	0.1.9
+Release:	2%{?dist}
 Summary:        Sphinx theme for readthedocs.org
 Summary(zh_CN.UTF-8): readthedocs.org 的 Sphinx 主题
 
@@ -124,6 +124,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.1.9-2
+- 更新到 0.1.9
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.1.8-4
 - 为 Magic 3.0 重建
 

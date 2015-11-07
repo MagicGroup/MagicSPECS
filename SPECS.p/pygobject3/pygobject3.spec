@@ -9,8 +9,8 @@
 %global with_check 0
 
 Name:           pygobject3
-Version:	3.18.0
-Release:	1%{?dist}
+Version:	3.19.2
+Release:	2%{?dist}
 Summary:        Python bindings for GObject Introspection
 
 License:        LGPLv2+ and MIT
@@ -210,6 +210,9 @@ xvfb-run make DESTDIR=$RPM_BUILD_ROOT check V=1
 %{_libdir}/pkgconfig/pygobject-3.0.pc
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.19.2-2
+- 更新到 3.19.2
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-1
 - 更新到 3.18.0
 

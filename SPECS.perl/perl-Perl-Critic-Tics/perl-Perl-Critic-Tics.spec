@@ -1,7 +1,7 @@
 # This file is lincesed under the terms of GNU GPLv2+.
 Name:           perl-Perl-Critic-Tics
 Version:	0.009
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Policies for things that make me wince
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.009-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.009-1
 - 更新到 0.009
 

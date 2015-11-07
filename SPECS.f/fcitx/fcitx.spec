@@ -5,7 +5,7 @@
 Name:			fcitx
 Summary:		An input method framework
 Version:		4.2.8.3
-Release:		3%{?dist}
+Release:		4%{?dist}
 License:		GPLv2+
 Group:			User Interface/Desktops
 URL:			https://fcitx-im.org/wiki/Fcitx
@@ -353,6 +353,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.2.8.3-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 4.2.8.3-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Utility for the creation of squashfs filesystems
 Summary(zh_CN.UTF-8): 创建 squashfs 文件系统的工具
 Name: squashfs-tools
 Version:	4.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -66,6 +66,9 @@ rm -rf %{buildroot}
 %{_sbindir}/unsquashfs
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.3-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 4.3-1
 - 更新到 4.3
 

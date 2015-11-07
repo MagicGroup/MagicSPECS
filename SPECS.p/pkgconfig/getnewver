@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://pkg-config.freedesktop.org/releases/?C=M;O=D"
+url="http://pkg-config.freedesktop.org/releases/?C=M&O=D"
 new1="pkg-config-"
 new2=".tar.gz"
 downcommand="wget -q" 

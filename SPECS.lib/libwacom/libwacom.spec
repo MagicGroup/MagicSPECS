@@ -2,8 +2,8 @@
 
 Name:           libwacom
 
-Version: 0.9
-Release: 1%{?dist}
+Version: 0.15
+Release: 2%{?dist}
 Summary:        Tablet Information Client Library
 Summary(zh_CN.UTF-8): 手写板信息客户端库
 Requires:       %{name}-data
@@ -94,6 +94,9 @@ magic_rpm_clean.sh
 %{_datadir}/libwacom/layouts/*.svg
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.15-2
+- 更新到 0.15
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.9-1
 - 更新到 0.9
 

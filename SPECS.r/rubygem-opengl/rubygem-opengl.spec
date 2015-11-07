@@ -11,7 +11,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	0.9.2
-Release:	7%{?dist}
+Release:	8%{?dist}
 
 Summary:	An OpenGL wrapper for Ruby
 Group:	Development/Languages
@@ -179,6 +179,9 @@ popd
 %doc	%{gem_instdir}/utils/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.9.2-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.9.2-7
 - 为 Magic 3.0 重建
 

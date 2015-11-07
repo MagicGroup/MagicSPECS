@@ -1,6 +1,6 @@
 Name:		chromium-ffmpegsumo
 Version:	27.0.1453.93
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Media playback library for chromium
 Group:		System Environment/Libraries
 License:	LGPLv2+
@@ -96,6 +96,9 @@ cp -a config/arm-neon/libavutil/avconfig.h %{buildroot}%{_includedir}/ffmpegsumo
 %{_libdir}/libffmpegsumo.so
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 27.0.1453.93-2
+- 为 Magic 3.0 重建
+
 * Thu May 30 2013 Tom Callaway <spot@fedoraproject.org> - 27.0.1453.93-1
 - update to 27.0.1453.93 sync
 

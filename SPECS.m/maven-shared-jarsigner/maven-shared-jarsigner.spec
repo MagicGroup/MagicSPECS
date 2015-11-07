@@ -1,6 +1,6 @@
 Name:             maven-shared-jarsigner
 Version:          1.3.2
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          Component to assist in signing Java archives
 License:          ASL 2.0
 URL:              http://maven.apache.org/shared/maven-jarsigner/
@@ -44,6 +44,9 @@ find -name \*.jar -delete
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.2-4
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.3.2-3
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/gnu/libcdio/?C=M;O=D"
+url="http://ftp.gnu.org/gnu/libcdio/?C=M&O=D"
 new1="libcdio-"
 new2=".tar.bz2"
 downcommand="wget -q" 

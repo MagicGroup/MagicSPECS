@@ -1,6 +1,6 @@
 Name:           espeak
-Version:        1.45.05
-Release:        4%{?dist}
+Version: 1.48.04-source
+Release:        5%{?dist}
 Summary:        Software speech synthesizer (text-to-speech)
 Summary(zh_CN.UTF-8): 软件语音合成器（文本转语音）
 
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com>
+- 更新到 1.48.04-source
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.45.05-4
 - 为 Magic 3.0 重建
 

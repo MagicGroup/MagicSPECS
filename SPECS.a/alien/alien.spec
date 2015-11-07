@@ -1,7 +1,7 @@
 
 %define name alien
-%define version 8.94
-%define release 1%{?dist}
+%define version 8.92
+%define release 2%{?dist}
 
 
 Summary:	Install Debian and Slackware Packages with RPM
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_localstatedir}/lib/alien
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 8.94-1
+- 更新到 8.92
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 8.94-1
 - 更新到 8.94
 

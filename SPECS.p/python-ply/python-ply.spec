@@ -3,8 +3,8 @@
 Name:			python-ply
 Summary: 		Python Lex-Yacc
 Summary(zh_CN.UTF-8):  	Python Lex-Yacc
-Version:		3.6
-Release:		3%{?dist}
+Version:	3.8
+Release:	2%{?dist}
 License:		BSD
 Group:			System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -121,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.8-2
+- 更新到 3.8
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.6-3
 - 为 Magic 3.0 重建
 

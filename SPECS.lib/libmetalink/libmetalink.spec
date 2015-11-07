@@ -1,6 +1,6 @@
 Name:		libmetalink
 Version:	0.1.2
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Metalink library written in C
 Summary(zh_CN.UTF-8): 用 C 写的 Metalink 库
 Group:		System Environment/Libraries
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.2-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.1.2-5
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary: Python wrapper module around the OpenSSL library
 Name: pyOpenSSL
 Version: 0.15.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-%{version}.tar.gz
 
 BuildArch: noarch
@@ -94,6 +94,9 @@ popd
 %doc examples doc/_build/html
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.15.1-2
+- 为 Magic 3.0 重建
+
 * Fri Aug  7 2015 Tomáš Mráz <tmraz@redhat.com> - 0.15.1-1
 - Upgrade to 0.15.1
 

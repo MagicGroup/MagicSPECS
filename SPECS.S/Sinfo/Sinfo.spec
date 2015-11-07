@@ -2,7 +2,7 @@ Summary: Magic Deskop Service Info
 Summary(zh_CN.UTF-8): Magic 桌面服务管理器
 Name: Sinfo
 Version: 0.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL
 URL: http://ftp.magiclinux.org.cn/haulm
 Group: Applications/Internet
@@ -43,6 +43,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 /opt/Sinfo
 /usr/share/applications/
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.5-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.5-3
 - 为 Magic 3.0 重建
 

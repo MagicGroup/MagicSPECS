@@ -79,7 +79,7 @@
 Summary: The GNU libc libraries
 Name: glibc
 Version: %{glibcversion}
-Release: %{glibcrelease}.1
+Release: %{glibcrelease}.2
 # GPLv2+ is used in a bunch of programs, LGPLv2+ is used for libraries.
 # Things that are linked directly into dynamically linked programs
 # and shared libraries (e.g. crt files, lib*_nonshared.a) have an additional
@@ -1664,6 +1664,9 @@ rm -f *.filelist*
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.18-12.2
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 2.18-12.1
 - 为 Magic 3.0 重建
 

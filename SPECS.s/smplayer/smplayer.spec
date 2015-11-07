@@ -8,8 +8,8 @@
 %define skins_ver 15.2.0
 
 Name:           smplayer
-Version:	14.9.0.6994
-Release:	4%{?dist}
+Version:	15.9.0
+Release:	2%{?dist}
 Summary:        A graphical frontend for mplayer
 Summary(zh_CN.UTF-8):	mplayer 的图形化前端
 
@@ -148,6 +148,9 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/kde4/services/ServiceMenus/smplayer_enqueue.desktop
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 15.9.0-2
+- 更新到 15.9.0
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.9.0.6994-4
 - 为 Magic 3.0 重建
 

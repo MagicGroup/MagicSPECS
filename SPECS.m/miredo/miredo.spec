@@ -10,7 +10,7 @@
 
 Name:           miredo
 Version:        1.2.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tunneling of IPv6 over UDP through NATs
 Summary(zh_CN.UTF-8): 在 UDP 协议上通过地址转换使用 IPv6 隧道
 
@@ -278,6 +278,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.6-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 15 2014 Liu Di <liudidi@gmail.com> - 1.2.6-3
 - 为 Magic 3.0 重建
 

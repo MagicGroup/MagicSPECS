@@ -14,7 +14,7 @@ Summary:   Xorg X11 ati video driver
 Summary(zh_CN.UTF-8): Xorg X11 ati 显卡驱动
 Name:      xorg-x11-drv-ati
 Version:	7.5.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT%{moduledir}/multimedia/
 %{_mandir}/man4/radeon.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.5.0-3
+- 为 Magic 3.0 重建
+
 * Sun Oct 25 2015 Liu Di <liudidi@gmail.com> - 7.5.0-2
 - 更新到 7.5.0
 

@@ -1,6 +1,6 @@
 Name:           libestr
-Version:        0.1.9
-Release:        3%{?dist}
+Version: 0.1.10
+Release:        4%{?dist}
 Summary:        String handling essentials library
 Summary(zh_CN.UTF-8): 字符串处理要素库
 
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/libestr.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.10-4
+- 更新到 0.1.10
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 0.1.9-3
 - 为 Magic 3.0 重建
 

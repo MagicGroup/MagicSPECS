@@ -1,6 +1,6 @@
 Name: ttf2pt1
 Version: 3.4.4
-Release: 14%{?dist}
+Release: 15%{?dist}
 Summary: TrueType to Adobe Type 1 font converter
 Summary(zh_CN.UTF-8): TrueType 到 Adobe Type 1 字体转换器
 
@@ -76,6 +76,9 @@ rm -rf %buildroot
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.4.4-15
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3.4.4-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Merge
 Version:        0.08
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Three-way merge and diff
 Summary(zh_CN.UTF-8): 三种方式合并和比较
 License:        GPL+ or Artistic
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		xcb-util-image
 Version:	0.4.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Port of Xlib's XImage and XShmImage functions on top of libxcb
 Summary(zh_CN.UTF-8): 基于 libxcb 的 Xlib 的 XImage 和 XShmImage 函数
 Group:		System Environment/Libraries
@@ -67,6 +67,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.4.0-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.4.0-1
 - 更新到 0.4.0
 

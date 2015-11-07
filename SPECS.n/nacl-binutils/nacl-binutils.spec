@@ -24,7 +24,7 @@ ExclusiveArch: i686 x86_64
 Summary: A GNU collection of binary utilities
 Name: nacl-binutils%{?_with_debug:-debug}
 Version: 2.24
-Release: 2.git%{gitver}%{?dist}
+Release: 3.git%{gitver}%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -427,6 +427,9 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.24-3.git7dc2f25
+- 为 Magic 3.0 重建
+
 * Mon Jan 19 2015 Liu Di <liudidi@gmail.com> - 2.24-2.git7dc2f25
 - 为 Magic 3.0 重建
 

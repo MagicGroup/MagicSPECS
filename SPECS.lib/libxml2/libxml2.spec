@@ -2,7 +2,7 @@ Summary: Library providing XML and HTML support
 Summary(zh_CN.UTF-8): 提供 XML 和 HTML 支持的库
 Name: libxml2
 Version: 2.9.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -172,6 +172,9 @@ rm -fr %{buildroot}
 %doc doc/python.html
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.9.2-3
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 2.9.2-2
 - 为 Magic 3.0 重建
 

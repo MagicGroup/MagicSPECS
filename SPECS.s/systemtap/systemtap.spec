@@ -32,7 +32,7 @@
 
 Name: systemtap
 Version: 2.2.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 # for version, see also configure.ac
 
 
@@ -770,6 +770,9 @@ done
 # ------------------------------------------------------------------------
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.2.1-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.2.1-3
 - 为 Magic 3.0 重建
 

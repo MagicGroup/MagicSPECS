@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Compatibility
 Version:        1.001
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl::Critic policies for compatibility with Perl versions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.001-13
 - 为 Magic 3.0 重建
 

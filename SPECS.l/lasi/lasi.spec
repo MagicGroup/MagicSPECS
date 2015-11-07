@@ -1,6 +1,6 @@
 Name:           lasi
-Version:        1.1.1
-Release:        8%{?dist}
+Version:	1.1.2
+Release:        9%{?dist}
 Summary:        C++ library for creating Postscript documents
 Summary(zh_CN.UTF-8): 创建 PostScript 文档的 C++ 库
 
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.1.2-9
+- 更新到 1.1.2
+
 * Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1.1.1-8
 - 为 Magic 3.0 重建
 

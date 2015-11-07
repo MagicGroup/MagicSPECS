@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-pcre
-Version: 7.1.5
-Release: 1%{?dist}
+Version: 7.1.6
+Release: 2%{?dist}
 Summary:        Perl compatibility regular expressions (PCRE) for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 Perl 兼容正则表达式库
 
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 7.1.6-2
+- 更新到 7.1.6
+
 * Fri Mar 06 2015 Liu Di <liudidi@gmail.com> - 7.1.5-1
 - 更新到 7.1.5
 

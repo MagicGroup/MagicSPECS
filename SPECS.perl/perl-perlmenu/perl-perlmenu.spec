@@ -1,6 +1,6 @@
 Name:           perl-perlmenu
 Version:        4.0
-Release:        26%{?dist}
+Release:        27%{?dist}
 Summary:        Perl library module for curses-based menus & data-entry templates
 
 Group:          Development/Libraries
@@ -35,6 +35,9 @@ install -p -m 644 perlmenu.pm $RPM_BUILD_ROOT%{perl_vendorlib}
 %{perl_vendorlib}/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.0-27
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

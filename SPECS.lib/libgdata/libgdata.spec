@@ -1,6 +1,6 @@
 Name:           libgdata
-Version:	0.15.1
-Release:        4%{?dist}
+Version:	0.17.3
+Release: 2%{?dist}
 Summary:        Library for the GData protocol
 Summary(zh_CN.UTF-8): GData 协议的库
 
@@ -83,6 +83,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/libgdata.*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.17.3-2
+- 更新到 0.17.3
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.15.1-4
 - 更新到 0.15.1
 

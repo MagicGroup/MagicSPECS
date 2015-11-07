@@ -2,7 +2,7 @@ Summary: Murrine GTK2 engine
 Summary(zh_CN.UTF-8): Murrine GTK2 引擎
 Name: gtk-murrine-engine
 Version: 0.98.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPLv2 or LGPLv3
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/themes/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.98.2-6
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.98.2-5
 - 为 Magic 3.0 重建
 

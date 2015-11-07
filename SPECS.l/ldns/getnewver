@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.nlnetlabs.nl/downloads/ldns/?C=M;O=D"
+url="http://www.nlnetlabs.nl/downloads/ldns/?C=M&O=D"
 new1="ldns-"
 new2=".tar.gz"
 downcommand="wget -q" 

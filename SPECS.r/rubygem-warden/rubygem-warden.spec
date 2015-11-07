@@ -4,7 +4,7 @@
 Summary: Rack middle-ware that provides authentication for rack applications
 Name: rubygem-%{gem_name}
 Version: 1.2.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/hassox/%{gem_name}
@@ -65,6 +65,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.3-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.3-4
 - 为 Magic 3.0 重建
 

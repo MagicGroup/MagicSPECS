@@ -1,6 +1,6 @@
 Name:           shared-desktop-ontologies
 Version:        0.11.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Shared ontologies needed for semantic environments
 Summary(zh_CN.UTF-8): 语义环境的共享本体
 
@@ -96,6 +96,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.11.0-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 0.11.0-3
 - 为 Magic 3.0 重建
 

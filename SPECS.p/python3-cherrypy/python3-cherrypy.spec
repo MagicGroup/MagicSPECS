@@ -1,7 +1,7 @@
 Name:           python3-cherrypy
 %global         camelname CherryPy
 Version:        3.8.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Pythonic, object-oriented web development framework
 Summary(zh_CN.UTF-8): 面向对象的网页开发框架
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf cherrypy/tutorial/__pycache__
 %{python3_sitelib}/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.8.0-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.8.0-2
 - 为 Magic 3.0 重建
 

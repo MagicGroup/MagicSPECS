@@ -1,6 +1,6 @@
 Name:           efivar
-Version:        0.20
-Release:        2%{?dist}
+Version:	0.21
+Release:	2%{?dist}
 Summary:        Tools to manage UEFI variables
 Summary(zh_CN.UTF-8): 管理 UEFI 变量的工具
 License:        LGPLv2.1
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.21-2
+- 更新到 0.21
+
 * Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 0.20-2
 - 为 Magic 3.0 重建
 

@@ -11,9 +11,9 @@
 %define run_check 0%{!?_with_check:0}
 
 Name:		Cython
-Version:	0.20.2
+Version:	0.23.4
 ##Release:	4.b3%{?dist}
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A language for writing Python extension modules
 Summary(zh_CN.UTF-8): 编写 Python 扩展模块的语言
 
@@ -150,6 +150,9 @@ popd
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.23.4-4
+- 更新到 0.23.4
+
 * Tue Jun 17 2014 Liu Di <liudidi@gmail.com> - 0.20.2-3
 - 更新到 0.20.2
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ceph.com/download/?C=M;O=D"
+url="http://ceph.com/download/?C=M&O=D"
 new1="ceph-"
 new2=".tar.gz"
 downcommand="wget -q" 

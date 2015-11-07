@@ -1,6 +1,6 @@
 Name:		perl-Test-Warnings
 Version:	0.021
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Test for warnings and the lack of them
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -75,6 +75,9 @@ make test
 %{_mandir}/man3/Test::Warnings.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.021-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.021-1
 - 更新到 0.021
 

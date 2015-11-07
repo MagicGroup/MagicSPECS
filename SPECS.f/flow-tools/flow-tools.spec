@@ -8,7 +8,7 @@ Version: 0.68.5.1
 Name: flow-tools
 Summary: Tool set for working with NetFlow data
 Summary(zh_CN.UTF-8): 处理 NetFlow 数据的工具集
-Release: 17%{?dist}
+Release: 18%{?dist}
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License: BSD 
@@ -231,6 +231,9 @@ exit 0
 %doc docs/*.html ChangeLog.old TODO INSTALL SECURITY
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.68.5.1-18
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.68.5.1-17
 - 为 Magic 3.0 重建
 

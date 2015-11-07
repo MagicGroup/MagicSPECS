@@ -1,6 +1,6 @@
 Name:           perl-Text-Balanced
 Version:        2.03
-Release:        349%{?dist}
+Release:        350%{?dist}
 Summary:        Extract delimited text sequences from strings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.03-350
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.03-349
 - 为 Magic 3.0 重建
 

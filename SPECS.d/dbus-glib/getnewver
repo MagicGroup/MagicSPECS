@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://dbus.freedesktop.org/releases/dbus-glib/?C=M;O=D"
+url="http://dbus.freedesktop.org/releases/dbus-glib/?C=M&O=D"
 new1="dbus-glib-"
 new2=".tar.gz"
 downcommand="wget -q" 

@@ -2,7 +2,7 @@ Summary: Library for parsing IDL (Interface Definition Language)
 Summary(zh_CN.UTF-8): 解析 IDL 的库
 Name: libIDL
 Version: 0.8.14
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://ftp.gnome.org/pub/gnome/sources/libIDL/0.8/
 Source: http://download.gnome.org/sources/libIDL/0.8/%{name}-%{version}.tar.bz2
 Patch0: libIDL-0.8.6-multilib.patch
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 %{_infodir}/libIDL2.info.gz
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.8.14-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8.14-5
 - 为 Magic 3.0 重建
 

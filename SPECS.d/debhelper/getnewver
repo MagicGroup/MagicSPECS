@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.de.debian.org/debian/pool/main/d/debhelper/?C=M;O=D"
+url="http://ftp.de.debian.org/debian/pool/main/d/debhelper/?C=M&O=D"
 new1="debhelper_"
 new2=".tar.gz"
 downcommand="wget -q" 

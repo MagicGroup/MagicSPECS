@@ -1,6 +1,6 @@
 Name:           gocr
-Version:        0.49
-Release:        4%{?dist}
+Version:	0.48
+Release:        5%{?dist}
 Summary:        GNU Optical Character Recognition program
 Summary(zh_CN.UTF-8): GNU 文字识别程序
 
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gocr.1*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.48-5
+- 更新到 0.48
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.49-4
 - 更新到
 

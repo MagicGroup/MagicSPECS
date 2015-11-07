@@ -1,7 +1,7 @@
 Name:           perl-CGI-Compile
 Summary:        Compile .cgi scripts to a code reference like ModPerl::Registry
-Version:	0.19
-Release:	1%{?dist}
+Version:	0.20
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/CGI-Compile-%{version}.tar.gz 
@@ -55,6 +55,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.20-2
+- 更新到 0.20
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.19-1
 - 更新到 0.19
 

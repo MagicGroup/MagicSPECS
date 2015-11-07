@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.9.91
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	KDiff3 is a utility for comparing and/or merging two or three text files or directories.
 Summary(zh_CN.UTF-8): 比较文本和目录和工具
 Group:		Applications/Utilities
@@ -157,5 +157,8 @@ done
 %{tde_tdelibdir}/libkdiff3plugin.so
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.9.91-1.1
+- 为 Magic 3.0 重建
+
 * Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.9.91-1
 - Initial release for TDE 14.0.0

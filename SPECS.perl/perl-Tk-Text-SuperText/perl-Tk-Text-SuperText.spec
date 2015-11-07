@@ -1,6 +1,6 @@
 Name:           perl-Tk-Text-SuperText
 Version:        0.9.4
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Improved text widget for perl/tk
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.9.4-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.9.4-11
 - 为 Magic 3.0 重建
 

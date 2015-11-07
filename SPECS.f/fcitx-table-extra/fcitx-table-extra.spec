@@ -1,6 +1,6 @@
 Name:		fcitx-table-extra
-Version:	0.3.4
-Release:	2%{?dist}
+Version:	0.3.7
+Release:	3%{?dist}
 Summary:	Extra tables for Fcitx
 Summary(zh_CN.UTF-8): Fcitx 的附加码表
 Group:		System Environment/Libraries
@@ -65,6 +65,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.3.7-3
+- 更新到 0.3.7
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

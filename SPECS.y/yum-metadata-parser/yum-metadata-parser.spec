@@ -5,7 +5,7 @@ Summary: A fast metadata parser for yum
 Summary(zh_CN.UTF-8): yum 使用的快速元数据解析器
 Name: yum-metadata-parser
 Version: 1.1.4
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source0: http://linux.duke.edu/projects/yum/download/%{name}/%{name}-%{version}.tar.gz
 Patch0: BZ-612409-handle-2GB-rpms.patch
 License: GPLv2
@@ -52,6 +52,9 @@ yum 使用的快速元数据解析器。
 %{python_sitelib_platform}/*egg-info
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.1.4-8
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.1.4-7
 - 为 Magic 3.0 重建
 

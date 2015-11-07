@@ -1,6 +1,6 @@
 Name:           perl-Array-RefElem
 Version:        1.00
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Set up array elements as aliases
 Summary(zh_CN.UTF-8): 设置数组元素的别名
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.00-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-16
 - 为 Magic 3.0 重建
 

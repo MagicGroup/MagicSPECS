@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/released/hmaccalc/?C=M;O=D"
+url="https://fedorahosted.org/released/hmaccalc/?C=M&O=D"
 new1="hmaccalc-"
 new2=".tar.gz"
 downcommand="wget -q" 

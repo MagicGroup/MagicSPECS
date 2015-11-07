@@ -1,6 +1,6 @@
 Name: xhtml2fo-style-xsl
 Version: 20051222
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -69,6 +69,9 @@ fi
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 20051222-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 20051222-8
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Modular Assembler
 Summary(zh_CN.UTF-8): 模块化汇编语言
 Name: yasm
 Version:	1.3.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 # See COPYING for the detail, there is quite a lot!
 License: BSD and (GPLv2+ or Artistic or LGPLv2+) and LGPLv2
 Group: Development/Languages
@@ -81,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 更新到 1.3.0
 

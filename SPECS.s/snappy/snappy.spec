@@ -1,6 +1,6 @@
 Name:           snappy
 Version:	1.1.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Fast compression and decompression library
 Summary(zh_CN.UTF-8): 快速压缩和解压库
 
@@ -79,6 +79,9 @@ make check
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.3-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.1.3-1
 - 更新到 1.1.3
 

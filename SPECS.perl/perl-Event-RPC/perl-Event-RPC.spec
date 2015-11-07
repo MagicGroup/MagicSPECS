@@ -1,6 +1,6 @@
 Name:           perl-Event-RPC
-Version:        1.05
-Release:        4%{?dist}
+Version:	1.08
+Release:	2%{?dist}
 Summary:        Event based transparent client/server RPC framework
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.08-2
+- 更新到 1.08
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.05-4
 - 为 Magic 3.0 重建
 

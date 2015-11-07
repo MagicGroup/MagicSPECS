@@ -1,6 +1,6 @@
 Name:           perl-Test-Compile
-Version:	v1.2.1
-Release:	1%{?dist}
+Version:	v1.3.0
+Release:	2%{?dist}
 Summary:        Check whether Perl module files compile correctly
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - v1.3.0-2
+- 更新到 v1.3.0
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - v1.2.1-1
 - 更新到 v1.2.1
 

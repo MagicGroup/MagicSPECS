@@ -8,8 +8,8 @@
 Summary: Terminal emulator for GNOME
 Summary(zh_CN.UTF-8): GNOME 的终端模拟器
 Name: gnome-terminal
-Version:	3.12.0
-Release: 1%{?dist}
+Version:	3.19.1
+Release: 2%{?dist}
 License: GPLv3+ and GFDL
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
@@ -85,6 +85,9 @@ fi
 %{_datadir}/gnome-shell/search-providers/gnome-terminal-search-provider.ini
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
+- 更新到 3.19.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

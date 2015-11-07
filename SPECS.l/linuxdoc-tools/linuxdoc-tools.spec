@@ -4,8 +4,8 @@
 
 Summary: A text formatting package based on SGML
 Name: linuxdoc-tools
-Version: 0.9.68
-Release: 7%{?dist}
+Version: 0.9.69-3
+Release: 8%{?dist}
 License: Copyright only
 Group: Applications/Publishing
 Source: http://http.us.debian.org/debian/pool/main/l/linuxdoc-tools/%{name}_%{version}.tar.gz
@@ -106,6 +106,9 @@ exit 0
 %{_mandir}/*/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com>
+- 更新到 0.9.69-3
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 0.9.68-7
 - 为 Magic 3.0 重建
 

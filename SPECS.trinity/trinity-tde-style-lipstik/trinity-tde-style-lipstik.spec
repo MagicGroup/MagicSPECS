@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	2.2.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Lipstik style for TDE
 Summary(zh_CN.UTF-8): TDE 的 Lipstik 风格
 Group:		Applications/Utilities
@@ -138,5 +138,8 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:2.2.3-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:2.2.3-1
 - Initial release for TDE 14.0.0

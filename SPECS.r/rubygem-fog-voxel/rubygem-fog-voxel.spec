@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Module for the 'fog' gem to support Voxel
 Group: Development/Languages
 License: MIT
@@ -75,6 +75,9 @@ popd
 %{gem_instdir}/tests
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.2-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.2-3
 - 为 Magic 3.0 重建
 

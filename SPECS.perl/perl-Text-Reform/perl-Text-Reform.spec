@@ -1,6 +1,6 @@
 Name:           perl-Text-Reform
 Version:        1.20
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Manual text wrapping and reformatting
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.20-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20-16
 - 为 Magic 3.0 重建
 

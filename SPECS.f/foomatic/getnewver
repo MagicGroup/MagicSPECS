@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.openprinting.org/download/foomatic/?C=M;O=D"
+url="http://www.openprinting.org/download/foomatic/?C=M&O=D"
 new1="foomatic-db-engine-"
 new2=".tar.gz"
 downcommand="wget -q" 

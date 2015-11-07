@@ -20,7 +20,7 @@
 Summary: IPv4/IPv6 addresses manipulation library
 Name: rubygem-%{gem_name}
 Version: 0.8.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/bluemonk/ipaddress
@@ -99,6 +99,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.8.0-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.0-10
 - 为 Magic 3.0 重建
 

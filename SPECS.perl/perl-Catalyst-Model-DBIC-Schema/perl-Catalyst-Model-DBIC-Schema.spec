@@ -2,7 +2,7 @@ Name:           perl-Catalyst-Model-DBIC-Schema
 Summary:        DBIx::Class::Schema Model Class
 Summary(zh_CN.UTF-8): DBIx::Class::Schema Model 类
 Version:	0.65
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -90,6 +90,9 @@ TEST_POD=1 C_M_DBIC_SCHEMA_TESTAPP=1
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.65-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.65-2
 - 为 Magic 3.0 重建
 

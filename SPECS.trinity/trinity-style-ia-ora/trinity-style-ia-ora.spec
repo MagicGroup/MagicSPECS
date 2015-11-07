@@ -48,7 +48,7 @@ Name:			trinity-%{tde_pkg}
 Summary:        Mandriva theme for TDE - Widget design
 Summary(zh_CN.UTF-8): TDE 下的 Mandriva 主题
 Version:        1.0.8
-Release:		%{?!preversion:4}%{?preversion:3_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:4}%{?preversion:3_%{preversion}}%{?dist}%{?_variant}.1
 
 License:        GPL
 Group:          Environment/Desktop
@@ -135,5 +135,8 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.0.8-4.opt.1
+- 为 Magic 3.0 重建
+
 * Sat Jan 19 2013 Francois Andriot <francois.andriot@free.fr> - 1.0.8-4
 - Initial release for TDE 14.0.0

@@ -9,7 +9,7 @@ License:	LGPLv2+
 Group:		Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 Version:	1.1.0
-Release:	8%{?dist}
+Release:	9%{?dist}
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
 # cvs -d:pserver:anonymous@meanwhile.cvs.sourceforge.net:/cvsroot/meanwhile login
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/%{name}-doc-%{version}/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.0-9
+- 为 Magic 3.0 重建
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 1.1.0-8
 - 为 Magic 3.0 重建
 

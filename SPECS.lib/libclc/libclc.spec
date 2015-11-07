@@ -10,7 +10,7 @@
 
 Name:           libclc
 Version:        0.0.1
-Release:        11.%{checkout}%{?dist}
+Release:        12.%{checkout}%{?dist}
 Summary:        An open source implementation of the OpenCL 1.1 library requirements
 Summary(zh_CN.UTF-8): OpenCL 1.1 库需求的开源实现
 
@@ -100,6 +100,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.1-12.20140901gite822ae3
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 0.0.1-11.20140901gite822ae3
 - 为 Magic 3.0 重建
 

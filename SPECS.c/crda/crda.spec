@@ -1,9 +1,9 @@
-%define         crda_version    3.13
-%define         regdb_version   2013.11.27
+%define         crda_version    3.18
+%define         regdb_version   2015.10.22
 
 Name:           crda
 Version:        %{crda_version}_%{regdb_version}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Regulatory compliance daemon for 802.11 wireless networking
 
 Group:          System Environment/Base
@@ -123,6 +123,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.18_2015.10.22-4
+- 更新到 3.18_2015.10.22
+
 * Fri Feb 28 2014 John W. Linville <linville@redhat.com> - 3.13_2013.11.27-2
 - Accomodate relative pathnames in the symlink for /etc/localtime
 

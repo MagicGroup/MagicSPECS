@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.28
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Command line tool for updating bootloader configs
 Summary(zh_CN.UTF-8): 更新引导程序配置的命令行工具
 Group: System Environment/Base
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 8.28-5
+- 为 Magic 3.0 重建
+
 * Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 8.28-4
 - 为 Magic 3.0 重建
 

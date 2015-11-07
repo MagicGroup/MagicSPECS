@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.4.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Tilt templates with layouts and helpers
 Group: Development/Languages
 License: MIT
@@ -88,6 +88,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4.0-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.4.0-5
 - 为 Magic 3.0 重建
 

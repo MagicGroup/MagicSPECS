@@ -1,6 +1,6 @@
 Name:		libmongo-client
 Version: 0.1.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Alternative C driver for MongoDB
 Summary(zh_CN.UTF-8): MongoDB 可选的 C 驱动
 
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.8-3
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.1.8-2
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 %global pytest %(ls -1 %{_bindir}/py.test-3* | tail -n 1)
 
 Name:           rpmlint
-Version:	1.7
+Version:	1.8
 Release:	2%{?dist}
 Summary:        Tool for checking common errors in RPM packages
 Summary(zh_CN.UTF-8): 检查 RPM 包中的一般错误的工具
@@ -88,6 +88,9 @@ make check PYTHON=%{python} PYTEST=%{pytest}
 %{_mandir}/man1/rpmlint.1*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.8-2
+- 更新到 1.8
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.7-2
 - 为 Magic 3.0 重建
 

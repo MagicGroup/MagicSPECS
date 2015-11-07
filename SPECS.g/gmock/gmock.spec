@@ -2,7 +2,7 @@ Summary:        Google C++ Mocking Framework
 Summary(zh_CN.UTF-8): Google C++ Mock 框架
 Name:           gmock
 Version:        1.7.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -141,6 +141,9 @@ rm -rf %{buildroot}
 %{_datadir}/aclocal/gtest.m4
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.7.0-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

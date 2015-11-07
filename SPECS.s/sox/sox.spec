@@ -2,7 +2,7 @@ Summary: A general purpose sound file conversion tool
 Summary(zh_CN.UTF-8): 音频文件转换工具
 Name: sox
 Version:	14.4.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 14.4.2-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 14.4.2-2
 - 为 Magic 3.0 重建
 

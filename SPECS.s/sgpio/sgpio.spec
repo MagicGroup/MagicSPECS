@@ -2,7 +2,7 @@ Summary: SGPIO captive backplane tool
 Summary(zh_CN.UTF-8): SGPIO 专属背板工具
 Name: sgpio
 Version: 1.2.0.10
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/sgpio.*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.0.10-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 1.2.0.10-8
 - 为 Magic 3.0 重建
 

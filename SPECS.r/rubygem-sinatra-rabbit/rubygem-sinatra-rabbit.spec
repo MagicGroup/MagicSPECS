@@ -3,7 +3,7 @@
 Summary: Ruby DSL for creating restful applications using Sinatra
 Name: rubygem-%{gem_name}
 Version: 1.1.6
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: https://github.com/mifo/sinatra-rabbit
@@ -75,6 +75,9 @@ cp -a .%{gem_dir}/* \
 %{gem_instdir}/tests
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.6-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.6-5
 - 为 Magic 3.0 重建
 

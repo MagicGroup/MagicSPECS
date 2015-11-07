@@ -35,8 +35,8 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version:	3.18.0
-Release: 1%{?dist}
+Version:	3.19.1
+Release: 2%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Summary: Backend data server for Evolution
@@ -430,6 +430,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/installed-tests
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
+- 更新到 3.19.1
+
 * Wed Sep 23 2015 Liu Di <liudidi@gmail.com> - 3.18.0-1
 - 更新到 3.18.0
 

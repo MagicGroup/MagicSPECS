@@ -8,7 +8,7 @@ Summary: X Keyboard Extension configuration data
 Summary(zh_CN.UTF-8): X 键盘扩展配置数据
 Name: xkeyboard-config
 Version:	2.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -119,6 +119,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/xkeyboard-config.pc
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.16-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 2.16-2
 - 更新到 2.16
 

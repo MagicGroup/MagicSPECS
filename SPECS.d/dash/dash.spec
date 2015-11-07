@@ -1,6 +1,6 @@
 Name:           dash
-Version:        0.5.7
-Release:        3%{?dist}
+Version:	0.5.8
+Release:        4%{?dist}
 Summary:        Small and fast POSIX-compliant shell
 Summary(zh_CN.UTF-8): 小而快速的 POSIX 兼容 shell
 Group:          System Environment/Shells
@@ -42,6 +42,9 @@ fi
 %{_datadir}/man/man1/dash.1.gz
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.8-4
+- 更新到 0.5.8
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.5.7-3
 - 为 Magic 3.0 重建
 

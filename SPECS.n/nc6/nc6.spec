@@ -2,7 +2,7 @@ Summary:        Netcat with IPv6 Support
 Summary(zh_CN.UTF-8): 支持 IPv6 的 Netcat
 Name:           nc6
 Version:        1.0
-Release:        22%{?dist}
+Release:        23%{?dist}
 Group:          Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL:            http://www.deepspace6.net/projects/netcat6.html
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %doc README AUTHORS COPYING NEWS TODO
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0-23
+- 为 Magic 3.0 重建
+
 * Wed Jan 21 2015 Liu Di <liudidi@gmail.com> - 1.0-22
 - 为 Magic 3.0 重建
 

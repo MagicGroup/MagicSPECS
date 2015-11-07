@@ -1,6 +1,6 @@
 Name:           lmdb
 Version:        0.9.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Memory-mapped key-value database
 Summary(zh_CN.UTF-8): 内存映射的键-值数据库
 
@@ -109,6 +109,9 @@ LD_LIBRARY_PATH=$PWD make test
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.14-3
+- 为 Magic 3.0 重建
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 0.9.14-2
 - 为 Magic 3.0 重建
 

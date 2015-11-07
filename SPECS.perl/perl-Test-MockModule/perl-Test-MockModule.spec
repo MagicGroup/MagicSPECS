@@ -1,6 +1,6 @@
 Name:           perl-Test-MockModule
-Version:	0.10
-Release:	1%{?dist}
+Version:	0.11
+Release:	2%{?dist}
 Summary:        Override subroutines in a module for unit testing
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -37,6 +37,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 更新到 0.11
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-1
 - 更新到 0.10
 

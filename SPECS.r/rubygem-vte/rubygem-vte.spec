@@ -9,7 +9,7 @@
 Summary:	Ruby binding of vte
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group:		Development/Languages
 # from README
 License:	LGPLv2
@@ -139,6 +139,9 @@ popd
 %{gem_instdir}/sample/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.2.5-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.5-3
 - 为 Magic 3.0 重建
 

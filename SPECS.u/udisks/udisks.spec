@@ -16,7 +16,7 @@ Summary: Storage Management Service
 Summary(zh_CN.UTF-8): 存储管理服务
 Name: udisks
 Version:	1.0.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -171,6 +171,9 @@ magic_rpm_clean.sh
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.0.5-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 1.0.5-1
 - 更新到 1.0.5
 

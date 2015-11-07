@@ -1,6 +1,6 @@
 Name:           libverto
 Version: 0.2.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Main loop abstraction library
 Summary(zh_CN.UTF-8): 主循环抽象库
 
@@ -197,6 +197,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}-tevent.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.2.6-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.2.6-1
 - 更新到 0.2.6
 

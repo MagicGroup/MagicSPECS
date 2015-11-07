@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://www.openfabrics.org/downloads/verbs/?C=M;O=D"
+url="https://www.openfabrics.org/downloads/verbs/?C=M&O=D"
 new1="libibverbs-"
 new2=".tar.gz"
 downcommand="wget -q" 

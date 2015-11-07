@@ -1,6 +1,6 @@
 Name:             fusesource-pom
 Version:          1.9
-Release:          10%{?dist}
+Release:          11%{?dist}
 Summary:          Parent POM for FuseSource Maven projects
 License:          ASL 2.0
 URL:              http://fusesource.com/
@@ -32,6 +32,9 @@ cp -p %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.9-11
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.9-10
 - 为 Magic 3.0 重建
 

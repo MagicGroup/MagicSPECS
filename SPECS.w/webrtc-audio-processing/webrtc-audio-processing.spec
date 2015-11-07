@@ -1,7 +1,7 @@
 
 Name:           webrtc-audio-processing
 Version:        0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Library for echo cancellation
 Summary(zh_CN.UTF-8): 回声消除库
 
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.1-5
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.1-4
 - 为 Magic 3.0 重建
 

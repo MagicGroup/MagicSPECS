@@ -1,6 +1,6 @@
 Name:		perl-Sub-Identify
 Version:	0.12
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Retrieve names of code references
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Identify.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.12-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.12-1
 - 更新到 0.12
 

@@ -1,8 +1,8 @@
 Summary: A utility for setting up encrypted disks
 Summary(zh_CN.UTF-8): 设置加密磁盘的工具
 Name: cryptsetup
-Version: 1.6.4
-Release: 3%{?dist}
+Version: 1.6.8
+Release: 4%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -142,6 +142,9 @@ install -d %{buildroot}/%{_libdir}/fipscheck
 %clean
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.6.8-4
+- 更新到 1.6.8
+
 * Sun Mar 02 2014 Milan Broz <gmazyland@gmail.com> - 1.6.4-2
 - Require libgcrypt 1.6.1 (with fixed PBKDF2 and Whirlpool hash).
 

@@ -1,8 +1,8 @@
 Summary: A high quality TV viewer
 Summary(zh_CN.UTF-8): 高质量的电视软件
 Name: tvtime
-Version:	1.0.7
-Release:	1%{?dist}
+Version:	1.0.8
+Release:	2%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -111,6 +111,9 @@ rm -rf %{buildroot}
 %{_bindir}/tvtime
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.8-2
+- 更新到 1.0.8
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1.0.7-1
 - 更新到 1.0.7
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://liblo.sourceforge.net"
+url="https://sourceforge.net/projects/liblo"
 new1="liblo-"
 new2=".tar.gz"
 downcommand="wget -q" 

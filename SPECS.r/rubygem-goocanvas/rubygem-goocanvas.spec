@@ -9,7 +9,7 @@
 Summary:	Ruby binding of GooCanvas
 Name:		rubygem-%{gem_name}
 Version:	2.2.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Group:		Development/Languages
 # from README
 License:	LGPLv2
@@ -157,6 +157,9 @@ done
 %{gem_instdir}/sample/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2.0-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.2.0-7
 - 为 Magic 3.0 重建
 

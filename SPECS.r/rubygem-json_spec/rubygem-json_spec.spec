@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Easily handle JSON in RSpec and Cucumber
 
 Group:          Development/Languages
@@ -80,6 +80,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.4-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.4-3
 - 为 Magic 3.0 重建
 

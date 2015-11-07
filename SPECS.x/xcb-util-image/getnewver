@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://xcb.freedesktop.org/dist/?C=M;O=D"
+url="http://xcb.freedesktop.org/dist/?C=M&O=D"
 new1="xcb-util-image-"
 new2=".tar.bz2"
 downcommand="wget -q" 

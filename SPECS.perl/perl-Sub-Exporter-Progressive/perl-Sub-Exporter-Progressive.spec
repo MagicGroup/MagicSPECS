@@ -3,7 +3,7 @@
 
 Name:		perl-Sub-Exporter-Progressive
 Version:	0.001011
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Only use Sub::Exporter if you need it
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Exporter::Progressive.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.001011-7
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.001011-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 # 此脚本可能会不适应将来网站的变化
-url="http://jocr.sourceforge.net/download.html"
+url="https://sourceforge.net/projects/jocr"
 new1="gocr-"
 new2=".tar.gz"
 downcommand="wget -q" 

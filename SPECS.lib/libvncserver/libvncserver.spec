@@ -3,7 +3,7 @@ Summary: Library to make writing a vnc server easy
 Summary(zh_CN.UTF-8): 更易编写 vnc 服务的库
 Name:    libvncserver
 Version: 0.9.9
-Release: 12%{?dist}
+Release: 13%{?dist}
 
 # NOTE: --with-tightvnc-filetransfer => GPLv2
 License: GPLv2+
@@ -135,6 +135,9 @@ xvfb-run -a make -C test test ||:
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.9-13
+- 为 Magic 3.0 重建
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.9.9-12
 - 为 Magic 3.0 重建
 

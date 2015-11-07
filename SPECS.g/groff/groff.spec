@@ -5,8 +5,8 @@
 Summary: A document formatting system
 Summary(zh_CN.UTF-8): 一个文档格式化系统
 Name: groff
-Version: 1.22.2
-Release: 1%{?dist}
+Version: 1.22.3
+Release: 2%{?dist}
 License: GPLv3+ and GFDL and BSD and MIT
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -426,6 +426,9 @@ fi
 %doc %{_docdir}/%{name}-%{version}/pdf/
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.22.3-2
+- 更新到 1.22.3
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.22.2-1
 - 更新到 1.22.2
 

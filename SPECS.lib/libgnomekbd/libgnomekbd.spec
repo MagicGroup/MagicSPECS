@@ -1,6 +1,6 @@
 Name:           libgnomekbd
 Version:        3.6.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A keyboard configuration library
 Summary(zh_CN.UTF-8): 键盘配置库
 
@@ -108,6 +108,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.6.0-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.6.0-3
 - 为 Magic 3.0 重建
 

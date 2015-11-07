@@ -10,7 +10,7 @@
 
 Name:           ocaml-ocamlgraph
 Version:        1.8.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        OCaml library for arc and node graphs
 Summary(zh_CN.UTF-8): arc 和 node 图形的 OCaml 库
 
@@ -165,6 +165,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8.5-5
+- 为 Magic 3.0 重建
+
 * Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.8.5-4
 - 为 Magic 3.0 重建
 

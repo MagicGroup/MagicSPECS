@@ -11,8 +11,8 @@ License: GPL v2 or Later
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://konversation.kde.org
-Version: 1.5
-Release: 2%{?dist}
+Version: 1.6
+Release: 3%{?dist}
 Source0: http://download.kde.org/stable/%{real_name}/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -87,6 +87,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_localedir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6-3
+- 更新到 1.6
+
 * Sun Jun 01 2014 Liu Di <liudidi@gmail.com> - 1.5-2
 - 为 Magic 3.0 重建
 

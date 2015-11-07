@@ -1,8 +1,8 @@
 %global _with_python3 1
 
 Name:           python-requests
-Version:	2.7.0
-Release:	1%{?dist}
+Version:	2.8.1
+Release:	2%{?dist}
 Summary:        HTTP library, written in Python, for human beings
 Summary(zh_CN.UTF-8): Python 编写的 HTTP 库
 
@@ -121,6 +121,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.8.1-2
+- 更新到 2.8.1
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.7.0-1
 - 更新到 2.7.0
 

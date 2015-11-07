@@ -2,7 +2,7 @@
 
 Name:           opencv
 Version:        2.4.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Collection of algorithms for computer vision
 Summary(zh_CN.UTF-8): 计算机视觉算法集合
 Group:          Development/Libraries
@@ -275,6 +275,9 @@ popd
 %{python2_sitearch}/cv2.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.4.9-4
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 2.4.9-3
 - 为 Magic 3.0 重建
 

@@ -1,10 +1,10 @@
 %define git 1
-%define vcsdate 20140418
+%define vcsdate 20151030
 
 Name:    iris
 Summary: A library for working with the XMPP/Jabber protocol
 Version: 1.0.0
-Release: 0.16.git%{vcsdate}%{?dist}
+Release: 0.17.git%{vcsdate}%{?dist}
 License: LGPLv2+
 URL:     https://github.com/psi-im/iris
 Source0: iris-git%{vcsdate}git.tar.xz
@@ -125,6 +125,9 @@ test "$(pkg-config --modversion qjdns)" = "1.0.0"
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.0-0.17.git20151030
+- 更新到 20151030 日期的仓库源码
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 1.0.0-0.16.git20140418
 - 更新到 20140418 日期的仓库源码
 

@@ -2,7 +2,7 @@ Summary: Signing utility for UEFI binaries
 Summary(zh_CN.UTF-8): UEFI 二进制签名工具
 Name: pesign
 Version: 0.108
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
 License: GPLv2
@@ -106,6 +106,9 @@ exit 0
 %endif
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.108-5
+- 为 Magic 3.0 重建
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.108-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

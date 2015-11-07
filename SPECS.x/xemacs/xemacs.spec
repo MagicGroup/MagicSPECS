@@ -23,7 +23,7 @@
 
 Name:           xemacs
 Version:        21.5.34
-Release:        13%{?snap:.%{snap}}%{?dist}
+Release:        14%{?snap:.%{snap}}%{?dist}
 Summary:        Different version of Emacs
 Summary(zh_CN.UTF-8): 不同版本的 Emacs
 
@@ -676,6 +676,9 @@ fi
 %dir %{_datadir}/xemacs/site-packages/pkginfo
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 21.5.34-14.20150929hga76c9268bb72
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 21.5.34-13.20150929hga76c9268bb72
 - 为 Magic 3.0 重建
 

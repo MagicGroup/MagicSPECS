@@ -35,10 +35,10 @@
 %global major_version 1.9
 
 Name:           ant
-Version:        1.9.4
-Release:        3%{?dist}
+Version:        1.9.6
+Release:        2%{?dist}
 Epoch:          0
-Summary:        Build tool for java
+Summary:        Java build tool
 Summary(it):    Tool per la compilazione di programmi java
 Summary(fr):    Outil de compilation pour java
 License:        ASL 2.0
@@ -54,14 +54,19 @@ BuildRequires:  java-devel >= 1:1.8.0
 BuildRequires:  ant
 BuildRequires:  ant-junit
 BuildRequires:  junit
+BuildRequires:  hamcrest
 BuildRequires:  xalan-j2
 BuildRequires:  xerces-j2
 BuildRequires:  xml-commons-apis
 
-Requires:       jpackage-utils >= 0:1.7.5
-Requires:       java-devel >= 1:1.8.0
+# Theoretically Ant might be usable with just JRE, but typical Ant
+# workflow requires full JDK, so we recommend it here.
+Recommends:     java-devel >= 1:1.8.0
+
 Requires:       xerces-j2
 Requires:       xml-commons-apis
+
+Requires:       %{name}-lib = %{epoch}:%{version}-%{release}
 
 Obsoletes:      %{name}-scripts < %{epoch}:%{version}-%{release}
 Provides:       %{name}-scripts = %{epoch}:%{version}-%{release}
@@ -69,8 +74,15 @@ Provides:       %{name}-scripts = %{epoch}:%{version}-%{release}
 BuildArch:      noarch
 
 %description
-Ant is a platform-independent build tool for java. It's used by apache
-jakarta and xml projects.
+Apache Ant is a Java library and command-line tool whose mission is to
+drive processes described in build files as targets and extension
+points dependent upon each other.  The main known usage of Ant is the
+build of Java applications.  Ant supplies a number of built-in tasks
+allowing to compile, assemble, test and run Java applications.  Ant
+can also be used effectively to build non Java applications, for
+instance C or C++ applications.  More generally, Ant can be used to
+pilot any type of process which can be described in terms of targets
+and tasks.
 
 %description -l fr
 Ant est un outil de compilation multi-plateformes pour java. Il est
@@ -81,6 +93,12 @@ Ant e' un tool indipendente dalla piattaforma creato per faciltare la
 compilazione di programmi java.
 Allo stato attuale viene utilizzato dai progetti apache jakarta ed
 apache xml.
+
+%package lib
+Summary:        Core part of %{name}
+
+%description lib
+Core part of Apache Ant that can be used as a library.
 
 %package jmf
 Summary:        Optional jmf tasks for %{name}
@@ -336,7 +354,7 @@ rm src/tests/junit/org/apache/tools/ant/types/selectors/SignedSelectorTest.java 
    src/tests/junit/org/apache/tools/mail/MailMessageTest.java
 
 #install jars
-build-jar-repository -s -p lib/optional antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver xalan-j2-serializer xerces-j2 xml-commons-apis
+build-jar-repository -s -p lib/optional antlr bcel javamail/mailapi jdepend junit log4j oro regexp bsf commons-logging commons-net jsch xalan-j2 xml-commons-resolver xalan-j2-serializer xerces-j2 xml-commons-apis hamcrest/core
 
 # Fix file-not-utf8 rpmlint warning
 iconv KEYS -f iso-8859-1 -t utf-8 -o KEYS.utf8
@@ -383,7 +401,8 @@ do
   # add backward compatibility for nodeps jar that is now part of main
   # jar
   alias=
-  [ $jarname == ant ] && alias=org.apache.ant:ant-nodeps
+  [ $jarname == ant ] && alias=org.apache.ant:ant-nodeps,apache:ant,ant:ant
+  [ $jarname == ant-launcher ] && alias=ant:ant-launcher
 
   #install pom
   install -p -m 644 src/etc/poms/${jarname}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/${pomname}
@@ -420,7 +439,7 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d
 echo "ant/ant-jmf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jmf
 echo "ant/ant-swing" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/swing
 echo "antlr ant/ant-antlr" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/antlr
-echo "bsf ant/ant-apache-bsf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bsf
+echo "rhino bsf ant/ant-apache-bsf" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-bsf
 echo "xml-commons-resolver ant/ant-apache-resolver" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/apache-resolver
 echo "apache-commons-logging ant/ant-commons-logging" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-logging
 echo "apache-commons-net ant/ant-commons-net" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/commons-net
@@ -433,8 +452,8 @@ echo "xalan-j2 xalan-j2-serializer ant/ant-apache-xalan2" > $RPM_BUILD_ROOT%{_sy
 echo "javamail jaf ant/ant-javamail" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/javamail
 echo "jdepend ant/ant-jdepend" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jdepend
 echo "jsch ant/ant-jsch" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/jsch
-echo "junit ant/ant-junit" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit
-echo "junit ant/ant-junit4" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit4
+echo "junit hamcrest/core ant/ant-junit" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit
+echo "junit hamcrest/core ant/ant-junit4" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/junit4
 echo "testutil ant/ant-testutil" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.d/testutil
 
 %if %with javadoc
@@ -451,18 +470,11 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{ant} test
 %endif
 
-%files -f .mfiles
-%files -f .mfiles-ant
-%files -f .mfiles-launcher
+%files
 %doc KEYS LICENSE NOTICE README WHATSNEW
 %config(noreplace) %{_sysconfdir}/%{name}.conf
 %attr(0755,root,root) %{_bindir}/ant
 %attr(0755,root,root) %{_bindir}/antRun
-%{_javadir}/%{name}.jar
-%{_javadir}/%{name}-launcher.jar
-%{_javadir}/%{name}-bootstrap.jar
-%dir %{_javadir}/%{name}
-%{_javadir}/%{name}/%{name}-bootstrap.jar
 %dir %{ant_home}
 %dir %{ant_home}/bin
 %{ant_home}/bin/ant
@@ -477,11 +489,17 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{ant_home}/etc/junit-frames-xalan1.xsl
 %{ant_home}/etc/common2master.xsl
 %{ant_home}/etc/printFailingTests.xsl
+%dir %{_sysconfdir}/%{name}.d
+
+%files lib -f .mfiles -f .mfiles-ant -f .mfiles-launcher
 %dir %{ant_home}/lib
+%{_javadir}/%{name}.jar
+%{_javadir}/%{name}-bootstrap.jar
+%{_javadir}/%{name}-launcher.jar
+%{_javadir}/%{name}/%{name}-bootstrap.jar
 %{ant_home}/lib/%{name}.jar
 %{ant_home}/lib/%{name}-launcher.jar
 %{ant_home}/lib/%{name}-bootstrap.jar
-%dir %{_sysconfdir}/%{name}.d
 
 %files jmf -f .mfiles-jmf
 %{ant_home}/lib/%{name}-jmf.jar
@@ -580,6 +598,9 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 # -----------------------------------------------------------------------------
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-4
+- 更新到 1.9.6
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.9.4-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

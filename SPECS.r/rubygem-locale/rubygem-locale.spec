@@ -31,7 +31,7 @@
 Summary:	Pure ruby library which provides basic APIs for localization
 Name:		rubygem-%{gem_name}
 Version:	2.1.2
-Release:	%{fedorarel}%{?dist}.1
+Release:	%{fedorarel}%{?dist}.2
 Group:		Development/Languages
 License:	GPLv2 or Ruby
 URL:		http://locale.rubyforge.org/
@@ -214,6 +214,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.1.2-1.2
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.2-1.1
 - 为 Magic 3.0 重建
 

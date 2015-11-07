@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/releases/e/l/elfutils/?C=M;O=D"
+url="https://fedorahosted.org/releases/e/l/elfutils/?C=M&O=D"
 new1="a href="""
 new2="\\/"
 downcommand="wget -q" 

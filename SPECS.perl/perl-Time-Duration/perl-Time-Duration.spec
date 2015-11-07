@@ -1,7 +1,7 @@
 Name:           perl-Time-Duration
 Summary:        Time-Duration - rounded or exact English expression of durations
 Version:	1.20
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPLv2+ or Artistic 2.0
 Group:          Development/Libraries
 Url:            http://search.cpan.org/dist/Time-Duration/
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.20-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.20-2
 - 为 Magic 3.0 重建
 

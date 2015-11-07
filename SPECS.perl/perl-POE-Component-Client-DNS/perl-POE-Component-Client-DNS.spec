@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Client-DNS
 Version:	1.053
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Non-blocking/concurrent DNS queries using Net::DNS and POE
 
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.053-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.053-1
 - 更新到 1.053
 

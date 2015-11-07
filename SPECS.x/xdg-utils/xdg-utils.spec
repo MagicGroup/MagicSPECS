@@ -6,7 +6,7 @@ Summary: Basic desktop integration functions
 Summary(zh_CN.UTF-8): 基本的桌面集成功能
 Name:    xdg-utils
 Version:	1.1.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 URL:     http://portland.freedesktop.org/ 
 %if 0%{?vcsdate:1}
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.1.1-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 1.1.1-1
 - 更新到 1.1.1
 

@@ -6,7 +6,7 @@ Summary:   Xorg X11 glint video driver
 Summary(zh_CN.UTF-8): Xorg X11 glint 显卡驱动
 Name:      xorg-x11-drv-glint
 Version:   1.2.8
-Release:   14%{?dist}
+Release:   15%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/glint.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.2.8-15
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.2.8-14
 - 为 Magic 3.0 重建
 

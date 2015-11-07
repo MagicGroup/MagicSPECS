@@ -1,6 +1,6 @@
 Name:           perl-Struct-Dumb
 Version:        0.03
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Make simple lightweight record-like structures
 License:        GPL+ or Artistic
 
@@ -49,6 +49,9 @@ that access or modify the values stored.
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.03-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.03-5
 - 为 Magic 3.0 重建
 

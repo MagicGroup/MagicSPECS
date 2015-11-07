@@ -12,8 +12,8 @@ Summary:	Text editor for the GNOME desktop
 Summary(zh_CN.UTF-8): GNOME 桌面下的文本编辑器
 Name:		gedit
 Epoch:		2
-Version:	3.13.2
-Release:	1%{?dist}
+Version:	3.18.1
+Release:	2%{?dist}
 License:	GPLv2+ and GFDL
 Group:		Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/编辑器
@@ -189,6 +189,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/vala/vapi/gedit.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-2
+- 更新到 3.18.1
+
 * Thu Jun 26 2014 Liu Di <liudidi@gmail.com> - 2:3.13.2-1
 - 更新到 3.13.2
 

@@ -2,7 +2,7 @@ Summary:	Portable Musepack encoder
 Summary(zh_CN.UTF-8): 可移植 Musepack 编码器
 Name:		mppenc
 Version:		1.16
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:		LGPL
 Group:		Applications/Multimedia
 Group(zh_CN.UTF-8):	应用程序/多媒体
@@ -43,6 +43,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.16-6
+- 为 Magic 3.0 重建
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 1.16-5
 - 为 Magic 3.0 重建
 

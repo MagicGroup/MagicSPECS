@@ -1,6 +1,6 @@
 Name:		libbsd
-Version:	0.6.0
-Release:	1%{?dist}
+Version:	0.7.0
+Release:	2%{?dist}
 Summary:	Library providing BSD-compatible functions for portability
 Summary(zh_CN.UTF-8): 提供 BSD 兼容函数的库
 URL:		http://libbsd.freedesktop.org/
@@ -83,6 +83,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}-ctor.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.0-2
+- 更新到 0.7.0
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.6.0-1
 - 更新到 0.6.0
 

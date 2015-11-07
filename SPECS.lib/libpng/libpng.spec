@@ -2,7 +2,7 @@ Summary: A library of functions for manipulating PNG image format files
 Summary(zh_CN.UTF-8): 处理 PNG 图像格式文件的库
 Name: libpng
 Epoch: 2
-Version: 1.6.12
+Version: 1.6.18
 Release: 2%{?dist}
 License: zlib
 Group: System Environment/Libraries
@@ -131,6 +131,9 @@ make check
 %{_bindir}/pngfix
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2:1.6.18-2
+- 更新到 1.6.18
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 2:1.6.12-2
 - 为 Magic 3.0 重建
 

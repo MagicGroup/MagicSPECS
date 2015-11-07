@@ -1,6 +1,6 @@
 Name:          jackson-databind
 Version:       2.4.1.3
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       General data-binding package for Jackson (2.x)
 License:       ASL 2.0 and LGPLv2+
 URL:           http://wiki.fasterxml.com/JacksonHome
@@ -67,6 +67,9 @@ rm src/test/java/com/fasterxml/jackson/databind/ser/TestJdkTypes.java \
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.4.1.3-3
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.4.1.3-2
 - 为 Magic 3.0 重建
 

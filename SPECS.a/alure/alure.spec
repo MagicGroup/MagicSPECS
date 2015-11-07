@@ -1,6 +1,6 @@
 Name:           alure
 Version:        1.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Audio Library Tools REloaded
 Summary(zh_CN.UTF-8): 重载音频库的工具
 Group:          System Environment/Libraries
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

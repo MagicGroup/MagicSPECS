@@ -2,7 +2,7 @@ Summary: Utility to administer the Linux Virtual Server
 Summary(zh_CN.UTF-8): 管理 Linux 虚拟服务器的工具
 Name: ipvsadm
 Version: 1.26
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -100,6 +100,9 @@ fi
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.26-6
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.26-5
 - 为 Magic 3.0 重建
 

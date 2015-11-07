@@ -1,6 +1,6 @@
 Name:           perl-Test-ConsistentVersion
 Version:	0.3.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Ensures a CPAN distribution has consistent versioning
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ TEST_AUTHOR=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.0-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.3.0-1
 - 更新到 0.3.0
 

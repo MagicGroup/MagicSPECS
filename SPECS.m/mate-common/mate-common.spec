@@ -1,8 +1,8 @@
 Name:           mate-common
 Summary:        mate common build files
 Summary(zh_CN.UTF-8): MATE 的通用构建文件
-Version: 1.9.0
-Release: 1%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 License:        GPLv3+
 URL:            http://mate-desktop.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -45,6 +45,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
 - 更新到 1.9.0
 

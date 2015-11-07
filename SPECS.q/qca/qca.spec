@@ -6,7 +6,7 @@ Name:    qca
 Summary: Qt Cryptographic Architecture
 Summary(zh_CN.UTF-8): Qt 加密算法库
 Version: 2.1.0
-Release: 14%{?dist}
+Release: 15%{?dist}
 
 License: LGPLv2+
 URL:     http://delta.affinix.com/qca
@@ -409,6 +409,9 @@ make test ARGS="--timeout 300 --output-on-failure" -C %{_target_platform}-qt5
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.1.0-15
+- 为 Magic 3.0 重建
+
 * Mon Aug 03 2015 Helio Chissini de Castro <helio@kde.org> - 2.1.0-14
 - Add missing header. Breaks compilation for upcoming okular on Qt5
 

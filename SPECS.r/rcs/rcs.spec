@@ -2,7 +2,7 @@ Summary: Revision Control System (RCS) file version management tools
 Summary(zh_CN.UTF-8): 版本控制系统 (RCS) 文件版本管理工具
 Name: rcs
 Version:	5.9.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -70,6 +70,9 @@ fi
 %{_infodir}/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.9.4-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 5.9.4-1
 - 更新到 5.9.4
 

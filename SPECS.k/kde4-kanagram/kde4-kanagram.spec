@@ -11,7 +11,7 @@ Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://www.kde.org
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
@@ -65,6 +65,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/appdata/kanagram.appdata.xml
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 30 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

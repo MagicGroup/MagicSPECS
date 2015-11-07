@@ -1,8 +1,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           gupnp-igd
-Version:        0.2.3
-Release:        2%{?dist}
+Version:	0.2.4
+Release:        3%{?dist}
 Summary:        Library to handle UPnP IGD port mapping        
 Summary(zh_CN.UTF-8): 处理 UPnP IGD 端口映射的库
 
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/GUPnPIgd-1.0.gir
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.2.4-3
+- 更新到 0.2.4
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.2.3-2
 - 为 Magic 3.0 重建
 

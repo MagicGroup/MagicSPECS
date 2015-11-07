@@ -7,8 +7,8 @@
 %global commit 6b38706d90a9
 
 Name:           eigen3
-Version:        3.2.1
-Release:        3%{?dist}
+Version:	3.2.6
+Release:        4%{?dist}
 Summary:        A lightweight C++ template library for vector and matrix math
 Summary(zh_CN.UTF-8): 一个处理向量和矩阵数学的轻量级 C++ 模板库
 
@@ -105,6 +105,9 @@ make -C %{_target_platform} %{?_smp_mflags} test ARGS="-V" || exit 0
 %doc %{_target_platform}/doc/html
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.2.6-4
+- 更新到 3.2.6
+
 * Thu Feb 27 2014 Sandro Mani <manisandro@gmail.com> - 3.2.1-3
 - Make doc package noarch
 

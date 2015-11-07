@@ -1,6 +1,6 @@
 Name:           perl-GDGraph
 Version:	1.49
-Release:	1%{?dist}
+Release:	2%{?dist}
 Epoch:          1
 Summary:        Graph generation package for Perl
 
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:1.49-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:1.49-1
 - 更新到 1.49
 

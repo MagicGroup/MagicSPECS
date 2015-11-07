@@ -6,7 +6,7 @@ Summary:	Python binding for the ALSA library
 Summary(zh_CN.UTF-8): ALSA 库的 Python 绑定
 Name:		python-alsa
 Version:	1.0.29
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	LGPLv2+
 Group:		Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -41,6 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0.29-4
+- 为 Magic 3.0 重建
+
 * Tue Aug 18 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
 - 为 Magic 3.0 重建
 

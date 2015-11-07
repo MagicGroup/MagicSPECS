@@ -7,7 +7,7 @@
 
 Name:           mingw-filesystem
 Version:        99
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        MinGW cross compiler base filesystem and environment
 Summary(zh_CN.UTF-8): MinGW 交叉编译器的基本文件系统和环境
 
@@ -322,6 +322,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 99-6
+- 为 Magic 3.0 重建
+
 * Mon Oct 13 2014 Liu Di <liudidi@gmail.com> - 99-5
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://cairographics.org/releases/?C=M;O=D"
+url="http://cairographics.org/releases/?C=M&O=D"
 new1="cairo-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,7 +1,7 @@
 Name:           jemalloc
 Version:        4.0.0
 
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        General-purpose scalable concurrent malloc implementation
 
 Group:          System Environment/Libraries
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.0.0-3
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 4.0.0-2
 - 为 Magic 3.0 重建
 

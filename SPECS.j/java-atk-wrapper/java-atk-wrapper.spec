@@ -3,7 +3,7 @@
 
 Name:       java-atk-wrapper
 Version:    %{major_version}.%{minor_version}
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    Java ATK Wrapper
 
 Group:      Development/Libraries
@@ -67,6 +67,9 @@ ln -s %{_libdir}/%{name}/libatk-wrapper.so.0.0.18 \
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.30.4-6
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 0.30.4-5
 - 为 Magic 3.0 重建
 

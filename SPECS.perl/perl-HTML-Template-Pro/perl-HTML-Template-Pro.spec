@@ -6,7 +6,7 @@
 
 Name:           perl-HTML-Template-Pro
 Version:	0.9510
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl/XS module to use HTML Templates from CGI scripts
 License:        GPL+ or Artistic or LGPLv2+
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.9510-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.9510-1
 - 更新到 0.9510
 

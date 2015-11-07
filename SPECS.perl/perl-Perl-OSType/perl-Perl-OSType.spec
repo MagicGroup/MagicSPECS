@@ -2,8 +2,8 @@
 %global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
 
 Name:		perl-Perl-OSType
-Version:	1.008
-Release:	1%{?dist}
+Version:	1.009
+Release:	2%{?dist}
 Summary:	Map Perl operating system names to generic types
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Perl::OSType.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.009-2
+- 更新到 1.009
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.008-1
 - 更新到 1.008
 

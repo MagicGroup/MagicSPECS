@@ -1,9 +1,9 @@
 %define git 1
-%define vcsdate 20140714
+%define vcsdate 20151031
 
 Name:		libcec
 Version:	2.1.4
-Release:	4%{?dist}
+Release:	6%{?dist}
 Summary:	Library and utilities for HDMI-CEC device control
 Summary(zh_CN.UTF-8): HDMI-CEC 设备控制的库和工具
 
@@ -74,6 +74,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.4-6
+- 更新到 20151031 日期的仓库源码
+
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.4-5
+- 为 Magic 3.0 重建
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 2.1.4-4
 - 更新到 20140714 日期的仓库源码
 

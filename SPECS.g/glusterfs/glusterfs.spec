@@ -73,12 +73,12 @@ Summary:          Cluster File System
 %if ( 0%{_for_fedora_koji_builds} )
 Name:             glusterfs
 Version:          3.5.0
-Release:          0.6%{?prereltag:.%{prereltag}}%{?dist}
+Release:          0.7%{?prereltag:.%{prereltag}}%{?dist}
 Vendor:           Fedora Project
 %else
 Name:             @PACKAGE_NAME@
 Version:          @PACKAGE_VERSION@
-Release:          2%{?dist}
+Release:          3%{?dist}
 Vendor:           glusterfs.org
 %endif
 License:          GPLv2 or LGPLv3+
@@ -903,6 +903,9 @@ if [ $1 -ge 1 ]; then
 fi
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.5.0-0.7.beta3
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.5.0-0.6.beta3
 - 为 Magic 3.0 重建
 

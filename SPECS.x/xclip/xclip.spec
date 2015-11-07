@@ -1,6 +1,6 @@
 Name:		xclip
 Version:	0.12
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPLv2+
 Group:		Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xclip*.1*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.12-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.12-5
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.fcitx-im.org/fcitx-cloudpinyin/?C=M;O=D"
+url="http://download.fcitx-im.org/fcitx-cloudpinyin/?C=M&O=D"
 new1="fcitx-cloudpinyin-"
 new2=".tar.xz"
 downcommand="wget -q" 

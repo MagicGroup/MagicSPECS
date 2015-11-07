@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.13.2
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary: kio_mhtml is a KDE I/O Slave for mht and eml files.
 Summary(zh_CN.UTF-8): 一个查看mht和eml文件的 TDE I/O Slave
 Group:		Applications/Utilities
@@ -128,6 +128,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.13.2-1.2
+- 为 Magic 3.0 重建
+
 * Thu Oct 15 2015 Liu Di <liudidi@gmail.com> - 2:0.13.2-1.1
 - 为 Magic 3.0 重建
 

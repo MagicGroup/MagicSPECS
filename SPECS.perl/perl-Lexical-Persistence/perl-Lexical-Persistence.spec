@@ -1,6 +1,6 @@
 Name:           perl-Lexical-Persistence
 Version:	1.023
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Persistent lexical variable values for arbitrary calls
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.023-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.023-1
 - 更新到 1.023
 

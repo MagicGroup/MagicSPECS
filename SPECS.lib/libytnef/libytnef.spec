@@ -1,6 +1,6 @@
 Name:           libytnef
 Version:        1.5
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        TNEF Stream Parser Library
 Summary(zh_CN.UTF-8): TNEF 流解析库
 
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5-12
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.5-11
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 Name:    libassuan
 Summary: GnuPG IPC library
 Summary(zh_CN.UTF-8): GnuPG IPC 库
-Version: 2.1.1
-Release: 1%{?dist}
+Version: 2.3.0
+Release: 2%{?dist}
 
 # The library is LGPLv2+, the documentation GPLv3+
 License: LGPLv2+ and GPLv3+
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.3.0-2
+- 更新到 2.3.0
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 2.1.1-1
 - 更新到 2.1.1
 

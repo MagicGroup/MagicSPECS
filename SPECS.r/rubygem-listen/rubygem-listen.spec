@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.0.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Listen to file modifications
 Group: Development/Languages
 License: MIT
@@ -94,6 +94,9 @@ popd
 %doc %{gem_instdir}/CONTRIBUTING.md
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.0.3-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.0.3-2
 - 为 Magic 3.0 重建
 

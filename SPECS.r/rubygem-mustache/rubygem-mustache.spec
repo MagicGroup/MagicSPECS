@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Mustache is a framework-agnostic way to render logic-free views
 Group: Development/Languages
 License: MIT
@@ -93,6 +93,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.2-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.2-2
 - 为 Magic 3.0 重建
 

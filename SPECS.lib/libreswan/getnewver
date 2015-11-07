@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://download.libreswan.org?C=M;O=D"
+url="https://download.libreswan.org?C=M&O=D"
 new1="libreswan-"
 new2=".tar.gz"
 downcommand="wget -q" 

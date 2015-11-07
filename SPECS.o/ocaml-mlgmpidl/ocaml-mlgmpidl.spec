@@ -4,7 +4,7 @@
 
 Name:           ocaml-mlgmpidl
 Version:        1.2.1
-Release:        0.9.%{svndate}%{?dist}
+Release:        0.10.%{svndate}%{?dist}
 Summary:        OCaml interface to GMP and MPFR libraries
 Summary(zh_CN.UTF-8): GMP 和 MPFR 库的 OCaml 接口
 Group:          Development/Libraries
@@ -162,6 +162,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.1-0.10.20120830
+- 为 Magic 3.0 重建
+
 * Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 1.2.1-0.9.20120830
 - 为 Magic 3.0 重建
 

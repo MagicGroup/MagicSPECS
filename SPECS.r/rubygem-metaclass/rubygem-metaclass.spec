@@ -5,7 +5,7 @@
 Summary: Adds a metaclass method to all Ruby objects
 Name: rubygem-%{gem_name}
 Version: 0.0.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 # https://github.com/floehopper/metaclass/issues/1
 License: MIT
@@ -77,6 +77,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.4-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.0.4-3
 - 为 Magic 3.0 重建
 

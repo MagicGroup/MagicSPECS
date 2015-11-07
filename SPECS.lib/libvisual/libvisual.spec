@@ -1,6 +1,6 @@
 Name:           libvisual
 Version:        0.4.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Abstraction library for audio visualisation plugins
 Summary(zh_CN.UTF-8): 音频可视化插件的抽象库
 
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.4.0-8
+- 为 Magic 3.0 重建
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.4.0-7
 - 为 Magic 3.0 重建
 

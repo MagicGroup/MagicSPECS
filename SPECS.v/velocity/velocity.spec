@@ -30,7 +30,7 @@
 
 Name:           velocity
 Version:        1.7
-Release:        14%{?dist}
+Release:        15%{?dist}
 Epoch:          0
 Summary:        Java-based template engine
 License:        ASL 2.0
@@ -217,6 +217,9 @@ install -pD -T -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 %{_datadir}/%{name}
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0:1.7-15
+- 为 Magic 3.0 重建
+
 * Wed Jun 18 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.7-14
 - Apply patch for log4j 1.2.17
 

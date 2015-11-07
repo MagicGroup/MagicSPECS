@@ -2,7 +2,7 @@ Summary: Converts text and other types of files to PostScript
 Summary(zh_CN.UTF-8): 转换文本和其它类型文件到 PostScript 文件 
 Name: a2ps
 Version: 4.14
-Release: 23%{?dist}
+Release: 24%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -329,5 +329,8 @@ exit 0
 %{_emacs_sitelispdir}/%{name}/*.el
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.14-24
+- 为 Magic 3.0 重建
+
 * Mon Feb 24 2014 Liu Di <liudidi@gmail.com>
 - 修改 spec ，以此为基础，后续不再使用 fedora 的 spec。

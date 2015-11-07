@@ -1,8 +1,8 @@
 Name: libiscsi
 Summary: iSCSI client library
 Summary(zh_CN.UTF-8): iSCSI 客户端库
-Version: 1.11.0
-Release: 3%{?dist}
+Version: 1.15.0
+Release: 4%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -105,6 +105,9 @@ The libiscsi-devel package includes the header files for libiscsi.
 %{_libdir}/pkgconfig/libiscsi.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.15.0-4
+- 更新到 1.15.0
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.11.0-3
 - 为 Magic 3.0 重建
 

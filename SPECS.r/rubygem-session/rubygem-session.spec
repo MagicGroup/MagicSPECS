@@ -3,7 +3,7 @@
 Summary: Session drives external programs
 Name: rubygem-%{gem_name}
 Version: 3.1.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: Ruby
 URL: http://github.com/ahoward/session/tree/master
@@ -69,6 +69,9 @@ RUBYOPT="-Ilib -Itest" testrb test/session.rb
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.1.0-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.1.0-10
 - 为 Magic 3.0 重建
 

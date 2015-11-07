@@ -1,6 +1,6 @@
 Name:       perl-srpm-macros    
 Version:    1
-Release:    7%{?dist}
+Release:    8%{?dist}
 Summary:    RPM macros for building Perl source package from source repository
 Group:      Development/Libraries
 License:    GPLv3+
@@ -19,6 +19,9 @@ install -m 644 -D "%{SOURCE0}" \
 %config %{_sysconfdir}/rpm/macros.perl-srpm
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1-7
 - 为 Magic 3.0 重建
 

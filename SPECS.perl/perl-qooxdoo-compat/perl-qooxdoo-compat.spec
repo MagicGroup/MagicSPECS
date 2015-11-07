@@ -1,7 +1,7 @@
 Summary:    Perl backend for Qooxdoo
 Name:       perl-qooxdoo-compat
 Version:    0.7.3
-Release:    16%{?dist}
+Release:    17%{?dist}
 License:    LGPLv2 or EPL
 Group:      Development/Languages
 URL:        http://qooxdoo.org/
@@ -39,6 +39,9 @@ Qooxdoo 0.7.
 %{perl_vendorlib}/Qooxdoo
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.3-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.7.3-16
 - 为 Magic 3.0 重建
 

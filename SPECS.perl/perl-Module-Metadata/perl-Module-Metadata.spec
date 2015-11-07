@@ -1,6 +1,6 @@
 Name:		perl-Module-Metadata
 Version:	1.000027
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Gather package and POD information from perl module files
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Module-Metadata/
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/Module::Metadata.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.000027-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.000027-1
 - 更新到 1.000027
 

@@ -2,7 +2,7 @@
 
 Name:			ebtables
 Version:		2.0.10
-Release:		15%{?dist}
+Release:		16%{?dist}
 Summary:		Ethernet Bridge frame table administration tool
 Summary(zh_CN.UTF-8): 	以太网桥接帧表管理工具
 License:		GPLv2+
@@ -103,6 +103,9 @@ mv %{buildroot}/%{_lib}/ebtables/libebtc.so %{buildroot}/%{_lib}/
 %ghost %{_sysconfdir}/sysconfig/ebtables.broute
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.0.10-16
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.0.10-15
 - 为 Magic 3.0 重建
 

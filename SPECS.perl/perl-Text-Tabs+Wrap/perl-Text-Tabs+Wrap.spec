@@ -1,6 +1,6 @@
 Name:           perl-Text-Tabs+Wrap
 Version:        2013.0523
-Release:        347%{?dist}
+Release:        348%{?dist}
 Summary:        Expand tabs and do simple line wrapping
 License:        TTWL
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2013.0523-348
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2013.0523-347
 - 为 Magic 3.0 重建
 

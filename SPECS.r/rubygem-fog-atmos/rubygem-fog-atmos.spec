@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Module for the 'fog' gem to support Atmos
 Group: Development/Languages
 License: MIT
@@ -77,6 +77,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.1.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.0-3
 - 为 Magic 3.0 重建
 

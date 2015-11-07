@@ -1,6 +1,6 @@
 Name:           perl-File-Modified
-Version:	0.09
-Release:	1%{?dist}
+Version:	0.10
+Release:	2%{?dist}
 Summary:        Checks intelligently if files have changed
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.10-2
+- 更新到 0.10
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
 - 更新到 0.09
 

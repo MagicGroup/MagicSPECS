@@ -2,7 +2,7 @@
 
 Name:           xfce4-dev-tools
 Version:        4.12.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Xfce developer tools
 Summary(zh_CN.UTF-8): Xfce 开发工具
 
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.12.0-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 4.12.0-1
 - 更新到 4.12.0
 

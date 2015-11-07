@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Swift
 Version:	1.0.3
-Release:	16%{?dist}
+Release:	17%{?dist}
 Summary:        Set of additional policies for Perl::Critic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.3-17
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 1.0.3-15
 - 为 Magic 3.0 重建
 

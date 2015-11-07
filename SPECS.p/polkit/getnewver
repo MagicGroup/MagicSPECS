@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/polkit/releases/?C=M;O=D"
+url="http://www.freedesktop.org/software/polkit/releases/?C=M&O=D"
 new1="polkit-"
 new2=".tar.gz"
 downcommand="wget -q" 

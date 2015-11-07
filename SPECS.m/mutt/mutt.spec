@@ -19,7 +19,7 @@ Summary: A text mode mail user agent
 Summary(zh_CN.UTF-8): 文本模式的邮件用户代理
 Name: mutt
 Version: 1.5.23
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 5
 # The entire source code is GPLv2+ except
 # pgpewrap.c setenv.c sha1.c wcwidth.c which are Public Domain
@@ -187,6 +187,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5:1.5.23-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 5:1.5.23-4
 - 为 Magic 3.0 重建
 

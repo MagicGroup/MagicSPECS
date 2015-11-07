@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://downloads.xiph.org/releases/vorbis/?C=M;O=D"
+url="http://downloads.xiph.org/releases/vorbis/?C=M&O=D"
 new1="libvorbis-"
 new2=".tar.gz"
 downcommand="wget -q" 

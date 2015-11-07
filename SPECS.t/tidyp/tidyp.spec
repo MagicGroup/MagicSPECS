@@ -2,7 +2,7 @@ Summary:	Clean up and pretty-print HTML/XHTML/XML
 Summary(zh_CN.UTF-8): 清理和完善打印 HTML/XHTML/XML
 Name:		tidyp
 Version:	1.04
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	W3C
 Group:		Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -91,6 +91,9 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/libtidyp.la
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.04-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 1.04-1
 - 更新到 1.04
 

@@ -1,6 +1,6 @@
 Name:           perl-IO-Tty
 Version:	1.13_01
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl interface to pseudo tty's
 
 License:        GPL+ or Artistic
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.13_01-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.13_01-1
 - 更新到 1.13_01
 

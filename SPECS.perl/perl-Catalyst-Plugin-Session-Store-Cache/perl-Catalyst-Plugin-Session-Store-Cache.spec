@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Session-Store-Cache
 Version:        0.01
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Store sessions using a Catalyst::Plugin::Cache
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.01-22
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-21
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Lingua-EN-Numbers-Ordinate
 Version:	1.04
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl functions for giving the ordinal form of a number given its cardinal value
 
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.04-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.04-2
 - 为 Magic 3.0 重建
 

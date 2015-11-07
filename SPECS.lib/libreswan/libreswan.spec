@@ -17,8 +17,8 @@
 Name: libreswan
 Summary: IPsec implementation with IKEv1 and IKEv2 keying protocols
 Summary(zh_CN.UTF-8): 带有 IKEv1 和 IKEv2 协议的 IPsec 实现
-Version: 3.9
-Release: 1%{?dist}
+Version: 3.15
+Release: 2%{?dist}
 License: GPLv2
 Url: https://www.libreswan.org/
 Source: https://download.libreswan.org/%{name}-%{version}%{?prever}.tar.gz
@@ -206,6 +206,9 @@ if [ ! -f %{_sysconfdir}/ipsec.d/cert8.db ] ; then
 fi
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.15-2
+- 更新到 3.15
+
 * Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 3.9-1
 - 更新到 3.9
 

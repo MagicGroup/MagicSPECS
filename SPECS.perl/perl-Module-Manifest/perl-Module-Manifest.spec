@@ -1,6 +1,6 @@
 Name:           perl-Module-Manifest
 Version:        1.08
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Parse and examine a Perl distribution MANIFEST file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.08-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.08-11
 - 为 Magic 3.0 重建
 

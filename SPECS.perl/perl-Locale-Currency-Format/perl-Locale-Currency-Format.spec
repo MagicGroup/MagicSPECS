@@ -1,6 +1,6 @@
 Name:           perl-Locale-Currency-Format
-Version:	1.34
-Release:	1%{?dist}
+Version:	1.35
+Release:	2%{?dist}
 Summary:        Perl functions for formatting monetary values
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,6 +38,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.35-2
+- 更新到 1.35
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.34-1
 - 更新到 1.34
 

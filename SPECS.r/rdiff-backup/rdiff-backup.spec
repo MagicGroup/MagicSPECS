@@ -4,7 +4,7 @@ Version:	1.3.3
 Summary: Convenient and transparent local/remote incremental mirror/backup
 Summary(zh_CN.UTF-8): 便捷，透明的本地/远程增量镜像/备份
 Name: rdiff-backup
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 URL: http://www.nongnu.org/rdiff-backup/
 Source: http://savannah.nongnu.org/download/%{name}/%{name}-%{version}.tar.gz
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.3.3-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.3.3-1
 - 更新到 1.3.3
 

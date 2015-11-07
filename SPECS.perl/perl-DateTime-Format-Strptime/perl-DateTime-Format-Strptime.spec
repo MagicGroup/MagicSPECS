@@ -3,7 +3,7 @@
 
 Name:           perl-DateTime-Format-Strptime
 Version:	1.5600
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:        Parse and format strptime and strftime patterns
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/DateTime::Format::Strptime.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.5600-7
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.5600-6
 - 为 Magic 3.0 重建
 

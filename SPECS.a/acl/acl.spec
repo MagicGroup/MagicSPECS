@@ -2,7 +2,7 @@ Summary: Access control list utilities
 Summary(zh_CN.UTF-8): 访问控制列表相关工具
 Name: acl
 Version: 2.2.52
-Release: 4%{?dist}
+Release: 5%{?dist}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gawk
 BuildRequires: gettext
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libacl.so.*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.2.52-5
+- 为 Magic 3.0 重建
+
 * Wed Feb 26 2014 Liu Di <liudidi@gmail.com> - 2.2.52-4
 - 更新到 2.2.52
 

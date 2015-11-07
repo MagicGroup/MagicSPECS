@@ -2,7 +2,7 @@ Name:		pylibacl
 Summary:	POSIX.1e ACLs library wrapper for python
 Summary(zh_CN.UTF-8): POSIX.1e ACL 库的 Python 接口
 Version:	0.5.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 #license version is precised on a website
 License:	LGPLv2+
 Group:		Development/Libraries
@@ -44,6 +44,9 @@ magic_rpm_clean.sh
 %{python_sitearch}/*egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.3-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 0.5.3-1
 - 更新到 0.5.3
 

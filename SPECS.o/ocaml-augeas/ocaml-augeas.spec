@@ -2,7 +2,7 @@
 
 Name:           ocaml-augeas
 Version:        0.5
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        OCaml bindings for Augeas configuration API
 Summary(zh_CN.UTF-8): Augeas 配置 API 的 OCaml 绑定
 License:        LGPLv2+ with exceptions
@@ -95,6 +95,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5-10
+- 为 Magic 3.0 重建
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.5-9
 - 为 Magic 3.0 重建
 

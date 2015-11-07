@@ -6,7 +6,7 @@ Summary: Recite Word Easily.
 Summary(zh_CN.UTF-8): 轻轻松松背单词
 Name: reciteword
 Version: %ver
-Release: %rel.3
+Release: %rel.4
 License: GPL
 Group: Applications/Productivity
 Group(zh_CN.UTF-8): 应用程序/生产力
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/pixmaps/rwdict.png
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.8.5-1.4
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.8.5-1.3
 - 为 Magic 3.0 重建
 

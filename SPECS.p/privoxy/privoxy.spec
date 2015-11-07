@@ -7,7 +7,7 @@
 
 Name: privoxy
 Version:	3.0.23
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: Privacy enhancing proxy
 Summary(zh_CN.UTF-8): 增强的代理服务
 License: GPLv2+
@@ -152,6 +152,9 @@ fi
 #doc/source/developer-manual doc/source/faq doc/source/user-manual
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.0.23-3
+- 为 Magic 3.0 重建
+
 * Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 3.0.23-2
 - 为 Magic 3.0 重建
 

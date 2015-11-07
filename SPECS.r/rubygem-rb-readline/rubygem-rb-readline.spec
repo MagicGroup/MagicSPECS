@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	0.5.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 Summary:	Pure-Ruby Readline Implementation
 License:	BSD
@@ -97,6 +97,9 @@ popd
 %doc	%{gem_docdir}/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.5.3-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.3-3
 - 为 Magic 3.0 重建
 

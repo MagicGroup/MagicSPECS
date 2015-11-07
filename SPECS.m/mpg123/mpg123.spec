@@ -3,8 +3,8 @@
 %global apriority 99
 
 Name:           mpg123
-Version:	1.22.0
-Release:	1%{?dist}
+Version:	1.22.4
+Release:	2%{?dist}
 Summary:        MPEG audio player
 Summary(zh_CN.UTF-8): MPEG 音频播放器
 Group:          Applications/Multimedia
@@ -196,6 +196,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.22.4-2
+- 更新到 1.22.4
+
 * Mon Mar 30 2015 Liu Di <liudidi@gmail.com> - 1.22.0-1
 - 更新到 1.22.0
 

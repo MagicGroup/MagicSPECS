@@ -9,7 +9,7 @@
 Name:    qt-mobility
 Summary: Qt Mobility Framework
 Version: 1.2.2
-Release: 0.21.%{snap}git%{git_short}%{?dist}
+Release: 0.22.%{snap}git%{git_short}%{?dist}
 
 License: LGPLv2 with exceptions
 URL:     http://qt.digia.com/Product/Qt-Add-Ons/
@@ -438,6 +438,9 @@ cp -a doc/html/* %{buildroot}%{_qt4_docdir}/html/qtmobility/
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.2-0.22.20140317git169da60c
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2.2-0.21.20140317git169da60c
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

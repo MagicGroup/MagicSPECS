@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/cups-pk-helper/releases/?C=M;O=D"
+url="http://www.freedesktop.org/software/cups-pk-helper/releases/?C=M&O=D"
 new1="cups-pk-helper-"
 new2=".tar.xz"
 downcommand="wget -q" 

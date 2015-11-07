@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-findlib
-Version: 1.5.5
-Release: 1%{?dist}
+Version: 1.5.6
+Release: 2%{?dist}
 Summary:        Objective CAML package manager and build helper
 Summary(zh_CN.UTF-8): OCaml 包管理器和构建帮助程序
 License:        BSD
@@ -107,6 +107,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.6-2
+- 更新到 1.5.6
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.5.5-1
 - 更新到 1.5.5
 

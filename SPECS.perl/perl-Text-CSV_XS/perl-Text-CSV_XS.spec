@@ -1,6 +1,6 @@
 Name:           perl-Text-CSV_XS
-Version:	1.19
-Release:	1%{?dist}
+Version:	1.20
+Release:	2%{?dist}
 Summary:        Comma-separated values manipulation routines
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -57,6 +57,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.20-2
+- 更新到 1.20
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.19-1
 - 更新到 1.19
 

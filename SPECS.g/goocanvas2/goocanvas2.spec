@@ -3,7 +3,7 @@
 
 Name:           goocanvas2
 Version:        2.0.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A new canvas widget for GTK+ that uses cairo for drawing
 Summary(zh_CN.UTF-8): 使用 cario 绘画的新 canvas 控件
 
@@ -80,6 +80,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/GooCanvas-2.0.gir
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.2-7
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 2.0.2-6
 - 为 Magic 3.0 重建
 

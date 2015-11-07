@@ -2,7 +2,7 @@ Summary: A plain ASCII to PostScript converter
 Summary(zh_CN.UTF-8): 一个纯 ASCII 文本到 PostScript 的转换程序
 Name: enscript
 Version: 1.6.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -113,6 +113,9 @@ fi
 %config(noreplace) %{_sysconfdir}/enscript.cfg
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.6.6-3
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 1.6.6-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:		gmlive
 Group:		Applications/Internet
 Group(zh_CN.UTF-8):   应用程序/互联网
 Version:	0.22.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL
 Summary:	A P2P Stream program
 Summary(zh_CN.UTF-8): P2P流媒体程序
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/gmlive.png
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.22.3-3
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.22.3-2
 - 为 Magic 3.0 重建
 

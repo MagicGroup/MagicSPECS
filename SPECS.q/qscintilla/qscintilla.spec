@@ -10,8 +10,8 @@
 
 Summary: A Scintilla port to Qt
 Name:    qscintilla
-Version: 2.9
-Release: 4%{?dist}
+Version:	2.9.1
+Release:	2%{?dist}
 
 License: GPLv3
 Url:     http://www.riverbankcomputing.com/software/qscintilla/
@@ -313,6 +313,9 @@ test -x %{buildroot}%{python2_sitearch}/PyQt4/Qsci.so
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.9.1-2
+- 更新到 2.9.1
+
 * Tue Jun 16 2015 Rex Dieter <rdieter@fedoraproject.org> 2.9-4
 - fix libqscintillaplugin.so linkage (#1231721)
 

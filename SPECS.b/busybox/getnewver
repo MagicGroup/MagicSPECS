@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.busybox.net/downloads/?C=M;O=D"
+url="http://www.busybox.net/downloads/?C=M&O=D"
 new1="busybox-"
 new2=".tar.bz2"
 downcommand="wget -q" 

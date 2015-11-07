@@ -30,7 +30,7 @@
 
 Name:           jdom
 Version:        1.1.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Epoch:          0
 Summary:        Java alternative to DOM and SAX
 License:        ASL 1.1
@@ -120,6 +120,9 @@ cp %{SOURCE1} $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-jdom.pom
 %doc LICENSE.txt
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0:1.1.3-9
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0:1.1.3-8
 - 为 Magic 3.0 重建
 

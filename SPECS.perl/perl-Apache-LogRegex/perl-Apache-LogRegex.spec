@@ -1,6 +1,6 @@
 Name:           perl-Apache-LogRegex
-Version:	1.70
-Release:	3%{?dist}
+Version:	1.71
+Release:	2%{?dist}
 Summary:        Parse a line from an Apache logfile into a hash
 Summary(zh_CN.UTF-8): 解析 Apache 日志文件的一行到哈希
 License:        GPL+ or Artistic
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.71-2
+- 更新到 1.71
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.70-3
 - 为 Magic 3.0 重建
 

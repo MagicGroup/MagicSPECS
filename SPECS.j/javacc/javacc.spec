@@ -30,7 +30,7 @@
 
 Name:           javacc
 Version:        5.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Epoch:          0
 Summary:        A parser/scanner generator for java
 License:        BSD
@@ -135,6 +135,9 @@ install -Dpm 644 pom.xml %{buildroot}/%{_mavenpomdir}/JPP-%{name}.pom
 %{_javadocdir}/%{name}
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0:5.0-14
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0:5.0-13
 - 为 Magic 3.0 重建
 

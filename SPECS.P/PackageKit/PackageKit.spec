@@ -6,8 +6,8 @@
 
 Summary:   Package management service
 Name:      PackageKit
-Version: 1.0.7
-Release: 1%{?dist}
+Version: 1.0.10
+Release: 2%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/PackageKit/
 Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
@@ -312,6 +312,9 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_datadir}/gtk-doc/html/PackageKit
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0.10-2
+- 更新到 1.0.10
+
 * Fri Jul 31 2015 Liu Di <liudidi@gmail.com> - 1.0.7-1
 - 更新到 1.0.7
 

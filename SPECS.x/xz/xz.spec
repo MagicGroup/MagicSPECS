@@ -4,7 +4,7 @@ Summary:	LZMA compression utilities
 Summary(zh_CN.UTF-8): LZMA 压缩工具
 Name:		xz
 Version:	5.2.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv2+
 Group:		Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
@@ -171,6 +171,9 @@ LD_LIBRARY_PATH=$PWD/src/liblzma/.libs make check
 %{_mandir}/man1/*lz*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 5.2.2-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 5.2.2-2
 - 更新到 5.2.2
 

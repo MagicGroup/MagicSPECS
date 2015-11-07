@@ -1,6 +1,6 @@
 Name:       perl-Text-PDF
 Version:    0.29a
-Release:    19%{?dist}
+Release:    20%{?dist}
 # lib/Text/PDF.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -66,6 +66,9 @@ make test
 %{_bindir}/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.29a-20
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.29a-19
 - 为 Magic 3.0 重建
 

@@ -33,7 +33,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.008
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	Perl bindings for the TQt library
 Summary(zh_CN.UTF-8): TQt 库的 Perl 绑定
 Group:		Development/Libraries
@@ -176,6 +176,9 @@ magic_rpm_clean.sh
 
 
 %Changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:3.008-1.2
+- 为 Magic 3.0 重建
+
 * Wed Oct 14 2015 Liu Di <liudidi@gmail.com> - 2:3.008-1.1
 - 为 Magic 3.0 重建
 

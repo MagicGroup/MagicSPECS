@@ -1,12 +1,12 @@
 
-%global realversion 1.10.0
+%global realversion 1.12.2
 %global _hardened_build 1
 
 Name: libmbim
 Summary: Support library for the Mobile Broadband Interface Model protocol
 Summary(zh_CN.UTF-8): 移动宽带接口模型协议的支持库
 Version: %{?realversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 URL: http://freedesktop.org/software/libmbim
 
@@ -95,6 +95,9 @@ make check
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.1-2
+- 更新到 0.0.1
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.10.0-1
 - 更新到 1.10.0
 

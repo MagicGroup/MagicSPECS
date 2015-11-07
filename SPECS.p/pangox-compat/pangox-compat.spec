@@ -1,6 +1,6 @@
 Name:           pangox-compat
 Version:        0.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Compatibility library for pangox
 Summary(zh_CN.UTF-8): pangox 的兼容库
 
@@ -60,6 +60,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.0.2-3
+- 为 Magic 3.0 重建
+
 * Wed Apr 15 2015 Liu Di <liudidi@gmail.com> - 0.0.2-2
 - 为 Magic 3.0 重建
 

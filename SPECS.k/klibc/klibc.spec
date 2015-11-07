@@ -3,7 +3,7 @@ Summary:			A minimal libc subset for use with initramfs.
 Summary(zh_CN.UTF-8):		一个迷你化的用于 initramfs 里面的 libc
 Name:				klibc
 Version:	2.0.3
-Release:			2%{?dist}
+Release:			3%{?dist}
 License:			BSD/GPL
 
 Group:				Development/Libraries
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 #%doc %{bindocdir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.3-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 2.0.3-2
 - 为 Magic 3.0 重建
 

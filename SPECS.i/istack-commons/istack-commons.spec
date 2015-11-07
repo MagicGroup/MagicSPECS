@@ -1,6 +1,6 @@
 Name:           istack-commons
 Version:        2.17
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Common code for some Glassfish projects
 Group:          Development/Libraries
 License:        CDDL and GPLv2 with exceptions
@@ -137,6 +137,9 @@ cp -p soimp/pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}-soimp.pom
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.17-7
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.17-6
 - 为 Magic 3.0 重建
 

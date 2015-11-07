@@ -2,7 +2,7 @@ Name:    usbutils
 Summary: Linux USB utilities
 Summary(zh_CN.UTF-8): Linux 下的 USB 工具
 Version: 008
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL:     http://www.linux-usb.org/
 License: GPLv2+
 Group:   Applications/System
@@ -45,6 +45,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/usbutils.pc
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 008-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 008-5
 - 为 Magic 3.0 重建
 

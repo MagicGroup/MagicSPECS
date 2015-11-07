@@ -1,6 +1,6 @@
 Name:           fuse-sshfs
 Version:	2.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        FUSE-Filesystem to access remote filesystems via SSH
 Summary(zh_CN.UTF-8): 通过 SSH 访问远程文件系统的 FUSE 文件系统
 
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/sshfs.1.gz
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.5-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 2.5-1
 - 更新到 2.5
 

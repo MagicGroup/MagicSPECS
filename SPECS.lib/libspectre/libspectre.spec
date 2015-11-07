@@ -1,6 +1,6 @@
 Name:           libspectre
 Version: 0.2.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        A library for rendering PostScript(TM) documents
 Summary(zh_CN.UTF-8): 渲染 PostScript(TM) 文档的库
 
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.7-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.2.7-1
 - 更新到 0.2.7
 

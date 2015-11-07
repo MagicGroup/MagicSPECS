@@ -1,6 +1,6 @@
 Name:           perl-Time-HiRes
 Version:        1.9726
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        High resolution alarm, sleep, gettimeofday, interval timers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.9726-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.9726-4
 - 为 Magic 3.0 重建
 

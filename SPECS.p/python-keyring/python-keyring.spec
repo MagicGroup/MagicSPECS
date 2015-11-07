@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           python-keyring
-Version:	5.4
-Release:	1%{?dist}
+Version:	5.6
+Release:	2%{?dist}
 Summary:        Python 2 library to store and access passwords safely
 Summary(zh_CN.UTF-8): 安全地存储和访问密码的 Python2 库
 License:        MIT and Python
@@ -126,6 +126,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 5.6-2
+- 更新到 5.6
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 5.4-1
 - 更新到 5.4
 

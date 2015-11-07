@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.3.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Read, write and manipulate property lists as defined by Apple
 Group: Development/Languages
 License: MIT
@@ -72,6 +72,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.3.0-3
 - 为 Magic 3.0 重建
 

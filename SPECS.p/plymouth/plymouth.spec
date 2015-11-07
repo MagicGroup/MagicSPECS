@@ -8,7 +8,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.9
-Release: 11%{?snapshot_date}%{?dist}
+Release: 12%{?snapshot_date}%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -499,6 +499,9 @@ fi
 %defattr(-, root, root)
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.8.9-12.2013.08.14
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 0.8.9-11.2013.08.14
 - 为 Magic 3.0 重建
 

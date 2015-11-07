@@ -15,7 +15,7 @@ Summary: PIM Storage Service
 Summary(zh_CN.UTF-8): 个人信息管理存储服务
 Name:    akonadi
 Version: 1.13.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: LGPLv2+
 URL:     http://community.kde.org/KDE_PIM/Akonadi 
@@ -217,6 +217,9 @@ fi
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.13.0-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 1.13.0-4
 - 为 Magic 3.0 重建
 

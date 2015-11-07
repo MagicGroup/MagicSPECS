@@ -4,7 +4,7 @@
 
 Name:           ocaml-bin-prot
 Version:        2.0.9
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Read and write OCaml values in a type-safe binary protocol
 Summary(zh_CN.UTF-8): 使用类型安全的二进制协议读取和写入 OCaml 值
 License:        LGPLv2+ with exceptions
@@ -110,6 +110,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.9-11
+- 为 Magic 3.0 重建
+
 * Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 2.0.9-10
 - 为 Magic 3.0 重建
 

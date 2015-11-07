@@ -1,6 +1,6 @@
 Name:           perl-Object-Signature
 Version:        1.07
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Cryptographically strong objects 
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.07-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.07-10
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary: OSF/Motif library clone
 Name: lesstif
 Version: 0.95.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPLv2+
 # in Xm-2.1/
 # some files are MIT
@@ -275,6 +275,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.95.2-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.95.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

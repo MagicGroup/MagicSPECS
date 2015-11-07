@@ -24,7 +24,7 @@ Summary:        Specialist tools for ALSA
 Summary(zh_CN.UTF-8): ALSA 的一些专门工具
 Name:           alsa-tools
 Version:	1.0.29
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 # Checked at least one source file from all the sub-projects contained in
 # the source tarball and they are consistent GPLv2+ - TJ 2007-11-15
@@ -247,6 +247,9 @@ install -m 644 %{SOURCE5} %{buildroot}/lib/udev/rules.d
 %endif
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.29-4
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
 - 更新到 1.0.29
 

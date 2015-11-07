@@ -6,7 +6,7 @@
 Summary:	Ruby library to help write robots.txt compliant web robots
 Name:		rubygem-%{gem_name}
 Version:	0.1.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 Group:		Development/Languages
 # LICENSE.txt
@@ -127,6 +127,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.1-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.1-5
 - 为 Magic 3.0 重建
 

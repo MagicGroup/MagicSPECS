@@ -1,6 +1,6 @@
 Name:          jackson-dataformat-xml
 Version:       2.4.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       XML data binding extension for Jackson
 License:       ASL 2.0
 URL:           http://wiki.fasterxml.com/JacksonExtensionXmlDataBinding
@@ -68,6 +68,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.4.1-3
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.4.1-2
 - 为 Magic 3.0 重建
 

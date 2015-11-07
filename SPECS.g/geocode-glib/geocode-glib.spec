@@ -1,8 +1,8 @@
 %global json_glib_version 0.16.2
 
 Name:           geocode-glib
-Version:	3.12.0
-Release:        1%{?dist}
+Version:	3.18.0
+Release:        2%{?dist}
 Summary:        Geocoding helper library
 Summary(zh_CN.UTF-8): 地理编码辅助库
 
@@ -76,6 +76,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
+- 更新到 3.18.0
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

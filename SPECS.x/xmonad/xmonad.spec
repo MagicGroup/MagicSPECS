@@ -4,7 +4,7 @@
 
 Name:           %{pkg_name}
 Version:        0.11.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A tiling window manager
 
 License:        BSD
@@ -206,6 +206,9 @@ rm %{buildroot}%{_docdir}/%{name}*/LICENSE
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.11.1-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.11.1-6
 - 为 Magic 3.0 重建
 

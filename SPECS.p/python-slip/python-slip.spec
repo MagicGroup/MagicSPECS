@@ -1,6 +1,6 @@
 Name:       python-slip
-Version:	0.6.3
-Release:	3%{?dist}
+Version:	0.6.4
+Release:	2%{?dist}
 Summary:    Convenience, extension and workaround code for Python 2.x
 
 Group:      System Environment/Libraries
@@ -155,6 +155,9 @@ popd
 %{python2_sitelib}/slip.gtk-%{version}-py%{python2_version}.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.6.4-2
+- 更新到 0.6.4
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.6.3-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary:		Lunar Calender for Chinese Users
 Summary(zh_CN.UTF-8):		中国的农历
 Name:           ccal	
 Version:	2.5.3
-Release:       	5%{?dist}
+Release:       	6%{?dist}
 License:       	GPL
 Group:         User Interface/Desktops
 Group(zh_CN.UTF-8):  用户界面/桌面
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/ccal*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.5.3-6
+- 为 Magic 3.0 重建
+
 * Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2.5.3-5
 - 为 Magic 3.0 重建
 

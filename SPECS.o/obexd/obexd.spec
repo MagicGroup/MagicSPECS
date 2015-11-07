@@ -1,6 +1,6 @@
 Name:		obexd
 Version: 0.48
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:	D-Bus service for Obex Client access
 Summary(zh_CN.UTF-8): 访问 Obex 客户端的 D-Bus 服务
 
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/services/obex-client.service
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.48-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 0.48-1
 - 更新到 0.48
 

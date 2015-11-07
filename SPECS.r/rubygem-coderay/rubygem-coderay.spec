@@ -3,7 +3,7 @@
 Summary: Fast syntax highlighter engine for many programming languages
 Name: rubygem-%{gem_name}
 Version: 1.1.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: LGPLv2+
 URL: http://coderay.rubychan.de
@@ -59,6 +59,9 @@ find %{buildroot}/%{gem_instdir}/bin -type f | xargs sed -i 's/\r//' $FILES
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.0-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.0-6
 - 为 Magic 3.0 重建
 

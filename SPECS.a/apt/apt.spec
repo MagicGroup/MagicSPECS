@@ -16,7 +16,7 @@ Summary: Debian's Advanced Packaging Tool with RPM support
 Summary(zh_CN.UTF-8): 使用RPM支持的 Debian 高级包工具
 Name: apt
 Version: 0.5.15lorg3.95
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: GPL
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -338,6 +338,9 @@ fi
 %endif
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.5.15lorg3.95-14
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.5.15lorg3.95-13
 - 为 Magic 3.0 重建
 

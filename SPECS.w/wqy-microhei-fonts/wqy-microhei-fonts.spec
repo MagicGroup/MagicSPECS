@@ -5,7 +5,7 @@
 
 Name:           %{fontname}-fonts
 Version:        0.2.0
-Release:        0.11.beta%{?dist}
+Release:        0.12.beta%{?dist}
 Summary:        Compact Chinese fonts derived from Droid
 Summary(zh_CN.UTF-8): 文泉驿微米黑字体
 
@@ -61,6 +61,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.2.0-0.12.beta
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.2.0-0.11.beta
 - 为 Magic 3.0 重建
 

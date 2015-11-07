@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://downloads.puppetlabs.com/hiera/?C=M;O=D"
+url="http://downloads.puppetlabs.com/hiera/?C=M&O=D"
 new1="hiera-"
 new2=".tar.gz"
 downcommand="wget -q" 

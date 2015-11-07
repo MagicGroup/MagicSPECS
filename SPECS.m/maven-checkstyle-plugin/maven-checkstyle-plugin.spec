@@ -1,6 +1,6 @@
 Name:             maven-checkstyle-plugin
 Version:          2.12
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          Plugin that generates a report regarding the code style used by the developers
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -61,6 +61,9 @@ This package contains the API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.12-4
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 2.12-3
 - 为 Magic 3.0 重建
 

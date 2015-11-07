@@ -1,7 +1,7 @@
 Summary: Encrypt Data with Cipher Block Chaining Mode
 Name: perl-Crypt-CBC
 Version:	2.33
-Release:	1%{?dist}
+Release:	2%{?dist}
 # Upstream confirms that they're under the same license as perl.
 # Wording in CBC.pm is less than clear, but still.
 License: GPL+ or Artistic
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.33-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.33-1
 - 更新到 2.33
 

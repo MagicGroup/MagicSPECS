@@ -2,7 +2,7 @@
 
 Name:           zeromq
 Version:	4.1.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Software library for fast, message-based applications
 Summary(zh_CN.UTF-8): 快速，基于消息的程序使用的软件库
 
@@ -112,6 +112,9 @@ make check
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.1.3-3
+- 更新到
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.1.3-2
 - 更新到 4.1.3
 

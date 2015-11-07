@@ -2,8 +2,8 @@ Summary:        Shared code for mate-panel, mate-session, mate-file-manager, etc
 Summary(zh_CN.UTF-8): mate-panel, mate-session, mate-file-manager 等程序的共享代码
 Name:           mate-desktop
 License:        GPLv2+ and LGPLv2+ and MIT
-Version: 1.9.1
-Release: 1%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 URL:            http://mate-desktop.org
@@ -191,6 +191,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
 - 更新到 1.9.1
 

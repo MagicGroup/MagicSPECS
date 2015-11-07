@@ -1,6 +1,6 @@
 Name:           iguanaIR
 Version:        1.0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Driver for Iguanaworks USB IR transceiver
 
 Group:          System Environment/Daemons
@@ -162,6 +162,9 @@ fi
 %{_bindir}/%{name}-reflasher
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.5-5
+- 为 Magic 3.0 重建
+
 * Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.0.5-4
 - 为 Magic 3.0 重建
 

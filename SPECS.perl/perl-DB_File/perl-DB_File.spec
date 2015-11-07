@@ -1,6 +1,6 @@
 Name:           perl-DB_File
 Version:	1.835
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl5 access to Berkeley DB version 1.x
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.835-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.835-1
 - 更新到 1.835
 

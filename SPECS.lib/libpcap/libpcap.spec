@@ -1,6 +1,6 @@
 Name: libpcap
 Epoch: 14
-Version: 1.6.2
+Version: 1.7.4
 Release: 2%{?dist}
 Summary: A system-independent interface for user-level packet capture
 Summary(zh_CN.UTF-8): 系统无关的用户级包捕捉库
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/pcap*.5*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 14:1.7.4-2
+- 更新到 1.7.4
+
 * Tue Feb 17 2015 Liu Di <liudidi@gmail.com> - 14:1.6.2-2
 - 为 Magic 3.0 重建
 

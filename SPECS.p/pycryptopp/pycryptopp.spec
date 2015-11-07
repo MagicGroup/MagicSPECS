@@ -1,6 +1,6 @@
 Name:           pycryptopp
 Version:        0.6.0.1206569328141510525648634803928199668821045408958
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Python wrappers for the Crypto++ library
 Summary(zh_CN.UTF-8): Crypto++ 库的 Python 接口
 
@@ -62,6 +62,9 @@ rm -rf %{buildroot}%{python_sitearch}/%{name}/testvectors/
 %{python_sitearch}/%{name}-%{version}-*.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.6.0.1206569328141510525648634803928199668821045408958-6
+- 为 Magic 3.0 重建
+
 * Wed Aug 12 2015 Liu Di <liudidi@gmail.com> - 0.6.0.1206569328141510525648634803928199668821045408958-5
 - 为 Magic 3.0 重建
 

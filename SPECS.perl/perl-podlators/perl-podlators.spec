@@ -1,6 +1,6 @@
 Name:           perl-podlators
 Version:        2.5.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Format POD source into various output formats
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.5.3-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.5.3-7
 - 为 Magic 3.0 重建
 

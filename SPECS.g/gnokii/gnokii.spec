@@ -3,7 +3,7 @@
 
 Name:           gnokii
 Version:        0.6.31
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Linux/Unix tool suite for various mobile phones
 
 Group:          Applications/Communications
@@ -268,6 +268,9 @@ fi
 %{_libdir}/pkgconfig/xgnokii.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.6.31-9
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 0.6.31-8
 - 为 Magic 3.0 重建
 

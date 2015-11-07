@@ -13,9 +13,9 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:          engrampa
-Version:       1.9.0
-Release:       2%{?dist}
-#Release:       0.2%{?git_rel}%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
+#Release: 1%{?dist}
 Summary:       MATE Desktop file archiver
 Summary(zh_CN.UTF-8): MATE 桌面的文件归档管理器
 License:       GPLv2+ and LGPLv2+
@@ -110,6 +110,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
 - 为 Magic 3.0 重建
 

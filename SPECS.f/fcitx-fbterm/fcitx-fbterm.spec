@@ -1,6 +1,6 @@
 Name:		fcitx-fbterm
 Version:	0.2.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Fbterm Support for Fcitx
 Summary(zh_CN.UTF-8): Fcitx 的 fbterm 支持
 Group:		System Environment/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.0-4
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

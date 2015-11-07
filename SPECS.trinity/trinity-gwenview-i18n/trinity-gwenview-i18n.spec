@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		1.4.2
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:		Internationalization support for Gwenview [Trinity]
 Summary(zh_CN.UTF-8): Gwenview 的国际化支持
 Group:			Applications/Utilities
@@ -145,5 +145,8 @@ rm -rf %{?buildroot}%{tde_tdedocdir}/HTML/
 %doc AUTHORS ChangeLog COPYING TODO
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:1.4.2-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.4.2-1
 - Initial release for TDE 14.0.0

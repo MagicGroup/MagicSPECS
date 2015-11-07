@@ -9,7 +9,7 @@
 
 Name:    openjpeg
 Version: 1.5.1
-Release: 14%{?dist}
+Release: 15%{?dist}
 Summary: JPEG 2000 command line tools
 Summary(zh_CN.UTF-8): JPEG 2000 命令行工具
 
@@ -220,6 +220,9 @@ make test -C %{_target_platform}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.1-15
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.5.1-14
 - 为 Magic 3.0 重建
 

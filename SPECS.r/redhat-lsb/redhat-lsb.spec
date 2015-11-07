@@ -64,7 +64,7 @@ Summary: Implementation of Linux Standard Base specification
 Summary(zh_CN.UTF-8): Linux 标准基本描述的实现
 Name: redhat-lsb
 Version: 4.1
-Release: 32%{?dist}
+Release: 33%{?dist}
 URL: http://www.linuxfoundation.org/collaborate/workgroups/lsb
 Source0: https://fedorahosted.org/releases/r/e/redhat-lsb/%{name}-%{version}-%{srcrelease}.tar.bz2
 Patch0: lsb-release-3.1-update-init-functions.patch
@@ -771,6 +771,9 @@ os.remove("%{_datadir}/lsb")
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.1-33
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 4.1-32
 - 为 Magic 3.0 重建
 

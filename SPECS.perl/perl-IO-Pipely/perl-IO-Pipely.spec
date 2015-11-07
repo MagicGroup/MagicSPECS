@@ -1,6 +1,6 @@
 Name:           perl-IO-Pipely
 Version:        0.005
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Portably create pipe() or pipe-like handles, one way or another
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.005-7
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.005-6
 - 为 Magic 3.0 重建
 

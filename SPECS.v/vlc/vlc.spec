@@ -34,9 +34,9 @@ Summary(zh_CN.UTF-8): 跨平台的开源媒体框架、播放器和服务器
 Name:		vlc
 Version:	2.2.1
 %if 0%{?gitv}
-Release:	2%{?dist}
+Release:	3%{?dist}
 %else
-Release:	2%{?dist}
+Release:	3%{?dist}
 %endif
 License:	GPLv2+
 Group:		Applications/Multimedia
@@ -537,6 +537,9 @@ fi || :
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.2.1-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 2.2.1-2
 - 为 Magic 3.0 重建
 

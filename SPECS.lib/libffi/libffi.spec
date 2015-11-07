@@ -1,8 +1,8 @@
 %global multilib_arches %{ix86} ppc %{power64} s390 s390x x86_64
 
 Name:		libffi
-Version: 3.1
-Release:	6%{?dist}
+Version: 3.2.1
+Release:	7%{?dist}
 Summary:	A portable foreign function interface library
 Summary(zh_CN.UTF-8): 可移植的外部函数接口库
 
@@ -136,6 +136,9 @@ fi
 %{_infodir}/libffi.info.gz
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.2.1-7
+- 更新到 3.2.1
+
 * Thu Jul 17 2014 Liu Di <liudidi@gmail.com> - 3.1-6
 - 为 Magic 3.0 重建
 

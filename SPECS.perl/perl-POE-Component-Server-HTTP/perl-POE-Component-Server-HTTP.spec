@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Server-HTTP
 Version:        0.09
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Foundation of a POE HTTP Daemon
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.09-19
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-18
 - 为 Magic 3.0 重建
 

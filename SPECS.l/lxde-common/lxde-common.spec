@@ -18,7 +18,7 @@
 
 Name:           lxde-common
 Version:        0.5.5
-Release:        0.7%{?git_version:.%{?git_version}}%{?dist}
+Release:        0.8%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Default configuration files for LXDE
 Summary(zh_CN.UTF-8): LXDE 的默认配置文件
 
@@ -121,6 +121,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.5.5-0.8.20110328git87c368d7
+- 为 Magic 3.0 重建
+
 * Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 0.5.5-0.7.20110328git87c368d7
 - 为 Magic 3.0 重建
 

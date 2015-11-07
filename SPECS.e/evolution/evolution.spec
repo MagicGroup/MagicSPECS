@@ -31,8 +31,8 @@
 ### Abstract ###
 
 Name: evolution
-Version:	3.13.3
-Release: 2%{?dist}
+Version:	3.19.1
+Release: 3%{?dist}
 Group: Applications/Productivity
 Summary: Mail and calendar client for GNOME
 License: GPLv2+ and GFDL
@@ -520,6 +520,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
+- 更新到 3.19.1
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.13.3-2
 - 更新到 3.13.3
 

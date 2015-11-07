@@ -2,7 +2,7 @@ Summary:        Fast Scanner Generator
 Summary(zh_CN.UTF-8): 快速扫描器生成器
 Name:           jflex
 Version:        1.6.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        BSD
 URL:            http://jflex.de/
 BuildArch:      noarch
@@ -105,6 +105,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6.1-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.6.1-3
 - 为 Magic 3.0 重建
 

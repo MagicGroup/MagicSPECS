@@ -1,6 +1,6 @@
 Name:		perl-Test-CPAN-Meta-YAML
 Version:	0.25
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Validate a META.yml file within a CPAN distribution
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::CPAN::Meta::YAML::Version.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.25-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.25-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

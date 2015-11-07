@@ -10,7 +10,7 @@
 
 Name:           spice-gtk
 Version:	0.30
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A GTK+ widget for SPICE clients
 Summary(zh_CN.UTF-8): SPICE 客户端的 GTK+ 部件
 
@@ -275,6 +275,9 @@ rm -rf %{buildroot}%{_datadir}/pkgconfig/spice-protocol.pc
 %{_mandir}/man1/spice-client.1*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.30-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.30-1
 - 更新到 0.30
 

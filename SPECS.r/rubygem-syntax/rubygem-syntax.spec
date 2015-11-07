@@ -3,7 +3,7 @@
 Summary:        Ruby library for performing simple syntax highlighting
 Name:           rubygem-%{gem_name}
 Version:        1.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Languages
 License:        BSD
 URL:            https://github.com/dblock/syntax
@@ -84,6 +84,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.2.0-3
 - 为 Magic 3.0 重建
 

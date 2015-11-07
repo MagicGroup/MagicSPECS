@@ -1,6 +1,6 @@
 Name:           perl-perlfaq
 Version:        5.021010
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Frequently asked questions about Perl
 # Code examples are Public Domain
 License:        (GPL+ or Artistic) and Public Domain
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.021010-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 5.021010-2
 - 为 Magic 3.0 重建
 

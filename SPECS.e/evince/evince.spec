@@ -4,8 +4,8 @@
 %global gxps_version 0.2.1
 
 Name:           evince
-Version:	3.13.3
-Release:        1%{?dist}
+Version:	3.18.1
+Release:        2%{?dist}
 Summary:        Document viewer
 Summary(zh_CN.UTF-8): 文档查看器
 
@@ -252,6 +252,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_libdir}/nautilus/extensions-3.0/libevince-properties-page.so
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-1
 - 更新到 3.13.3
 

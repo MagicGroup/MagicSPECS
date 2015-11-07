@@ -2,7 +2,7 @@ Summary:	Tool for tunneling SSH through HTTP proxies
 Summary(zh_CN.UTF-8): 通过 HTTP 代理使用 SSH 隧道的工具
 Name:		corkscrew
 Version:	2.0
-Release:	13%{?dist}
+Release:	14%{?dist}
 License:	GPLv2
 Group:		Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/%{name}.1.gz
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0-14
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 2.0-13
 - 为 Magic 3.0 重建
 

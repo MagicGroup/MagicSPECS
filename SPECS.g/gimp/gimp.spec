@@ -82,7 +82,7 @@ Summary:        GNU Image Manipulation Program
 Name:           gimp
 Epoch:          2
 Version:        2.8.10
-Release:        %{?prerelprefix}5%{dotprerel}%{dotgitrev}%{?dist}.1
+Release:        %{?prerelprefix}5%{dotprerel}%{dotgitrev}%{?dist}.2
 
 # Compute some version related macros.
 # Ugly, need to get quoting percent signs straight.
@@ -659,6 +659,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2:2.8.10-5.2
+- 更新到 2.8.14
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 2:2.8.10-5.1
 - 为 Magic 3.0 重建
 

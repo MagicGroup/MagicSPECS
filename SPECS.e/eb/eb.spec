@@ -1,6 +1,6 @@
 Name:           eb
 Version:        4.4.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library for accessing Japanese CD-ROM electronic books
 Summary(zh_CN.UTF-8):   访问日文 CD-ROM 电子书的库
 
@@ -91,6 +91,9 @@ cat %{name}utils.lang >> %{name}.lang
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.4.3-2
+- 为 Magic 3.0 重建
+
 * Mon Sep  2 2013 Jens Petersen <petersen@redhat.com> - 4.4.3-1
 - update to 4.4.3
 

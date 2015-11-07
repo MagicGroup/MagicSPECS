@@ -1,6 +1,6 @@
 Name:		qrupdate
 Version:	1.1.2
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A Fortran library for fast updates of QR and Cholesky decompositions
 Summary(zh_CN.UTF-8): 快速更新 QR 和 Cholesky 分解的 Fortran 库
 Group:		Development/Libraries
@@ -71,6 +71,9 @@ make test FC=gfortran FFLAGS="%{optflags} -fimplicit-none -funroll-loops"
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.2-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.1.2-3
 - 为 Magic 3.0 重建
 

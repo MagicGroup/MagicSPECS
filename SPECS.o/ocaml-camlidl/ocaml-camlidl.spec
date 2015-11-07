@@ -2,7 +2,7 @@
 
 Name:           ocaml-camlidl
 Version:        1.05
-Release:        25%{?dist}
+Release:        26%{?dist}
 Summary:        Stub code generator and COM binding for Objective Caml
 Summary(zh_CN.UTF-8): OCaml 的 COM 绑定和 Stub 代码生成器
 License:        QPL and LGPLv2 with exceptions
@@ -132,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.05-26
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.05-25
 - 为 Magic 3.0 重建
 

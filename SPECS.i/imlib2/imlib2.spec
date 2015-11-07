@@ -1,7 +1,7 @@
 Summary:        Image loading, saving, rendering, and manipulation library
 Name:           imlib2
 Version:        1.4.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        Imlib2
 Group:          System Environment/Libraries
 URL:            http://docs.enlightenment.org/api/imlib2/html/
@@ -119,6 +119,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.4.5-8
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.5-7
 - 为 Magic 3.0 重建
 

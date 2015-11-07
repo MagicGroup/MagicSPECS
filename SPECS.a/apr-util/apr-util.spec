@@ -15,8 +15,8 @@
 
 Summary: Apache Portable Runtime Utility library
 Name: apr-util
-Version: 1.5.3
-Release: 1%{?dist}
+Version: 1.5.4
+Release: 2%{?dist}
 License: ASL 2.0
 Group: System Environment/Libraries
 URL: http://apr.apache.org/
@@ -245,6 +245,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*.m4
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.4-2
+- 更新到 1.5.4
+
 * Tue Nov 26 2013 Joe Orton <jorton@redhat.com> - 1.5.3-1
 - update to 1.5.3
 

@@ -2,7 +2,7 @@ Summary: The client for the Trivial File Transfer Protocol (TFTP)
 Summary(zh_CN.UTF-8): 简单文件传输协议 (TFTP) 的客户端
 Name: tftp
 Version: 5.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: BSD
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -112,6 +112,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_unitdir}/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.2-6
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 5.2-5
 - 为 Magic 3.0 重建
 

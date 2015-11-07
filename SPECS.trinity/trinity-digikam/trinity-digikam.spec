@@ -37,7 +37,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		0.9.6
-Release:		%{?!preversion:6}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:6}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 Summary:		Digital photo management application for TDE
 Summary(zh_CN.UTF-8): TDE 下的数码照片管理程序
 Group:			Applications/Utilities
@@ -355,6 +355,9 @@ install -D -m 644 "%{SOURCE1}" "$RPM_BUILD_ROOT%{tde_datadir}/apps/konqueror/ser
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.9.6-6.3
+- 为 Magic 3.0 重建
+
 * Thu Oct 08 2015 Liu Di <liudidi@gmail.com> - 2:0.9.6-6.2
 - 为 Magic 3.0 重建
 

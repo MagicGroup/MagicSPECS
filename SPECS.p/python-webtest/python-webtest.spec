@@ -4,7 +4,7 @@
 
 Name:           python-webtest
 Version:	2.0.18
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Helper to test WSGI applications
 Summary(zh_CN.UTF-8): 测试 WSGI 应用的辅助程序
 
@@ -118,6 +118,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0.18-2
+- 更新到
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 2.0.18-1
 - 更新到 2.0.18
 

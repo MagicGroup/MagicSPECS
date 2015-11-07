@@ -1,7 +1,7 @@
 Summary: Rotates, compresses, removes and mails system log files
 Name: logrotate
 Version: 3.8.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL+
 Group: System Environment/Base
 Url: https://fedorahosted.org/logrotate/
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644, root, root) %verify(not size md5 mtime) %config(noreplace) %{_localstatedir}/lib/logrotate.status
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.8.7-4
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 3.8.7-3
 - 为 Magic 3.0 重建
 

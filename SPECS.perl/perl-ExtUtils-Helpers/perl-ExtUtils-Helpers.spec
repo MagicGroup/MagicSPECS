@@ -3,7 +3,7 @@
 
 Name:		perl-ExtUtils-Helpers
 Version:	0.022
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Various portability utilities for module builders
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ExtUtils::Helpers::Windows.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.022-7
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.022-6
 - 为 Magic 3.0 重建
 

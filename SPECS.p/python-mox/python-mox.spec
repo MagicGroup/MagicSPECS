@@ -4,7 +4,7 @@
 
 Name:           python-%{upstream_name}
 Version:        0.5.3
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Mock object framework
 Summary(zh_CN.UTF-8): Mock 对象框架
 
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{python_sitelib}/%{upstream_name}-%{version}*.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.3-12
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.5.3-11
 - 为 Magic 3.0 重建
 

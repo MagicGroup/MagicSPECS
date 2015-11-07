@@ -1,9 +1,9 @@
 #%%global _internal_version  bc54d96
 
 Name:          mate-power-manager
-Version: 1.9.0
+Version: 1.11.0
 #Release: 1%{?dist}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:       MATE power management service
 Summary(zh_CN.UTF-8): MATE 电源管理服务
 License:       GPLv2+
@@ -130,6 +130,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
 - 更新到 1.9.0
 

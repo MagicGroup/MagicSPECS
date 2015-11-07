@@ -4,8 +4,8 @@
 %global oname   beautifulsoup4
 
 Name:           python-beautifulsoup4
-Version:        4.4.0
-Release:        2%{?dist}
+Version:	4.4.1
+Release:	2%{?dist}
 Summary:        HTML/XML parser for quick-turnaround applications like screen-scraping
 Summary(zh_CN.UTF-8): 类似抓取屏幕的快速周转的应用使用的 HTML/XML 解析器
 Group:          Development/Languages
@@ -152,6 +152,9 @@ pushd %{py3dir}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.4.1-2
+- 更新到 4.4.1
+
 * Wed Aug 19 2015 Liu Di <liudidi@gmail.com> - 4.4.0-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           xorg-x11-drv-ivtv
 Version:        1.2.0
-Release:        0.12%{?dist}
+Release:        0.13%{?dist}
 Summary:        Xorg X11 ivtv video driver
 Summary(zh_CN.UTF-8): Xorg X11 ivtv 显卡驱动
 
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.2.0-0.13
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.2.0-0.12
 - 为 Magic 3.0 重建
 

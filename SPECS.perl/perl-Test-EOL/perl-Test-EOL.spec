@@ -1,6 +1,6 @@
 Name:		perl-Test-EOL
 Version:	1.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Check the correct line endings in your project
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::EOL.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.6-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6-1
 - 更新到 1.6
 

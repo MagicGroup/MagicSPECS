@@ -1,6 +1,6 @@
 Name:           sofia-sip
 Version:        1.12.11
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Sofia SIP User-Agent library
 Summary(zh_CN.UTF-8): Sofia SIP 用户代理库
 
@@ -144,6 +144,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/*.1*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.12.11-7
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.12.11-6
 - 为 Magic 3.0 重建
 

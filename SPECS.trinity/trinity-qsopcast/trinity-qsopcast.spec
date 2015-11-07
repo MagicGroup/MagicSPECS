@@ -38,7 +38,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.3.6
-Release:	%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.1
 Summary:        A P2P Stream program
 Summary(zh_CN.UTF-8): P2P流媒体程序
 Group:		Applications/Multimedia
@@ -125,5 +125,8 @@ EOF
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.3.6-8.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.10.0c-1
 - Initial release for TDE 14.0.0

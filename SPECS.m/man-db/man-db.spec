@@ -4,8 +4,8 @@
 Summary: Tools for searching and reading man pages
 Summary(zh_CN.UTF-8): 搜索和读取手册页的工具
 Name: man-db
-Version: 2.6.7.1
-Release: 1%{?dist}
+Version: 2.7.4
+Release: 2%{?dist}
 # GPLv2+ .. man-db
 # GPLv3+ .. gnulib
 License: GPLv2+ and GPLv3+
@@ -119,6 +119,9 @@ magic_rpm_clean.sh
 %lang(zh_CN)   %{_datadir}/man/zh_CN/man*/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.7.4-2
+- 更新到 2.7.4
+
 * Sat Aug 09 2014 Liu Di <liudidi@gmail.com> - 2.6.7.1-1
 - 更新到 2.6.7.1
 

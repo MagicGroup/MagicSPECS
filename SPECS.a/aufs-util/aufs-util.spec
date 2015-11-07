@@ -1,12 +1,12 @@
 # Define aufs version
 %define git 1
-%define vcsdate 20140302
+%define vcsdate 20151028
 
 Summary:		Utilities to Manipulate aufs Components
 Summary(zh_CN.UTF-8): 	处理 aufs 组件的工具
 Name:			aufs-util
 Version:			3.2
-Release:			0.git%{vcsdate}%{?dist}.5
+Release:			0.git%{vcsdate}%{?dist}.7
 License:			GPL
 Group:			System Environment/Base
 Group(zh_CN.UTF-8):		系统环境/基本
@@ -94,6 +94,12 @@ fi
 %{_libdir}/libau.so.2*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.2-0.git20151028.7
+- 更新到 20151028 日期的仓库源码
+
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.2-0.git20140302.6
+- 为 Magic 3.0 重建
+
 * Sun Mar 02 2014 Liu Di <liudidi@gmail.com> - 3.2-0.git20140302.5
 - 更新到 20140302 日期的仓库源码
 

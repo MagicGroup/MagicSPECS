@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-Install
 Version:        2.04
-Release:        348%{?dist}
+Release:        349%{?dist}
 Summary:        Install Perl files from here to there
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.04-349
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.04-348
 - 为 Magic 3.0 重建
 

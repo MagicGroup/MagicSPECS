@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	3.3.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	Look messages into your mail server
 Summary(zh_CN.UTF-8): 查看邮件服务器的信息
 Group:		Applications/Internet
@@ -160,6 +160,9 @@ install -D -m 644 "pics/kshowmail.png"          "$RPM_BUILD_ROOT%{tde_datadir}/i
 %lang(en) %{tde_tdedocdir}/HTML/en/kshowmail/
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:3.3.1-1.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 13 2015 Liu Di <liudidi@gmail.com> - 2:3.3.1-1.1
 - 为 Magic 3.0 重建
 

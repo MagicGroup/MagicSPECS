@@ -3,8 +3,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libxml++
-Version:	2.37.1
-Release: 1%{?dist}
+Version:	2.91.2
+Release: 2%{?dist}
 Summary:        C++ wrapper for the libxml2 XML parser library
 Summary(zh_CN.UTF-8): libxml2 XML 解析库的 C++ 接口
 
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.91.2-2
+- 更新到 2.91.2
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.37.1-1
 - 更新到 2.37.1
 

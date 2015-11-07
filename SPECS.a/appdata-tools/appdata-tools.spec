@@ -1,7 +1,7 @@
 Summary:   Tools for AppData files
 Name:      appdata-tools
 Version:   0.1.7
-Release:   4%{?alphatag}%{?dist}
+Release:   5%{?alphatag}%{?dist}
 License:   GPLv2+
 URL:       http://people.freedesktop.org/~hughsient/appdata/
 Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
@@ -49,6 +49,9 @@ make %{?_smp_mflags}
 %{_emacs_sitestartdir}/appdata-rng-init.el
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.1.7-5
+- 为 Magic 3.0 重建
+
 * Sat Apr 12 2014 Liu Di <liudidi@gmail.com> - 0.1.7-4
 - 为 Magic 3.0 重建
 

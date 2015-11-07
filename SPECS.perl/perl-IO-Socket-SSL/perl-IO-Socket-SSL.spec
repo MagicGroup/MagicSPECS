@@ -1,6 +1,6 @@
 Name:		perl-IO-Socket-SSL
-Version:	2.019
-Release:	1%{?dist}
+Version:	2.020
+Release:	2%{?dist}
 Summary:	Perl library for transparent SSL
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Socket::SSL*.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.020-2
+- 更新到 2.020
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.019-1
 - 更新到 2.019
 

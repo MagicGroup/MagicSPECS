@@ -4,7 +4,7 @@
 
 Name:           python-%{srcname}
 Version:	1.12
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Python HTTP library with thread-safe connection pooling and file post
 Summary(zh_CN.UTF-8): 线程安全的连接池和文件上传的 Python HTTP 库
 
@@ -112,6 +112,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.12-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.12-1
 - 更新到 1.12
 

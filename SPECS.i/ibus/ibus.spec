@@ -36,7 +36,7 @@
 
 Name:           ibus
 Version:        1.5.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Intelligent Input Bus for Linux OS
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -465,6 +465,9 @@ fi
 %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.5.6-5
+- 为 Magic 3.0 重建
+
 * Tue Jun 24 2014 Liu Di <liudidi@gmail.com> - 1.5.6-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Geography-Countries
 Version:        2009041301
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        2-letter, 3-letter, and numerical codes for countries
 Group:          Development/Libraries
 License:        MIT
@@ -41,6 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2009041301-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2009041301-10
 - 为 Magic 3.0 重建
 

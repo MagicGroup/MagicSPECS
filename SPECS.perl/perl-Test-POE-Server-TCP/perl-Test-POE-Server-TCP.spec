@@ -1,6 +1,6 @@
 Name:           perl-Test-POE-Server-TCP
 Version:	1.18
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        POE Component providing TCP server services for test cases
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.18-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.18-1
 - 更新到 1.18
 

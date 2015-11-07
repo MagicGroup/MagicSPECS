@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://www.kernel.org/pub/linux/utils/net/iproute2/?C=M;O=D"
+url="https://www.kernel.org/pub/linux/utils/net/iproute2/?C=M&O=D"
 new1="iproute2-"
 new2=".tar.xz"
 downcommand="wget -q" 

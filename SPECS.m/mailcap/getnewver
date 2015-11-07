@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/released/mailcap/?C=M;O=D"
+url="https://fedorahosted.org/released/mailcap/?C=M&O=D"
 new1="mailcap-"
 new2=".tar.xz"
 downcommand="wget -q" 

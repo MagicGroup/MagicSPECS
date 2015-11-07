@@ -1,6 +1,6 @@
 Name: zhcon
 Version: 0.2.6
-Release: 17%{?dist}
+Release: 18%{?dist}
 Group: Applications/System
 Group(zh_CN): 应用程序/系统
 License: GPLv2+
@@ -77,6 +77,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_datadir}/%{name}/
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.2.6-18
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.6-17
 - 为 Magic 3.0 重建
 

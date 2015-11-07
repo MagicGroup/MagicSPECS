@@ -1,6 +1,6 @@
 Name:           perl-DBIx-Class-IntrospectableM2M
 Version:	0.001002
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Introspect many-to-many shortcuts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.001002-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.001002-1
 - 更新到 0.001002
 

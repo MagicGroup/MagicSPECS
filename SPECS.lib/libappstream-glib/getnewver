@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://people.freedesktop.org/~hughsient/appstream-glib/releases/?C=M;O=D"
+url="http://people.freedesktop.org/~hughsient/appstream-glib/releases/?C=M&O=D"
 new1="appstream-glib-"
 new2=".tar.xz"
 downcommand="wget -q" 

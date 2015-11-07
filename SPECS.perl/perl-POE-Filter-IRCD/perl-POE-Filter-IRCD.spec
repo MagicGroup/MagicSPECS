@@ -1,6 +1,6 @@
 Name:           perl-POE-Filter-IRCD
 Version:	2.44
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A POE-based parser for the IRC protocol
 
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.44-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.44-1
 - 更新到 2.44
 

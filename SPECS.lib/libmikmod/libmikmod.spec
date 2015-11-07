@@ -1,8 +1,8 @@
 Summary: A MOD music file player library
 Summary(zh_CN.UTF-8): MOD 音乐文件播放器库
 Name: libmikmod
-Version: 3.3.6
-Release: 1%{?dist}
+Version: 3.3.7
+Release: 2%{?dist}
 License: GPLv2 and LGPLv2+
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -83,6 +83,9 @@ fi
 %{_libdir}/pkgconfig/libmikmod.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.3.7-2
+- 更新到 3.3.7
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 3.3.6-1
 - 更新到 3.3.6
 

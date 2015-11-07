@@ -6,8 +6,8 @@
 # NOTE:  Try not to release new versions to released versions of Fedora
 # You need to recompile all users of HDF5 for each version change
 Name: hdf5
-Version: 1.8.14
-Release: 5%{?dist}
+Version: 1.8.15
+Release: 6%{?dist}
 Summary: A general purpose library and file format for storing scientific data
 License: BSD
 Group: System Environment/Libraries
@@ -409,6 +409,9 @@ done
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.8.15-6
+- 更新到 1.8.15 Patch 1
+
 * Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 1.8.14-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           virt-what
 Version:	1.15
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Detect if we are running in a virtual machine
 Summary(zh_CN.UTF-8): 检测你是否在虚拟机中运行
 
@@ -91,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.15-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 1.15-1
 - 更新到 1.15
 

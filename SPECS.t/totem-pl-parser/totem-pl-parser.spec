@@ -1,6 +1,6 @@
 Name:		totem-pl-parser
 Version:	3.10.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Totem Playlist Parser library
 Summary(zh_CN.UTF-8): Totem 播放列表解析库
 
@@ -78,6 +78,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.10.5-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 3.10.5-1
 - 更新到 3.10.5
 

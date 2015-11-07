@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Headers-Fast
 Version:        0.19
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Faster implementation of HTTP::Headers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.19-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.19-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:      Disposable Soft Synth Interface
 Summary(zh_CN.UTF-8): 一次性软合成器接口
 Name:         dssi
 Version:      1.1.1
-Release:      4%{?dist}
+Release:      5%{?dist}
 License:      MIT
 Group:        Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -113,6 +113,9 @@ tests/controller
 %{_libdir}/pkgconfig/dssi.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.1-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

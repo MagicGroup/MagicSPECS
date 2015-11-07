@@ -9,7 +9,7 @@ Summary:	The Schily smake program.
 Summary(zh_CN.UTF-8): Schily smake 程序
 Name:		%{name}
 Version:	1.2.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Epoch:		%{serial}
 Prefix:		%{prefix}
 License:	GPL
@@ -98,6 +98,9 @@ magic_rpm_clean.sh
 %{_libdir}/lib*.a
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 7:1.2.5-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 7:1.2.5-1
 - 更新到 1.2.5
 

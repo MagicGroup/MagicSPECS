@@ -6,7 +6,7 @@
 Summary: Database of printers and printer drivers
 Name: foomatic-db
 Version: %{dbver_rel}
-Release: 39.%{dbver_snap}%{?dist}
+Release: 40.%{dbver_snap}%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Requires: %{name}-filesystem = %{version}-%{release}
@@ -149,6 +149,9 @@ ln -sf ../../foomatic/db/source/PPD %{buildroot}%{_datadir}/cups/model/foomatic-
 %{_datadir}/cups/model/foomatic-db-ppds
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.0-40.20140403
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-39.20130604
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

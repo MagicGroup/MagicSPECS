@@ -1,6 +1,6 @@
 Name: libcryptui
 Version: 3.12.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Interface components for OpenPGP
 Summary(zh_CN.UTF-8): OpenPGP 的接口组件
 
@@ -88,6 +88,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gir-1.0/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.12.2-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.12.2-3
 - 为 Magic 3.0 重建
 

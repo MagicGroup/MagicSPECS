@@ -1,6 +1,6 @@
 Name:		ebook-tools
 Version:	0.2.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Tools for accessing and converting various ebook file formats
 Summary(zh_CN.UTF-8): 访问和转换多种电子书格式的工具
 
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 %{_libdir}/libepub.so.0*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.2-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 18 2013 John5342 <john5342 at, fedoraproject.org> 0.2.2-1
 - New upstream release (fixes rhbz:1014443)
 - Drop rmhardcoded (-DLIB_SUFFIX now supported directly)

@@ -8,7 +8,7 @@ Summary: A GNU stream text editor
 Summary(zh_CN.UTF-8): GNU 流式文本编辑器
 Name: sed
 Version:	4.2.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv3+
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -80,6 +80,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.2.2-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 4.2.2-1
 - 更新到 4.2.2
 

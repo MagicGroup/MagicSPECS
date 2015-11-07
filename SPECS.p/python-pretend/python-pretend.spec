@@ -4,7 +4,7 @@
 
 Name:           python-pretend
 Version:        1.0.8
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A library for stubbing in Python
 Summary(zh_CN.UTF-8): Python 的存根库
 
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0.8-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.8-5
 - 为 Magic 3.0 重建
 

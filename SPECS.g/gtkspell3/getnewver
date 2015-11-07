@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://gtkspell.sourceforge.net/"
-new1="The latest version is <b>"
-new2="<"
+url="https://sourceforge.net/projects/gtkspell"
+new1="gtkspell3-"
+new2=".tar.gz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

@@ -1,5 +1,5 @@
 %define _sysconfdir /etc
-%define date 2015-10-21
+%define date 2015-11-01
 %define with_gui 1
 %define with_vdpau 1
 
@@ -12,7 +12,7 @@ Summary(zh_CN.UTF-8): MPlayer, Linux 下的媒体播放器
 Name: mplayer
 Version: 1.0svn20151021
 License: GPL
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Url: http://www.mplayerhq.hu
@@ -202,6 +202,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0svn20151021-2
+- 更新到 1.0svn20151101
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 1.0svn20151021-1
 - 更新到 1.0svn20151021
 

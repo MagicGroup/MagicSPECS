@@ -1,6 +1,6 @@
 Name:           perl-Apache-DBI-Cache
 Version:        0.08
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        Perl DBI connection cache
 Summary(zh_CN.UTF-8): Perl DBI 连接缓存
 License:        GPL+ or Artistic
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-33
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-32
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           dbus-c++
 Version:        0.9.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Native C++ bindings for D-Bus
 Summary(zh_CN.UTF-8): D-Bus 的原生 C++ 绑定
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9.0-3
+- 为 Magic 3.0 重建
+
 * Wed Feb 26 2014 Jiri Popelka <jpopelka@redhat.com> - 0.9.0-2
 - fix bootstrap script for ppc64le (#1070306)
 

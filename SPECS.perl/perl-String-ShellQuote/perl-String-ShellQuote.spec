@@ -1,6 +1,6 @@
 Name:           perl-String-ShellQuote
 Version:        1.04
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Perl module for quoting strings for passing through the shell
 # shell-quote:  GPLv2+
 # rest:         GPL+ or Artistic
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/String::ShellQuote.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.04-18
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.04-17
 - 为 Magic 3.0 重建
 

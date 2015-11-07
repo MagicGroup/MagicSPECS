@@ -3,7 +3,7 @@ Summary: Disk based hash library
 Summary(zh_CN.UTF-8): 基于磁盘的哈希库
 Name: dbh
 Version:	5.0.19
-Release:	1%{?dist}
+Release:	2%{?dist}
 URL: http://dbh.sourceforge.net/
 Source0: http://downloads.sourceforge.net/%{name}/lib%{name}2-%{version}.tar.gz
 Patch0: %{name}-5.0.13-bigendian.patch
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/dbh*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:5.0.19-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 1:5.0.19-1
 - 更新到 5.0.19
 

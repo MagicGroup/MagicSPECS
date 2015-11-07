@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ffmpeg.org/releases/?C=M;O=D"
+url="http://ffmpeg.org/releases/?C=M&O=D"
 new1="ffmpeg-"
 new2=".tar.gz"
 downcommand="wget -q" 

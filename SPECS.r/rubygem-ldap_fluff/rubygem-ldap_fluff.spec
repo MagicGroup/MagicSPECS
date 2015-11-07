@@ -4,7 +4,7 @@
 Summary: LDAP querying tools for Active Directory, FreeIPA and POSIX-style
 Name: rubygem-%{gem_name}
 Version: 0.3.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: GPLv2+
 URL: https://github.com/theforeman/ldap_fluff
@@ -60,6 +60,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.7-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.7-2
 - 为 Magic 3.0 重建
 

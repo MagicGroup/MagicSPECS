@@ -43,7 +43,7 @@ Summary:   X.Org X11 X server
 Summary(zh_CN.UTF-8): X.Org X11 X 服务
 Name:      xorg-x11-server
 Version:   1.16.4
-Release:   2%{?gitdate:.%{gitdate}}%{dist}
+Release:   3%{?gitdate:.%{gitdate}}%{dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X
@@ -605,6 +605,9 @@ find %{inst_srcdir}/hw/xfree86 -name \*.c -delete
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.16.4-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.16.4-2
 - 为 Magic 3.0 重建
 

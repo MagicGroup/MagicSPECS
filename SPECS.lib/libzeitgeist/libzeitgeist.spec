@@ -1,6 +1,6 @@
 Name:           libzeitgeist
 Version:        0.3.18
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Client library for applications that want to interact with the Zeitgeist daemon
 Summary(zh_CN.UTF-8): 与 Zeitgeist 服务交互的程序所需要的客户端库
 
@@ -95,6 +95,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.3.18-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.3.18-4
 - 为 Magic 3.0 重建
 

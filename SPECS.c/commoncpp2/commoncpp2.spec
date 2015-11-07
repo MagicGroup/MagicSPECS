@@ -2,7 +2,7 @@ Summary: GNU Common C++ class framework
 Summary(zh_CN.UTF-8): GNU 通用 C++ 类框架
 Name: commoncpp2
 Version: 1.8.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+ with exceptions
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -89,6 +89,9 @@ fi
 %{_infodir}/commoncpp2.info*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.8.1-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.8.1-2
 - 为 Magic 3.0 重建
 

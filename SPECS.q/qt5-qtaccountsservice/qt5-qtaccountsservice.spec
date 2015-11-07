@@ -4,7 +4,7 @@ Name:           qt5-%{qt_module}
 Summary:        Qt5 - AccountService addon
 Summary(zh_CN.UTF-8): Qt5 - 账号服务附加组件
 Version:	0.6.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:          Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License:        LGPLv2+
@@ -79,6 +79,9 @@ magic_rpm_clean.sh
 %{_libdir}/libQtAccountsService.so
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.6.0-3
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 0.6.0-2
 - 为 Magic 3.0 重建
 

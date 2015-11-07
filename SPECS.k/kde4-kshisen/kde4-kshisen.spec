@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): 连连看游戏
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version: 4.14.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPL
 URL:     https://projects.kde.org/projects/kde/kdegames/%{name}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -82,6 +82,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/sounds/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 更新到 4.14.3
 

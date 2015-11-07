@@ -2,7 +2,7 @@ Summary: A MathML rendering library
 Summary(zh_CN.UTF-8): MathML 渲染库
 Name: gtkmathview
 Version: 0.8.0
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv3+
@@ -124,6 +124,9 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.8.0-12
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.8.0-11
 - 为 Magic 3.0 重建
 

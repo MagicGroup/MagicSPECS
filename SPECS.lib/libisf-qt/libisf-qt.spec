@@ -1,6 +1,6 @@
 Name:          libisf-qt
 Version:       0.1
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       library to handle handwriting data in Microsoft’s Ink Serialized Format (ISF)
 Summary(zh_CN.UTF-8): 处理微软 ISF 格式手写数据的库
 Group:		System Environment/Libraries
@@ -90,6 +90,9 @@ magic_rpm_clean.sh
 %{_datadir}/cmake/Modules/FindIsfQt.cmake
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.1-4
 - 为 Magic 3.0 重建
 

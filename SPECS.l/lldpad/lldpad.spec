@@ -7,7 +7,7 @@
 
 Name:               lldpad
 Version:            1.0.1
-Release:            2.git%{checkout}%{?dist}
+Release:            3.git%{checkout}%{?dist}
 Summary:            Intel LLDP Agent
 Summary(zh_CN.UTF-8): Intel LLDP 代理
 Group:              System Environment/Daemons
@@ -121,6 +121,9 @@ magic_rpm_clean.sh
 %{_libdir}/liblldp_clif.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.1-3.git986eb2e
+- 为 Magic 3.0 重建
+
 * Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-2.git986eb2e
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/realmd/releases/?C=M;O=D"
+url="http://www.freedesktop.org/software/realmd/releases/?C=M&O=D"
 new1="realmd-"
 new2=".tar.gz"
 downcommand="wget -q" 

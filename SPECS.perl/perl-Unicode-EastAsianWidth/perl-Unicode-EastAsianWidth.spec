@@ -1,6 +1,6 @@
 Name:		perl-Unicode-EastAsianWidth
 Version:	1.33
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	East Asian Width properties
 Group:		Development/Libraries
 License:	CC0
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/Unicode::EastAsianWidth.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.33-8
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.33-7
 - 为 Magic 3.0 重建
 

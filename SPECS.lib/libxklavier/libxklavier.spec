@@ -2,7 +2,7 @@ Summary:	High-level API for X Keyboard Extension
 Summary(zh_CN.UTF-8): X 键盘扩展的高级 API
 Name:		libxklavier
 Version:	5.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/Xkl-1.0.gir
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.3-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 5.3-1
 - 更新到 5.3
 

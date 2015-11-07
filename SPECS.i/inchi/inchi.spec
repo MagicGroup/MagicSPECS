@@ -5,7 +5,7 @@ Summary: The IUPAC International Chemical Identifier library
 Summary(zh_CN.UTF-8): IUPAC 国际化学标识库
 Name: inchi
 Version: 1.0.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://www.inchi-trust.org
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -101,6 +101,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %doc INCHI-1-DOC/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.4-4
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.4-3
 - 为 Magic 3.0 重建
 

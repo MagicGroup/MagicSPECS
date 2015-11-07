@@ -2,7 +2,7 @@ Summary:	C library for portable packet creation and injection
 Summary(zh_CN.UTF-8): 可移植包的创建和注入 C 库
 Name:		libnet
 Version:	1.1.6
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/%{name}*.3*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.6-6
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.1.6-5
 - 为 Magic 3.0 重建
 

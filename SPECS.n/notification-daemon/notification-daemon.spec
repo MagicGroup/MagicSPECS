@@ -4,8 +4,8 @@
 Summary: Desktop Notification Daemon
 Summary(zh_CN.UTF-8): 桌面通知服务
 Name: notification-daemon
-Version: 3.15.2
-Release: 1%{?dist}
+Version: 3.18.1
+Release: 2%{?dist}
 URL: http://live.gnome.org/NotificationDaemon
 License: GPLv2+
 Group: System Environment/Libraries
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{_sysconfdir}/xdg/autostart/notification-daemon-autostart.desktop
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 3.15.2-1
 - 更新到 3.15.2
 

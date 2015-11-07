@@ -5,7 +5,7 @@ Summary: 	Perl module for context-sensitive phonetic string replacement
 Summary(zh_CN.UTF-8): 上下文相关的语音字符串替换的 Perl 模块
 Name: 		perl-ccom
 Version: 	1.4.1
-Release: 	16%{?dist}
+Release: 	17%{?dist}
 License: 	LGPLv2+
 Group: 		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/*.pm
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.4.1-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.4.1-16
 - 为 Magic 3.0 重建
 

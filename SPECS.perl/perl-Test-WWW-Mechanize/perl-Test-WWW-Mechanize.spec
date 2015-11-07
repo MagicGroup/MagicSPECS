@@ -1,6 +1,6 @@
 Name:           perl-Test-WWW-Mechanize
 Version:        1.44
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Testing-specific WWW::Mechanize subclass
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ make test
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.44-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.44-10
 - 为 Magic 3.0 重建
 

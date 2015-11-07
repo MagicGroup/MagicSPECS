@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://p11-glue.freedesktop.org/releases/?C=M;O=D"
+url="http://p11-glue.freedesktop.org/releases/?C=M&O=D"
 new1="p11-kit-"
 new2=".tar.gz"
 downcommand="wget -q" 

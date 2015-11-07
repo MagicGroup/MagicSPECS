@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-UserPreferences
 Version:        0.13
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        Kwiki User Preferences Plugin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.13-32
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.13-31
 - 为 Magic 3.0 重建
 

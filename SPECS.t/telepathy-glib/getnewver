@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://telepathy.freedesktop.org/releases/telepathy-glib/?C=M;O=D"
+url="http://telepathy.freedesktop.org/releases/telepathy-glib/?C=M&O=D"
 new1="telepathy-glib-"
 new2=".tar.gz"
 downcommand="wget -q" 

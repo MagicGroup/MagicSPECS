@@ -1,6 +1,6 @@
 Name:           perl-Array-Utils
 Version:        0.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Small utils for array manipulation
 Summary(zh_CN.UTF-8): 处理数组的小工具
 License:        GPL+ or Artistic
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.5-10
 - 为 Magic 3.0 重建
 

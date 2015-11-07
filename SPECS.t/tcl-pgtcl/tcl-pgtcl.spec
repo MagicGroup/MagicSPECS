@@ -2,7 +2,7 @@
 
 Name:		tcl-pgtcl
 Version:	2.1.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A Tcl client library for PostgreSQL
 Summary(zh_CN.UTF-8): PostgreSQL 的 Tcl 客户端库
 
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.1-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.1.1-4
 - 为 Magic 3.0 重建
 

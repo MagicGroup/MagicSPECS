@@ -1,6 +1,6 @@
 Name:    telepathy-logger-qt
 Version: 15.04.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Telepathy Logging for Qt 5
 Summary(zh_CN.UTF-8): Qt5 下的 Telepathy 登录框架
 
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 15.04.0-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 15.04.0-3
 - 为 Magic 3.0 重建
 

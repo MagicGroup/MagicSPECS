@@ -30,7 +30,7 @@
 
 Name:           jarjar
 Version:        1.4
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Jar Jar Links
 License:        ASL 2.0
 URL:            http://code.google.com/p/jarjar/
@@ -120,6 +120,9 @@ cp -pr dist/javadoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.4-14
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.4-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:          stax-ex
 Version:       1.7.1
-Release:       9%{?dist}
+Release:       10%{?dist}
 Summary:       StAX API extensions
 License:       CDDL or GPLv2
 Url:           https://stax-ex.dev.java.net
@@ -59,6 +59,9 @@ dos2unix LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.7.1-10
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.7.1-9
 - 为 Magic 3.0 重建
 

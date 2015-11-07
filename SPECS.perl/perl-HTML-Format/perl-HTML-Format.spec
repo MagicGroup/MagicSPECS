@@ -1,6 +1,6 @@
 Name:           perl-HTML-Format
-Version:        2.11
-Release:        8%{?dist}
+Version:	2.12
+Release:	2%{?dist}
 Summary:        HTML formatter modules
 
 Group:          Development/Libraries
@@ -98,6 +98,9 @@ cd ..
 %{_mandir}/man3/HTML*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.12-2
+- 更新到 2.12
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.11-8
 - 为 Magic 3.0 重建
 

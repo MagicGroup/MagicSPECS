@@ -22,9 +22,9 @@
 Name:           lirc
 Version:        0.9.0
 %if 0%{?released}
-Release:        28%{?dist}
+Release:        29%{?dist}
 %else
-Release:        0.9.%{pre}%{?dist}
+Release:        0.10.%{pre}%{?dist}
 %endif
 Summary:        The Linux Infrared Remote Control package
 
@@ -329,6 +329,9 @@ find /etc/systemd -name lirc.service -xtype l -delete || :
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.9.0-29
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.9.0-28
 - 为 Magic 3.0 重建
 

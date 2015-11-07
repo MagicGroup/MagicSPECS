@@ -1,7 +1,7 @@
 Summary:	Perl interface to the MD2 Algorithm
 Name:		perl-Digest-MD2
 Version:	2.04
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Digest-MD2/
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Digest::MD2.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.04-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.04-1
 - 更新到 2.04
 

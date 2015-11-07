@@ -2,7 +2,7 @@
 
 Name:           telepathy-mission-control
 Version:	5.16.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Epoch:          1
 Summary:        Central control for Telepathy connection manager
 Summary(zh_CN.UTF-8): Telepathy 连接管理器的中央控制
@@ -114,6 +114,9 @@ fi
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1:5.16.3-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 1:5.16.3-1
 - 更新到 5.16.3
 

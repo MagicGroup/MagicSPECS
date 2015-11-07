@@ -1,6 +1,6 @@
 Name:           perl-Email-MIME-ContentType
 Version:	1.018
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Parse a MIME Content-Type Header
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.018-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.018-1
 - 更新到 1.018
 

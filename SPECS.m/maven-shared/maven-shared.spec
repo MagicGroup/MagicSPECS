@@ -32,7 +32,7 @@ Summary:        Maven Shared Components
 URL:            http://maven.apache.org/shared/
 Name:           maven-shared
 Version:        20
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        ASL 2.0
 Group:          Development/Libraries
 
@@ -73,6 +73,9 @@ chmod -R go=u-w *
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 20-5
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 20-4
 - 为 Magic 3.0 重建
 

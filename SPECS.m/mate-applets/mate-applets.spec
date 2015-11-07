@@ -13,9 +13,9 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-applets
-Version:        1.9.0
-Release:        3%{?dist}
-#Release:        0.1%{?git_rel}%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
+#Release: 1%{?dist}
 Summary:        MATE Desktop panel applets
 Summary(zh_CN.UTF-8): MATE 桌面面板小部件
 License:        GPLv2+ and LGPLv2+
@@ -173,6 +173,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Tue Dec 23 2014 Liu Di <liudidi@gmail.com> - 1.9.0-3
 - 为 Magic 3.0 重建
 

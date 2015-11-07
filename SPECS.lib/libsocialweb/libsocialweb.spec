@@ -1,6 +1,6 @@
 Name:          libsocialweb
 Version:       0.25.21
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       A social network data aggregator
 Summary(zh_CN.UTF-8): 社交网络数据聚合程序
 
@@ -132,6 +132,9 @@ magic_rpm_clean.sh
 %{_datadir}/libsocialweb/keys
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.25.21-3
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 0.25.21-2
 - 为 Magic 3.0 重建
 

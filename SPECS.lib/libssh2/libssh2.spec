@@ -4,8 +4,8 @@
 %global noarch_docs_package 1
 
 Name:		libssh2
-Version: 1.4.3
-Release: 1%{?dist}
+Version: 1.6.0
+Release: 2%{?dist}
 Summary:	A library implementing the SSH2 protocol
 Summary(zh_CN.UTF-8): 实现 SSH2 协议的库
 Group:		System Environment/Libraries
@@ -132,6 +132,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
+- 更新到 1.6.0
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.4.3-1
 - 更新到 1.4.3
 

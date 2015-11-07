@@ -1,6 +1,6 @@
 Name:           cagibi
 Version:        0.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        SSDP (UPnP discovery) cache/proxy daemon
 Summary(zh_CN.UTF-8): SSDP(UPnP 探索)缓存/代理守护进程
 Group:          System Environment/Base
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_datadir}/dbus-1/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.0-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 0.2.0-3
 - 为 Magic 3.0 重建
 

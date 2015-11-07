@@ -1,7 +1,7 @@
 Name:           perl-Socket
 Epoch:          1
 Version:	2.020
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Networking constants and support functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:2.020-4
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1:2.020-3
 - 为 Magic 3.0 重建
 

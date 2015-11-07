@@ -3,7 +3,7 @@
 
 Name:           maven-%{bname}
 Version:        2.6
-Release:        9%{?dist}
+Release:        10%{?dist}
 Epoch:          0
 Summary:        Tools to manage artifacts and deployment
 License:        ASL 2.0
@@ -199,6 +199,9 @@ Javadoc for %{name}.
 %doc LICENSE NOTICE DEPENDENCIES
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0:2.6-10
+- 为 Magic 3.0 重建
+
 * Mon Jun 30 2014 Michael Simacek <msimacek@redhat.com> - 0:2.6-9
 - Obsolete main package instead of requiring it
 

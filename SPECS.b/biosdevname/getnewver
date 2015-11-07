@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://linux.dell.com/files/biosdevname/?C=M;O=D"
+url="http://linux.dell.com/files/biosdevname/?C=M&O=D"
 new1="biosdevname-"
 new2="\\/"
 downcommand="wget -q" 

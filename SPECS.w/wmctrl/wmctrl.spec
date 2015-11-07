@@ -1,6 +1,6 @@
 Name:           wmctrl
 Version:        1.07
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Command line tool to interact with an X Window Manager
 Summary(zh_CN.UTF-8): 与 X 窗口管理器交互的命令行工具
 
@@ -48,6 +48,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.07-14
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.07-13
 - 为 Magic 3.0 重建
 

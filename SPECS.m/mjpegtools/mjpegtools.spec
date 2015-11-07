@@ -7,7 +7,7 @@
 
 Name: %name
 Version: 2.1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Tools for recording, editing, playing back and mpeg-encoding video under linux
 Summary(zh_CN): 在 linux 下录制、编辑、播放以及 mpeg 编码视频的工具
 License: GPL
@@ -134,6 +134,9 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1.0-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 15 2014 Liu Di <liudidi@gmail.com> - 2.1.0-1
 - 更新到 2.1.0
 

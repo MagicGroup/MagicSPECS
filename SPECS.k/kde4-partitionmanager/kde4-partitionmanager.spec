@@ -3,15 +3,15 @@
 %define jobs		$((`/usr/bin/getconf _NPROCESSORS_ONLN` + 1))
 
 %define git 1
-%define vcsdate 20140604
+%define vcsdate 20151030
 %define kde4_enable_final_bool OFF
 
 Name: 			kde4-%{realname}
 Version:		1.0.60
 %if 0%{?git}
-Release:		0.git%{vcsdate}%{dist}.3
+Release:		0.git%{vcsdate}%{dist}.5
 %else
-Release:		10%{?dist}
+Release:		12%{?dist}
 %endif
 License:		GPL
 Summary:		Easily manage disks, partitions and file systems on your KDE Desktop
@@ -85,6 +85,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20151030.5
+- 更新到 20151030 日期的仓库源码
+
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20140604.4
+- 为 Magic 3.0 重建
+
 * Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20140604.3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:        Modified version of the Athena Widgets with N*XTSTEP appearance
 Summary(zh_CN.UTF-8): 具有 N*XTSTEP 外观 Athena 部件的修改版本
 Name:           neXtaw
 Version:        0.15.1
-Release:        17%{?dist}
+Release:        18%{?dist}
 
 URL:            http://siag.nu/neXtaw/
 Source0:        http://siag.nu/pub/neXtaw/%{name}-%{version}.tar.gz
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.15.1-18
+- 为 Magic 3.0 重建
+
 * Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 0.15.1-17
 - 为 Magic 3.0 重建
 

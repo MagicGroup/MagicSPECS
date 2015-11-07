@@ -2,7 +2,7 @@ Summary:	A C++ port of Lucene
 Summary(zh_CN.UTF-8): Lucene 的 C++ 移植
 Name:		clucene09
 Version:	0.9.21b
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	LGPLv2+ or ASL 2.0
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -138,6 +138,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/%{name}/
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.9.21b-9
+- 为 Magic 3.0 重建
+
 * Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 0.9.21b-8
 - 为 Magic 3.0 重建
 

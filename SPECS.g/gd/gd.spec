@@ -5,8 +5,8 @@
 Summary:       A graphics library for quick creation of PNG or JPEG images
 Summary(zh_CN.UTF-8): 快速创建 PNG 或 JPEG 图像的图形库
 Name:          gd
-Version:       2.1.0
-Release:       4%{?prever}%{?short}%{?dist}
+Version:	2.1.1
+Release:       5%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:       MIT
@@ -152,6 +152,9 @@ make check
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1.1-5
+- 更新到 2.1.1
+
 * Mon Dec 23 2013 Peter Robinson <pbrobinson@fedoraproject.org> 2.1.0-4
 - Fix FTBFS
 

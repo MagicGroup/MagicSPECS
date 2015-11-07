@@ -1,6 +1,6 @@
 Name:       perl-CPANPLUS-Shell-Default-Plugins-RT 
 Version:    0.01 
-Release:    14%{?dist}
+Release:    15%{?dist}
 # see README 
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{perl_vendorlib}/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.01-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.01-14
 - 为 Magic 3.0 重建
 

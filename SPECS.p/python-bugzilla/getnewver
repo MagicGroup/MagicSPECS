@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/releases/p/y/python-bugzilla/?C=M;O=D"
+url="https://fedorahosted.org/releases/p/y/python-bugzilla/?C=M&O=D"
 new1="python-bugzilla-"
 new2=".tar.gz"
 downcommand="wget -q" 

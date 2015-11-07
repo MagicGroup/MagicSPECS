@@ -1,8 +1,8 @@
 Summary: The Reliable Event Logging Protocol library
 Summary(zh_CN.UTF-8): 可靠事件日志协议库
 Name: librelp
-Version: 1.2.7
-Release: 1%{?dist}
+Version: 1.2.8
+Release: 2%{?dist}
 License: GPLv3+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -73,6 +73,9 @@ fi
 %{_libdir}/pkgconfig/relp.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.8-2
+- 更新到 1.2.8
+
 * Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 1.2.7-1
 - 更新到 1.2.7
 

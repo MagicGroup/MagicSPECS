@@ -1,6 +1,6 @@
 Name:           cln
-Version:	1.3.3
-Release:        1%{?dist}
+Version:	1.3.4
+Release:        2%{?dist}
 Summary:        Class Library for Numbers
 Summary(zh_CN.UTF-8): 数字类库
 
@@ -92,6 +92,9 @@ fi
 %exclude %{_libdir}/*.la
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3.4-2
+- 更新到 1.3.4
+
 * Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 1.3.3-1
 - 更新到 1.3.3
 

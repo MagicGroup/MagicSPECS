@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.gna.org/kvpnc/?C=M;O=D"
+url="http://download.gna.org/kvpnc/?C=M&O=D"
 new1="kvpnc-"
 new2="-kde4.tar.bz2"
 downcommand="wget -q" 

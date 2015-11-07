@@ -9,7 +9,7 @@ Summary: 1394-based digital camera control library
 Summary(zh_CN.UTF-8): 基于 1394 的数码相机控制库
 Name: libdc1394
 Version: 2.2.1
-Release: 2%{?svn_snapshot}%{?dist}
+Release: 3%{?svn_snapshot}%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://sourceforge.net/projects/libdc1394/
@@ -137,6 +137,9 @@ done
 %{_mandir}/man1/dc1394_*.1.gz
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.2.1-3
+- 为 Magic 3.0 重建
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 2.2.1-2
 - 为 Magic 3.0 重建
 

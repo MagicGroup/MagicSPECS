@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ccal.chinesebay.com/ccal/index.html.html"
+url="https://download.samba.org/pub/linux-cifs/cifs-utils/?C=M&O=D"
 new1="cifi-utils-"
 new2=".tar.bz2.asc"
 downcommand="wget -q" 

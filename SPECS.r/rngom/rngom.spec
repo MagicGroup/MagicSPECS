@@ -1,6 +1,6 @@
 Name: rngom
 Version: 201103
-Release: 0.11.20120119svn%{?dist}
+Release: 0.12.20120119svn%{?dist}
 Summary: Java library for parsing RELAX NG grammars
 Group: Development/Libraries
 License: MIT
@@ -101,6 +101,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}/.
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 201103-0.12.20120119svn
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 201103-0.11.20120119svn
 - 为 Magic 3.0 重建
 

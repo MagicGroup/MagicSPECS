@@ -25,7 +25,7 @@
 
 Name:		trinity-tqt3
 Version:	3.5.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	TQt GUI Library, Version 3
 Summary(zh_CN.UTF-8): TQt GUI 库，版本 3
 Group: System Environment/Libraries
@@ -1494,6 +1494,9 @@ chmod 644 "%{?buildroot}%{_datadir}/tqt3/mkspecs/"*/*
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 3.5.0-1.2
+- 为 Magic 3.0 重建
+
 * Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 3.5.0-1.1
 - 为 Magic 3.0 重建
 

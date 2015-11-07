@@ -1,6 +1,6 @@
 Name:	keybinder
 Version:	0.3.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	A library for registering global keyboard shortcuts
 Summary(zh_CN.UTF-8): 注册全局键盘快捷方式的库
 Group:	Development/Libraries
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 %doc COPYING
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.3.0-7
+- 为 Magic 3.0 重建
+
 * Sun Feb 15 2015 Liu Di <liudidi@gmail.com> - 0.3.0-6
 - 为 Magic 3.0 重建
 

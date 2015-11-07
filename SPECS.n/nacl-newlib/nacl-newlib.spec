@@ -3,7 +3,7 @@
 Name:		nacl-newlib
 Summary:	C library intended for use on embedded systems
 Version:	2.0.0
-Release:	2.git%{gitver}%{?dist}
+Release:	3.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-newlib.git
 # (Checkout ID taken from chromium-27.0.1453.93/native_client/tools/REVISIONS)
@@ -93,6 +93,9 @@ cp -a %{SOURCE5} %{buildroot}%{_prefix}/x86_64-nacl/lib/crt1.o
 %{_prefix}/x86_64-nacl/lib/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.0-3.gita9ae3c6
+- 为 Magic 3.0 重建
+
 * Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 2.0.0-2.gita9ae3c6
 - 为 Magic 3.0 重建
 

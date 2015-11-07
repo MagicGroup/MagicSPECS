@@ -1,6 +1,6 @@
 Name:       perl-MooseX-Emulate-Class-Accessor-Fast
 Version:    0.00903
-Release:    15%{?dist}
+Release:    16%{?dist}
 # lib/MooseX/Adopt/Class/Accessor/Fast.pm -> GPL+ or Artistic
 # lib/MooseX/Emulate/Class/Accessor/Fast.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.00903-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.00903-15
 - 为 Magic 3.0 重建
 

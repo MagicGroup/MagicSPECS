@@ -1,6 +1,6 @@
 Name:           javacc-maven-plugin
 Version:        2.6
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        JavaCC Maven Plugin
 License:        ASL 2.0
 URL:            http://mojo.codehaus.org/javacc-maven-plugin/ 
@@ -64,6 +64,9 @@ cp -p %{SOURCE1} .
 %doc LICENSE-2.0.txt src/main/resources/NOTICE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.6-20
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.6-19
 - 为 Magic 3.0 重建
 

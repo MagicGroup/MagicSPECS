@@ -1,6 +1,6 @@
 Name:		btrfs-progs
-Version:	4.1.2
-release:	2%{?dist}
+Version:	4.2.3
+release:	3%{?dist}
 Summary:	Userspace programs for btrfs
 Summary(zh_CN.UTF-8): btrfs 的用户空间程序
 
@@ -95,6 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libbtrfs.so
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.2.3-3
+- 更新到 4.2.3
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 4.1.2-2
 - 为 Magic 3.0 重建
 

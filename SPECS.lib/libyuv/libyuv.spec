@@ -7,7 +7,7 @@ Name:		libyuv
 Summary:	YUV conversion and scaling functionality library
 Summary(zh_CN.UTF-8): YUV 转换和缩放函数库
 Version:	0
-Release:	0.25.20121221svn522%{?dist}
+Release:	0.26.20121221svn522%{?dist}
 License:	BSD
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -95,6 +95,9 @@ make check
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0-0.26.20121221svn522
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0-0.25.20121221svn522
 - 为 Magic 3.0 重建
 

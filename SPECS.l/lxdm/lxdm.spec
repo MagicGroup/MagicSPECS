@@ -18,7 +18,7 @@
 
 Name:           lxdm
 Version:        0.4.1
-Release:        5%{?git_version:.%{?git_version}}%{?dist}
+Release:        6%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Lightweight X11 Display Manager
 Summary(zh_CN.UTF-8): 轻量级的 X11 登录管理器
 
@@ -223,6 +223,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.1-6
+- 为 Magic 3.0 重建
+
 * Mon Jun 23 2014 Liu Di <liudidi@gmail.com> - 0.4.1-5
 - 为 Magic 3.0 重建
 

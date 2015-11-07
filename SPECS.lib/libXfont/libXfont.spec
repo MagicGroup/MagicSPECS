@@ -1,8 +1,8 @@
 Summary: X.Org X11 libXfont runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXfont 运行库
 Name: libXfont
-Version: 1.5.0
-Release: 1%{?dist}
+Version: 1.4.9
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xfont.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.4.9-2
+- 更新到 1.4.9
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.5.0-1
 - 更新到 1.5.0
 

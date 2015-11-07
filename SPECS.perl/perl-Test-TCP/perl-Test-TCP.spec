@@ -1,6 +1,6 @@
 Name:           perl-Test-TCP
-Version:        2.13
-Release:        1%{?dist}
+Version:	2.14
+Release:	2%{?dist}
 Summary:        Testing TCP program
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.14-2
+- 更新到 2.14
+
 * Sat Jul 25 2015 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.13-1
 - Upstream update.
 

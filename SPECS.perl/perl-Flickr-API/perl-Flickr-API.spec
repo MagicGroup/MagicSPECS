@@ -1,6 +1,6 @@
 Name:           perl-Flickr-API
-Version:	1.17
-Release:	1%{?dist}
+Version:	1.25
+Release:	2%{?dist}
 Summary:        Perl interface to the Flickr API
 # LICENSE:                              Artistic 2.0
 # examples/flickr_method_test_login.pl: GPL+ or Artistic
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man1/flickr_*_stored_config.pl.1*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.25-2
+- 更新到 1.25
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.17-1
 - 更新到 1.17
 

@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	0.2.4
-Release:	101%{?dist}
+Release:	102%{?dist}
 
 Summary:	Power Assert for Ruby
 License:	Ruby or BSD
@@ -81,6 +81,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.4-102
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.2.4-101
 - 为 Magic 3.0 重建
 

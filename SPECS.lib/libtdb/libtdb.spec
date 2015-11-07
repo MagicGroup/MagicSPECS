@@ -6,7 +6,7 @@
 
 Name: libtdb
 Version: 1.3.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 Summary: The tdb library
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n python-tdb -p /sbin/ldconfig
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.7-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 07 2015 Liu Di <liudidi@gmail.com> - 1.3.7-1
 - 更新到 1.3.7
 

@@ -1,6 +1,6 @@
 Name:           mockito
 Version:        1.9.0
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        A Java mocking framework
 
 License:        MIT
@@ -91,6 +91,9 @@ cp -rp target/javadoc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc NOTICE
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.9.0-19
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 1.9.0-18
 - 为 Magic 3.0 重建
 

@@ -5,8 +5,8 @@
 Summary: Core X11 protocol client library
 Summary(zh_CN.UTF-8): 核心的 X11 协议客户端库
 Name: libX11
-Version: 1.6.2
-Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Version: 1.6.3
+Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/*.5*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6.3-2
+- 更新到 1.6.3
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.6.2-1
 - 更新到 1.6.2
 

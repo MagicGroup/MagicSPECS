@@ -1,8 +1,8 @@
 Summary:     The mdadm program controls Linux md devices (software RAID arrays)
 Summary(zh_CN.UTF-8): 控制 Linux md 设备 (软 Raid) 的程序
 Name:        mdadm
-Version: 3.3.2
-Release: 1%{?dist}
+Version: 3.3.4
+Release: 2%{?dist}
 Source:      http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.xz
 Source1:     mdmonitor.init
 Source2:     raid-check
@@ -108,6 +108,9 @@ rm -rf %{buildroot}
 /etc/libreport/events.d/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.3.4-2
+- 更新到 3.3.4
+
 * Fri Aug 22 2014 Liu Di <liudidi@gmail.com> - 3.3.2-1
 - 更新到 3.3.2
 

@@ -7,7 +7,7 @@
 
 Name:		libsolv
 Version:	0.6.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
 # git clone https://github.com/openSUSE/libsolv.git
@@ -165,6 +165,9 @@ magic_rpm_clean.sh
 %{python_sitearch}/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.4-3
+- 为 Magic 3.0 重建
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.6.4-2
 - 为 Magic 3.0 重建
 

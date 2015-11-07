@@ -1,6 +1,6 @@
 Name:           perl-Gtk2-Ex-FormFactory
 Version:        0.67
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Framework for Gtk2 perl applications
 
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.67-6
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.67-5
 - 为 Magic 3.0 重建
 

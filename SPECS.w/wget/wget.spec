@@ -2,7 +2,7 @@ Summary: A utility for retrieving files using the HTTP or FTP protocols
 Summary(zh_CN.UTF-8): 支持 HTTP 和 FTP 协议的下载工具
 Name: wget
 Version:	1.16.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv3+
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.16.3-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.16.3-1
 - 更新到 1.16.3
 

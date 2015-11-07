@@ -6,7 +6,7 @@ Summary: Free versions of the 35 standard PostScript fonts.
 Summary(zh_CN.UTF-8): 35 种 PostScript 字体的免费版本
 Name: urw-fonts
 Version: 2.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 Source: ftp://ftp.gnome.ru/fonts/urw/release/urw-fonts-%{filippov_version}.tar.bz2
 URL: ftp://ftp.gnome.ru/fonts/urw/release/
 # URW holds copyright
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %{fontdir}/*.pfb
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.4-10
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.4-9
 - 为 Magic 3.0 重建
 

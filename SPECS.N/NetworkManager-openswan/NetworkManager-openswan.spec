@@ -1,12 +1,12 @@
 #%define nm_version        1:0.9.8
 
-%define realversion 1.0.0
+%define realversion 1.0.6
 
 Summary:   NetworkManager VPN plug-in for openswan
 Summary(zh_CN.UTF-8): NetworkManaget 的 openswan VPN 插件
 Name:      NetworkManager-openswan
-Version:	1.0.0
-Release:	1%{?dist}
+Version:	1.0.6
+Release:	2%{?dist}
 License:   GPLv2+
 Group:     System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -109,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.6-2
+- 更新到 1.0.6
+
 * Mon Jan 05 2015 Liu Di <liudidi@gmail.com> - 1.0.0-1
 - 更新到 1.0.0
 

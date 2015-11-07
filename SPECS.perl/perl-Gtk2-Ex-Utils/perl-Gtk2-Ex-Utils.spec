@@ -1,6 +1,6 @@
 Name:           perl-Gtk2-Ex-Utils
 Version:        0.09
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Extra Gtk2 Utilities for working with Gnome2/Gtk2 in Perl
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.09-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-14
 - 为 Magic 3.0 重建
 

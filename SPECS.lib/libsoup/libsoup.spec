@@ -3,8 +3,8 @@
 ### Abstract ###
 
 Name: libsoup
-Version:	2.52.0
-Release: 1%{?dist}
+Version:	2.53.1
+Release: 2%{?dist}
 License: LGPLv2
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/libsoup-2.4.vapi
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.53.1-2
+- 更新到 2.53.1
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.52.0-1
 - 更新到 2.52.0
 

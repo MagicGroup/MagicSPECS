@@ -18,7 +18,7 @@ Summary: Free Software (GPL) Implementation of the NX Server
 Summary(zh_CN.UTF-8): NX 服务的自由 (GPL) 实现 
 Name: freenx-server
 Version: 0.7.3
-Release: 31%{?dist}
+Release: 32%{?dist}
 License: GPLv2
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -220,6 +220,9 @@ systemctl daemon-reload &>/dev/null || :
 /var/log/nx
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.7.3-32
+- 为 Magic 3.0 重建
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.3-31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://download.enlightenment.org/rel/libs/evas_generic_loaders/?C=M;O=D"
+url="https://download.enlightenment.org/rel/libs/evas_generic_loaders/?C=M&O=D"
 new1="evas_generic_loaders-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,6 +1,6 @@
 Name:           xarchiver
 Version:        0.5.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Archive manager for Xfce
 Summary(zh_CN.UTF-8): Xfce 下的归档管理器
 
@@ -94,6 +94,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.5.4-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 0.5.4-3
 - 为 Magic 3.0 重建
 

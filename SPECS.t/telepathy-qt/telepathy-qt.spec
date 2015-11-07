@@ -13,7 +13,7 @@
 
 Name:    telepathy-qt
 Version: 0.9.6.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: High-level bindings for Telepathy
 
 License: LGPLv2+
@@ -238,6 +238,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.9.6.1-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.9.6.1-2
 - 为 Magic 3.0 重建
 

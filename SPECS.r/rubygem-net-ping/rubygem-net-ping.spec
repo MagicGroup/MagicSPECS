@@ -10,7 +10,7 @@
 Summary: A ping interface for Ruby
 Name: rubygem-%{gem_name}
 Version: 1.7.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: Artistic 2.0
 URL: http://www.rubyforge.org/projects/shards
@@ -85,6 +85,9 @@ cp -a .%{gem_dir}/* \
 %{gem_instdir}/CHANGES
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.7.7-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.7.7-2
 - 为 Magic 3.0 重建
 

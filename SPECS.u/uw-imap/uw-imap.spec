@@ -11,7 +11,7 @@ Summary: UW Server daemons for IMAP and POP network mail protocols
 Summary(zh_CN.UTF-8): IMAP 和 POP 网络邮件协议的 UW 服务
 Name:	 uw-imap 
 Version: 2007f
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # See LICENSE.txt, http://www.apache.org/licenses/LICENSE-2.0
 License: ASL 2.0 
@@ -361,6 +361,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2007f-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 2007f-4
 - 为 Magic 3.0 重建
 

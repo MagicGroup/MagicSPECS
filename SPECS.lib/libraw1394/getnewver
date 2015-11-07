@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.kernel.org/pub/linux/libs/ieee1394/?C=M;O=D"
+url="http://www.kernel.org/pub/linux/libs/ieee1394/?C=M&O=D"
 new1="libraw1394-"
 new2=".tar.xz"
 downcommand="wget -q" 

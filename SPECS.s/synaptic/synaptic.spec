@@ -4,7 +4,7 @@ Summary: Graphical frontend for APT package manager.
 Summary(zh_CN.UTF-8): APT 包管理器的图形界面
 Name: synaptic
 Version: 0.57.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: GPLv2+
 Group: Applications/System
@@ -126,6 +126,9 @@ scrollkeeper-update -q ||:
 %{_mandir}/man8/%{name}.8*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.57.2-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 0.57.2-5
 - 为 Magic 3.0 重建
 

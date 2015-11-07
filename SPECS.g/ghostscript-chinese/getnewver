@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://pwu.fedorapeople.org/ghostscript-chinese/?C=M;O=D"
+url="http://pwu.fedorapeople.org/ghostscript-chinese/?C=M&O=D"
 new1="ghostscript-chinese-"
 new2=".tar.gz"
 downcommand="wget -q" 

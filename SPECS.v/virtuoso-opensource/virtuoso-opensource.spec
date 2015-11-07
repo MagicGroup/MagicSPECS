@@ -9,7 +9,7 @@
 Name:    virtuoso-opensource
 Epoch:   1
 Version: 6.1.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A high-performance object-relational SQL database
 Summary(zh_CN.UTF-8): 高性能的对象关系型数据库
 
@@ -229,6 +229,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1:6.1.6-3
+- 为 Magic 3.0 重建
+
 * Sun Oct 18 2015 Liu Di <liudidi@gmail.com> - 1:6.1.6-2
 - 为 Magic 3.0 重建
 

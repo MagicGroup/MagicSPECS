@@ -1,6 +1,6 @@
 Name:           wol
 Version:        0.7.1
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Wake On Lan client
 Summary(zh_CN.UTF-8): 网络唤醒客户端
 
@@ -60,6 +60,9 @@ fi
 %{_bindir}/%{name}*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.7.1-15
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 0.7.1-14
 - 为 Magic 3.0 重建
 

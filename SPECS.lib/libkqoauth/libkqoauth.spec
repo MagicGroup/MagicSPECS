@@ -31,7 +31,7 @@ process it.
 
 Name:           libkqoauth
 Version:        0.98
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        %{pack_summ}
 License:        LGPL-2.1+ and LGPL-3.0+
 Group:          System/Libraries
@@ -94,6 +94,9 @@ make %{?_smp_mflags}
 %endif
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.98-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 26 2014 Liu Di <liudidi@gmail.com> - 0.98-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:          libmms
 Version: 0.6.4
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Library for Microsoft Media Server (MMS) streaming protocol
 Summary(zh_CN.UTF-8): 微软流媒体服务协议 (MMS) 的库
 License:       LGPLv2+
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.4-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.6.4-1
 - 更新到 0.6.4
 

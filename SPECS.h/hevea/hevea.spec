@@ -6,7 +6,7 @@
 
 Name:		hevea
 Version:	2.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	LaTeX to HTML translator
 Summary(zh_CN.UTF-8): LaTeX 到 HTML 的转换器
 Group:		Applications/Publishing
@@ -76,6 +76,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.16-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 2.16-2
 - 为 Magic 3.0 重建
 

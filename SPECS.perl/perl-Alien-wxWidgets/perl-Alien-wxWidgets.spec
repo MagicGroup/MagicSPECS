@@ -1,6 +1,6 @@
 Name:           perl-Alien-wxWidgets
 Version:	0.67
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Building, finding and using wxWidgets binaries
 Summary(zh_CN.UTF-8): 构建、查找和使用二进制的 wx 部件
 
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.67-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.67-2
 - 为 Magic 3.0 重建
 

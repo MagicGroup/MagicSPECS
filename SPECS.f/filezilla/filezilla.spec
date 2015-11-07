@@ -1,7 +1,7 @@
 #define fz_rc   rc2
 Name:           filezilla
-Version:	3.8.0
-Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.1
+Version:	3.14.1
+Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.2
 Summary:        FileZilla FTP, FTPS and SFTP client
 Summary(zh_CN.UTF-8): FTP, FTPS 和 SFTP 客户端
 
@@ -124,6 +124,9 @@ fi || :
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.14.1-1.2
+- 更新到 3.14.1
+
 * Thu Apr 03 2014 Liu Di <liudidi@gmail.com> - 3.8.0-1.1
 - 更新到 3.8.0
 

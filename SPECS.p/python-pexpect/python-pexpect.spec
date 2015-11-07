@@ -5,8 +5,8 @@
 Summary:	Unicode-aware Pure Python Expect-like module
 Summary(zh_CN.UTF-8): 支持 Unicode 的类 Expect 纯 Python 模块
 Name:		python-pexpect
-Version:	3.3
-Release:	1%{?dist}
+Version:	4.0.1
+Release:	2%{?dist}
 License:	MIT
 Group:		Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -143,6 +143,9 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.0.1-2
+- 更新到 4.0.1
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 3.3-1
 - 更新到 3.3
 

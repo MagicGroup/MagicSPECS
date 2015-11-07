@@ -1,6 +1,6 @@
 Name:           perl-HTML-StripScripts-Parser
 Version:        1.03
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        XSS filter using HTML::Parser
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.03-10
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.03-9
 - 为 Magic 3.0 重建
 

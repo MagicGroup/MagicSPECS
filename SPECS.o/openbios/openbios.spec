@@ -2,7 +2,7 @@
 %global tarver 1.0
 
 %define svn 1
-%define vcsdate 20150327
+%define vcsdate 20151101
 
 # Disable unhelpful RPM test.
 %global _binaries_in_noarch_packages_terminate_build 0
@@ -12,10 +12,10 @@
 Name:           openbios
 %if 0%{?svn}
 Version:	1.0.svn%{vcsdate}
-Release:	2%{?dist}
+Release:	4%{?dist}
 %else
 Version:        %{tarver}.svn%{svnrel}
-Release:        2%{?dist}
+Release:        4%{?dist}
 %endif
 Summary:        OpenBIOS implementation of IEEE 1275-1994
 Summary(zh_CN.UTF-8): IEEE 1275-1994 的 OpenBIOS 实现
@@ -121,6 +121,12 @@ cp -a obj-sparc64/openbios-builtin.elf $qemudir/openbios-sparc64
 %endif
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.svn20151101-4
+- 更新到 20151101 日期的仓库源码
+
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.svn20150327-3
+- 为 Magic 3.0 重建
+
 * Fri Mar 27 2015 Liu Di <liudidi@gmail.com> - 1.0.svn20150327-2
 - 更新到 20150327 日期的仓库源码
 

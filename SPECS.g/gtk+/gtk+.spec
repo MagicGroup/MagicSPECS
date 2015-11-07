@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): GIMP 工具集
 Name:		gtk+
 Epoch:		1
 Version:	1.2.10
-Release:	74%{?dist}
+Release:	75%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -253,6 +253,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-75
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-74
 - 为 Magic 3.0 重建
 

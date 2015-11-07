@@ -1,6 +1,6 @@
 Name:           seabios
 Version:        1.8.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open-source legacy BIOS implementation
 Summary(zh_CN.UTF-8): 开源的老旧 BIOS 实现 
 
@@ -146,6 +146,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.8.2-3
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
 - 为 Magic 3.0 重建
 

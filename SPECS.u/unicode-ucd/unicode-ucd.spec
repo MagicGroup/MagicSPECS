@@ -4,7 +4,7 @@
 
 Name:           unicode-ucd
 Version:	8.0.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Unicode Character Database
 Summary(zh_CN.UTF-8): Unicode 字符数据库
 
@@ -46,6 +46,9 @@ cp -p %{SOURCE1} .
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 8.0.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 8.0.0-2
 - 为 Magic 3.0 重建
 

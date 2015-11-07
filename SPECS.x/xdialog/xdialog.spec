@@ -4,7 +4,7 @@ Name: xdialog
 Summary: X11 drop in replacement for cdialog
 Summary(zh_CN.UTF-8): cdialog 的 X11 替代程序
 Version: 2.3.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPL+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -83,6 +83,9 @@ rm -rf %{buildroot}
 %exclude %{_docdir}/%{real_name}-%{version}
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.3.1-8
+- 更新到
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 2.3.1-7
 - 为 Magic 3.0 重建
 

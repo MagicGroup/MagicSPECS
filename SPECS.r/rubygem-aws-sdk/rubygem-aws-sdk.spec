@@ -7,7 +7,7 @@
 Summary:        AWS SDK for Ruby
 Name:           rubygem-aws-sdk
 Version:        1.60.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
 URL:            http://aws.amazon.com/sdkforruby/
@@ -83,6 +83,9 @@ cp -a ./%{_bindir}/* %{buildroot}%{_bindir}
 %doc %{gem_instdir}/LICENSE.txt
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.60.2-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.60.2-3
 - 为 Magic 3.0 重建
 

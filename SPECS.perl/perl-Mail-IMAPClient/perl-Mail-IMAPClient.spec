@@ -1,6 +1,6 @@
 Name:           perl-Mail-IMAPClient
 Version:	3.37
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        An IMAP Client API
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.37-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.37-1
 - 更新到 3.37
 

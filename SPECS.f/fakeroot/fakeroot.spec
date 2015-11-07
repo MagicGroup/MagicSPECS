@@ -2,7 +2,7 @@ Summary: Gives a fake root environment
 Summary(zh_CN.UTF-8): 创建一个假的 root 环境
 Name: fakeroot
 Version: 1.18.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -136,6 +136,9 @@ fi
 %{_libdir}/libfakeroot/libfakeroot-0.so
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.18.4-3
+- 为 Magic 3.0 重建
+
 * Mon Aug 26 2013 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.18.4-2
 - Add alternatives (Mimic Debian's behavior).
 

@@ -1,6 +1,6 @@
 Name:           perl-SGMLSpm
 Version:	1.03ii
-Release:	32%{?dist}
+Release:	33%{?dist}
 Summary:        Perl library for parsing the output of nsgmls
 
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/skel.pl
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.03ii-33
+- 为 Magic 3.0 重建
+
 * Fri Jun 13 2014 Liu Di <liudidi@gmail.com> - 1.03ii-31
 - 为 Magic 3.0 重建
 

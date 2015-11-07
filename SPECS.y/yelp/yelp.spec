@@ -5,7 +5,7 @@ Summary(zh_CN.UTF-8): GNOME 桌面的帮助浏览器
 Name: yelp
 Epoch: 1
 Version:	3.19.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 #VCS: git:git://git.gnome.org/yelp
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source: http://download.gnome.org/sources/yelp/%{majorver}/%{name}-%{version}.tar.xz
@@ -130,6 +130,9 @@ gtk-update-icon-cache %{_datadir}icons/hicolor &> /dev/null || :
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:3.19.1-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:3.19.1-2
 - 更新到 3.19.1
 

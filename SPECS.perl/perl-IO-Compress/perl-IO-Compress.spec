@@ -2,8 +2,8 @@
 %{?perl_default_filter}
 
 Name:           perl-IO-Compress
-Version:	2.068
-Release:	1%{?dist}
+Version:	2.069
+Release:	2%{?dist}
 Summary:        Read and write compressed data
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -108,6 +108,9 @@ make test %{?with_long_tests:COMPRESS_ZLIB_RUN_ALL=1}
 %{_mandir}/man3/IO::Uncompress::*.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.069-2
+- 更新到 2.069
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.068-1
 - 更新到 2.068
 

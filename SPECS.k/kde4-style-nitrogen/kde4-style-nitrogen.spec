@@ -9,7 +9,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Summary:        A fork of the Oxygen/Ozone decoration
 Summary(zh_CN.UTF-8): Oxygen/Ozone 窗口装饰的移植
 Version:        3.3.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Source:         99551-kde4-windeco-nitrogen-%{version}-Source.tar.gz
 
 %description
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc COPYING README
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.3.2-5
+- 为 Magic 3.0 重建
+
 * Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 3.3.2-4
 - 为 Magic 3.0 重建
 

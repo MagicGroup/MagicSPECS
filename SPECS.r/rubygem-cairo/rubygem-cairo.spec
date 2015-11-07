@@ -9,7 +9,7 @@
 Summary:	Ruby bindings for cairo
 Name:		rubygem-%{gem_name}
 Version:	%{gemver}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group:		Development/Languages
 License:	GPLv2 or Ruby
 URL:		http://cairographics.org/rcairo/
@@ -194,6 +194,9 @@ popd
 %{header_dir}/rb_cairo.h
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.14.3-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.14.3-2
 - 为 Magic 3.0 重建
 

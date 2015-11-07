@@ -6,9 +6,9 @@ Summary: Network exploration tool and security scanner
 Summary(zh_CN.UTF-8): 网络探测工具和安全扫描器
 Name: nmap
 Epoch: 2
-Version: 6.47
+Version: 6.49BETA5
 #global prerelease TEST5
-Release: 3%{?dist}
+Release: 2%{?dist}
 # Uses combination of licenses based on GPL license, but with extra modification
 # so it got its own license tag rhbz#1055861
 License: Nmap
@@ -230,6 +230,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xnmap.1.gz
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2:6.49BETA5-2
+- 更新到 6.49BETA5
+
 * Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2:6.47-3
 - 为 Magic 3.0 重建
 

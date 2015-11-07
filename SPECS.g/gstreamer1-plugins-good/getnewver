@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://gstreamer.freedesktop.org/src/gst-plugins-good/?C=M;O=D"
+url="http://gstreamer.freedesktop.org/src/gst-plugins-good/?C=M&O=D"
 new1="gst-plugins-good-"
 new2=".tar.xz"
 downcommand="wget -q" 

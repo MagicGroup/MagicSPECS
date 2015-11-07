@@ -10,7 +10,7 @@
 
 Name:          ucommon
 Version:       6.6.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Portable C++ framework for threads and sockets
 
 License:       LGPLv3+
@@ -122,6 +122,9 @@ make doc
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 6.6.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Liu Di <liudidi@gmail.com> - 6.6.1-2
 - 为 Magic 3.0 重建
 

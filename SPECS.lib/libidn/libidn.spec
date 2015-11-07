@@ -1,8 +1,8 @@
 Summary: Internationalized Domain Name support library
 Summary(zh_CN.UTF-8): 国际化域名支持库
 Name: libidn
-Version: 1.28
-Release: 3%{?dist}
+Version: 1.32
+Release: 4%{?dist}
 URL: http://www.gnu.org/software/libidn/
 License: LGPLv2+ and GPLv3+ and GFDL
 Source0: http://ftp.gnu.org/gnu/libidn/libidn-%{version}.tar.gz
@@ -138,6 +138,9 @@ rm -rf %{buildroot}
 %{_emacs_sitelispdir}/%{name}
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.32-4
+- 更新到 1.32
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.28-3
 - 更新到 1.28
 

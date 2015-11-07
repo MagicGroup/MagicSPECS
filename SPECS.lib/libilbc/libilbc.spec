@@ -7,7 +7,7 @@ Summary:	iLBC Speech Coder
 Summary(pl.UTF-8):	Koder mowy iLBC
 Name:		libilbc
 Version:	1.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	Global IP Sound v2.0 (requires registration for non-personal use)
 Group:		Libraries
 Source0:	http://simon.morlat.free.fr/download/1.3.x/source/ilbc-rfc3951.tar.gz
@@ -101,5 +101,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0-4
 - 为 Magic 3.0 重建

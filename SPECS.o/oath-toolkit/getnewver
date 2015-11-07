@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.savannah.gnu.org/releases/oath-toolkit/?C=M;O=D"
+url="http://download.savannah.gnu.org/releases/oath-toolkit/?C=M&O=D"
 new1="oath-toolkit-"
 new2=".tar.gz"
 downcommand="wget -q" 

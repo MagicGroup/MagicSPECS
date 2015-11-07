@@ -1,5 +1,5 @@
 Name:           perl-Crypt-OpenSSL-Random
-Version:	0.10
+Version:	0.11
 Release:	2%{?dist}
 Summary:        Perl interface to OpenSSL for Random
 License:        GPL+ or Artistic 
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 更新到 0.11
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-2
 - 为 Magic 3.0 重建
 

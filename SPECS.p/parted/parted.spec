@@ -5,7 +5,7 @@ Summary: The GNU disk partition manipulation program
 Summary(zh_CN.UTF-8): GNU 磁盘分区处理程序
 Name:    parted
 Version: 3.2
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv3+
 Group:   Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -169,6 +169,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.2-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.2-7
 - 为 Magic 3.0 重建
 

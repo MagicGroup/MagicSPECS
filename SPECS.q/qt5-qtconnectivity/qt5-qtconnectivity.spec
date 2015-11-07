@@ -6,7 +6,7 @@
 Summary: Qt5 - Connectivity components
 Summary(zh_CN.UTF-8): Qt5 - Connectivity 组件
 Name:    qt5-%{qt_module}
-Version: 5.5.0
+Version: 5.5.1
 Release:2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively, for exception details
@@ -138,6 +138,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
+- 更新到 5.5.1
+
 * Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-2
 - 为 Magic 3.0 重建
 

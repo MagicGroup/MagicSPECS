@@ -2,8 +2,8 @@
 %bcond_without anthy
 
 Name:    m17n-lib
-Version:  1.6.4
-Release:  6%{?dist}
+Version: 1.7.0
+Release: 2%{?dist}
 Summary:  Multilingual text library
 Summary(zh_CN.UTF-8): 多语言文本库
 
@@ -132,6 +132,9 @@ magic_rpm_clean.sh
 %{_libdir}/libm17n-gui.so.*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.7.0-2
+- 更新到 1.7.0
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.6.4-6
 - 为 Magic 3.0 重建
 

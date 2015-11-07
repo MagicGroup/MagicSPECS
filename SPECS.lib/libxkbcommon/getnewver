@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://xkbcommon.org/download/?C=M;O=D"
+url="http://xkbcommon.org/download/?C=M&O=D"
 new1="libxkbcommon-"
 new2=".tar.xz"
 downcommand="wget -q" 

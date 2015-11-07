@@ -3,9 +3,9 @@
 Name:           gwenview
 Version:        1.4.3
 %if %{git}
-Release:	0.git%{gitdate}%{?dist}.2
+Release:	0.git%{gitdate}%{?dist}.3
 %else
-Release:        9%{?dist}
+Release:        10%{?dist}
 %endif
 Summary:        Simple image viewer for KDE
 Summary(zh_CN.UTF-8): KDE下的简单图像查看器
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.4.3-0.git20111229.3
+- 更新到 20151030 日期的仓库源码
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.4.3-0.git20111229.2
 - 更新到 20140415 日期的仓库源码
 

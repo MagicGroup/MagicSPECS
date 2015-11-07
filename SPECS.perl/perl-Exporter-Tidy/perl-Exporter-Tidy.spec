@@ -1,6 +1,6 @@
 Name:           perl-Exporter-Tidy
 Version:        0.08
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Another way of exporting symbols
 # Generated with licenses.pl
 License:        AAL or AFL or AGPLv3 or APSL 2.0 or ASL 2.0 or Artistic 2.0 or BSD or Boost or CATOSL or CDDL or CNRI or CPAL or CeCILL or ECL 2.0 or EFL 2.0 or EPL or EU Datagrid or EUPL 1.1 or Entessa or Fair or GPLv2 or GPLv3 or IBM or IPA or ISC or LGPLv2 or LGPLv3 or LPL or LPPL or MIT or MPLv1.1 or MPLv2.0 or MS-PL or MS-RL or MirOS or Motosoto or NCSA or NGPL or Naumen or Nokia or OFL or OSL 3.0 or PHP or PostgreSQL or Python or QPL or RPSL or SPL or Sleepycat or VSL or W3C or ZPLv2.0 or zlib
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.08-4
 - 为 Magic 3.0 重建
 

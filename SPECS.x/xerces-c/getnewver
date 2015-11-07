@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://archive.apache.org/dist/xerces/c/3/sources/?C=M;O=D"
+url="http://archive.apache.org/dist/xerces/c/3/sources/?C=M&O=D"
 new1="xerces-c-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,6 +1,6 @@
 Name:           perl-HTTP-DAV
 Version:	0.48
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        WebDAV client library for Perl5
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.48-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.48-1
 - 更新到 0.48
 

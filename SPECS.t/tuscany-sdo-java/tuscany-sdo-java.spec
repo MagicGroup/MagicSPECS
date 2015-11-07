@@ -5,7 +5,7 @@
 
 Name:          tuscany-sdo-java
 Version:       1.1.1
-Release:       11%{?dist}
+Release:       12%{?dist}
 Summary:       Service Data Objects 2.1 Java API spec
 License:       ASL 2.0
 Url:           http://tuscany.apache.org/sdo-java.html
@@ -93,6 +93,9 @@ sed -i 's#<target>1.4</target>#<target>1.5</target>#' pom.xml sdo-api/pom.xml
 %doc LICENSE NOTICE
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.1-12
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.1.1-11
 - 为 Magic 3.0 重建
 

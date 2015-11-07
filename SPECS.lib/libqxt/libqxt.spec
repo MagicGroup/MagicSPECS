@@ -1,6 +1,6 @@
 Name:		libqxt
 Version:	0.6.2
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Qt extension library
 Summary(zh_CN.UTF-8): Qt 扩展库
 Group:		System Environment/Libraries
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/qxt*.prf
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.2-5
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.6.2-4
 - 为 Magic 3.0 重建
 

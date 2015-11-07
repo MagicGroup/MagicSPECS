@@ -1,8 +1,8 @@
 Summary:	Open audio/video container format library
 Summary(zh_CN.UTF-8): 开源的音频、视频容器格式库
 Name:		libmatroska
-Version: 1.4.1
-Release:	1%{?dist}
+Version: 1.4.4
+Release:	2%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.4-2
+- 更新到 1.4.4
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.4.1-1
 - 更新到 1.4.1
 

@@ -1,8 +1,8 @@
 %define debug_package %{nil}
 
 Name:		mono-basic
-Version: 3.8
-Release: 1%{?dist}
+Version: 4.0.1
+Release: 2%{?dist}
 Summary:	VisualBasic.NET support for mono
 Summary(zh_CN.UTF-8): mono 的 VB.NET 支持
 Group:		Development/Languages
@@ -61,7 +61,7 @@ libdir=%{_prefix}/lib
 
 Name: mono-basic
 Description: mono-basic - VB for mono
-Version: 3.8
+Version: 4.0.1
 Libs: -r:%{_prefix}/lib/mono/2.0/Microsoft.VisualBasic.dll
 EOF
 
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/mono-basic.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.0.1-2
+- 更新到 4.0.1
+
 * Thu Nov 20 2014 Liu Di <liudidi@gmail.com> - 3.8-1
 - 更新到 3.8
 

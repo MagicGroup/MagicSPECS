@@ -1,6 +1,6 @@
 Name:           perl-Class-Trigger
 Version:        0.14
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Mixin to add / call inheritable triggers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.14-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-11
 - 为 Magic 3.0 重建
 

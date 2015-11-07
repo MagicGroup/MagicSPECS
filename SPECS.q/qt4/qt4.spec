@@ -48,7 +48,7 @@ done
 
 
 Version: %{real_version}
-Release:	1%{?dist}
+Release:	2%{?dist}
 %define ver %version
 
 Source0: http://download.qt.io/official_releases/qt/4.8/%{version}/qt-everywhere-opensource-src-%{version}.tar.gz
@@ -2079,6 +2079,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.8.7-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 4.8.7-1
 - 更新到 4.8.7
 

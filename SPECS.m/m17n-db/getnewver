@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.savannah.gnu.org/releases/m17n/?C=M;O=D"
+url="http://download.savannah.gnu.org/releases/m17n/?C=M&O=D"
 new1="m17n-db-"
 new2=".tar.gz"
 downcommand="wget -q" 

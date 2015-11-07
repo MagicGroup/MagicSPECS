@@ -2,7 +2,7 @@ Summary: A library for interfacing IEEE 1284-compatible devices
 Summary(zh_CN.UTF-8): IEEE 1284 兼容设备接口库
 Name: libieee1284
 Version: 0.2.11
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.11-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 0.2.11-13
 - 为 Magic 3.0 重建
 

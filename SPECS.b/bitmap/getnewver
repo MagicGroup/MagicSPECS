@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://xorg.freedesktop.org/releases/individual/app/?C=M;O=D"
+url="http://xorg.freedesktop.org/releases/individual/app/?C=M&O=D"
 new1="bitmap-"
 new2=".tar.gz"
 downcommand="wget -q" 

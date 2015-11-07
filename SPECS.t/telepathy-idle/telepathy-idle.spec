@@ -2,7 +2,7 @@
 
 Name:           telepathy-idle
 Version:        0.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        IRC connection manager for Telepathy
 Summary(zh_CN.UTF-8): Telepathy 的 IRC 连接管理器
 
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.0-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.2.0-3
 - 为 Magic 3.0 重建
 

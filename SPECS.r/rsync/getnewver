@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://download.samba.org/pub/rsync/src/?C=M;O=D"
+url="https://download.samba.org/pub/rsync/src/?C=M&O=D"
 new1="rsync-patches-"
 new2=".tar.gz"
 downcommand="wget -q" 

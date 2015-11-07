@@ -2,7 +2,7 @@ Summary: A Tubing and Extrusion Library for OpenGL
 Summary(zh_CN.UTF-8): OpenGL 使用的 Tubing 和 Extrusion 库
 Name: libgle
 Version: 3.1.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv2 or (Artistic clarified and MIT)
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -91,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.1.0-9
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 3.1.0-8
 - 为 Magic 3.0 重建
 

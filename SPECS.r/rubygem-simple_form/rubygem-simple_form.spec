@@ -12,7 +12,7 @@
 
 Name: rubygem-%{gem_name}
 Version: %{mainver}
-Release: %{?prever:0.}2%{?prever}%{?prerelease}%{?dist}.1
+Release: %{?prever:0.}2%{?prever}%{?prerelease}%{?dist}.2
 Summary: Flexible and powerful components to create forms
 
 Group: Development/Languages
@@ -99,6 +99,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.1.0-0.2.rc2.2
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.1.0-0.2.rc2.1
 - 为 Magic 3.0 重建
 

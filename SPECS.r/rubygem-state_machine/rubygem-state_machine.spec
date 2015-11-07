@@ -13,7 +13,7 @@
 Summary:       Adds support for creating state machines for attributes on any Ruby class
 Name:          rubygem-%{gem_name}
 Version:       1.1.2
-Release:       13%{?dist}
+Release:       14%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://www.pluginaweek.org
@@ -108,6 +108,9 @@ rm -rf %{buildroot}
 %doc %{gem_instdir}/Rakefile
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.2-14
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.2-13
 - 为 Magic 3.0 重建
 

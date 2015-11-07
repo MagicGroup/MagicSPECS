@@ -3,7 +3,7 @@ Summary:	Very simple RubyGems sandbox
 
 Name:		rubygem-%{gem_name}
 Version:	3.3.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group:		Development/Languages
 License:	MIT
 URL:		http://github.com/jbarnette/isolate
@@ -77,6 +77,9 @@ ruby -rubygems %{_bindir}/rake test --trace
 %{gem_docdir}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.3.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.3.1-3
 - 为 Magic 3.0 重建
 

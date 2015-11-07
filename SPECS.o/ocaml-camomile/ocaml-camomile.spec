@@ -2,7 +2,7 @@
 
 Name:           ocaml-camomile
 Version:        0.8.3
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Unicode library for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 Unicode 库
 
@@ -120,6 +120,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.8.3-17
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.8.3-16
 - 为 Magic 3.0 重建
 

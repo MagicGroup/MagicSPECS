@@ -1,6 +1,6 @@
 Name:           perl-Text-Unidecode
-Version:	1.24
-Release:	1%{?dist}
+Version:	1.27
+Release:	2%{?dist}
 Summary:        US-ASCII transliterations of Unicode text
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.27-2
+- 更新到 1.27
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.24-1
 - 更新到 1.24
 

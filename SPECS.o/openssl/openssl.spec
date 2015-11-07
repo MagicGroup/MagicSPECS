@@ -23,7 +23,7 @@
 Summary: Utilities from the general purpose cryptography library with TLS implementation
 Name: openssl
 Version: 1.0.1k
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 1
 # We have to remove certain patented algorithms from the openssl source
 # tarball with the hobble-openssl script which is included below.
@@ -492,6 +492,9 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/fipscanister.*
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.0.1k-7
+- 为 Magic 3.0 重建
+
 * Thu Mar 19 2015 Tomáš Mráz <tmraz@redhat.com> 1.0.1k-6
 - fix CVE-2015-0209 - potential use after free in d2i_ECPrivateKey()
 - fix CVE-2015-0286 - improper handling of ASN.1 boolean comparison

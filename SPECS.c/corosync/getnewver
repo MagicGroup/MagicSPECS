@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://build.clusterlabs.org/corosync/releases/?C=M;O=D"
+url="http://build.clusterlabs.org/corosync/releases/?C=M&O=D"
 new1="corosync-"
 new2=".tar.gz"
 downcommand="wget -q" 

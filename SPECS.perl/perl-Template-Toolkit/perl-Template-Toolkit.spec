@@ -1,6 +1,6 @@
 Name:           perl-Template-Toolkit
 Version:	2.26
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Template processing system
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.26-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.26-1
 - 更新到 2.26
 

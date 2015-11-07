@@ -4,7 +4,7 @@ Summary: Dispatches signals between Python objects in a wide variety of contexts
 Summary(zh_CN.UTF-8): 分派各种 Python 环境之间的信号
 Name: python-louie
 Version: 1.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: BSD
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -54,6 +54,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1-9
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.1-8
 - 为 Magic 3.0 重建
 

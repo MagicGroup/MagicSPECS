@@ -17,7 +17,7 @@
 
 Name:           python-%{srcname}
 Version:	7.1.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A tool for installing and managing Python packages
 Summary(zh_CN.UTF-8): 安装和管理 Python 包的工具
 
@@ -236,6 +236,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 7.1.2-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 7.1.2-2
 - 为 Magic 3.0 重建
 

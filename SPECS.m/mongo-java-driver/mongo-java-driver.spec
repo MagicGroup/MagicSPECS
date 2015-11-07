@@ -1,6 +1,6 @@
 Name:		mongo-java-driver
 Version:	2.11.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A Java driver for MongoDB
 
 Group:		Development/Libraries
@@ -97,6 +97,9 @@ cp -rp docs/bson %{buildroot}%{_javadocdir}/%{name}-bson
 %doc README.md LICENSE.txt
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.11.3-6
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.11.3-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Symbolic GNOME icons
 Summary(zh_CN.UTF-8): Symbolic GNOME 图标
 Name: gnome-icon-theme-symbolic
 Version:	3.12.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 #VCS: git:git://git.gnome.org/gnome-icon-theme-symbolic
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0: http://download.gnome.org/sources/gnome-icon-theme-symbolic/%{majorver}/%{name}-%{version}.tar.xz
@@ -50,6 +50,9 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 %{_datadir}/pkgconfig/gnome-icon-theme-symbolic.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.12.0-2
+- 为 Magic 3.0 重建
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

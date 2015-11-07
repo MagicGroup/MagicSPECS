@@ -1,6 +1,6 @@
 Name:           perl-Getopt-Usaginator
 Version:        0.0012
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Conjure up a usage function for your applications
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.0012-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.0012-17
 - 为 Magic 3.0 重建
 

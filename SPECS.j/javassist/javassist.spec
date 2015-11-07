@@ -2,7 +2,7 @@
 
 Name:           javassist
 Version:        3.18.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        The Java Programming Assistant provides simple Java bytecode manipulation
 Group:          Development/Libraries
 License:        MPLv1.1 or LGPLv2+ or ASL 2.0
@@ -73,6 +73,9 @@ mkdir runtest
 %doc License.html
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-5
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 3.18.1-4
 - 为 Magic 3.0 重建
 

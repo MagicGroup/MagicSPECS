@@ -8,7 +8,7 @@
 
 Name:       csnappy 
 Version:    0
-Release:    5.20150729git%{shortcommit}%{?dist}
+Release:    6.20150729git%{shortcommit}%{?dist}
 Summary:    Snappy compression library ported to C 
 Summary(zh_CN.UTF-8): Snappy 压缩库的 C 移植
 Group:      System Environment/Libraries
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0-6.20150729gitd7bc683
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0-5.20150729gitd7bc683
 - 为 Magic 3.0 重建
 

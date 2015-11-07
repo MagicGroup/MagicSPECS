@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 5.3.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: minitest provides a complete suite of testing facilities
 Group: Development/Languages
 License: MIT
@@ -104,6 +104,9 @@ popd
 %{gem_instdir}/design_rationale.rb
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.3.1-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 5.3.1-4
 - 为 Magic 3.0 重建
 

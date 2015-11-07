@@ -1,6 +1,6 @@
 Name:           mate-settings-daemon
-Version: 1.9.1
-Release: 1%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 Summary:        MATE Desktop settings daemon
 Summary(zh_CN.UTF-8): MATE 桌面的设置服务
 License:        GPLv2+
@@ -119,6 +119,9 @@ fi
 %{_libdir}/pkgconfig/mate-settings-daemon.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
 - 更新到 1.9.1
 

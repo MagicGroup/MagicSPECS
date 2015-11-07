@@ -1,6 +1,6 @@
 Name:           felix-parent
 Version:        2.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Parent POM file for Apache Felix Specs
 License:        ASL 2.0
 URL:            http://felix.apache.org/
@@ -34,6 +34,9 @@ Parent POM file for Apache Felix Specs.
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1-8
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.1-7
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:    lksctp-tools
 Summary: User-space access to Linux Kernel SCTP
 Version: 1.0.16
-Release: 3%{?dist}
+Release: 4%{?dist}
 # src/apps/bindx_test.C is GPLv2, I've asked upstream for clarification
 License: GPLv2 and GPLv2+ and LGPLv2 and MIT
 Group:   System Environment/Libraries
@@ -83,6 +83,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 %doc doc/*.txt
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.16-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 1.0.16-3
 - 为 Magic 3.0 重建
 

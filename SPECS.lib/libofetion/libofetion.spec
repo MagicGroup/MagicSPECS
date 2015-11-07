@@ -1,6 +1,6 @@
 Name: libofetion
 Version: 2.2.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Fetion GTK+ fronted, based on Fetion v4 protocal
 Summary(zh_CN.UTF-8): 飞信 GTK+ 前端，基于飞信 v4 协议
 Group: Appications/Internet
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.2.2-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 2.2.2-3
 - 为 Magic 3.0 重建
 

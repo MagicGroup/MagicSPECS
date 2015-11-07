@@ -4,7 +4,7 @@ Summary:	OpenGL Extension to GTK
 Summary(zh_CN.UTF-8): GTK 的 OpenGL 扩展
 Name:		gtkglext
 Version:	1.2.0
-Release:	19%{?dist}
+Release:	20%{?dist}
 
 License:	LGPLv2+ or GPLv2+
 Group:		System Environment/Libraries
@@ -109,6 +109,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.2.0-20
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 1.2.0-19
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-Mail
 Version:	0.4020
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Convert between DateTime and RFC2822/822 formats
 
 Group:          Development/Libraries
@@ -76,6 +76,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.4020-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.4020-1
 - 更新到 0.4020
 

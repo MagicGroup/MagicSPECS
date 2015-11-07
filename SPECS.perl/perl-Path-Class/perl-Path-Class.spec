@@ -1,6 +1,6 @@
 Name:		perl-Path-Class
 Version:	0.35
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Cross-platform path specification manipulation
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Path::Class::File.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.35-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.35-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		epstool
 Version:	3.08
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	A utility to create or extract preview images in EPS files
 Summary(zh_CN.UTF-8): 创建和解压 EPS 文件中预览图像的工具
 Group:		Applications/Multimedia
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/epstool.1.*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.08-4
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 3.08-3
 - 为 Magic 3.0 重建
 

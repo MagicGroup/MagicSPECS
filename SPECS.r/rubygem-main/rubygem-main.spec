@@ -4,7 +4,7 @@
 Summary:        A class factory and dsl for generating command line programs real quick
 Name:           rubygem-%{gem_name}
 Version:        6.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Languages
 License:        BSD or Ruby
 URL:            https://github.com/ahoward/main
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.0.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 6.0.0-3
 - 为 Magic 3.0 重建
 

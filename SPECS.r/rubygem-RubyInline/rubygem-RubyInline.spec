@@ -5,7 +5,7 @@
 Summary: Write foreign code within your ruby code
 Name: rubygem-%{gem_name}
 Version: 3.11.3
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.zenspider.com/ZSS/Products/RubyInline/
@@ -87,6 +87,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.11.3-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.11.3-7
 - 为 Magic 3.0 重建
 

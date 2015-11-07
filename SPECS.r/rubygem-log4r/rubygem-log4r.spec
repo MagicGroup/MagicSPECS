@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.10
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Log4r, logging framework for ruby
 Group: Development/Languages
 # License is changed for future releases!
@@ -92,6 +92,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.10-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.10-4
 - 为 Magic 3.0 重建
 

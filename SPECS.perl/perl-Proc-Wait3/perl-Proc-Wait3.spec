@@ -1,6 +1,6 @@
 Name:           perl-Proc-Wait3
 Version:        0.04
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl extension for wait3 system call
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.04-13
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.04-12
 - 为 Magic 3.0 重建
 

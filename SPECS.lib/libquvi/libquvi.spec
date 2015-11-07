@@ -1,6 +1,6 @@
 Name:           libquvi
 Version: 0.9.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        A cross-platform library for parsing flash media stream
 Summary(zh_CN.UTF-8): 解析 flash 媒体流的跨平台库
 
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/quvi-object.7*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.4-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 0.9.4-1
 - 更新到 0.9.4
 

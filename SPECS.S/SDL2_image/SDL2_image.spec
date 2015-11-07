@@ -1,6 +1,6 @@
 Name:           SDL2_image
-Version:        2.0.0
-Release:        10%{?dist}
+Version:	匹配到二进制文件
+Release:	2%{?dist}
 Summary:        Image loading library for SDL
 Summary(zh_CN.UTF-8): SDL 的图像载入库
 
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com>
+- 更新到 匹配到二进制文件 index.html
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-10
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Static-Simple
 Version:	0.33
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Make serving static pages painless
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.33-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.33-1
 - 更新到 0.33
 

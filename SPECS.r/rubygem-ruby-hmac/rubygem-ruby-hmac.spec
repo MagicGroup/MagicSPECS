@@ -4,7 +4,7 @@
 Summary: This module provides common interface to HMAC functionality
 Name: rubygem-%{gem_name}
 Version: 0.4.0
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: Development/Languages
 License: MIT and Ruby
 URL: http://ruby-hmac.rubyforge.org
@@ -59,6 +59,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.0-14
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.0-13
 - 为 Magic 3.0 重建
 

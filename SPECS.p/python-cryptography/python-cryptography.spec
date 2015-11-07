@@ -4,8 +4,8 @@
 %global breqs() %1-setuptools %1-pretend %1-iso8601 %1-cryptography-vectors = %{version}
 
 Name:           python-cryptography
-Version:        1.0
-Release:        3%{?dist}
+Version:	1.1
+Release:	2%{?dist}
 Summary:        PyCA's cryptography library
 Summary(zh_CN.UTF-8): PyCA 的加密库
 
@@ -110,6 +110,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1-2
+- 更新到 1.1
+
 * Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1.0-3
 - 为 Magic 3.0 重建
 

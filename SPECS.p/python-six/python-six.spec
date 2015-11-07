@@ -3,8 +3,8 @@
 %global __python3 python3
 
 Name:           python-six
-Version:        1.9.0
-Release:        5%{?dist}
+Version:	1.10.0
+Release:	2%{?dist}
 Summary:        Python 2 and 3 compatibility utilities
 Summary(zh_CN.UTF-8): Python 2 和 3 兼容工具
 
@@ -102,6 +102,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.10.0-2
+- 更新到 1.10.0
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.9.0-5
 - 为 Magic 3.0 重建
 

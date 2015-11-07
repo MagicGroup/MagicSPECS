@@ -6,8 +6,8 @@
 Summary:   Cron daemon for executing programs at set times
 Summary(zh_CN.UTF-8): 在指定的时间执行程序的 cron 服务
 Name:      cronie
-Version:   1.4.11
-Release:   5%{?dist}
+Version:	1.5.0
+Release:   6%{?dist}
 Patch0:    correct-env.patch
 Patch1:    unitfile-killprocess.patch
 License:   MIT and BSD and ISC and GPLv2+
@@ -222,6 +222,9 @@ exit 0
 %attr(0644,root,root) %{_sysconfdir}/cron.d/dailyjobs
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.0-6
+- 更新到 1.5.0
+
 * Thu Jan 16 2014 Ville Skyttä <ville.skytta@iki.fi> - 1.4.11-5
 - Drop INSTALL from docs, fix rpmlint tabs vs spaces warning.
 

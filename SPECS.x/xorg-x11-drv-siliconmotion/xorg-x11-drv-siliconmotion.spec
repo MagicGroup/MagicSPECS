@@ -6,7 +6,7 @@ Summary:    Xorg X11 siliconmotion video driver
 Summary(zh_CN.UTF-8): Xorg X11 siliconmotion 显卡驱动
 Name:       xorg-x11-drv-siliconmotion
 Version:	1.7.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/siliconmotion.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.7.8-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.7.8-2
 - 更新到 1.7.8
 

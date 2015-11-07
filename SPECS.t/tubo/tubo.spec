@@ -2,7 +2,7 @@ Name:  tubo
 Summary:  Library to thread process std-in/std-err/std-out from fork() child
 Summary(zh_CN.UTF-8): 处理标准输入/输出/错误的库
 Version:  5.0.15
-Release:  3%{?dist}
+Release:  4%{?dist}
 License:  GPLv3+
 URL:      http://xffm.org/libtubo.html
 Source0:  http://sourceforge.net/projects/xffm/files/libtubo/libtubo0-%{version}.tar.bz2
@@ -84,6 +84,9 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.0.15-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 5.0.15-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary:       Docile keeps your Ruby DSLs tame and well-behaved
 Name:          rubygem-%{gem_name}
 Version:       1.1.5
-Release:       3%{?dist}
+Release:       4%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           https://ms-ati.github.com/docile/
@@ -78,6 +78,9 @@ rspec -Ilib spec
 %{gem_instdir}/spec
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.5-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.5-3
 - 为 Magic 3.0 重建
 

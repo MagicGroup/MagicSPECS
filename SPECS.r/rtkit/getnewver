@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://0pointer.de/public/?C=M;O=D"
+url="http://0pointer.de/public/?C=M&O=D"
 new1="rtkit-"
 new2=".tar.xz"
 downcommand="wget -q" 

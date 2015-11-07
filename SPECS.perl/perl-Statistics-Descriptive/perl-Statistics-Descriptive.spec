@@ -1,6 +1,6 @@
 Name:           perl-Statistics-Descriptive
 Version:	3.0609
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl module of basic descriptive statistical functions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ are available.
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.0609-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.0609-1
 - 更新到 3.0609
 

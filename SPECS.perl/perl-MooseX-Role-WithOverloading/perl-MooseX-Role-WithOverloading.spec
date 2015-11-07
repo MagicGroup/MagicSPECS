@@ -1,6 +1,6 @@
 Name:       perl-MooseX-Role-WithOverloading 
-Version:	0.16
-Release:	1%{?dist}
+Version:	0.17
+Release:	2%{?dist}
 # lib/MooseX/Role/WithOverloading.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.17-2
+- 更新到 0.17
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.16-1
 - 更新到 0.16
 

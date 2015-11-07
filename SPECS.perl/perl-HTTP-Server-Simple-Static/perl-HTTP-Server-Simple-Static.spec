@@ -1,6 +1,6 @@
 Name:		perl-HTTP-Server-Simple-Static
 Version:	0.09
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Serve static files with HTTP::Server::Simple
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.09-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.09-1
 - 更新到 0.09
 

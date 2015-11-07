@@ -15,7 +15,7 @@
 
 Name: pygtk2
 Version: 2.24.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPLv2+
 Group: Development/Languages
 Summary: Python bindings for GTK+
@@ -160,6 +160,9 @@ rm -fr $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/pygtk
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.24.0-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 2.24.0-4
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary: A simplified Jabber client library
 Name: rubygem-%{gem_name}
 Version: 0.8.8
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Development/Languages
 License: GPLv2+
 URL: http://xmpp4r-simple.rubyforge.org/
@@ -68,6 +68,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.8-13
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.8.8-12
 - 为 Magic 3.0 重建
 

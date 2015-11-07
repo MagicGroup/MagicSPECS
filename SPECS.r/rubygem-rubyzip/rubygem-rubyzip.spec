@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A ruby module for reading and writing zip files
 Group: Development/Languages
 License: Ruby or BSD
@@ -70,6 +70,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.7-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.7-3
 - 为 Magic 3.0 重建
 

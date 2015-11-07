@@ -3,7 +3,7 @@
 
 Name:           perl-Software-License
 Version:	0.103010
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Package that provides templated software licenses
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Software::LicenseUtils.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.103010-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.103010-2
 - 为 Magic 3.0 重建
 

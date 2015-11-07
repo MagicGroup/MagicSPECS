@@ -6,7 +6,7 @@
 
 Name:		perl-Package-DeprecationManager
 Version:	0.14
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Manage deprecation warnings for your distribution
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::DeprecationManager.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.14-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.14-3
 - 为 Magic 3.0 重建
 

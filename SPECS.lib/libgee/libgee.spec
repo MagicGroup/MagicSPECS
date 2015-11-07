@@ -1,6 +1,6 @@
 Name:           libgee
-Version:	0.15.3
-Release:        1%{?dist}
+Version:	0.18.0
+Release:        2%{?dist}
 Summary:        GObject collection library
 Summary(zh_CN.UTF-8): GObject 收集库
 
@@ -125,6 +125,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.18.0-2
+- 更新到 0.18.0
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 0.15.3-1
 - 更新到 0.15.3
 

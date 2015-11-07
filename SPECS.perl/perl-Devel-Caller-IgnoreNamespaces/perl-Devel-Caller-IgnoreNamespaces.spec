@@ -1,6 +1,6 @@
 Name:           perl-Devel-Caller-IgnoreNamespaces
 Version:        1.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Make available a function which can ignore name-spaces that you tell it about
 License:        GPLv2 or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.0-13
 - 为 Magic 3.0 重建
 

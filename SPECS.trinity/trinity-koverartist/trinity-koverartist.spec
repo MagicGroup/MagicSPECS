@@ -48,7 +48,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		Fast Creation of CD/DVD Covers
 Summary(zh_CN.UTF-8): 快速创建 CD/DVD 封面
 Version:		0.5
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 
 License:		GPLv2+
 Group:			Applications/Utilities
@@ -160,6 +160,9 @@ done
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.5-1.opt.2
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 0.5-1.opt.1
 - 为 Magic 3.0 重建
 

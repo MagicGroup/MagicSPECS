@@ -1,6 +1,6 @@
 Name:           gxine
 Version:        0.5.905
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        GTK frontend for the xine multimedia library
 
 Group:          Applications/Multimedia
@@ -131,6 +131,9 @@ touch --no-create %{_datadir}/icons/hicolor || :
 %{_libdir}/mozilla/plugins/gxineplugin.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.5.905-9
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.5.905-8
 - 为 Magic 3.0 重建
 

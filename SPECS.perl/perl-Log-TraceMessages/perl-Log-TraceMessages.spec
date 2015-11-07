@@ -1,6 +1,6 @@
 Name:           perl-Log-TraceMessages
 Version:        1.4
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Perl extension for trace messages used in debugging
 
 License:        GPL+ or Artistic
@@ -51,6 +51,9 @@ make test
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.4-23
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.4-22
 - 为 Magic 3.0 重建
 

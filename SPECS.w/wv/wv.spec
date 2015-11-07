@@ -2,7 +2,7 @@ Name:       wv
 Summary:    MSWord 6/7/8/9 binary file format to HTML converter
 Summary(zh_CN.UTF-8): 微软 Word 6/7/8/9 格式文件转移为 HTML
 Version:    1.2.9
-Release:    7%{?dist}
+Release:    8%{?dist}
 License:    GPLv2+
 Group:      Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -82,6 +82,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.2.9-8
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.2.9-7
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary: Open implementation of Service Location Protocol V2
 Summary(zh_CN.UTF-8): 服务位置协议 V2 的开源实现
 Name:    openslp
 Version: 2.0.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -188,6 +188,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.0-8
+- 为 Magic 3.0 重建
+
 * Thu Apr 02 2015 Liu Di <liudidi@gmail.com> - 2.0.0-7
 - 为 Magic 3.0 重建
 

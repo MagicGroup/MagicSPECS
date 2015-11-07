@@ -9,7 +9,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.1.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Fast XML parser and object serializer
 
 Group:          Development/Languages
@@ -109,6 +109,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.8-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.8-4
 - 为 Magic 3.0 重建
 

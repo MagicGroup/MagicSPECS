@@ -2,7 +2,7 @@
 
 Name:           python-enchant
 Version:        1.6.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Python bindings for Enchant spellchecking library
 Summary(zh_CN.UTF-8): Echant 拼写检查库的 Python 绑定
 Group:          Development/Languages
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.6.6-4
+- 为 Magic 3.0 重建
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 1.6.6-3
 - 为 Magic 3.0 重建
 

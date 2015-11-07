@@ -1,6 +1,6 @@
 Name:           libvdpau
-Version: 0.8
-Release: 1%{?dist}
+Version: 1.1.1
+Release: 2%{?dist}
 Summary:        Wrapper library for the Video Decode and Presentation API
 Summary(zh_CN.UTF-8): 对于视频解码和演示API的包装库
 
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.1-2
+- 更新到 1.1.1
+
 * Wed Aug 06 2014 Liu Di <liudidi@gmail.com> - 0.8-1
 - 更新到 0.8
 

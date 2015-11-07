@@ -1,6 +1,6 @@
 Name:           cryptopp
 Version:        5.6.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        C++ class library of cryptographic schemes
 Summary(zh_CN.UTF-8): 密码方案的 C++ 类库
 License:        Boost
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.6.2-4
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.6.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

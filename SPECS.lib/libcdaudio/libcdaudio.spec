@@ -2,7 +2,7 @@ Summary: Control operation of a CD-ROM when playing audio CDs
 Summary(zh_CN.UTF-8): 当播放音频 CD 时控制光驱
 Name: libcdaudio
 Version: 0.99.12p2
-Release: 17%{?dist}
+Release: 18%{?dist}
 # COPYING is a copy of GPLv2, but the code and the README clearly indicate
 # that the code is LGPLv2+. Probably want to let upstream know about COPYING.
 License: LGPLv2+
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libcdaudio.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.99.12p2-18
+- 为 Magic 3.0 重建
+
 * Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.99.12p2-17
 - 为 Magic 3.0 重建
 

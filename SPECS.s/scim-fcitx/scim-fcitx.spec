@@ -1,6 +1,6 @@
 Name:           scim-fcitx
 Version:        3.1.1
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        FCITX Input Method Engine for SCIM
 Summary(zh_CN.UTF-8): SCIM 下的 FCITX 输入法引擎
 
@@ -71,6 +71,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.1.1-23
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 3.1.1-22
 - 为 Magic 3.0 重建
 

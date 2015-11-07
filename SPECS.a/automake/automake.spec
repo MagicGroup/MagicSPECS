@@ -1,12 +1,12 @@
-%global api_version 1.14
+%global api_version 1.15
 
 # remove once %%configure is used instead of ./configure
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
 Summary:    A GNU tool for automatically creating Makefiles
 Name:       automake
-Version:    %{api_version}.1
-Release:    1%{?dist}
+Version:    %{api_version}
+Release:    2%{?dist}
 
 # docs ~> GFDL, sources ~> GPLv2+, mkinstalldirs ~> PD and install-sh ~> MIT
 License:    GPLv2+ and GFDL and Public Domain and MIT
@@ -125,6 +125,9 @@ fi
 %{_mandir}/man1/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.15-2
+- 更新到 1.15
+
 * Tue Jan 07 2014 Pavel Raiskup <praiskup@redhat.com> - 1.14.1-1
 - rebase to new maintenance release (#1046634)
 

@@ -1,6 +1,6 @@
 Name:           gcab
 Version:        0.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Cabinet file library and tool
 Summary(zh_CN.UTF-8): Cabinet 文件库和工具
 
@@ -85,6 +85,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/libgcab-1.0.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.6-4
+- 为 Magic 3.0 重建
+
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 0.6-3
 - 为 Magic 3.0 重建
 

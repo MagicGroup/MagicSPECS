@@ -1,7 +1,7 @@
 Name:           perl-CGI
 Summary:        Handle Common Gateway Interface requests and responses
-Version:	4.21
-Release:	1%{?dist}
+Version:	4.22
+Release:	2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LE/LEEJO/CGI-%{version}.tar.gz
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.22-2
+- 更新到 4.22
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 4.21-1
 - 更新到 4.21
 

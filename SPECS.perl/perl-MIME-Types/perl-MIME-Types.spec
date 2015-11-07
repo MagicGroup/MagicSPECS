@@ -1,6 +1,6 @@
 Name:           perl-MIME-Types
 Version:	2.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        MIME types module for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MojoX::MIME::Types.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.11-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.11-1
 - 更新到 2.11
 

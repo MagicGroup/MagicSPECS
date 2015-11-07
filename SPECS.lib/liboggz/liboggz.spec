@@ -1,6 +1,6 @@
 Name:           liboggz
 Version:        1.1.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple programming interface for Ogg files and streams
 Summary(zh_CN.UTF-8): Ogg 文件和流的简单程序接口
 
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.1-6
+- 为 Magic 3.0 重建
+
 * Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 1.1.1-5
 - 为 Magic 3.0 重建
 

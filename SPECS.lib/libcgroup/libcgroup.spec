@@ -6,7 +6,7 @@ Summary: Library to control and monitor control groups
 Summary(zh_CN.UTF-8): 控制和监视 cgroup 的库 
 Name: libcgroup
 Version: 0.41
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPLv2+
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -167,6 +167,9 @@ getent group cgred >/dev/null || groupadd -r cgred
 %{_libdir}/pkgconfig/libcgroup.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.41-6
+- 为 Magic 3.0 重建
+
 * Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 0.41-5
 - 为 Magic 3.0 重建
 

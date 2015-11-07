@@ -1,6 +1,6 @@
 Name:       perl-Class-DBI-Plugin-DeepAbstractSearch 
 Version:    0.08 
-Release:    22%{?dist}
+Release:    23%{?dist}
 # lib/Class/DBI/Plugin/DeepAbstractSearch.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-23
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-22
 - 为 Magic 3.0 重建
 

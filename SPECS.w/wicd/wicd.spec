@@ -4,7 +4,7 @@
 
 Name:                wicd
 Version:             1.7.3
-Release:             3%{?dist}
+Release:             4%{?dist}
 Summary:             Wireless and wired network connection manager
 Summary(zh_CN.UTF-8): 无线和有线网络连接管理程序
 
@@ -292,6 +292,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/autostart/wicd-tray.desktop
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.7.3-4
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.7.3-3
 - 为 Magic 3.0 重建
 

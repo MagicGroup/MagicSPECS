@@ -4,7 +4,7 @@
 Summary:       Broadcom Crystal HD device interface library
 Name:          libcrystalhd
 Version:       3.10.0
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       LGPLv2
 Group:         System Environment/Libraries
 URL:           http://www.broadcom.com/support/crystal_hd/
@@ -139,6 +139,9 @@ install -pm 0644 driver/linux/20-crystalhd.rules \
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.10.0-7
+- 为 Magic 3.0 重建
+
 * Mon Oct 07 2013 Nicolas Chauvet <kwizart@gmail.com> - 3.10.0-6
 - Don't install udev rules in /etc/udev/rules.d - rhbz#979542
 

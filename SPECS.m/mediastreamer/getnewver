@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download-mirror.savannah.gnu.org/releases/linphone/mediastreamer/?C=M;O=D"
+url="http://download-mirror.savannah.gnu.org/releases/linphone/mediastreamer/?C=M&O=D"
 new1="mediastreamer-"
 new2=".tar.gz"
 downcommand="wget -q" 

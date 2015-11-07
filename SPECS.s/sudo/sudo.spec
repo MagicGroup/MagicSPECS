@@ -1,8 +1,8 @@
 Summary: Allows restricted root access for specified users
 Summary(zh_CN.UTF-8): 允许指定的用户使用 root 权限
 Name: sudo
-Version:	1.8.14p3
-Release:	1%{?dist}
+Version:	1.8.15
+Release:	2%{?dist}
 License: ISC
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -199,6 +199,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libexecdir}/sudo/libsudo_util.so
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.8.15-2
+- 更新到 1.8.15
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.8.14p3-1
 - 更新到 1.8.14p3
 

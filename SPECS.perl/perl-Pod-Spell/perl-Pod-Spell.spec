@@ -1,6 +1,6 @@
 Name:           perl-Pod-Spell
 Version:	1.17
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A formatter for spellchecking Pod
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/auto/share/dist/Pod-Spell/wordlist
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.17-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.17-2
 - 为 Magic 3.0 重建
 

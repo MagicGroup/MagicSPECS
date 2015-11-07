@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.skbuff.net/iputils/?C=M;O=D"
+url="http://www.skbuff.net/iputils/?C=M&O=D"
 new1="iputils-s"
 new2=".tar.bz2"
 downcommand="wget -q" 

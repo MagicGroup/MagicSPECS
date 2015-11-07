@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://xorg.freedesktop.org/archive/individual/lib/?C=M;O=D"
+url="http://xorg.freedesktop.org/archive/individual/lib/?C=M&O=D"
 new1="libxshmfence-"
 new2=".tar.bz2"
 downcommand="wget -q" 

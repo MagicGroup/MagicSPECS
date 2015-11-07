@@ -1,6 +1,6 @@
 Name:		perl-Readonly-XS
 Version:	1.05
-Release:	16%{?dist}
+Release:	17%{?dist}
 Summary:	Companion module for Readonly
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Readonly::XS.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.05-17
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.05-16
 - 为 Magic 3.0 重建
 

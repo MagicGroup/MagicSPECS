@@ -4,7 +4,7 @@
 
 Name:           web-assets
 Version:        5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A simple framework for bits pushed to browsers
 Summary(zh_CN.UTF-8): 一个位推送到浏览器的简单框架
 BuildArch:      noarch
@@ -104,6 +104,9 @@ systemctl reload-or-try-restart httpd.service || :
 %endif
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 5-6
+- 为 Magic 3.0 重建
+
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 5-5
 - 为 Magic 3.0 重建
 

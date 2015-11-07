@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/desktop-file-utils/releases/?C=M;O=D"
+url="http://www.freedesktop.org/software/desktop-file-utils/releases/?C=M&O=D"
 new1="desktop-file-utils-"
 new2=".tar.xz"
 downcommand="wget -q" 

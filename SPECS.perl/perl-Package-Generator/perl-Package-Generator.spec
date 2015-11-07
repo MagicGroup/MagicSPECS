@@ -1,6 +1,6 @@
 Name:		perl-Package-Generator
 Version:	1.106
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Generate new packages quickly and easily
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Reaper.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.106-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.106-1
 - 更新到 1.106
 

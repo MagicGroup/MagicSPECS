@@ -4,7 +4,7 @@ Summary: Cross platform file downloader
 Summary(zh_CN.UTF-8): 跨平台的文件下载工具
 Name: multiget
 Version: 2.0
-Release: 0.3%{?dist}
+Release: 0.4%{?dist}
 License: GPL
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -73,6 +73,9 @@ magic_rpm_clean.sh
 %{_datadir}/pixmaps/mg_32.xpm
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0-0.4
+- 为 Magic 3.0 重建
+
 * Thu Jan 01 2015 Liu Di <liudidi@gmail.com> - 2.0-0.3
 - 为 Magic 3.0 重建
 

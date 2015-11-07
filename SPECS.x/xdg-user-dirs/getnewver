@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://user-dirs.freedesktop.org/releases/?C=M;O=D"
+url="http://user-dirs.freedesktop.org/releases/?C=M&O=D"
 new1="xdg-user-dirs-"
 new2=".tar.gz"
 downcommand="wget -q" 

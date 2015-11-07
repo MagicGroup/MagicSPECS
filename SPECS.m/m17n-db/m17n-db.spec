@@ -1,8 +1,8 @@
 Name:       m17n-db
 Summary:    Multilingualization datafiles for m17n-lib
 Summary(zh_CN.UTF-8): m17n-lib 的多语言数据文件
-Version: 1.6.5
-Release: 1%{?dist}
+Version: 1.7.0
+Release: 2%{?dist}
 Group:      System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:    LGPLv2+
@@ -128,6 +128,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/m17n-db.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.7.0-2
+- 更新到 1.7.0
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.6.5-1
 - 更新到 1.6.5
 

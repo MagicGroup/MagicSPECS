@@ -1,8 +1,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 
 Name:          libplist
-Version: 1.11
-Release:       3%{?dist}
+Version: 1.12
+Release:       4%{?dist}
 Summary:       Library for manipulating Apple Binary and XML Property Lists
 Summary(zh_CN.UTF-8): 处理 Apple 二进制和 XML 属性列表的库
 
@@ -87,6 +87,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.12-4
+- 更新到 1.12
+
 * Mon Jul 21 2014 Liu Di <liudidi@gmail.com> - 1.11-3
 - 为 Magic 3.0 重建
 

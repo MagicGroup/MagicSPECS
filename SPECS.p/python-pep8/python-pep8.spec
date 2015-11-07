@@ -6,7 +6,7 @@
 
 Name:           python-%{module_name}
 Version:	1.6.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Python style guide checker
 Summary(zh_CN.UTF-8): Python 风格向导检查器
 
@@ -116,6 +116,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.6.2-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.6.2-1
 - 更新到 1.6.2
 

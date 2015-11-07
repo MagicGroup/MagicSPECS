@@ -12,7 +12,7 @@
 Summary: 	Enhanced TeX modes for Emacs
 Name: 		emacs-auctex
 Version: 	11.87
-Release: 	2%{?dist}
+Release: 	3%{?dist}
 License: 	GPLv3+ and GFDL
 Group: 		Applications/Editors
 URL: 		http://www.gnu.org/software/auctex/
@@ -169,6 +169,9 @@ fi
 #%doc doc/html
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 11.87-3
+- 为 Magic 3.0 重建
+
 * Tue Dec  4 2012 Jonathan G. Underwood <jonathan.underwood@gmail.com> - 11.87-2
 - Fix the install location of the preview tex files
 - Fix the BuildRequires for latex

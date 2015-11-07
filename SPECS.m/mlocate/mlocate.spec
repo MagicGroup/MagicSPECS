@@ -2,7 +2,7 @@ Summary: An utility for finding files by name
 Summary(zh_CN.UTF-8): 按名称查找文件的工具
 Name: mlocate
 Version: 0.26
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: https://fedorahosted.org/mlocate/
 Group: Applications/System
@@ -69,6 +69,9 @@ fi
 %ghost %{_localstatedir}/lib/mlocate/mlocate.db
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.26-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 17 2014 Liu Di <liudidi@gmail.com> - 0.26-1
 - 更新到 0.26
 

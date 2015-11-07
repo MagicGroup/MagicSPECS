@@ -8,7 +8,7 @@ Summary: A library for text mode user interfaces
 Summary(zh_CN.UTF-8): 文本模式下用户界面库
 Name: newt
 Version: 0.52.18
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -148,6 +148,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.52.18-2
+- 为 Magic 3.0 重建
+
 * Wed Feb 11 2015 Liu Di <liudidi@gmail.com> - 0.52.18-1
 - 更新到 0.52.18
 

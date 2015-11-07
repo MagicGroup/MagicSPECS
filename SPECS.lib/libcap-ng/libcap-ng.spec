@@ -3,8 +3,8 @@
 Summary: An alternate posix capabilities library
 Summary(zh_CN.UTF-8): 另一个  posix 能力库
 Name: libcap-ng
-Version: 0.7.4
-Release: 1%{?dist}
+Version: 0.7.7
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -135,6 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644,root,root) %{_mandir}/man8/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.7-2
+- 更新到 0.7.7
+
 * Fri Jul 11 2014 Liu Di <liudidi@gmail.com> - 0.7.4-1
 - 更新到 0.7.4
 

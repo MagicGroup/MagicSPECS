@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.1.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Delorean lets you travel in time with Ruby by mocking Time.now
 Group: Development/Languages
 License: MIT
@@ -64,6 +64,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.1.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.0-3
 - 为 Magic 3.0 重建
 

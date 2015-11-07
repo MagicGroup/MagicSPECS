@@ -1,6 +1,6 @@
 Name:           perl-URI-Fetch
 Version:	0.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Smart URI fetching/caching
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.11-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.11-1
 - 更新到 0.11
 

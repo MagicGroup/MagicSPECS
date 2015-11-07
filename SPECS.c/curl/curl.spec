@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
-Version: 7.35.0
-Release: 2%{?dist}
+Version: 7.45.0
+Release: 3%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.lzma
@@ -226,6 +226,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.45.0-3
+- 更新到 7.45.0
+
 * Tue Feb 25 2014 Kamil Dudka <kdudka@redhat.com> 7.35.0-2
 - refresh expired cookie in test172 from upstream test-suite (#1068967)
 

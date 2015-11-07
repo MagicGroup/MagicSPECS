@@ -3,7 +3,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.3.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Query JSON structure with a matching language
 
 Group:          Development/Tools
@@ -80,6 +80,9 @@ rspec -Ilib spec
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.3.3-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.3-7
 - 为 Magic 3.0 重建
 

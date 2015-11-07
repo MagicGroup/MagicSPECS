@@ -9,7 +9,7 @@ Summary:   Xorg X11 r128 video driver
 Summary(zh_CN.UTF-8): Xorg X11 r128 显卡驱动
 Name:      xorg-x11-drv-r128
 Version:	6.10.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/r128.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 6.10.0-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 6.10.0-2
 - 更新到 6.10.0
 

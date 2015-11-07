@@ -3,7 +3,7 @@
 %{!?python_sitelib: %define python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:           python-httplib2
-Version:	0.9.1
+Version:	0.9.2
 Release:	2%{?dist}
 Summary:        A comprehensive HTTP client library
 Summary(zh_CN.UTF-8): 全面的 HTTP 客户端库
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.9.2-2
+- 更新到 0.9.2
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.9.1-2
 - 为 Magic 3.0 重建
 

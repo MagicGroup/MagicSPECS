@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Pager
 Version:        0.08
-Release:        27%{?dist}
+Release:        28%{?dist}
 Summary:        Pager utility for Class::DBI
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,6 +39,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-28
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.08-27
 - 为 Magic 3.0 重建
 

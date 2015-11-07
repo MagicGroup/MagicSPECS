@@ -3,7 +3,7 @@
 Summary: Framework and DSL for defining and using model instance factories
 Name: rubygem-%{gem_name}
 Version: 2.3.2
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://thoughtbot.com/projects/factory_girl
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.2-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.3.2-10
 - 为 Magic 3.0 重建
 

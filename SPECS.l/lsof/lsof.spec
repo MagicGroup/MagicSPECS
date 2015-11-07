@@ -1,7 +1,7 @@
 Summary: A utility which lists open files on a Linux/UNIX system
 Name: lsof
 Version: 4.87
-Release: 5%{?dist}
+Release: 6%{?dist}
 # Sendmail .. lib/snpf.c
 # LGPLv2+  .. lib/regex.c, regex.h
 License: zlib and Sendmail and LGPLv2+
@@ -42,6 +42,9 @@ install -p -m 0644 lsof.8 ${RPM_BUILD_ROOT}%{_mandir}/man8
 %{_mandir}/man*/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.87-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Liu Di <liudidi@gmail.com> - 4.87-5
 - 为 Magic 3.0 重建
 

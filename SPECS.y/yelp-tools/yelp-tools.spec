@@ -1,6 +1,6 @@
 Name:          yelp-tools
 Version:       3.11.3
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Create, manage, and publish documentation for Yelp
 
 Group:         Applications/Publishing
@@ -42,6 +42,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_datadir}/aclocal/yelp.m4
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.11.3-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 17 2013 Richard Hughes <rhughes@redhat.com> - 3.11.3-1
 - Update to 3.11.3
 

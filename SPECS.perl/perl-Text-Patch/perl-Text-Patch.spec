@@ -1,6 +1,6 @@
 Name:           perl-Text-Patch
 Version:        1.8
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Patches text with given patch
 License:        GPLv2+
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.8-13
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.8-12
 - 为 Magic 3.0 重建
 

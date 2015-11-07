@@ -2,8 +2,8 @@
 
 Summary: A library of handy utility functions
 Name: glib2
-Version:	2.46.0
-Release: 1%{?dist}
+Version:	2.47.1
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -221,6 +221,9 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_datadir}/installed-tests
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.47.1-2
+- 更新到 2.47.1
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 2.46.0-1
 - 更新到 2.46.0
 

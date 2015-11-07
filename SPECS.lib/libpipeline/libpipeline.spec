@@ -3,8 +3,8 @@
 Summary: A pipeline manipulation library
 Summary(zh_CN.UTF-8): 一个管道操作库
 Name: libpipeline
-Version: 1.3.0
-Release: 1%{?dist}
+Version: 1.4.1
+Release: 2%{?dist}
 License: GPLv3+
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.1-2
+- 更新到 1.4.1
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1.3.0-1
 - 更新到 1.3.0
 

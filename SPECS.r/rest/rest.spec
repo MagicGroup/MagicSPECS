@@ -1,6 +1,6 @@
 Name:          rest
 Version:	0.7.93
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       A library for access to RESTful web services
 Summary(zh_CN.UTF-8): 访问 RESTful web 服务的库
 
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/RestExtras-0.7.gir
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.93-6
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.7.93-5
 - 更新到 0.7.93
 

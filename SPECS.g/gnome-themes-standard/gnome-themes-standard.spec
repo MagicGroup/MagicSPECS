@@ -2,8 +2,8 @@
 %global gtk3_version 3.9.3
 
 Name: gnome-themes-standard
-Version:	3.13.3
-Release: 4%{?dist}
+Version:	3.18.0
+Release: 5%{?dist}
 Summary: Standard themes for GNOME applications
 Summary(zh_CN.UTF-8): GNOME 程序的标准主题 
 
@@ -109,6 +109,9 @@ done
 %{_sysconfdir}/gtk-2.0/gtkrc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-5
+- 更新到 3.18.0
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 3.13.3-4
 - 为 Magic 3.0 重建
 

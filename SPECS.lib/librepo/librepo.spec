@@ -1,5 +1,5 @@
 %define git 1
-%define vcsdate 20150413
+%define vcsdate 20151031
 %global gitrev f9ca1a4
 # gitrev is output of: git rev-parse --short HEAD
 
@@ -13,9 +13,9 @@
 Name:           librepo
 Version:        1.7.14
 %if 0%{git}
-Release:        0.git%{vcsdate}%{?dist}.1
+Release:        0.git%{vcsdate}%{?dist}.3
 %else
-Release:	2%{?dist}
+Release:	4%{?dist}
 %endif
 Summary:        Repodata downloading library
 Summary(zh_CN.UTF-8): Repo 数据下载库
@@ -175,6 +175,12 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20151031.3
+- 更新到 20151031 日期的仓库源码
+
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20150413.2
+- 为 Magic 3.0 重建
+
 * Mon Apr 13 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20150413.1
 - 更新到 20150413 日期的仓库源码
 

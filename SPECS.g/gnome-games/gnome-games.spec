@@ -32,7 +32,7 @@
 Summary: Games for the GNOME desktop
 Name: gnome-games
 Version: 3.6.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 License: GPLv2+ and GPLv3 and GFDL
 #VCS: git:git://git.gnome.org/gnome-games
@@ -718,6 +718,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:3.6.1-5
+- 为 Magic 3.0 重建
+
 * Tue Mar  5 2013 Hans de Goede <hdegoede@redhat.com> - 1:3.6.1-4
 - Fix glchess not working when playing against the computer (rhbz#917305)
 

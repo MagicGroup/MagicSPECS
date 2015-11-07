@@ -1,6 +1,6 @@
 Name:           ocaml-extlib
 Version:        1.6.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        OCaml ExtLib additions to the standard library
 Summary(zh_CN.UTF-8): OCaml 标准库的附加组件
 License:        LGPLv2+ with exceptions
@@ -101,6 +101,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6.1-10
+- 为 Magic 3.0 重建
+
 * Wed Mar 04 2015 Liu Di <liudidi@gmail.com> - 1.6.1-9
 - 为 Magic 3.0 重建
 

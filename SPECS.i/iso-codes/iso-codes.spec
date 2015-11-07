@@ -1,8 +1,8 @@
 Name:        iso-codes
 Summary:       ISO code lists and translations
 Summary(zh_CN.UTF-8): ISO 代码列表和翻译
-Version:	3.52
-Release:       2%{?dist}
+Version:	3.62
+Release:       3%{?dist}
 License:       LGPLv2+
 Group:        System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -58,6 +58,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/iso-codes.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.62-3
+- 更新到 3.62
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.52-2
 - 更新到 3.52
 

@@ -3,7 +3,7 @@
 
 Name:           memcached
 Version:        1.4.17
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          0
 Summary:        High Performance, Distributed Memory Object Cache
 
@@ -151,6 +151,9 @@ exit 0
 %{_includedir}/memcached/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0:1.4.17-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0:1.4.17-5
 - 为 Magic 3.0 重建
 

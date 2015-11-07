@@ -1,6 +1,6 @@
 Name:           perl-DBIx-DBSchema
 Version:	0.45
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Database-independent schema objects
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.45-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.45-1
 - 更新到 0.45
 

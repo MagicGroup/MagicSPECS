@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A module that helps implement the facade pattern
 
 Group:          Development/Languages
@@ -48,6 +48,9 @@ popd
 %{gem_spec}
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.5-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.5-4
 - 为 Magic 3.0 重建
 

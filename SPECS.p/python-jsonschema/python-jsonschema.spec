@@ -5,7 +5,7 @@
 
 Name:           python-%{pypi_name}
 Version:	2.5.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        An implementation of JSON Schema validation for Python
 Summary(zh_CN.UTF-8): JSON Schema 校验的 Python 实现
 
@@ -95,6 +95,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.5.1-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.5.1-1
 - 更新到 2.5.1
 

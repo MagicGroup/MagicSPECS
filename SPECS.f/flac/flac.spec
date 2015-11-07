@@ -1,8 +1,8 @@
 Summary: An encoder/decoder for the Free Lossless Audio Codec
 Summary(zh_CN.UTF-8): 自由无损音频编码 (FLAC) 的编码器/解码器
 Name: flac
-Version: 1.3.0
-Release: 3%{?dist}
+Version:	1.3.1
+Release: 4%{?dist}
 License: BSD and GPLv2+ and GFDL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -127,6 +127,9 @@ make -C test check FLAC__TEST_LEVEL=0 &> /dev/null
 %{_datadir}/aclocal/*.m4
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3.1-4
+- 更新到 1.3.1
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

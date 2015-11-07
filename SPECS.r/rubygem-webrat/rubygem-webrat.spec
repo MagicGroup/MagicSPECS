@@ -3,7 +3,7 @@
 Summary: Ruby Acceptance Testing for Web applications
 Name: rubygem-%{gem_name}
 Version: 0.7.3
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/brynary/webrat
@@ -97,6 +97,9 @@ rm -rf .gemrebuild
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.7.3-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.3-10
 - 为 Magic 3.0 重建
 

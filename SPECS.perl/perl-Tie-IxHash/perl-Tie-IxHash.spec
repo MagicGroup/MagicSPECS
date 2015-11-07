@@ -1,6 +1,6 @@
 Name:           perl-Tie-IxHash
 Version:        1.23
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Ordered associative arrays for Perl
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.23-6
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 1.23-5
 - 为 Magic 3.0 重建
 

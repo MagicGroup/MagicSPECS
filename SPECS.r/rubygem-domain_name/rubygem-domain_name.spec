@@ -4,7 +4,7 @@
 Summary:	Domain Name manipulation library for Ruby
 Name:		rubygem-%{gem_name}
 Version:	0.5.24
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 Group:		Development/Languages
 # See LICENSE.txt
@@ -112,6 +112,9 @@ popd
 %exclude	%{gem_instdir}/data/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.24-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.5.24-3
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 Summary: A RubyGems plugin that improves gem installation user experience
 Name: rubygem-%{gem_name}
 Version: 0.3.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/voxik/gem-nice-install
@@ -52,6 +52,9 @@ cp -a .%{gem_dir}/* \
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.0-3
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.debian.org/debian/pool/main/libp/libpaper/?C=M;O=D"
+url="http://ftp.debian.org/debian/pool/main/libp/libpaper/?C=M&O=D"
 new1="libpaper_"
 new2=".tar.gz"
 downcommand="wget -q" 

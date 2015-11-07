@@ -111,7 +111,7 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.10
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -2157,6 +2157,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.7.10-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.7.10-8
 - 为 Magic 3.0 重建
 

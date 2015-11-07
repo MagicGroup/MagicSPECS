@@ -2,7 +2,7 @@ Summary:			fbsplashsystemd - Systemd units for Fbsplash
 Summary(zh_CN.UTF-8):		fbsplashsystemd - 用于控制 Fbsplash 的 Systemd units
 Name:				fbsplashsystemd
 Version:			0.01
-Release:			1%{?dist}
+Release:			2%{?dist}
 
 Source:				%{name}-%{version}.tar.xz
 
@@ -68,5 +68,8 @@ magic_rpm_clean.sh
 %{_sbindir}/splash.ctl
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.01-2
+- 为 Magic 3.0 重建
+
 * Sat Jun 16 2012 Jiang Tao <jiangtao9999@163.com> - 0.01-1
 - Build for Magic Linux 3.0

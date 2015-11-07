@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.debian.org/debian/pool/main/d/dpkg/?C=M;O=D"
+url="http://ftp.debian.org/debian/pool/main/d/dpkg/?C=M&O=D"
 new1="dpkg_"
 new2=".tar.xz"
 downcommand="wget -q" 

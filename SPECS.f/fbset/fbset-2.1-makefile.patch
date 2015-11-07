@@ -29,7 +29,7 @@
 -		if [ ! -c /dev/fb5 ]; then mknod /dev/fb5 c 29 160; fi
 -		if [ ! -c /dev/fb6 ]; then mknod /dev/fb6 c 29 192; fi
 -		if [ ! -c /dev/fb7 ]; then mknod /dev/fb7 c 29 224; fi
-+		if [ -f $(PREFIX)/sbin/fbset ]; then rm $(PREFIX)/sbin/fbset; fi
++		#if [ -f $(PREFIX)/sbin/fbset ]; then rm $(PREFIX)/sbin/fbset; fi
 +		mkdir -p $(PREFIX)$(sbindir)
 +		$(INSTALL) -m 755 fbset $(PREFIX)$(sbindir)/
 +		$(INSTALL) -m 755 modeline2fb $(PREFIX)$(sbindir)/

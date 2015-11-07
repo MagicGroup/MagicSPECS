@@ -5,7 +5,7 @@
 Summary: Generate pure ruby from RubyParser compatible Sexps
 Name: rubygem-%{gem_name}
 Version: 2.1.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://seattlerb.rubyforge.org/ruby2ruby/
@@ -97,6 +97,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.1.1-3
 - 为 Magic 3.0 重建
 

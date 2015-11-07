@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://www.kernel.org/pub/linux/bluetooth/?C=M;O=D"
+url="https://www.kernel.org/pub/linux/bluetooth/?C=M&O=D"
 new1="obexd-"
 new2=".tar.gz"
 downcommand="wget -q" 

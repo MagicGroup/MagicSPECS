@@ -10,7 +10,7 @@
 
 Name:           pylint
 Version:	1.4.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Analyzes Python code looking for bugs and signs of poor quality
 Group:          Development/Debuggers
 License:        GPLv2+
@@ -163,6 +163,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.4.4-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 1.4.4-1
 - 更新到 1.4.4
 

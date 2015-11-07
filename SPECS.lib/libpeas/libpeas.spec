@@ -7,8 +7,8 @@
 %endif
 
 Name:		libpeas
-Version:	1.10.0
-Release:	4%{?dist}
+Version:	1.16.0
+Release:	5%{?dist}
 Summary:	Plug-ins implementation convenience library
 Summary(zh_CN.UTF-8): 实现插件的简易库
 
@@ -117,6 +117,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/glade/catalogs/libpeas-gtk.xml
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.16.0-5
+- 更新到 1.16.0
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1.10.0-4
 - 为 Magic 3.0 重建
 

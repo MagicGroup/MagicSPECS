@@ -1,6 +1,6 @@
 Name:           python-gdata
 Version:        2.0.18
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A Python module for accessing online Google services
 Summary(zh_CN.UTF-8): 访问在线 Google 服务的 Python 模块
 
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/gdata-%{version}-py*.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0.18-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 2.0.18-5
 - 为 Magic 3.0 重建
 

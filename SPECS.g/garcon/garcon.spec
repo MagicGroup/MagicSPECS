@@ -2,7 +2,7 @@
 
 Name:           garcon
 Version:	0.5.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Implementation of the freedesktop.org menu specification
 Summary(zh_CN.UTF-8): freedesktop.org 菜单标准的实现 
 
@@ -106,6 +106,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.0-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0.5.0-6
 - 为 Magic 3.0 重建
 

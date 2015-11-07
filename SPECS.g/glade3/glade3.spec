@@ -2,7 +2,7 @@ Summary:	User Interface Designer for GTK+ 2
 Summary(zh_CN.UTF-8): GTK+2 的用户界面设计器
 Name:		glade3
 Version:	3.8.4
-Release:	1%{?dist}
+Release:	2%{?dist}
 Epoch:		2
 License:	GPLv2+
 Group:		Development/Tools
@@ -204,6 +204,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libgladeui-1.0/gladeui
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2:3.8.4-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 20 2013 Kalev Lember <kalevlember@gmail.com> - 2:3.8.4-1
 - Update to 3.8.4
 

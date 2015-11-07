@@ -1,6 +1,6 @@
 Name:		mate-polkit
-Version: 1.9.0
-Release: 1%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 Summary:	Integrates polkit authentication for MATE desktop
 Summary(zh_CN.UTF-8): MATE 桌面集成的 polkit 认证
 License:	LGPLv2+
@@ -73,6 +73,9 @@ find %{buildroot} -name '*.la' -exec rm -fv {} ';'
 
 
 %changelog 
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
 - 更新到 1.9.0
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.7.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Colour management with Ruby
 Group: Development/Languages
 License: MIT
@@ -74,6 +74,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.7.1-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.7.1-2
 - 为 Magic 3.0 重建
 

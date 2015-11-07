@@ -3,7 +3,7 @@
 
 Name:		perl-Data-Section-Simple
 Version:	0.07
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Read data from __DATA__
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Data::Section::Simple.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.07-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.07-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:           perl-Archive-Extract
 # Epoch to compete with core module from perl.spec
 Epoch:          1
 Version:	0.76
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Generic archive extracting mechanism
 Summary(zh_CN.UTF-8): 通用的归档解压机制
 License:        GPL+ or Artistic
@@ -83,6 +83,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:0.76-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1:0.76-1
 - 更新到 0.76
 

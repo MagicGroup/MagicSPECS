@@ -5,7 +5,7 @@
 Summary: An extensible library which provides authentication for applications
 Name: pam
 Version: 1.1.8
-Release: 5%{?dist}
+Release: 6%{?dist}
 # The library is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 # pam_timestamp, pam_loginuid, and pam_console modules are GPLv2+.
@@ -374,6 +374,9 @@ fi
 %doc doc/adg/*.txt doc/adg/html
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.8-6
+- 为 Magic 3.0 重建
+
 * Tue Aug 05 2014 Liu Di <liudidi@gmail.com> - 1.1.8-5
 - 为 Magic 3.0 重建
 

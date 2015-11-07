@@ -1,6 +1,6 @@
 Name:          jackson-annotations
 Version:       2.4.1
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Core annotations for Jackson data processor 
 License:       ASL 2.0
 URL:           http://wiki.fasterxml.com/JacksonHome
@@ -53,6 +53,9 @@ sed -i 's/\r//' LICENSE
 %doc LICENSE
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.4.1-3
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.4.1-2
 - 为 Magic 3.0 重建
 

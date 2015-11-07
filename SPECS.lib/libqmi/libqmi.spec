@@ -1,13 +1,13 @@
 
 %global glib2_version 2.32.0
 
-%global realversion 1.10.0
+%global realversion 1.12.6
 
 Name: libqmi
 Summary: Support library to use the Qualcomm MSM Interface (QMI) protocol
 Summary(zh_CN.UTF-8): 使用 Qualcomm MSM Interface (QMI) 协议的支持库
 Version: %{?realversion}
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
@@ -100,6 +100,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.12.6-2
+- 更新到 1.12.6
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 1.10.0-1
 - 更新到 1.10.0
 

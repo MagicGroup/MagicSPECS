@@ -2,7 +2,7 @@ Summary: GNU's bc (a numeric processing language) and dc (a calculator)
 Summary(zh_CN.UTF-8): GNU 的 bc (一种数字处理语言) 和 dc (一个计算器)
 Name: bc
 Version: 1.06.95
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 URL: http://www.gnu.org/software/bc/
 Group: Applications/Engineering
@@ -72,6 +72,9 @@ fi
 %{_infodir}/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.06.95-7
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 1.06.95-6
 - 为 Magic 3.0 重建
 

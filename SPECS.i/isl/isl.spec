@@ -16,7 +16,7 @@ URL: http://isl.gforge.inria.fr/
 #
 # % global buildid .local
 
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 BuildRequires: gmp-devel
 BuildRequires: pkgconfig
@@ -94,6 +94,9 @@ make check
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:0.14-3
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1:0.14-1
 - 回退到 0.14
 

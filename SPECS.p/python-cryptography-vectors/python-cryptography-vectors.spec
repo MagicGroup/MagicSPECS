@@ -4,8 +4,8 @@
 %global pymodname cryptography_vectors
 
 Name:               python-%{modname}
-Version:            1.0
-Release:            3%{?dist}
+Version:	1.1
+Release:	2%{?dist}
 Summary:            Test vectors for the cryptography package
 Summary(zh_CN.UTF-8): 加密库包的测试向量
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1-2
+- 更新到 1.1
+
 * Sun Aug 23 2015 Liu Di <liudidi@gmail.com> - 1.0-3
 - 为 Magic 3.0 重建
 

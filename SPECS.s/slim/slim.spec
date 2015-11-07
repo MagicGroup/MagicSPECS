@@ -2,7 +2,7 @@
 
 Name:           slim
 Version:        1.3.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple Login Manager
 Summary(zh_CN.UTF-8): 简单的登录管理器
 Group:          User Interface/X
@@ -120,6 +120,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3.6-6
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 1.3.6-5
 - 为 Magic 3.0 重建
 

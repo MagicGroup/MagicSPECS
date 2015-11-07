@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://nice.freedesktop.org/releases/?C=M;O=D"
+url="http://nice.freedesktop.org/releases/?C=M&O=D"
 new1="libnice-"
 new2=".tar.gz"
 downcommand="wget -q" 

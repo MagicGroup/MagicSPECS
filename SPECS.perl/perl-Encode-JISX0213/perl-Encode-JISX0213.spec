@@ -1,6 +1,6 @@
 Name:           perl-Encode-JISX0213
 Version:        0.03
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        JIS X 0213 encoding
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.03-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.03-2
 - 为 Magic 3.0 重建
 

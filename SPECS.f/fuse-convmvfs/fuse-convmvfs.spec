@@ -1,6 +1,6 @@
 Name:           fuse-convmvfs
 Version:        0.2.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        FUSE-Filesystem to convert filesystem encodings
 Summary(zh_CN.UTF-8): 转换文件系统编码的文件系统
 
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.6-6
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.6-5
 - 为 Magic 3.0 重建
 

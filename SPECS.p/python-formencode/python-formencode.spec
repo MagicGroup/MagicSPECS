@@ -3,8 +3,8 @@
 %define srcname FormEncode
 
 Name:           python-formencode
-Version:        1.2.6
-Release:        3%{?dist}
+Version:	1.3.0
+Release:	2%{?dist}
 Summary:        HTML form validation, generation, and convertion package  
 Summary(zh_CN.UTF-8): HTML 表单校验、生成和转换包
 
@@ -81,6 +81,9 @@ PYTHONPATH=$(pwd) nosetests
 %{python_sitelib}/%{srcname}-%{version}-py%{python_version}.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 更新到 1.3.0
+
 * Thu Sep 03 2015 Liu Di <liudidi@gmail.com> - 1.2.6-3
 - 为 Magic 3.0 重建
 

@@ -8,8 +8,8 @@
 Name:           python-webob
 Summary:        WSGI request and response object
 Summary(zh_CN.UTF-8): WSGI 请求和回应对象
-Version:	1.5.0b0
-Release:	1%{?dist}
+Version:	1.5.1
+Release:	2%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -116,6 +116,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.5.1-2
+- 更新到 1.5.1
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.5.0b0-1
 - 更新到 1.5.0b0
 

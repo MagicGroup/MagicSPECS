@@ -34,8 +34,8 @@
 
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
-Version: 5.5.0
-Release: 1%{?dist}
+Version: 5.5.1
+Release: 2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -451,7 +451,7 @@ translationdir=%{_qt5_translationdir}
 
 Name: Qt5
 Description: Qt5 Configuration
-Version: 5.5.0
+Version: 5.5.1
 EOF
 
 # rpm macros
@@ -881,6 +881,9 @@ fi
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
+- 更新到 5.5.1
+
 * Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
 - 为 Magic 3.0 重建
 

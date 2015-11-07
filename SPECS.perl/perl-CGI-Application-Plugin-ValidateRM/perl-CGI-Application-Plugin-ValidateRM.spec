@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-ValidateRM
 Version:        2.5
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Help validate CGI::Application run modes using Data::FormValidator
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ chmod 0644 $RPM_BUILD_ROOT/%{perl_vendorlib}/CGI/Application/Plugin/ValidateRM.p
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.5-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.5-13
 - 为 Magic 3.0 重建
 

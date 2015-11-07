@@ -4,7 +4,7 @@ Summary: An X Window System tool for drawing basic vector graphics
 Summary(zh_CN.UTF-8): 描绘基本向量图形的 X 窗口系统工具
 Name: xfig
 Version: 3.2.5
-Release: 33.c%{?dist}
+Release: 34.c%{?dist}
 License: MIT
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -195,6 +195,9 @@ fi
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.2.5-34.c
+- 为 Magic 3.0 重建
+
 * Fri Oct 23 2015 Liu Di <liudidi@gmail.com> - 3.2.5-33.b
 - 为 Magic 3.0 重建
 

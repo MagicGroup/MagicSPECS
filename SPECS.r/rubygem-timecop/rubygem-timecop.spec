@@ -3,7 +3,7 @@
 Summary: Provides a unified method to mock Time.now, Date.today in a single call
 Name: rubygem-%{gem_name}
 Version: 0.7.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/travisjeffery/timecop
@@ -70,6 +70,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.7.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.7.1-3
 - 为 Magic 3.0 重建
 

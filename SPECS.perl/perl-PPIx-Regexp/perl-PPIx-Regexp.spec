@@ -1,6 +1,6 @@
 Name:           perl-PPIx-Regexp
-Version:	0.041
-Release:	1%{?dist}
+Version:	0.042_02
+Release:	2%{?dist}
 Summary:        Represent a regular expression of some sort
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.042_02-2
+- 更新到 0.042_02
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.041-1
 - 更新到 0.041
 

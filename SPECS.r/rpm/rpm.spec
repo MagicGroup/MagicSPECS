@@ -27,7 +27,7 @@
 Summary: The RPM package management system
 Name: rpm
 Version: %{rpmver}
-Release: %{?snapver:0.%{snapver}.}1%{?dist}.5
+Release: %{?snapver:0.%{snapver}.}1%{?dist}.6
 Group: System Environment/Base
 Url: http://www.rpm.org/
 Source0: http://rpm.org/releases/rpm-4.12.x/%{name}-%{srcver}.tar.bz2
@@ -529,6 +529,9 @@ exit 0
 %doc doc/librpm/html/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.13.0-0.rc1.1.6
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 4.12.90-1.5
 - 为 Magic 3.0 重建
 

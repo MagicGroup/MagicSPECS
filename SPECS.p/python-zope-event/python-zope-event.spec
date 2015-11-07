@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           python-zope-event
-Version:        4.0.3
-Release:        4%{?dist}
+Version:	4.1.0
+Release:	2%{?dist}
 Summary:        Zope Event Publication
 Summary(zh_CN.UTF-8): Zope 事件
 Group:          Development/Languages
@@ -118,6 +118,9 @@ popd
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.1.0-2
+- 更新到 4.1.0
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.0.3-4
 - 为 Magic 3.0 重建
 

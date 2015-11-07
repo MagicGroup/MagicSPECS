@@ -51,7 +51,7 @@
 Summary: A GNU collection of cross-compilation binary utilities
 Name: %{cross}-binutils
 Version: 2.25.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -676,6 +676,9 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.25.1-3
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 2.25.1-2
 - 为 Magic 3.0 重建
 

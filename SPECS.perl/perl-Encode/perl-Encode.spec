@@ -3,12 +3,12 @@
 %global cpan_version 2.76
 Name:           perl-Encode
 Epoch:          3
-Version:        %{cpan_version}
+Version:	2.78
 # Keep increasing release number even when rebasing version because
 # perl-encoding sub-package has independent version which does not change
 # often and consecutive builds would clash on perl-encoding NEVRA. This is the
 # same case as in perl.spec.
-Release:        3%{?dist}
+Release:	2%{?dist}
 Summary:        Character encodings in Perl
 # ucm:          UCD
 # other files:  GPL+ or Artistic
@@ -79,7 +79,7 @@ of the system. Perl strings are sequences of characters.
 
 %package -n perl-encoding
 Summary:        Write your Perl script in non-ASCII or non-UTF-8
-Version:        2.16
+Version:	2.78
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 # Keeping this sub-package arch-specific because it installs files into
@@ -109,7 +109,7 @@ The easiest and the best alternative is to write your script in UTF-8.
 # Keep architecture specific because files go into vendorarch
 %package devel
 Summary:        Perl Encode Module Generator
-Version:        %{cpan_version}
+Version:	2.78
 Group:          Development/Libraries
 Requires:       %{name}%{?_isa} = %{epoch}:%{cpan_version}-%{release}
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
@@ -165,6 +165,9 @@ make test
 %{perl_vendorarch}/Encode/encode.h
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3:2.78-2
+- 更新到 2.78
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 3:2.76-3
 - 为 Magic 3.0 重建
 

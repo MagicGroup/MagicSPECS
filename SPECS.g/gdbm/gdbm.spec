@@ -3,7 +3,7 @@ Summary: A GNU set of database routines which use extensible hashing
 Summary(zh_CN.UTF-8): 使用可扩展散列的数据库例程的 GNU 版本集合
 Name: gdbm
 Version:	1.11
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source: http://ftp.gnu.org/gnu/gdbm/gdbm-%{version}.tar.gz
 # Prevent gdbm from storing uninitialized memory content
 # to database files.
@@ -122,6 +122,9 @@ fi
 %{_mandir}/man3/* 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.11-8
+- 为 Magic 3.0 重建
+
 * Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 1.11-7
 - 更新到 1.11
 

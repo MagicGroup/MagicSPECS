@@ -5,7 +5,7 @@
 
 Name:           fontforge
 Version:        20120731b
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Outline and bitmap font editor
 
 Group:          Applications/Publishing
@@ -151,6 +151,9 @@ fi
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20120731b-9
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120731b-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

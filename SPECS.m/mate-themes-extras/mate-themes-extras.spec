@@ -1,8 +1,8 @@
 Summary: 	Extra gtk-2/3 themes for gtk based desktops
 Summary(zh_CN.UTF-8): 基于 gtk 的桌面的额外 gtk-2/3 主题
 Name: 		mate-themes-extras
-Version: 1.9.1
-Release: 1%{?dist}
+Version: 3.16.3
+Release: 2%{?dist}
 
 # upstream is located at github, but links from tag releases doesn't match copied link in
 # web-browser, in result fedora-rewiew-tool will fail.
@@ -116,6 +116,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.16.3-2
+- 更新到 3.16.3
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
 - 更新到 1.9.1
 

@@ -2,7 +2,7 @@
 %define git_commit fadf11e
 Name:           cwiid
 Version:        0.6.00
-Release:        27.20100505git%{git_commit}%{?dist}
+Release:        28.20100505git%{git_commit}%{?dist}
 Summary:        Wiimote interface library
 Summary(zh_CN.UTF-8): Wii 的遥控接口库
 
@@ -142,6 +142,9 @@ desktop-file-install --dir=${RPM_BUILD_ROOT}%{_datadir}/applications %{SOURCE1}
 %{_datadir}/applications/wmgui.desktop
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.6.00-28.20100505gitfadf11e
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 0.6.00-27.20100505gitfadf11e
 - 为 Magic 3.0 重建
 

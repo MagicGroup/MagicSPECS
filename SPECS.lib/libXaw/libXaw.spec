@@ -1,8 +1,8 @@
 Summary: X Athena Widget Set
 Summary(zh_CN.UTF-8): X 的部件集
 Name: libXaw
-Version: 1.0.12
-Release: 1%{?dist}
+Version: 1.0.13
+Release: 2%{?dist}
 License: MIT
 URL: http://www.x.org
 Group: System Environment/Libraries
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.13-2
+- 更新到 1.0.13
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.12-1
 - 更新到 1.0.12
 

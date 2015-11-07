@@ -6,7 +6,7 @@ Summary:   Xorg X11 v4l video driver
 Summary(zh_CN.UTF-8): Xorg X11 v4l 显卡驱动
 Name:      xorg-x11-drv-v4l
 Version:   0.2.0
-Release:   37%{?dist}
+Release:   38%{?dist}
 URL:       http://www.x.org
 License:   GPLv2+
 Group:     User Interface/X Hardware Support
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/v4l.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.2.0-38
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.2.0-37
 - 为 Magic 3.0 重建
 

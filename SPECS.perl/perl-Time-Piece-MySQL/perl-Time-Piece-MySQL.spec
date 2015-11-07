@@ -1,6 +1,6 @@
 Name:           perl-Time-Piece-MySQL
 Version:	0.06
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        MySQL-specific methods for Time::Piece
 
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.06-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.06-1
 - 更新到 0.06
 

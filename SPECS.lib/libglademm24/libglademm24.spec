@@ -1,6 +1,6 @@
 Name:           libglademm24
 Version:        2.6.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        C++ wrapper for libglade
 Summary(zh_CN.UTF-8):	libglade 的 C++ 绑定
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.6.7-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.6.7-4
 - 为 Magic 3.0 重建
 

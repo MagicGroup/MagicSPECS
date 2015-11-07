@@ -2,7 +2,7 @@
 
 Name:           ocaml-gettext
 Version: 0.3.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        OCaml library for i18n
 Summary(zh_CN.UTF-8): 多语言支持的 OCaml 库
 
@@ -202,6 +202,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.3.5-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.3.5-1
 - 更新到 0.3.5
 

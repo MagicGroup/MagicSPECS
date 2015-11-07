@@ -1,6 +1,6 @@
 Name:           redland
 Version:	1.0.17
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        RDF Application Framework
 Summary(zh_CN.UTF-8): RDF 应用程序框架
 
@@ -160,6 +160,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.17-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.0.17-1
 - 更新到 1.0.17
 

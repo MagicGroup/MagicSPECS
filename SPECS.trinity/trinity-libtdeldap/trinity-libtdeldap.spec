@@ -49,7 +49,7 @@ Group:		System/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		%{tde_epoch}
 Version:	0.5
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
@@ -173,6 +173,9 @@ magic_rpm_clean.sh
 
 
 %Changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.5-1.opt.2
+- 为 Magic 3.0 重建
+
 * Sun Oct 11 2015 Liu Di <liudidi@gmail.com> - 2:0.5-1.opt.1
 - 为 Magic 3.0 重建
 

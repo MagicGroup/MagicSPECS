@@ -1,6 +1,6 @@
 Name:           numlockx
 Version:        1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Turns on NumLock after starting X
 Summary(zh_CN.UTF-8): 启动 X 后打开 Numlock
 
@@ -43,6 +43,9 @@ magic_rpm_clean.sh
 %doc AUTHORS README LICENSE
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2-5
+- 为 Magic 3.0 重建
+
 * Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 1.2-4
 - 为 Magic 3.0 重建
 

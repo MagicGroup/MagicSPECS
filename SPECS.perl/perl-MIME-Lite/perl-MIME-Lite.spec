@@ -1,6 +1,6 @@
 Name:           perl-MIME-Lite
 Version:	3.030
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        MIME::Lite - low-calorie MIME generator
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.030-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.030-1
 - 更新到 3.030
 

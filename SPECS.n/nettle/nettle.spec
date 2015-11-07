@@ -1,6 +1,6 @@
 Name:           nettle
-Version: 3.0
-Release: 1%{?dist}
+Version: 3.1.1
+Release: 2%{?dist}
 Summary:        A low-level cryptographic library
 Summary(zh_CN.UTF-8): 低级的密码库
 
@@ -101,6 +101,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.1.1-2
+- 更新到 3.1.1
+
 * Wed Jan 28 2015 Liu Di <liudidi@gmail.com> - 3.0-1
 - 更新到 3.0
 

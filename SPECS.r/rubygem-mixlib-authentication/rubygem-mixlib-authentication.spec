@@ -20,7 +20,7 @@
 Summary: Simple per-request authentication
 Name: rubygem-%{gem_name}
 Version: 1.3.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://github.com/opscode/mixlib-authentication
@@ -100,6 +100,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3.0-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.0-7
 - 为 Magic 3.0 重建
 

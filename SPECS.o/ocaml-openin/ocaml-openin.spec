@@ -3,7 +3,7 @@
 
 Name:           ocaml-openin
 Version:        20070524
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        OCaml syntax to locally open modules
 Summary(zh_CN.UTF-8): 本地打开模块的 OCaml 语法
 
@@ -64,6 +64,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 20070524-24
+- 为 Magic 3.0 重建
+
 * Tue Mar 10 2015 Liu Di <liudidi@gmail.com> - 20070524-23
 - 为 Magic 3.0 重建
 

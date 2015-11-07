@@ -1,6 +1,6 @@
 Name:           perl-Pod-Parser
 Version:	1.63
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Basic perl modules for handling Plain Old Documentation (POD)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.63-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.63-1
 - 更新到 1.63
 

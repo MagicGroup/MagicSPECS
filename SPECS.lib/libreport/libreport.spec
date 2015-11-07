@@ -7,8 +7,8 @@
 Summary: Generic library for reporting various problems
 Summary(zh_CN.UTF-8): 报告多种问题的通用库
 Name: libreport
-Version: 2.2.3
-Release: 1%{?dist}
+Version: 2.6.3
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -664,6 +664,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.6.3-2
+- 更新到 2.6.3
+
 * Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 2.2.3-1
 - 更新到 2.2.3
 

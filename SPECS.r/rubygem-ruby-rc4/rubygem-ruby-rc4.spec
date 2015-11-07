@@ -10,7 +10,7 @@
 Summary: Pure Ruby implementation of the RC4 algorithm
 Name: rubygem-%{gem_name}
 Version: 0.1.5
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/caiges/Ruby-RC4
@@ -82,6 +82,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.5-11
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.5-10
 - 为 Magic 3.0 重建
 

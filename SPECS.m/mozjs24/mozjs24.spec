@@ -2,7 +2,7 @@ Summary:	JavaScript interpreter and libraries
 Summary(zh_CN.UTF-8): Java 脚本解释器和库
 Name:		mozjs24
 Version:	24.2.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	MPLv2.0
 Group:		Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -87,6 +87,9 @@ magic_rpm_clean.sh
 %{_includedir}/mozjs-24
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 24.2.0-5
+- 为 Magic 3.0 重建
+
 * Tue Dec 02 2014 Liu Di <liudidi@gmail.com> - 24.2.0-4
 - 为 Magic 3.0 重建
 

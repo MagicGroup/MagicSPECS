@@ -4,7 +4,7 @@
 Summary: HighLine is a high-level command-line IO library
 Name: rubygem-%{gem_name}
 Version: 1.6.21
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: GPLv2 or Ruby or BSD
 URL: https://github.com/JEG2/highline
@@ -83,6 +83,9 @@ popd
 %exclude %{gem_instdir}/INSTALL
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.6.21-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.6.21-3
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://cyberelk.net/tim/data/pycups/?C=M;O=D"
+url="http://cyberelk.net/tim/data/pycups/?C=M&O=D"
 new1="pycups-"
 new2=".tar.bz.."
 downcommand="wget -q" 

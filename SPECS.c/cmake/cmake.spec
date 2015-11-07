@@ -10,7 +10,7 @@
 
 Name:           cmake
 Version:	3.3.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Cross-platform make system
 Summary(zh_CN.UTF-8): 跨平台的 make 系统
 
@@ -289,6 +289,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %endif
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.3.2-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.3.2-1
 - 更新到 3.3.2
 

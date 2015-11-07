@@ -1,6 +1,6 @@
 %define name prism54-firmware
 %define version 1.0
-%define release 4%{?dist}
+%define release 5%{?dist}
 
 Summary: Firmware for the Linux prism54 driver
 Summary(zh_CN.UTF-8): prism54 固件
@@ -39,6 +39,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 /lib/firmware/*.arm
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0-5.1
+- 为 Magic 3.0 重建
+
 * Tue Aug 04 2015 Liu Di <liudidi@gmail.com> - 1.0-4.1
 - 为 Magic 3.0 重建
 

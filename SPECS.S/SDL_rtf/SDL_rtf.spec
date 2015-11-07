@@ -1,6 +1,6 @@
 Name:		SDL_rtf
 Version:		0.1.0
-Release:		4%{?dist}
+Release:		5%{?dist}
 Summary:	Simple DirectMedia Layer Rich Text Format (RTF) library
 Summary(zh_CN.UTF-8): 简单直接媒体层(SDL)富文本格式(RTF)库
 Group:		System Environment/Libraries
@@ -78,6 +78,9 @@ rm -rf %{_builddir}/%{name}-%{version}
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.0-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 0.1.0-4
 - 为 Magic 3.0 重建
 

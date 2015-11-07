@@ -1,6 +1,6 @@
 Name:		perl-Devel-CheckCompiler
 Version:	0.06
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Check the compiler's availability
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Devel-CheckCompiler/
@@ -51,6 +51,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/Devel::CheckCompiler.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-3
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.06-2
 - 为 Magic 3.0 重建
 

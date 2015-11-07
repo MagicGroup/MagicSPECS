@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.penguin.cz/~utx/ftp/amr/?C=M;O=D"
+url="http://www.penguin.cz/~utx/ftp/amr/?C=M&O=D"
 new1="a href=\"amrnb\-"
 new2=".tar.bz2"
 downcommand="wget -q" 

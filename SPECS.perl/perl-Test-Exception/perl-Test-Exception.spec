@@ -1,6 +1,6 @@
 Name:           perl-Test-Exception
 Version:	0.40
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Library of test functions for exception based Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/Test::Exception.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.40-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.40-1
 - 更新到 0.40
 

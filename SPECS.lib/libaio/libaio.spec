@@ -1,6 +1,6 @@
 Name: libaio
 Version: 0.3.110
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Linux-native asynchronous I/O access library
 Summary(zh_CN.UTF-8): Linux 本地异步 I/O 访问库
 License: LGPLv2+
@@ -79,6 +79,9 @@ magic_rpm_clean.sh
 %attr(0755,root,root) %{usrlibdir}/libaio.so
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.3.110-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 09 2014 Liu Di <liudidi@gmail.com> - 0.3.110-4
 - 为 Magic 3.0 重建
 

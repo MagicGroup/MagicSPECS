@@ -13,9 +13,9 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-notification-daemon
-Version:        1.9.0
-#Release:        0.2%{?git_rel}%{?dist}
-Release:        2%{?dist}
+Version: 1.11.0
+#Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Notification daemon for MATE Desktop
 Summary(zh_CN.UTF-8): MATE 桌面的通知服务
 License:        GPLv2+
@@ -98,6 +98,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
 - 为 Magic 3.0 重建
 

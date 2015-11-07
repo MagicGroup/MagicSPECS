@@ -1,6 +1,6 @@
 Name:           qt-gstreamer
 Version:        1.2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        C++ bindings for GStreamer with a Qt-style API
 Summary(zh_CN.UTF-8): GStreamer 的 Qt 框架的 C++ 绑定
 License:        LGPLv2+
@@ -148,6 +148,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.0-5
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 1.2.0-4
 - 为 Magic 3.0 重建
 

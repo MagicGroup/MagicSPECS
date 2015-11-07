@@ -1,6 +1,6 @@
 Name:          opusfile
 Version:       0.6
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       A high-level API for decoding and seeking within .opus files
 Summary(zh_CN.UTF-8): 解码和定位 .opus 文件的高级 API
 
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_libdir}/libopusurl.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.6-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 0.6-4
 - 为 Magic 3.0 重建
 

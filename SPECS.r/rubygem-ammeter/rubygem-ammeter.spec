@@ -4,7 +4,7 @@
 Summary: Write specs for your Rails 3+ generators
 Name: rubygem-%{gem_name}
 Version: 1.1.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/alexrothenberg/%{gem_name}
@@ -66,6 +66,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.2-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.2-3
 - 为 Magic 3.0 重建
 

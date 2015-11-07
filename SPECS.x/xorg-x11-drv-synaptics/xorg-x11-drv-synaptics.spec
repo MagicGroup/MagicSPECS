@@ -8,7 +8,7 @@
 Name:           xorg-x11-drv-synaptics
 Summary:        Xorg X11 Synaptics touchpad input driver
 Summary(zh_CN.UTF-8): Xorg X11 触摸板输入驱动
-Version:	1.8.2
+Version:	1.8.3
 Release:	2%{?dist}
 URL:            http://www.x.org
 License:        MIT
@@ -140,6 +140,9 @@ Development files for the Synaptics TouchPad for X.Org.
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.8.3-2
+- 更新到 1.8.3
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
 - 更新到 1.8.2
 

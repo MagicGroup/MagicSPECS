@@ -1,8 +1,8 @@
 %global             cbq_version v0.7.3
 Summary:            Advanced IP routing and network device configuration tools
 Name:               iproute
-Version:	3.14.0
-Release:            3%{?dist}
+Version:	4.2.0
+Release:            4%{?dist}
 Group:              Applications/System
 URL:                http://kernel.org/pub/linux/utils/net/%{name}2/
 Source0:            http://kernel.org/pub/linux/utils/net/%{name}2/%{name}2-%{version}.tar.gz
@@ -175,6 +175,9 @@ done
 %{_includedir}/libnetlink.h
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.2.0-4
+- 更新到 4.2.0
+
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 3.14.0-3
 - 为 Magic 3.0 重建
 

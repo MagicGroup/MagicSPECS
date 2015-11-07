@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://cyberelk.net/tim/data/patchutils/stable/?C=M;O=D"
+url="http://cyberelk.net/tim/data/patchutils/stable/?C=M&O=D"
 new1="patchutils-"
 new2=".tar.xz"
 downcommand="wget -q" 

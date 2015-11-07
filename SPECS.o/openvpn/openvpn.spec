@@ -5,7 +5,7 @@
 
 Name:              openvpn
 Version:           2.3.2
-Release:           3%{?prerelease:.%{prerelease}}%{?dist}
+Release:           4%{?prerelease:.%{prerelease}}%{?dist}
 Summary:           A full-featured SSL VPN solution
 Summary(zh_CN.UTF-8): 全功能的 SSL VPN 解决方案
 URL:               http://openvpn.net/
@@ -209,6 +209,9 @@ fi
 %exclude %{_datadir}/doc/%{name}/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.3.2-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 03 2015 Liu Di <liudidi@gmail.com> - 2.3.2-3
 - 为 Magic 3.0 重建
 

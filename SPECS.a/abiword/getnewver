@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.abisource.com/downloads/abiword/?C=M;O=D"
+url="http://www.abisource.com/downloads/abiword/?C=M&O=D"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 	rm -f index.html && $downcommand $url -O index.html

@@ -3,7 +3,7 @@
 
 Name:           SLOF
 Version:        0.1.git%{gittagdate}
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Slimline Open Firmware
 
 License:        BSD
@@ -58,6 +58,9 @@ cp -a boot_rom.bin $RPM_BUILD_ROOT%{_datadir}/qemu/slof.bin
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.git20140304-4
+- 为 Magic 3.0 重建
+
 * Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 0.1.git20140304-3
 - 为 Magic 3.0 重建
 

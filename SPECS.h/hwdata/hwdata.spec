@@ -1,8 +1,8 @@
 Name: hwdata
 Summary: Hardware identification and configuration data
 Summary(zh_CN.UTF-8): 硬件定义和配置数据
-Version:	0.263
-Release: 1%{?dist}
+Version:	0.283
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -39,6 +39,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.283-2
+- 更新到 0.283
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.263-1
 - 更新到 0.263
 

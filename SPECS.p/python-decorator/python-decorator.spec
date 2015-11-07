@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:           python-decorator
-Version:	4.0.2
-Release:	1%{?dist}
+Version:	4.0.4
+Release:	2%{?dist}
 Summary:        Module to simplify usage of decorators
 Summary(zh_CN.UTF-8): 简化修饰器使用的模块
 
@@ -111,6 +111,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.0.4-2
+- 更新到 4.0.4
+
 * Wed Sep 02 2015 Liu Di <liudidi@gmail.com> - 4.0.2-1
 - 更新到 4.0.2
 

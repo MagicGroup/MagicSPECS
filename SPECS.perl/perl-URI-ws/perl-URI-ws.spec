@@ -1,6 +1,6 @@
 Name:           perl-URI-ws
 Version:        0.03
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        WebSocket support for URI package
 License:        GPL+ or Artistic
 
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/URI*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.03-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.03-4
 - 为 Magic 3.0 重建
 

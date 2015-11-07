@@ -1,6 +1,6 @@
 Name:      perl-POE
 Version:	1.367
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:   POE - portable multitasking and networking framework for Perl
 
 Group:     Development/Libraries
@@ -119,6 +119,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.367-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.367-1
 - 更新到 1.367
 

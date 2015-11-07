@@ -3,7 +3,7 @@ Name:		qsopcast-qt4
 Group:		Applications/Internet
 Group(zh_CN.UTF-8):   应用程序/互联网
 Version:	0.4.85
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL v3
 Summary:	A P2P Stream program
 Summary(zh_CN.UTF-8): P2P 流媒体程序
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/qsopcast/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.4.85-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 10 2015 Liu Di <liudidi@gmail.com> - 0.4.85-3
 - 为 Magic 3.0 重建
 

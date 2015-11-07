@@ -1,6 +1,6 @@
 Name:           mate-themes
-Version: 1.9.0
-Release: 1%{?dist}
+Version: gtk3.14-1.11.0
+Release: 2%{?dist}
 Summary:        MATE Desktop themes
 Summary(zh_CN.UTF-8): MATE 桌面主题
 License:        GPLv2+
@@ -108,6 +108,9 @@ done
 %{_datadir}/icons/mate/cursors/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
+- 更新到 gtk3.14-1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
 - 更新到 1.9.0
 

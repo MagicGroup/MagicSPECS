@@ -7,7 +7,7 @@ Name: xorg-x11-%{pkgname}
 # IMPORTANT: If package ever gets renamed to something else, remove the Epoch line!
 Epoch: 1
 Version: 7.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
@@ -133,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:7.7-4
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1:7.7-3
 - 为 Magic 3.0 重建
 

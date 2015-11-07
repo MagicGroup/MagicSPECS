@@ -1,6 +1,6 @@
 Name:           perl-HTML-BarGraph
 Version:        0.5
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Generate multiset bar graphs using plain HTML
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/%{name}
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.5-10
 - 为 Magic 3.0 重建
 

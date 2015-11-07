@@ -1,6 +1,6 @@
 Name:           perl-PerlIO-via-QuotedPrint
 Version:        0.08
-Release:        349%{?dist}
+Release:        350%{?dist}
 Summary:        PerlIO layer for quoted-printable strings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.08-350
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.08-349
 - 为 Magic 3.0 重建
 

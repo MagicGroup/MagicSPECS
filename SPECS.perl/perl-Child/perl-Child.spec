@@ -1,6 +1,6 @@
 Name:           perl-Child
 Version:	0.012
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Object oriented simple interface to fork()
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/Child::Util.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.012-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.012-1
 - 更新到 0.012
 

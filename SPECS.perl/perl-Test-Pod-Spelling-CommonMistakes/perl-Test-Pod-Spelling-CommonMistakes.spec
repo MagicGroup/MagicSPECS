@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-Spelling-CommonMistakes
 Version:        1.001
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Checks POD for common spelling mistakes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

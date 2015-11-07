@@ -1,6 +1,6 @@
 Name:           libass
-Version:	0.11.2
-Release:        3%{?dist}
+Version:	0.13.0
+Release:        4%{?dist}
 Summary:        Portable library for SSA/ASS subtitles rendering
 Summary(zh_CN.UTF-8): 可移植的 SSA/ASS 字幕渲染库
 
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libass.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.13.0-4
+- 更新到 0.13.0
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.11.2-3
 - 更新到 0.11.2
 

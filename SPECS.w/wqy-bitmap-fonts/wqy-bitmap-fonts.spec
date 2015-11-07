@@ -4,7 +4,7 @@
 
 Name:           %{fontname}-fonts
 Version:        1.0.0
-Release:        0.5.rc1%{?dist}
+Release:        0.6.rc1%{?dist}
 Summary:        WenQuanYi Bitmap Chinese Fonts
 Summary(zh_CN.UTF-8): 文泉驿位图中文字体
 
@@ -71,6 +71,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.0.0-0.6.rc1
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.0.0-0.5.rc1
 - 为 Magic 3.0 重建
 

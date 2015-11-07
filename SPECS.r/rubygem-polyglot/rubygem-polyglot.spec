@@ -4,7 +4,7 @@
 Summary:        Allow hooking of language loaders for specified extensions into require
 Name:           rubygem-%{gem_name}
 Version:        0.3.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://github.com/cjheath/polyglot
@@ -58,6 +58,9 @@ cp -pa .%{gem_dir}/* \
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.4-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3.4-4
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary:	A command-line option parsing library for ruby
 Name:		rubygem-%{gem_name}
 Version:	2.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Group:		Applications/Productivity
 License:	GPLv2
 URL:		http://trollop.rubyforge.org/
@@ -41,6 +41,9 @@ ruby -Ilib/ test/test_trollop.rb
 %{gem_spec}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 2.0-7
 - 为 Magic 3.0 重建
 

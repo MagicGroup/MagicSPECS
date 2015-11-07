@@ -1,8 +1,8 @@
 %define _root_libdir    %{_libdir}
 
 Name:		   libtirpc
-Version: 0.2.4
-Release: 1%{?dist}
+Version: 0.3.2
+Release: 2%{?dist}
 Summary:		Transport Independent RPC Library
 Summary(zh_CN.UTF-8): 独立运行的 RPC 库
 Group:		  	System Environment/Libraries
@@ -142,6 +142,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.3.2-2
+- 更新到 0.3.2
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.2.4-1
 - 更新到 0.2.4
 

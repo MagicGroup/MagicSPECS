@@ -1,8 +1,8 @@
 Summary: A GNU general-purpose parser generator
 Summary(zh_CN.UTF-8): GNU 通用语法分析器
 Name: bison
-Version: 3.0.2
-Release: 1%{?dist}
+Version: 3.0.4
+Release: 2%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -157,6 +157,9 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.0.4-2
+- 更新到 3.0.4
+
 * Mon Dec 09 2013 Patsy Franklin <pfrankli@redhat.com> - 3.0.2-1
 - Rebase to 3.0.2.  Add BuildRequires: flex for testsuite.
 

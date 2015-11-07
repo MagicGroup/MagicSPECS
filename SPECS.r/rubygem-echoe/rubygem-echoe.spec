@@ -3,7 +3,7 @@
 Summary: A Rubygems packaging tool that provides Rake tasks for documentation, extension compiling, testing, and deployment
 Name: rubygem-%{gem_name}
 Version: 4.3.1
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://blog.evanweaver.com/files/doc/fauna/echoe/
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.3.1-13
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 4.3.1-12
 - 为 Magic 3.0 重建
 

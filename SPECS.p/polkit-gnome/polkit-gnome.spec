@@ -2,7 +2,7 @@ Summary: PolicyKit integration for the GNOME desktop
 Summary(zh_CN.UTF-8): GNOME 桌面的 PolicyKit 集成
 Name: polkit-gnome
 Version: 0.105
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Group: Applications/System
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.105-5
+- 为 Magic 3.0 重建
+
 * Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 0.105-4
 - 为 Magic 3.0 重建
 

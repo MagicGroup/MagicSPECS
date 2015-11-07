@@ -1,6 +1,6 @@
 Name:          sbc
 Version:	1.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:       Sub Band Codec used by bluetooth A2DP
 Summary(zh_CN.UTF-8): 蓝牙 A2DP 使用的子频带编解码器
 
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 %{_libdir}/libsbc.so
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.3-1
 - 更新到 1.3
 

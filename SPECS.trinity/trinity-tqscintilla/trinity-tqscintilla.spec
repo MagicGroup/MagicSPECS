@@ -31,7 +31,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.7.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	TQt source code editing component based on Scintilla
 Summary(zh_CN.UTF-8): 基于 Scintilla 的 TQt 源码编辑组件
 Group:		Development/Libraries
@@ -214,6 +214,9 @@ chmod a-x %{buildroot}%{_includedir}/tqscintilla/*.h
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.7.1-1.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:1.7.1-1.1
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-Algorithm-CheckDigits
 Version:	1.3.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Summary:	Perl extension to generate and test check digits
 Summary(zh_CN.UTF-8): 生成和测试校验数字的 Perl 扩展
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 为 Magic 3.0 重建
 

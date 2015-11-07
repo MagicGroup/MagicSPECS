@@ -7,7 +7,7 @@ Summary:	A lightweight RPC library based on XML and HTTP
 Summary(zh_CN.UTF-8): 一个轻量的基于 XML 和 HTTP 的 RPC 库
 Name:		xmlrpc-c
 Version:	1.32.5
-Release:	%release_func 1903.svn%svnrev
+Release:	%release_func 1904.svn%svnrev
 # See COPYING for details.
 # The Python 1.5.2 license used by a few files is just BSD.
 License:	BSD and MIT
@@ -245,6 +245,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.32.5-1904.svn2451
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.32.5-1903.svn2451
 - 为 Magic 3.0 重建
 

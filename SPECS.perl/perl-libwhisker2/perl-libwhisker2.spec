@@ -3,7 +3,7 @@ Name:           perl-%{real_name}
 Obsoletes:      perl-libwhisker <= 1.8
 Provides:       perl-libwhisker = %{version}-%{release}
 Version:        2.5
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Perl module geared specifically for HTTP testing
 Group:          Development/Libraries
 License:        BSD
@@ -103,6 +103,9 @@ perl ./test.pl
 %{_datadir}/%{name}
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.5-16
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 2.5-15
 - 为 Magic 3.0 重建
 

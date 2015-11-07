@@ -7,7 +7,7 @@
 
 Name:           avogadro
 Version:	1.1.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        An advanced molecular editor for chemical purposes
 Summary(zh_CN.UTF-8): 化学用途的高级分子编辑器
 
@@ -189,6 +189,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/avogadro/%{main_ver}/tools/
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.1.1-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 10 2015 Liu Di <liudidi@gmail.com> - 1.1.1-6
 - 为 Magic 3.0 重建
 

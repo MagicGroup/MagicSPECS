@@ -3,7 +3,7 @@
 
 Name:		perl-Test-Version
 Version:	2.03
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Check to see that versions in modules are sane
 License:	Artistic 2.0
 Group:		Development/Libraries
@@ -94,6 +94,9 @@ make test %{!?perl_bootstrap:AUTHOR_TESTING=1 RELEASE_TESTING=1}
 %{_mandir}/man3/Test::Version.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.03-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.03-1
 - 更新到 2.03
 

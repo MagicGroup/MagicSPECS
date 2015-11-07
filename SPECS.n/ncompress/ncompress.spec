@@ -2,7 +2,7 @@ Summary: Fast compression and decompression utilities.
 Summary(zh_CN.UTF-8): 快速压缩和解压缩的工具。
 Name: ncompress
 Version: 4.2.4.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: distributable
 Group: Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc LZW.INFO README
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.2.4.4-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 4.2.4.4-1
 - 更新到 4.2.4.4
 

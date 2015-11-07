@@ -1,7 +1,7 @@
 Summary: Development Libraries and headers for EFI
 Summary(zh_CN.UTF-8): EFI 的开发库和头文件 
 Name: gnu-efi
-Version:	3.0.2
+Version:	3.0.3
 Release:	2%{?dist}
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 %attr(0644,root,root) /boot/efi/EFI/%{efidir}/*.efi
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.0.3-2
+- 更新到 3.0.3
+
 * Tue Jun 30 2015 Liu Di <liudidi@gmail.com> - 3.0.2-2
 - 为 Magic 3.0 重建
 

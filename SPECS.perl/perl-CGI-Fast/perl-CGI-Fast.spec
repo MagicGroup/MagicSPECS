@@ -1,6 +1,6 @@
 Name:           perl-CGI-Fast
 Version:        2.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        CGI Interface for Fast CGI
 # lib/CGI/Fast.pm probably qotes piece of Artistic license before declaring
 # "as Perl itself" <https://github.com/leejo/cgi-fast/issues/13>
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.10-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.10-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:           ocaml-easy-format
 Version:        1.0.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        High-level and functional interface to the Format module
 Summary(zh_CN.UTF-8): 格式化棋块的高级的函数化的接口
 
@@ -102,6 +102,9 @@ make test
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.2-7
+- 为 Magic 3.0 重建
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 1.0.2-6
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 Name: festival
 Summary: Speech synthesis and text-to-speech system
 Version: %{festivalversion}
-Release: 25%{?dist}
+Release: 26%{?dist}
 
 URL: http://www.cstr.ed.ac.uk/projects/festival/
 Group: Applications/Multimedia
@@ -912,6 +912,9 @@ fi
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.96-26
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1.96-25
 - 为 Magic 3.0 重建
 

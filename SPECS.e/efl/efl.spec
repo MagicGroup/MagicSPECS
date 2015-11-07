@@ -13,7 +13,7 @@
 
 Name:		efl
 Version:	1.15.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Collection of Enlightenment libraries
 Summary(zh_CN.UTF-8): Enlightenment 桌面环境的库集合
 License:	BSD and LGPLv2+ and GPLv2 and zlib
@@ -479,6 +479,9 @@ fi
 %{_libdir}/pkgconfig/evas*.pc
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.15.2-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 14 2015 Liu Di <liudidi@gmail.com> - 1.15.2-2
 - 为 Magic 3.0 重建
 

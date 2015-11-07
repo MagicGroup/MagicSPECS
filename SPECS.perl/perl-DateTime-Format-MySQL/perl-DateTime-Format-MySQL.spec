@@ -12,7 +12,7 @@
 
 Name:           perl-DateTime-Format-MySQL
 Version:	0.05
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Parse and format MySQL dates and times 
 
 Group:          Development/Libraries
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.05-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-1
 - 更新到 0.05
 

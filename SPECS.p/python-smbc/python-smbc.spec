@@ -8,8 +8,8 @@
 Summary:       Python bindings for libsmbclient API from Samba
 Summary(zh_CN.UTF-8): Samba 的 libsmbclient 的 Python 绑定
 Name:          python-smbc
-Version:	1.0.15.4
-Release:	1%{?dist}
+Version:	1.0.15.5
+Release:	2%{?dist}
 URL:           http://cyberelk.net/tim/software/pysmbc/
 Source:        http://pypi.python.org/packages/source/p/pysmbc/pysmbc-%{version}.tar.bz2
 License:       GPLv2+
@@ -114,6 +114,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0.15.5-2
+- 更新到 1.0.15.5
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.15.4-1
 - 更新到 1.0.15.4
 

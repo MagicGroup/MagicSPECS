@@ -12,7 +12,7 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org
 Version: 4.14.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 #修复在 medistreamer 2.11 以上版本的编译问题
@@ -97,6 +97,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 17 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 为 Magic 3.0 重建
 

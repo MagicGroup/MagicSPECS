@@ -1,6 +1,6 @@
 Name:           nifticlib
 Version:        2.0.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A set of i/o libraries for reading and writing files in the nifti-1 data format
 Summary(zh_CN.UTF-8): 读取和写入 nifti-1 数据格式文件的工具
 
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.0-7
+- 为 Magic 3.0 重建
+
 * Mon Feb 16 2015 Liu Di <liudidi@gmail.com> - 2.0.0-6
 - 为 Magic 3.0 重建
 

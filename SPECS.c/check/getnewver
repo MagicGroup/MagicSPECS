@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://check.sourceforge.net/"
+url="https://sourceforge.net/projects/check"
 new1="Check "
 new2="<a"
 downcommand="wget -q" 

@@ -2,7 +2,7 @@ Summary:	Real-time file compressor
 Summary(zh_CN.UTF-8): 实时文件压缩器
 Name:		lzop
 Version:	1.03
-Release:	11%{?dist}
+Release:	12%{?dist}
 License:	GPLv2+
 Group:		Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man?/%{name}.*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.03-12
+- 为 Magic 3.0 重建
+
 * Thu Aug 07 2014 Liu Di <liudidi@gmail.com> - 1.03-11
 - 为 Magic 3.0 重建
 

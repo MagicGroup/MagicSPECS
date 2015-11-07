@@ -1,6 +1,6 @@
 Name:           evas-generic-loaders
-Version:	1.15.0
-Release:        2%{?dist}
+Version:	1.16.0-beta3
+Release:        3%{?dist}
 Summary:        Set of generic loaders for Evas
 Summary(zh_CN.UTF-8): Evas 的通用载入器集合
 License:        GPLv2+
@@ -35,6 +35,9 @@ magic_rpm_clean.sh
 %_libdir/evas/utils
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com>
+- 更新到 1.16.0-beta3
+
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.0-2
 - 更新到 1.15.0
 

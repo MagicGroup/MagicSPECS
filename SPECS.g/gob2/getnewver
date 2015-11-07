@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.5z.com/pub/gob/?C=M;O=D"
+url="http://ftp.5z.com/pub/gob/?C=M&O=D"
 new1="gob2-"
 new2=".tar.xz"
 downcommand="wget -q" 

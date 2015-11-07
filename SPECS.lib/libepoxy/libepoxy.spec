@@ -6,7 +6,7 @@
 Summary: Direct Rendering Manager runtime library
 Summary(zh_CN.UTF-8): 直接渲染管理 (DRM) 运行库
 Name: libepoxy
-Version: 1.2
+Version: 1.3.1
 Release: 2%{?dist}
 License: MIT
 URL: http://github.com/anholt/libepoxy
@@ -78,6 +78,9 @@ make check ||:
 %{_libdir}/pkgconfig/epoxy.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 更新到 1.3.1
+
 * Wed Feb 25 2015 Liu Di <liudidi@gmail.com> - 1.2-2
 - 为 Magic 3.0 重建
 

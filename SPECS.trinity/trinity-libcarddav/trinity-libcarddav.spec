@@ -30,7 +30,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.6.2
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	A portable CardDAV client implementation
 Group:		System/Libraries
 URL:		http://www.trinitydesktop.org/
@@ -171,5 +171,8 @@ fi
 
 
 %Changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.6.2-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.6.2-1
 - Initial release for TDE R14.0.0

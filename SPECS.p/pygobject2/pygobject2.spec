@@ -2,7 +2,7 @@
 
 Name: pygobject2
 Version: 2.28.6
-Release: 12%{?dist}
+Release: 13%{?dist}
 License: LGPLv2+
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -146,6 +146,9 @@ magic_rpm_clean.sh
 %{_datadir}/pygobject/xsl
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.28.6-13
+- 为 Magic 3.0 重建
+
 * Thu Aug 13 2015 Liu Di <liudidi@gmail.com> - 2.28.6-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Number-Format
 Version:	1.75
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl extension for formatting numbers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.75-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.75-1
 - 更新到 1.75
 

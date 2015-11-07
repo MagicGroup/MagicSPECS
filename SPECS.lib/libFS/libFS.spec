@@ -1,8 +1,8 @@
 Summary: X.Org X11 libFS runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libFS 运行库
 Name: libFS
-Version: 1.0.6
-Release: 1%{?dist}
+Version: 1.0.7
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libfs.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.7-2
+- 更新到 1.0.7
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.0.6-1
 - 更新到 1.0.6
 

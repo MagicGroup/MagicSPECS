@@ -3,7 +3,7 @@
 Summary:        Hawler, the ruby HTTP crawler
 Name:           rubygem-%{gem_name}
 Version:        0.3
-Release:        14%{?dist}
+Release:        15%{?dist}
 Group:          Development/Languages
 License:        BSD
 URL:            http://spoofed.org/files
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{gem_instdir}/test/
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3-15
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.3-14
 - 为 Magic 3.0 重建
 

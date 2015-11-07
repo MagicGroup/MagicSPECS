@@ -16,8 +16,8 @@
 %endif
 
 Name:           ocaml
-Version: 4.02.1
-Release: 1%{?dist}
+Version: 4.02.3
+Release: 2%{?dist}
 
 Summary:        OCaml compiler and programming environment
 
@@ -420,6 +420,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.02.3-2
+- 更新到 4.02.3
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 4.02.1-1
 - 更新到 4.02.1
 

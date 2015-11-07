@@ -1,9 +1,9 @@
 %define git 1
-%define vcsdate 20150927
+%define vcsdate 20151104
 
 Name:		shadowsocks-libev
 Version:	2.3.3
-Release:	3%{?dist}
+Release:	5%{?dist}
 Summary:	Libev port of shadowsocks
 Summary(zh_CN.UTF-8): shadowsocks 的 libev 移植版本
 
@@ -68,6 +68,12 @@ rm -f %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.3.3-5
+- 更新到 20151104 日期的仓库源码
+
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.3.3-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 27 2015 Liu Di <liudidi@gmail.com> - 2.3.3-3
 - 更新到 20150927 日期的仓库源码
 

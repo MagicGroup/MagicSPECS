@@ -4,7 +4,7 @@
 
 Name:           python-%{srcname}
 Version:	0.13
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        ECDSA cryptographic signature library
 Summary(zh_CN.UTF-8): ECDSA 加密签名库
 
@@ -119,6 +119,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.13-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 0.13-1
 - 更新到 0.13
 

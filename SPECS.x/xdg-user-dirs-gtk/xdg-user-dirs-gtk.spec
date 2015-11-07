@@ -1,6 +1,6 @@
 Name:		xdg-user-dirs-gtk
 Version:	0.10
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Gnome integration of special directories
 Summary(zh_CN.UTF-8): 用户指定目录的 Gnome 集成 
 
@@ -56,6 +56,9 @@ desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/user-dirs-upda
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.10-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 0.10-7
 - 为 Magic 3.0 重建
 

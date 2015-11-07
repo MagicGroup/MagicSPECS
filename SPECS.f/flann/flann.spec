@@ -4,7 +4,7 @@
 
 Name:           flann
 Version:	1.8.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Fast Library for Approximate Nearest Neighbors
 Summary(zh_CN.UTF-8): 快速的近似最邻近查找算法库
 Group:          Development/Libraries
@@ -151,6 +151,9 @@ rm -rf %{buildroot}
 %{python_sitearch}/flann-%{version}*.egg-info
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.8.4-6
+- 为 Magic 3.0 重建
+
 * Thu Apr 03 2014 Liu Di <liudidi@gmail.com> - 1.8.4-5
 - 更新到 1.8.4
 

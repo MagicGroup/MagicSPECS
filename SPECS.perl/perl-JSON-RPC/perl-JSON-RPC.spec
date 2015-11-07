@@ -1,6 +1,6 @@
 Name:           perl-JSON-RPC
 Version:        1.06
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl implementation of JSON-RPC 1.1 protocol
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -110,6 +110,9 @@ to serve JSON-RPC requests.
 %{perl_vendorlib}/JSON/RPC/Legacy/Server/Daemon.pm
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.06-4
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.06-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

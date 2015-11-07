@@ -1,6 +1,6 @@
 Name:           gnome-video-effects
 Version:	0.4.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Collection of GStreamer video effects
 Summary(zh_CN.UTF-8): GStreamer 视频效果集合
 
@@ -40,6 +40,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.4.1-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.4.1-3
 - 更新到 0.4.1
 

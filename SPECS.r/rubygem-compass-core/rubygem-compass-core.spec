@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: The Compass core stylesheet library
 Group: Development/Languages
 License: MIT
@@ -96,6 +96,9 @@ popd
 %doc %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.1-6
 - 为 Magic 3.0 重建
 

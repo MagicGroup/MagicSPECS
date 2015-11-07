@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.0.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Pure-ruby polyfill of MRI 2.1 String#scrub
 
 License:	MIT
@@ -93,6 +93,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.1-4
 - 为 Magic 3.0 重建
 

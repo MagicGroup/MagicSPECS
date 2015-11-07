@@ -3,7 +3,7 @@
 Summary: Manage child processes and their IO handles easily
 Name: rubygem-%{gem_name}
 Version: 1.3.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: BSD or Ruby
 URL: http://github.com/ahoward/open4/
@@ -62,6 +62,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3.4-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.3.4-3
 - 为 Magic 3.0 重建
 

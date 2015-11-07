@@ -1,8 +1,8 @@
 Summary: Collection of performance monitoring tools for Linux
 Summary(zh_CN.UTF-8): Linux 下的性能监视工具集合
 Name: sysstat
-Version:	11.1.7
-Release:	1%{?dist}
+Version:	11.1.8
+Release:	2%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -74,6 +74,9 @@ fi
 %{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 11.1.8-2
+- 更新到 11.1.8
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 11.1.7-1
 - 更新到 11.1.7
 

@@ -2,7 +2,7 @@ Summary: Audio/Video Control library for IEEE-1394 devices
 Summary(zh_CN.UTF-8): IEEE-1394 设备的音频/视频控制库
 Name: libavc1394
 Version: 0.5.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -82,6 +82,9 @@ make %{?_smp_mflags}
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.5.4-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.5.4-1
 - 更新到 0.5.4
 

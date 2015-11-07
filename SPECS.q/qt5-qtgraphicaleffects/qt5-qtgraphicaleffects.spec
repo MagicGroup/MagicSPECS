@@ -8,7 +8,7 @@
 Summary: Qt5 - QtGraphicalEffects component
 Summary(zh_CN.UTF-8): Qt5 - QtGraphicalEffects 组件
 Name:    qt5-%{qt_module}
-Version: 5.5.0
+Version: 5.5.1
 Release: 2%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, LICENSE.GPL3, respectively from qt5-qtbase for details
@@ -90,6 +90,9 @@ make install_docs INSTALL_ROOT=%{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
+- 更新到 5.5.1
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-2
 - 为 Magic 3.0 重建
 

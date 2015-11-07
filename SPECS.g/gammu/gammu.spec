@@ -1,8 +1,8 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:       gammu
-Version:        1.33.0
-Release:        3%{?dist}
+Version:	1.36.6
+Release:        4%{?dist}
 Summary:        Command Line utility to work with mobile phones
 Summary(zh_CN.UTF-8): 操作手机的命令行工具
 
@@ -170,6 +170,9 @@ cat lib%{name}.lang >> %{name}.lang
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.36.6-4
+- 更新到 1.36.6
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 1.33.0-3
 - 为 Magic 3.0 重建
 

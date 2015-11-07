@@ -5,7 +5,7 @@
 
 Name: openldap
 Version: 2.4.42
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: LDAP support libraries
 Summary(zh_CN.UTF-8): LDAP 支持库
 Group: System Environment/Daemons
@@ -551,6 +551,9 @@ exit 0
 %{_mandir}/man3/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.4.42-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 2.4.42-1
 - 更新到 2.4.42
 

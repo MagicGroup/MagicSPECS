@@ -13,8 +13,8 @@ BuildRequires: fontpackages-devel
 Summary: WYSIWYM (What You See Is What You Mean) document processor
 Summary(zh_CN.UTF-8): 所见即所得的文档处理器
 Name:	 lyx
-Version:	2.1.2
-Release: 1%{?dist}
+Version:	2.1.4
+Release: 2%{?dist}
 
 License: GPLv2+
 Group: 	 Applications/Publishing
@@ -304,6 +304,9 @@ fc-cache %{_fontdir} 2> /dev/null ||:
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.4-2
+- 更新到 2.1.4
+
 * Mon Dec 29 2014 Liu Di <liudidi@gmail.com> - 2.1.2-1
 - 更新到 2.1.2
 

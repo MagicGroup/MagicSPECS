@@ -1,8 +1,8 @@
 Summary:    Extensible Binary Meta Language library
 Summary(zh_CN.UTF-8): 可扩展二进制元语言库
 Name:       libebml
-Version: 1.3.0
-Release:    1%{?dist}
+Version: 1.3.3
+Release:    2%{?dist}
 License:    LGPLv2+
 Group:      System Environment/Libraries
 URL:        http://www.matroska.org/
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.3-2
+- 更新到 1.3.3
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 1.3.0-1
 - 更新到 1.3.0
 

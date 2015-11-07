@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-PkgConfig
 Version:	1.15
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Simplistic interface to pkg-config
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.15-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.15-1
 - 更新到 1.15
 

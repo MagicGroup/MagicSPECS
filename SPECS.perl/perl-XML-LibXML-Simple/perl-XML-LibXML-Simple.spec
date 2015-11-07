@@ -1,6 +1,6 @@
 Name:           perl-XML-LibXML-Simple
 Version:        0.95
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Read XML strings or files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.95-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 0.95-4
 - 为 Magic 3.0 重建
 

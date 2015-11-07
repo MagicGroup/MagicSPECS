@@ -1,6 +1,6 @@
 Name:		perl-Event
 Version:	1.24
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Event loop processing
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/Event::generic.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.24-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.24-2
 - 为 Magic 3.0 重建
 

@@ -6,8 +6,8 @@
 %global python 0
 
 Name:          libimobiledevice
-Version: 1.1.6
-Release:       1%{?dist}
+Version: 1.2.0
+Release:       2%{?dist}
 Summary:       Library for connecting to mobile devices
 Summary(zh_CN.UTF-8): 连接移动设备的库
 
@@ -103,6 +103,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %endif
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.0-2
+- 更新到 1.2.0
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.1.6-1
 - 更新到 1.1.6
 

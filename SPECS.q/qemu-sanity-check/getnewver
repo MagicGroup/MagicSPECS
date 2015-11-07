@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://people.redhat.com/~rjones/qemu-sanity-check/files/?C=M;O=D"
+url="http://people.redhat.com/~rjones/qemu-sanity-check/files/?C=M&O=D"
 new1="qemu-sanity-check-"
 new2=".tar.gz"
 downcommand="wget -q" 

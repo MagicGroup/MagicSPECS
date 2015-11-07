@@ -2,7 +2,7 @@
 
 Name:           cvsps
 Version:        2.2
-Release:        0.11.%{prever}%{?dist}
+Release:        0.12.%{prever}%{?dist}
 Summary:        Patchset tool for CVS
 Summary(zh_CN.UTF-8): CVS 用的补丁工具集
 
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.2-0.12.b1
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 2.2-0.10.b1
 - 为 Magic 3.0 重建
 

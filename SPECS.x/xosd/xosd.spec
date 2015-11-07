@@ -7,7 +7,7 @@
 
 Name:           xosd
 Version:        2.2.14
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        On-screen display library for X
 Summary(zh_CN.UTF-8): X 的屏幕显示库
 
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.2.14-16
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 2.2.14-15
 - 为 Magic 3.0 重建
 

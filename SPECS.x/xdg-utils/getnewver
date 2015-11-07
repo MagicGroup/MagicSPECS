@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://portland.freedesktop.org/download/?C=M;O=D"
+url="http://portland.freedesktop.org/download/?C=M&O=D"
 new1="xdg-utils-"
 new2=".tar.gz"
 downcommand="wget -q" 

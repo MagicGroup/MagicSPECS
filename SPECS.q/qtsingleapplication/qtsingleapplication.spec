@@ -5,7 +5,7 @@ Summary:	Qt library to start applications only once per user
 Summary(zh_CN.UTF-8): 每个用户只运行一次的程序的 Qt 库
 Name:		qtsingleapplication
 Version:	2.6.1
-Release:	12%{?dist}
+Release:	13%{?dist}
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv3 or LGPLv2 with exceptions
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/qtsinglecoreapplication.prf
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.6.1-13
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 2.6.1-12
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:   Writes audio CD-Rs in disk-at-once (DAO) mode
 Summary(zh_CN.UTF-8): 以 DAO 模式写入音频 CD
 Name:      cdrdao
 Version:   1.2.3
-Release:   16%{?dist}
+Release:   17%{?dist}
 License:   GPLv2+
 Group:     Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -65,6 +65,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.3-17
+- 为 Magic 3.0 重建
+
 * Mon Oct 09 2012 Honza Horak <hhorak@redhat.com> - 1.2.3-16
 - Add missing options to man page
 

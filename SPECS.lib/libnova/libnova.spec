@@ -1,6 +1,6 @@
 Name:		libnova
 Version: 0.15.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Libnova is a general purpose astronomy & astrodynamics library
 Summary(zh_CN.UTF-8): Libnove 是一个通用的天文学和天体动力学库
 Group:		Development/Libraries
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.15.0-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 0.15.0-1
 - 更新到 0.15.0
 

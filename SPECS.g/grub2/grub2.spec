@@ -47,7 +47,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.9%{?dist}
+Release:        0.10%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 Summary(zh_CN.UTF-8): 支持 Linux，多重启动和更多功能启动引导程序
 
@@ -628,6 +628,9 @@ fi
 %{_datarootdir}/grub/themes/
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:2.02-0.10
+- 为 Magic 3.0 重建
+
 * Wed Apr 16 2014 Liu Di <liudidi@gmail.com> - 1:2.02-0.9
 - 为 Magic 3.0 重建
 

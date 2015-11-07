@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://urlgrabber.baseurl.org/download/?C=M;O=D"
+url="http://urlgrabber.baseurl.org/download/?C=M&O=D"
 new1="urlgrabber-"
 new2=".tar.gz"
 downcommand="wget -q" 

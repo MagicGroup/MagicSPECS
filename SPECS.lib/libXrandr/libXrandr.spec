@@ -1,8 +1,8 @@
 Summary: X.Org X11 libXrandr runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXrandr 运行库
 Name: libXrandr
-Version: 1.4.2
-Release: 1%{?dist}
+Version: 1.5.0
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.0-2
+- 更新到 1.5.0
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.4.2-1
 - 更新到 1.4.2
 

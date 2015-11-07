@@ -1,6 +1,6 @@
 Name:           perl-eperl
 Version:        2.2.14
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        Embedded Perl Language
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.2.14-32
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.14-31
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

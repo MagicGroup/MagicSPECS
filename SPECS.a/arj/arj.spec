@@ -2,7 +2,7 @@ Summary:	Archiver for .arj files
 Summary(zh_CN):	.arj 文件的归档
 Name:		arj
 Version:	3.10.22
-Release:	11%{?dist}
+Release:	12%{?dist}
 License:	GPL+
 Group:		Applications/Archiving
 Group(zh_CN):	应用程序/归档
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*arj*1.*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.10.22-12
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 3.10.22-10
 - 为 Magic 3.0 重建
 

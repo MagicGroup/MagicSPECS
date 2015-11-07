@@ -3,9 +3,9 @@
 %bcond_with static
 %bcond_without check
 
-%define realver 3081101
-%define docver 3081101
-%define rpmver  3.8.11.1
+%define realver 3090200
+%define docver 3090200
+%define rpmver  3.9.2
 
 Summary: Library that implements an embeddable SQL database engine
 Summary(zh_CN.UTF-8): 实现嵌入式 SQL 数据库引擎的库
@@ -208,6 +208,9 @@ make test
 %endif
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-2
+- 更新到 3.9.2
+
 * Thu Oct 01 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-2
 - 为 Magic 3.0 重建
 

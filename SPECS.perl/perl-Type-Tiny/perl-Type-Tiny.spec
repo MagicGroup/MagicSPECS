@@ -1,6 +1,6 @@
 Name:           perl-Type-Tiny
 Version:	1.001_002
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Tiny, yet Moo(se)-compatible type constraint
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -96,6 +96,9 @@ make test
 %{_mandir}/man3/Test::TypeTiny.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001_002-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.001_002-1
 - 更新到 1.001_002
 

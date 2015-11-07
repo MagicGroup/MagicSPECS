@@ -1,7 +1,7 @@
 Name:           perl-Business-ISBN
 Version:	2.09_02
 %define module_version 2.05_03
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
 Summary(zh_CN.UTF-8): 国际标准书刊号的 Perl 模块
 
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.09_02-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.09_02-1
 - 更新到 2.09_02
 

@@ -1,6 +1,6 @@
 Name:           lxterminal
 Version:        0.1.11
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Desktop-independent VTE-based terminal emulator
 Summary(zh_CN.UTF-8): 基于 VTE 的桌面无关的终端模拟器
 
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.11-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.11-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

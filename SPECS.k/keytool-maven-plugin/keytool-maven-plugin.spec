@@ -3,7 +3,7 @@
 
 Name:             keytool-maven-plugin
 Version:          1.0
-Release:          16%{?dist}
+Release:          17%{?dist}
 Summary:          A plugin that wraps the keytool program and allows to manipulate keystores
 License:          MIT and ASL 2.0
 Group:            Development/Libraries
@@ -59,6 +59,9 @@ cp %{SOURCE1} LICENSE-ASL
 %doc LICENSE-MIT LICENSE-ASL
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0-17
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0-16
 - 为 Magic 3.0 重建
 

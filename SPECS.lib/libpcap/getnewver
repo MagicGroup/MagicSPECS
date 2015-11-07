@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.tcpdump.org/release/?C=M;O=D"
+url="http://www.tcpdump.org/release/?C=M&O=D"
 new1="libpcap-"
 new2=".tar.gz"
 downcommand="wget -q" 

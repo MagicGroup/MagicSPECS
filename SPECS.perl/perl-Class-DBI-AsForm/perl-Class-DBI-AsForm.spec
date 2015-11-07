@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-AsForm
 Version:        2.42
-Release:        33%{?dist}
+Release:        34%{?dist}
 Summary:        Produce HTML form elements for database columns
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.42-34
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.42-33
 - 为 Magic 3.0 重建
 

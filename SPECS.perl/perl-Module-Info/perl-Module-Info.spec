@@ -3,7 +3,7 @@
 
 Name:           perl-Module-Info
 Version:	0.35
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:        Information about Perl modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.35-6
+- 为 Magic 3.0 重建
+
 * Sun Jun 15 2014 Liu Di <liudidi@gmail.com> - 0.35-4
 - 为 Magic 3.0 重建
 

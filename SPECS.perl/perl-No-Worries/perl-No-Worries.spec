@@ -1,6 +1,6 @@
 Name:           perl-No-Worries
 Version:        1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl coding without worries
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.2-4
 - 为 Magic 3.0 重建
 

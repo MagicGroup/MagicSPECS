@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.4
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Generate a JSON payload from Git log output
 Group: Development/Languages
 License: AGPLv3+
@@ -105,6 +105,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.4-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.4-6
 - 为 Magic 3.0 重建
 

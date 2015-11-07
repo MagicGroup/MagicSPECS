@@ -5,7 +5,7 @@ Summary:       GNU Emacs text editor
 Name:          emacs
 Epoch:         1
 Version:       24.5
-Release:       7%{?dist}
+Release:       8%{?dist}
 License:       GPLv3+ and CC0-1.0
 URL:           http://www.gnu.org/software/emacs/
 Group:         Applications/Editors
@@ -479,6 +479,9 @@ update-desktop-database &> /dev/null || :
 %dir %{_datadir}/emacs/site-lisp/site-start.d
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:24.5-8
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Richard Hughes <rhughes@redhat.com> - 1:24.5-7
 - Remove no longer required AppData file
 

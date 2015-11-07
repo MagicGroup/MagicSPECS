@@ -1,6 +1,6 @@
 Name:           perl-SDL
 Version:	2.546
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        SDL bindings for the Perl language
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -60,6 +60,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.546-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.546-1
 - 更新到 2.546
 

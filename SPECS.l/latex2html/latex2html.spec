@@ -4,7 +4,7 @@ Summary: Converts LaTeX documents to HTML
 Summary(zh_CN.UTF-8): 转换 LaTeX 文档到 HTML 格式
 Name: latex2html
 Version: 2012
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -232,6 +232,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/pstoimg.*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2012-2
+- 为 Magic 3.0 重建
+
 * Wed Nov 21 2012 Jindrich Novy <jnovy@redhat.com> 2012-1
 - update to latex2html 2012
 - update URL

@@ -8,7 +8,7 @@
 
 Name:           debhelper
 Version:	9.20150101
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Helper programs for Debian rules
 Summary(zh_CN.UTF-8): Debian 打包用的辅助程序
 
@@ -80,6 +80,9 @@ make test
 %{perl_vendorlib}/Debian/Debhelper
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 9.20150101-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 9.20150101-1
 - 更新到 9.20150101
 

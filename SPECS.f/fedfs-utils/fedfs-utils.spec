@@ -1,6 +1,6 @@
 Name:           fedfs-utils
-Version:        0.10.3
-Release:        3%{?dist}
+Version: 0.10.4
+Release: 2%{?dist}
 Summary:        Utilities for mounting and managing FedFS
 Summary(zh_CN.UTF-8): 挂载和管理 FedFS 的工具
 
@@ -433,6 +433,9 @@ FedFS may support other network file system protocols in the future.
 %{_mandir}/man8/nsdb-*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.10.4-2
+- 更新到 0.10.4
+
 * Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 0.10.3-3
 - 为 Magic 3.0 重建
 

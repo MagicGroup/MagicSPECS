@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/gnu/libunistring/?C=M;O=D"
+url="http://ftp.gnu.org/gnu/libunistring/?C=M&O=D"
 new1="libunistring-"
 new2=".tar.gz"
 downcommand="wget -q" 

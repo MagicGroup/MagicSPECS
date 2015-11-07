@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.3
-Release: 10%{?dist}
+Release: 11%{?dist}
 Epoch: 1
 
 License: BSD
@@ -517,6 +517,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:5.7.3-11
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1:5.7.3-10
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:       yap
 Version:    6.2.2
-Release:    6%{?dist}
+Release:    7%{?dist}
 Summary:    High-performance Prolog Compiler
 Summary(zh_CN.UTF-8): 高性能的 Prolog 编译器
 Group:      Development/Languages
@@ -239,6 +239,9 @@ fi
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 6.2.2-7
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 6.2.2-6
 - 为 Magic 3.0 重建
 

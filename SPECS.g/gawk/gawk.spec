@@ -1,8 +1,8 @@
 Summary: The GNU version of the awk text processing utility
 Summary(zh_CN.UTF-8): awk 文本处理工具的 GNU 版本
 Name: gawk
-Version:	4.1.0
-Release: 1%{?dist}
+Version:	4.1.3
+Release: 2%{?dist}
 # Most of source files are licensed under GPLv3+,
 # several files are GPL or LGPLv2.1+ licensed,
 # gettext.h is LGPL and random.c is BSD licensed
@@ -79,6 +79,9 @@ fi
 %{_libdir}/gawk
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.1.3-2
+- 更新到 4.1.3
+
 * Fri Apr 04 2014 Liu Di <liudidi@gmail.com> - 4.1.0-1
 - 更新到 4.1.0
 

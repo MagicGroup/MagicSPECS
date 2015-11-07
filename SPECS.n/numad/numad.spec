@@ -2,7 +2,7 @@
 
 Name: numad
 Version: 0.5
-Release: 19.20140620git%{?dist}
+Release: 20.20140620git%{?dist}
 Summary: NUMA user daemon
 Summary(zh_CN.UTF-8): NUMA 用户服务
 
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 %systemd_postun numad.service
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5-20.20140620git
+- 为 Magic 3.0 重建
+
 * Sat Feb 28 2015 Liu Di <liudidi@gmail.com> - 0.5-19.20140620git
 - 为 Magic 3.0 重建
 

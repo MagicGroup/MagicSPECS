@@ -4,7 +4,7 @@ Summary: Lian Lian Kan for Linux
 Summary(zh_CN.UTF-8): Linux下的连连看
 Name: llk
 Version: %{ver}
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL
 URL: http://llk-linux.sourceforge.net
 Group: Amusements/Games
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.3-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 02 2014 Liu Di <liudidi@gmail.com> - 2.3-3
 - 为 Magic 3.0 重建
 

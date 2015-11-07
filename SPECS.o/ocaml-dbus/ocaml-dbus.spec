@@ -2,7 +2,7 @@
 
 Name:           ocaml-dbus
 Version:        0.29
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        OCaml library for using D-Bus
 Summary(zh_CN.UTF-8): 使用 D-Bus 需要的 OCaml 库
 License:        LGPLv2
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.29-13
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 0.29-12
 - 为 Magic 3.0 重建
 

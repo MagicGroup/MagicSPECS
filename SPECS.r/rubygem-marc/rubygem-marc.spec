@@ -11,7 +11,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.0.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Ruby library for MARC catalog
 Group:		Development/Languages
 
@@ -121,6 +121,9 @@ ruby -Ilib:. -e 'gem "test-unit"; require "marc" ; Dir.glob("test/tc_*.rb"){|f| 
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.0-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.0-3
 - 为 Magic 3.0 重建
 

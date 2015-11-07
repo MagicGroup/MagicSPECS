@@ -5,7 +5,7 @@
 
 Name:           gtkmm24
 Version:        2.24.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 Summary:        C++ interface for GTK2 (a GUI library for X)
 Summary(zh_CN.UTF-8): GTK2 的 C++ 接口
@@ -112,6 +112,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/devhelp/
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.24.4-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 2.24.4-3
 - 为 Magic 3.0 重建
 

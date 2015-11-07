@@ -53,7 +53,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.10.5
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	Python/C++ bindings generator runtime library
 Summary(zh_CN.UTF-8): Python/C++ 绑定生成器运行库
 Group:		Development/Tools
@@ -181,6 +181,9 @@ cd build
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:4.10.5-1.opt.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:4.10.5-1.opt.1
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Check your gems against Fedora/EPEL
 Group: Development/Languages
 License: MIT
@@ -92,6 +92,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.4-9
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.1.4-8
 - 为 Magic 3.0 重建
 

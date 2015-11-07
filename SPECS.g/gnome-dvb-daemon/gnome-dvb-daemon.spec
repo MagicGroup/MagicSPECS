@@ -1,8 +1,8 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 
 Name:		gnome-dvb-daemon
-Version:	0.2.10
-Release:	1%{?dist}
+Version:	0.2.90
+Release:	2%{?dist}
 Summary:	Digital Television manager
 Summary(zh_CN.UTF-8): 数字电视管理器
 
@@ -85,6 +85,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/*/apps/*.*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.2.90-2
+- 更新到 0.2.90
+
 * Wed Oct 24 2012 Bastien Nocera <bnocera@redhat.com> 0.2.10-1
 - Update to 0.2.10
 

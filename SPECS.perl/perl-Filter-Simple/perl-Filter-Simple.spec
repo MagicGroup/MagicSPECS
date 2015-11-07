@@ -1,7 +1,7 @@
 %global base_version 0.91
 Name:           perl-Filter-Simple
 Version:        0.92
-Release:        347%{?dist}
+Release:        348%{?dist}
 Summary:        Simplified Perl source filtering
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.92-348
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 0.92-347
 - 为 Magic 3.0 重建
 

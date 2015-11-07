@@ -1,6 +1,6 @@
 Name:           rpcbind
 Version:	0.2.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Universal Addresses to RPC Program Number Mapper
 Summary(zh_CN.UTF-8): 通用地址到 RPC 程序编号的映射
 Group:          System Environment/Daemons
@@ -134,6 +134,9 @@ fi
 %dir %attr(700,rpc,rpc) /var/lib/rpcbind
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.2.3-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.2.3-1
 - 更新到 0.2.3
 

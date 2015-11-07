@@ -2,7 +2,7 @@
 
 Name:           perl-Class-MakeMethods
 Version:	1.009
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Generate common types of methods
 
 Group:          Development/Libraries
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.009-2
+- 更新到
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.009-1
 - 更新到 1.009
 

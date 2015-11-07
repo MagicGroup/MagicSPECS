@@ -12,7 +12,7 @@
 
 Name:           Pyrex
 Version:        0.9.9
-Release:        6%{?dist}
+Release:        7%{?dist}
 Epoch:          0
 BuildArch:      noarch
 Summary:        A compiler/language for writing Python extension modules
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0:0.9.9-7
+- 为 Magic 3.0 重建
+
 * Tue Apr 14 2015 Liu Di <liudidi@gmail.com> - 0:0.9.9-6
 - 为 Magic 3.0 重建
 

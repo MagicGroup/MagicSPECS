@@ -2,7 +2,7 @@ Summary: A library for editing typed command lines
 Summary(zh_CN.UTF-8): readline 库的 5.x 版本
 Name: compat-readline5
 Version: 5.2
-Release: 22%{?dist}
+Release: 23%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTf-8): 系统环境/库
@@ -137,6 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/readline5/lib*.a
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.2-23
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 5.2-22
 - 为 Magic 3.0 重建
 

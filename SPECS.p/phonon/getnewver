@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://carroll.aset.psu.edu/pub/kde/stable/phonon/?C=M;O=D"
+url="http://carroll.aset.psu.edu/pub/kde/stable/phonon/?C=M&O=D"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

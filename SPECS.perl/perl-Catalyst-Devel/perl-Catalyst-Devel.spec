@@ -2,7 +2,7 @@ Name:           perl-Catalyst-Devel
 Summary:        Catalyst Development Tools
 Summary(zh_CN.UTF-8): Catalyst 开发工具
 Version:	1.39
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -93,6 +93,9 @@ magic_rpm_clean.sh
 %exclude %{perl_vendorlib}/Catalyst/Restarter/Win32.pm
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.39-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.39-2
 - 为 Magic 3.0 重建
 

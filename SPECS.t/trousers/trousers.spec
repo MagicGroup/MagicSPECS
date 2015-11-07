@@ -2,7 +2,7 @@ Name: trousers
 Summary: TCG's Software Stack v1.2
 Summary(zh_CN.UTF-8): TCG 软件包 v1.2
 Version:	0.3.13
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: BSD
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -123,6 +123,9 @@ exit 0
 %{_libdir}/libtddl.a
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.13-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 0.3.13-1
 - 更新到 0.3.13
 

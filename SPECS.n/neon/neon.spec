@@ -2,7 +2,7 @@ Summary: An HTTP and WebDAV client library
 Summary(zh_CN.UTF-8): HTTP 和 WebDAV 客户端库
 Name: neon
 Version: 0.30.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.30.1-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 26 2015 Liu Di <liudidi@gmail.com> - 0.30.1-1
 - 更新到 0.30.1
 

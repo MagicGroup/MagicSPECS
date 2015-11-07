@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
+url="http://ftp.gnu.org/pub/gnu/gettext/?C=M&O=D"
 new1="gettext-"
 new2=".tar.gz"
 downcommand="wget -q" 

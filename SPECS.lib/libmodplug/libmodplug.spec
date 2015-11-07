@@ -1,6 +1,6 @@
 Name:           libmodplug
 Version: 0.8.8.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          1
 Summary:        Modplug mod music file format library
 Summary(zh_CN.UTF-8): Modplug mod 音乐文件格式库
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1:0.8.8.5-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1:0.8.8.5-1
 - 更新到 0.8.8.5
 

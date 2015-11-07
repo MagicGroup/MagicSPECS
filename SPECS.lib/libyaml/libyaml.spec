@@ -4,7 +4,7 @@
 
 Name:       libyaml
 Version:    0.1.6
-Release:    6%{?dist}
+Release:    7%{?dist}
 Summary:    YAML 1.1 parser and emitter written in C
 Summary(zh_CN.UTF-8): 用 C 编写的 YAML 1.1 解析库
 
@@ -88,6 +88,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.1.6-7
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.1.6-6
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.0.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A secure, non-evaling end user template engine with aesthetic markup
 Group: Development/Languages
 License: MIT and Ruby
@@ -89,6 +89,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.0.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 3.0.1-3
 - 为 Magic 3.0 重建
 

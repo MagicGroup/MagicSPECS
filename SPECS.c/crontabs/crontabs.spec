@@ -3,7 +3,7 @@ Summary: Root crontab files used to schedule the execution of programs
 Summary(zh_CN.UTF-8): cronie 的根 crontabs 文件 
 Name: crontabs
 Version: 1.11
-Release: 7.%{snap_release}%{?dist}
+Release: 8.%{snap_release}%{?dist}
 License: Public Domain and GPLv2
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.11-8.20130830git
+- 为 Magic 3.0 重建
+
 * Fri Aug 30 2013 Marcela Mašláňová <mmaslano@redhat.com> 1.11-7.20121102git
 - fix man page link 971583
 

@@ -1,7 +1,7 @@
 Name:           perl-CLASS
 Summary:        Alias for __PACKAGE__
 Version:        1.00
-Release:        26%{?dist}
+Release:        27%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSCHWERN/CLASS-%{version}.tar.gz 
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.00-27
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.00-26
 - 为 Magic 3.0 重建
 

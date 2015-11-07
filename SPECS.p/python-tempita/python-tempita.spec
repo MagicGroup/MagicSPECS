@@ -2,7 +2,7 @@
 
 Name:           python-tempita
 Version:        0.5.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A very small text templating language
 Summary(zh_CN.UTF-8): 一个非常小的文本模板语言
 
@@ -106,6 +106,9 @@ nosetests
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.1-9
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 0.5.1-8
 - 为 Magic 3.0 重建
 

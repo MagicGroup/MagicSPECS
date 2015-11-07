@@ -1,6 +1,6 @@
 Name:		libotf
 Version: 0.9.13
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A Library for handling OpenType Font
 Summary(zh_CN.UTF-8): 处理 OpenType 字体的库
 
@@ -88,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.13-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 23 2014 Liu Di <liudidi@gmail.com> - 0.9.13-1
 - 更新到 0.9.13
 

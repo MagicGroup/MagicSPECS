@@ -8,7 +8,7 @@ Summary: Mobile broadband modem management service
 Summary(zh_CN.UTF-8): 移动宽带调制解调器管理服务
 Name: ModemManager
 Version: 1.3.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 #
 # Source from http://freedesktop.org/software/ModemManager/
 #
@@ -194,6 +194,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/vala/vapi/libmm-glib.*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
+- 为 Magic 3.0 重建
+
 * Tue Aug  5 2014 Dan Williams <dcbw@redhat.com> - 1.3.0-1
 - Update to git development snapshot
 - Add IPv6 support for many devices

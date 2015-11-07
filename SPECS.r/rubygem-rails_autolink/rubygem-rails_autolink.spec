@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Automatic generation of HTML links in texts
 Group: Development/Languages
 License: MIT
@@ -84,6 +84,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.6-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.1.6-2
 - 为 Magic 3.0 重建
 

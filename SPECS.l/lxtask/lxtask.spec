@@ -1,6 +1,6 @@
 Name:           lxtask
 Version:        0.1.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Lightweight and desktop independent task manager
 Summary(zh_CN.UTF-8): 轻量及桌面无关的任务管理器
 
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.4-5
+- 为 Magic 3.0 重建
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 0.1.4-4
 - 为 Magic 3.0 重建
 

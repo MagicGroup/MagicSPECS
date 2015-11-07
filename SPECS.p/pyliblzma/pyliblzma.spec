@@ -8,7 +8,7 @@ Summary:    Python bindings for lzma
 Summary(zh_CN.UTF-8): lzma 的 Python 绑定
 Name:       pyliblzma
 Version:    0.5.3
-Release:    9%{?dist}
+Release:    10%{?dist}
 License:    LGPLv3+
 URL:        https://launchpad.net/pyliblzma
 Source0:    http://pypi.python.org/packages/source/p/pyliblzma/%{name}-%{version}.tar.bz2
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{python_sitearch}/%{name}*.egg-info
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.3-10
+- 为 Magic 3.0 重建
+
 * Fri Aug 14 2015 Liu Di <liudidi@gmail.com> - 0.5.3-9
 - 为 Magic 3.0 重建
 

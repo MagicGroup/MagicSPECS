@@ -1,6 +1,6 @@
 Name:           perl-Data-Flow
 Version:        1.02
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Perl extension for simple-minded recipe-controlled build of data
 # Author declared license there:
 # <https://rt.cpan.org/Public/Bug/Display.html?id=18068#txn-175743>
@@ -41,6 +41,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.02-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.02-7
 - 为 Magic 3.0 重建
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/gnu/ed/?C=M;O=D"
+url="http://ftp.gnu.org/gnu/ed/?C=M&O=D"
 new1="ed-"
 new2=".tar.lz"
 downcommand="wget -q" 

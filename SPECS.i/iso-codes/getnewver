@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://pkg-isocodes.alioth.debian.org/downloads/?C=M;O=D"
+url="http://pkg-isocodes.alioth.debian.org/downloads/?C=M&O=D"
 new1="iso-codes-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,6 +1,6 @@
 Name:           gpicview
 Version:	0.2.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Simple and fast Image Viewer for X
 Summary(zh_CN.UTF-8): X 下简单快速的图形查看器
 
@@ -67,6 +67,9 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/icons/hicolor/*/apps/gpicview.png
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.2.4-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 11 2014 Liu Di <liudidi@gmail.com> - 0.2.4-1
 - 更新到 0.2.4
 

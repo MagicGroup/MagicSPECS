@@ -2,7 +2,7 @@ Summary: X.Org X11 libXinerama runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXinerama 运行库
 Name: libXinerama
 Version: 1.1.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/X11/extensions/panoramiXext.h
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.3-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.1.3-1
 - 更新到 1.1.3
 

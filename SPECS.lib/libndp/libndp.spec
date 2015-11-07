@@ -1,6 +1,6 @@
 Name: libndp
-Version: 1.3
-Release: 1%{?dist}
+Version: 1.5
+Release: 2%{?dist}
 Summary: Library for Neighbor Discovery Protocol
 Summary(zh_CN.UTF-8): 邻居发现协议的库
 Group: System Environment/Libraries
@@ -59,6 +59,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.5-2
+- 更新到 1.5
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.3-1
 - 更新到 1.3
 

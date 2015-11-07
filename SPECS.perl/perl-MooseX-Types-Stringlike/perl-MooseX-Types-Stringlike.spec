@@ -1,7 +1,7 @@
 Name:		perl-MooseX-Types-Stringlike
 Summary:	Moose type constraints for strings or string-like objects
 Version:	0.003
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	ASL 2.0
 URL:		http://search.cpan.org/dist/MooseX-Types-Stringlike/
 Source0:	http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/MooseX-Types-Stringlike-%{version}.tar.gz
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/MooseX::Types::Stringlike.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.003-7
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 0.003-6
 - 为 Magic 3.0 重建
 

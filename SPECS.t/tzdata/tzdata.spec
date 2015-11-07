@@ -4,7 +4,7 @@ Name: tzdata
 Version:	2015g
 %define tzdata_version 2015g
 %define tzcode_version 2015g
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: Public Domain
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -133,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/javazi-1.8
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2015g-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 05 2015 Liu Di <liudidi@gmail.com> - 2015g-1
 - 更新到 2015g
 

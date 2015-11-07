@@ -1,6 +1,6 @@
 Name:		opencl-filesystem
 Version:	1.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	OpenCL filesystem layout
 Summary(zh_CN.UTF-8): OpenCL 文件系统结构
 
@@ -32,6 +32,9 @@ mkdir -p %{buildroot}/%{_sysconfdir}/OpenCL/vendors/
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0-5
+- 为 Magic 3.0 重建
+
 * Mon Sep 07 2015 Liu Di <liudidi@gmail.com> - 1.0-4
 - 为 Magic 3.0 重建
 

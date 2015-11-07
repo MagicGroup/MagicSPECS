@@ -2,7 +2,7 @@ Summary: magic-release
 Summary(zh_CN.UTF-8): MagicLinux的发行文件
 Name: magic-release
 Version: 3.0
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: GPL
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 %{rpm_macros_dir}/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.0-14
+- 为 Magic 3.0 重建
+
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 3.0-13
 - 为 Magic 3.0 重建
 

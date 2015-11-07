@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.25.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: A Redis-backed queueing system
 Group: Development/Languages
 License: MIT
@@ -149,6 +149,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.25.2-6
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.25.2-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Produces a document with syntax highlighting
 Summary(zh_CN.UTF-8): 生成语法高亮的文档
 Name: source-highlight
 Version:	3.1.8
-Release:	1%{?dist}
+Release:	2%{?dist}
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 License: GPLv3+
@@ -100,6 +100,9 @@ fi
 %{_includedir}/srchilite/*.h
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.1.8-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 3.1.8-1
 - 更新到 3.1.8
 

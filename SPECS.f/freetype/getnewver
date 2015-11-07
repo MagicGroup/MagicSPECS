@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://download.savannah.gnu.org/releases/freetype/?C=M;O=D"
+url="http://download.savannah.gnu.org/releases/freetype/?C=M&O=D"
 new1="freetype-"
 new2=".tar.bz2"
 downcommand="wget -q" 

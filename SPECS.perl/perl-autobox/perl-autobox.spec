@@ -1,6 +1,6 @@
 Name:           perl-autobox
 Version:	2.83
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Call methods on native types
 Summary(zh_CN.UTF-8): 以基本类型调用方法
 License:        GPL+ or Artistic
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.83-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.83-2
 - 为 Magic 3.0 重建
 

@@ -15,9 +15,9 @@
 Summary:         Mate user file sharing
 Summary(zh_CN.UTF-8): Mate 用户文件共享
 Name:            mate-user-share
-Version:         1.8.0
-Release:         3%{?dist}
-#Release:         0.1%{?git_rel}%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
+#Release: 1%{?dist}
 License:         GPLv2+
 Group:           System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -137,6 +137,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
 - 为 Magic 3.0 重建
 

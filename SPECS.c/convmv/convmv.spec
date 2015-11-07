@@ -2,7 +2,7 @@ Summary: Converts filenames from one encoding to another.
 Summary(zh_CN.UTF-8): 转换文件名从一个编码到另一个。
 Name:    convmv
 Version: 1.15
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 Group:   Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -48,6 +48,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.15-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.15-2
 - 为 Magic 3.0 重建
 

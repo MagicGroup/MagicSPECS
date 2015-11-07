@@ -13,7 +13,7 @@ Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 URL: http://ktorrent.org
 Version:	4.3.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: http://ktorrent.pwsp.net/downloads/%{version}/%{real_name}-%{version}.tar.bz2
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -97,6 +97,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 %endif
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.3.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 4.3.1-1
 - 更新到 4.3.1
 

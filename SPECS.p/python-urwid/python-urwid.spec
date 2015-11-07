@@ -1,8 +1,8 @@
 %global with_python3 1
 
 Name:          python-urwid
-Version:	1.3.0
-Release:	1%{?dist}
+Version:	1.3.1
+Release:	2%{?dist}
 Summary:       Console user interface library
 Summary(zh_CN.UTF-8): 控制台用户界面库
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.1-2
+- 更新到 1.3.1
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 1.3.0-1
 - 更新到 1.3.0
 

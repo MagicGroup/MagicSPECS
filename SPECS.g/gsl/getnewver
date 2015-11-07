@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.gnu.org/pub/gnu/gsl/?C=M;O=D"
+url="http://ftp.gnu.org/pub/gnu/gsl/?C=M&O=D"
 new1="gsl-"
 new2=".tar.gz"
 downcommand="wget -q" 

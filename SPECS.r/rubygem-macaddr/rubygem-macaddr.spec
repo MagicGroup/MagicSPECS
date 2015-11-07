@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.7.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        MAC Address Determination for Ruby
 
 Group:          Development/Languages
@@ -89,6 +89,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.7.1-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.7.1-4
 - 为 Magic 3.0 重建
 

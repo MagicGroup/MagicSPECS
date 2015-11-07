@@ -1,6 +1,6 @@
 Name:           itstool
 Version:        2.0.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        ITS-based XML translation tool
 Summary(zh_CN.UTF-8): 基于 ITS 的 XML 翻译工具
 
@@ -40,6 +40,9 @@ magic_rpm_clean.sh
 %doc %{_mandir}/man1/itstool.1.gz
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.2-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.2.0-2
 - 为 Magic 3.0 重建
 

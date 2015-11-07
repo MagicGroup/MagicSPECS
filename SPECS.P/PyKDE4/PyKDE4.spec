@@ -4,8 +4,8 @@
 %global python_ver %(%{__python} -c "import sys ; print sys.version[:3]")
 
 Name: PyKDE4 
-Version: 4.14.3
-Release: 2%{?dist}
+Version: 4.3
+Release: 3%{?dist}
 Summary: Python bindings for KDE4 
 Summary(zh_CN.UTF-8): KDE4 的 Python 绑定
 
@@ -219,6 +219,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.3-3
+- 更新到 4.3
+
 * Sun Apr 19 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 为 Magic 3.0 重建
 

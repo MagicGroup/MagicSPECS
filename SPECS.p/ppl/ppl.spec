@@ -1,6 +1,6 @@
 Name:			ppl
 Version:		1.1
-Release:		12%{?dist}
+Release:		13%{?dist}
 Summary:		The Parma Polyhedra Library: a library of numerical abstractions
 Group:			Development/Libraries
 License:		GPLv3+
@@ -303,6 +303,9 @@ mv \
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-13
+- 为 Magic 3.0 重建
+
 * Sun Aug 02 2015 Liu Di <liudidi@gmail.com> - 1.1-12
 - 为 Magic 3.0 重建
 

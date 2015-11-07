@@ -1,6 +1,6 @@
 Name:		perl-Config-Tiny
-Version:	2.22
-Release:	1%{?dist}
+Version:	2.23
+Release:	2%{?dist}
 Summary:	Perl module for reading and writing .ini style configuration files
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Config::Tiny.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.23-2
+- 更新到 2.23
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 2.22-1
 - 更新到 2.22
 

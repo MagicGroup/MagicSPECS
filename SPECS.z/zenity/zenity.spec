@@ -1,6 +1,6 @@
 Name:          zenity
 Version:	3.18.1.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:       Display dialog boxes from shell scripts
 Summary(zh_CN.UTF-8): 在 shell 脚本中显示对话框
 Group:         Applications/System
@@ -51,6 +51,9 @@ rm $RPM_BUILD_ROOT%{_bindir}/gdialog
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.18.1.1-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 更新到 3.18.1
 

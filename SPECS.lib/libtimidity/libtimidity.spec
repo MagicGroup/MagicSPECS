@@ -1,6 +1,6 @@
 Name:           libtimidity
 Version:        0.1.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        MIDI to WAVE converter library
 Summary(zh_CN.UTF-8): MIDI 转 WAV 转换库
 Group:          System Environment/Libraries
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.0-12
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.1.0-11
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           at-spi2-core
-Version: 2.12.0
-Release:        1%{?dist}
+Version: 2.19.1
+Release:        2%{?dist}
 Summary:        Protocol definitions and daemon for D-Bus at-spi
 Summary(zh_CN.UTF-8): D-Bus at-spi 的协议定义和服务
 
@@ -97,6 +97,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libatspi.la
 %{_libdir}/pkgconfig/atspi-2.pc
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.19.1-2
+- 更新到 2.19.1
+
 * Tue Apr 01 2014 Liu Di <liudidi@gmail.com> - 2.12.0-1
 - 更新到 2.12.0
 

@@ -2,7 +2,7 @@ Name: kde4-kcm_fcitxconfig
 Summary: kcm_fcitxconfig
 Summary(zh_CN.UTF-8): fcitx 配置程序
 Version: 1.5.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
 License: GPL v2+
@@ -51,6 +51,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_localedir}/zh_CN/LC_MESSAGES/kcm_fcitxconfig.mo
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.5.3-5
+- 为 Magic 3.0 重建
+
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.5.3-4
 - 为 Magic 3.0 重建
 

@@ -5,8 +5,8 @@
 Summary: X.Org X11 libXi runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXi 运行库
 Name: libXi
-Version: 1.7.4
-Release: 1%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
+Version: 1.7.5
+Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.7.5-2
+- 更新到 1.7.5
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.7.4-1
 - 更新到 1.7.4
 

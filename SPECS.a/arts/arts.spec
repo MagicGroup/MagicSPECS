@@ -12,7 +12,7 @@ Group:   System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 Epoch:   8
 Version: 1.5.10
-Release: 21%{?dist}
+Release: 22%{?dist}
 
 License: LGPLv2+
 Url: http://www.kde.org
@@ -213,6 +213,9 @@ rm -rf  %{buildroot}
 
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 8:1.5.10-22
+- 为 Magic 3.0 重建
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 8:1.5.10-21
 - 为 Magic 3.0 重建
 

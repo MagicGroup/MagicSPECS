@@ -1,6 +1,6 @@
 Name:           perl-Carp-Always
 Version:	0.13
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Warn and die in Perl noisily with stack backtraces
 Summary(zh_CN.UTF-8): 使用堆栈的 Perl 警告模块
 License:        GPL+ or Artistic
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.13-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.13-2
 - 为 Magic 3.0 重建
 

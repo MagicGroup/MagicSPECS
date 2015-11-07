@@ -24,7 +24,7 @@
 
 Name:           trinity-knoda
 Version:        0.8.3
-Release:        2%{?dist}%{?_variant}
+Release:        3%{?dist}%{?_variant}
 Summary:        A database frontend for TDE.
 Summary(zh_CN.UTF-8): TDE 下的数据库前端
 
@@ -247,6 +247,9 @@ done
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.3-3.opt
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Liu Di <liudidi@gmail.com> - 0.8.3-2.opt
 - 为 Magic 3.0 重建
 

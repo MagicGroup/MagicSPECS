@@ -27,7 +27,7 @@
 Name:		trinity-dbus-tqt
 Epoch:		%{tde_epoch}
 Version:	0.63
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	Simple inter-process messaging system
 Summary(zh_CN.UTF-8): 简单内部进程信息系统
 Group: System Environment/Libraries
@@ -182,6 +182,9 @@ fi
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.63-1.2
+- 为 Magic 3.0 重建
+
 * Tue Oct 06 2015 Liu Di <liudidi@gmail.com> - 2:0.63-1.1
 - 为 Magic 3.0 重建
 

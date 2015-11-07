@@ -1,8 +1,8 @@
 Summary: A tool for determining compilation options
 Summary(zh_CN.UTF-8): 决定编译选项的工具
 Name: pkgconfig
-Version:	0.28
-Release:	1%{?dist}
+Version:	0.29
+Release:	2%{?dist}
 Epoch: 1
 License: GPLv2+
 URL: http://pkgconfig.freedesktop.org
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/pkg-config
 %{_datadir}/aclocal/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:0.29-2
+- 更新到 0.29
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1:0.28-1
 - 更新到 0.28
 

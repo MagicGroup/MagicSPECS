@@ -1,6 +1,6 @@
 Name:           perl-Text-RecordParser
 Version:        1.6.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Read record-oriented files
 License:        GPLv2
 Group:          Development/Libraries
@@ -82,6 +82,9 @@ make test
 %{_mandir}/man[13]/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.6.5-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.6.5-1
 - 更新到 1.6.5
 

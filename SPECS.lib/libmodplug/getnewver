@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://modplug-xmms.sourceforge.net/"
+url="https://sourceforge.net/projects/modplug-xmms"
 new1="libmodplug-"
 new2=".tar.gz"
 downcommand="wget -q" 

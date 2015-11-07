@@ -2,8 +2,8 @@ Summary: A documentation system for C/C++
 Summary(zh_CN.UTF-8): C/C++ 的文档系统
 Name:    doxygen
 Epoch:   1
-Version: 1.8.6
-Release: 1%{?dist}
+Version: 1.8.10
+Release: 2%{?dist}
 
 # No version is specified.
 License: GPL+
@@ -131,6 +131,9 @@ desktop-file-install \
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.8.10-2
+- 更新到 1.8.10
+
 * Thu Dec 26 2013 Orion Poplawski <orion@cora.nwra.com> - 1:1.8.6-1
 - 1.8.6
 

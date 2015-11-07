@@ -21,7 +21,7 @@
 
 Name:             avahi
 Version:          0.6.31
-Release:          24%{?dist}
+Release:          25%{?dist}
 Summary:          Local network service discovery
 License:          LGPLv2+
 URL:              http://avahi.org
@@ -635,6 +635,9 @@ exit 0
 %endif
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.31-25
+- 为 Magic 3.0 重建
+
 * Thu Jan 16 2014 Ville Skyttä <ville.skytta@iki.fi> - 0.6.31-24
 - Drop INSTALL from docs, fix some trivial rpmlint warnings.
 

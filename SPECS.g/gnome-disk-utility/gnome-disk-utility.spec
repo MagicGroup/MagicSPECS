@@ -11,8 +11,8 @@
 Summary: Disks
 Summary(zh_CN.UTF-8): GNOME 的磁盘工具
 Name: gnome-disk-utility
-Version:	3.12.0
-Release: 1%{?dist}
+Version:	3.18.1
+Release: 2%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库 
@@ -132,6 +132,9 @@ done
 %doc README AUTHORS NEWS COPYING
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
+- 更新到 3.18.1
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

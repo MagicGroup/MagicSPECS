@@ -1,5 +1,5 @@
 Name:             rtkit
-Version:	0.11
+Version:	匹配到二进制文件
 Release:	2%{?dist}
 Summary:          Realtime Policy and Watchdog Daemon
 Summary(zh_CN.UTF-8): 实时策略和看门狗服务
@@ -95,6 +95,9 @@ fi
 %{_mandir}/man8/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com>
+- 更新到 匹配到二进制文件 index.html
+
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 0.11-2
 - 为 Magic 3.0 重建
 

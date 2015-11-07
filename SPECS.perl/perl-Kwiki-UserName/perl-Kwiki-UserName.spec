@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-UserName
 Version:        0.14
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        Kwiki User Name Plugin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.14-33
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.14-32
 - 为 Magic 3.0 重建
 

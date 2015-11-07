@@ -6,7 +6,7 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
 Version: 4.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: kdebase4-runtime >= %{version}
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 %{_datadir}/apps/kdm/sessions/kde4.desktop
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Wed Dec 31 2014 Liu Di <liudidi@gmail.com> - 4.14.3-1
 - 更新到 4.14.3
 

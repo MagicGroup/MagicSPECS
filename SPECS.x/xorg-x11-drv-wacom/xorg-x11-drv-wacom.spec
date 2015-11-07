@@ -10,7 +10,7 @@ Summary:    Xorg X11 wacom input driver
 Summary(zh_CN.UTF-8): Xorg X11 wacom 输入驱动
 Name:       xorg-x11-drv-wacom
 Version:	0.31.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:        http://www.x.org
 License:    GPLv2+
 Group:      User Interface/X Hardware Support
@@ -107,6 +107,9 @@ X.Org X11 wacom input driver development files.
 %{_bindir}/isdv4-serial-debugger
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.31.0-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.31.0-2
 - 更新到 0.31.0
 

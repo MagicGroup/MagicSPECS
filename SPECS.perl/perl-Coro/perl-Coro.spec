@@ -1,6 +1,6 @@
 Name:           perl-Coro
-Version:	6.47
-Release:	1%{?dist}
+Version:	6.49
+Release:	2%{?dist}
 Summary:        The only real threads in perl
 # Coro/libcoro:    GPLv2 or BSD
 # Rest of package: GPL+ or Artistic
@@ -151,6 +151,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 6.49-2
+- 更新到 6.49
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 6.47-1
 - 更新到 6.47
 

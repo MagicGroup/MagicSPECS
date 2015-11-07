@@ -5,7 +5,7 @@ Summary: Implements the ActiveRecord pattern for ORM
 Name: rubygem-%{gem_name}
 Epoch: 1
 Version: 4.2.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -110,6 +110,9 @@ popd
 %doc %{gem_instdir}/examples
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:4.2.4-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1:4.2.4-2
 - 为 Magic 3.0 重建
 

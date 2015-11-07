@@ -2,7 +2,7 @@
 
 Name:           %{fontname}-fonts
 Version:        1.1.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        WenQuanYi Unibit Bitmap Font
 Summary(zh_CN.UTF-8): 文泉驿标准双等宽点阵字体
 
@@ -68,6 +68,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.1.0-12
+- 为 Magic 3.0 重建
+
 * Tue Oct 20 2015 Liu Di <liudidi@gmail.com> - 1.1.0-11
 - 为 Magic 3.0 重建
 

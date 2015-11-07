@@ -1,6 +1,6 @@
 Name:           perl-Mojolicious
 Version:        6.18
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A next generation web framework for Perl
 License:        Artistic 2.0
 
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.18-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 6.18-2
 - 为 Magic 3.0 重建
 

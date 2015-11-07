@@ -47,7 +47,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.5.10
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	ARTS (analog realtime synthesizer) - the TDE sound system
 Summary(zh_CN.UTF-8): ARTS - TDE 的声音系统
 Group:		System Environment/Daemons 
@@ -295,5 +295,8 @@ chmod 644 "%{?buildroot}%{tde_confdir}/kcmartsrc"
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:1.5.10-1.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.5.10-2
 - Initial release for TDE R14.0.0

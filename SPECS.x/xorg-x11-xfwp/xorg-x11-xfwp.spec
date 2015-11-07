@@ -6,7 +6,7 @@ Summary(zh_CN.UTF-8): X.Org X11 X 防火墙代理
 Name: xorg-x11-%{pkgname}
 # NOTE: The package version should always be the upstream xfwp tarball version.
 Version: %{xfwp_version}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -86,6 +86,9 @@ X.Org X11 X 防火墙代。
 %{_mandir}/man1/xfwp.1*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.0.2-5
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.0.2-4
 - 为 Magic 3.0 重建
 

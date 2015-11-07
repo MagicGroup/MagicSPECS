@@ -2,7 +2,7 @@
 
 Name:		python-pyrad
 Version:	2.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Python RADIUS client
 Summary(zh_CN.UTF-8): Python RADIUS 客户端
 License:	BSD
@@ -49,6 +49,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/%{pkgname}-%{version}-*.egg-info/
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 2.0-4
 - 为 Magic 3.0 重建
 

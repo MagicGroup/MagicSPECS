@@ -1,6 +1,6 @@
 Name:           re2
 Version:        20131024
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        C++ fast alternative to backtracking RE engines
 Group:          System Environment/Libraries
 License:        BSD
@@ -67,6 +67,9 @@ make %{?_smp_mflags} shared-test
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 20131024-7
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 20131024-6
 - 为 Magic 3.0 重建
 

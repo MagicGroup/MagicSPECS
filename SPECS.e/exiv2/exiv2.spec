@@ -1,8 +1,8 @@
 Summary: Exif and Iptc metadata manipulation library
 Summary(zh_CN.UTF-8): Exif 和 Iptc 元数据处理库
 Name:	 exiv2
-Version: 0.24
-Release: 2%{?dist}
+Version: 0.25
+Release: 3%{?dist}
 
 License: GPLv2+
 Group:	 Applications/Multimedia
@@ -129,6 +129,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.25-3
+- 更新到 0.25
+
 * Wed Apr 02 2014 Liu Di <liudidi@gmail.com> - 0.24-2
 - 更新到 0.24
 

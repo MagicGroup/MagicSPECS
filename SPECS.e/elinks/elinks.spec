@@ -4,7 +4,7 @@ Name:      elinks
 Summary:   A text-mode Web browser
 Summary(zh_CN.UTF-8): 文本界面的网页浏览器
 Version:   0.12
-Release:   0.37.%{prerel}%{?dist}
+Release:   0.38.%{prerel}%{?dist}
 License:   GPLv2
 URL:       http://elinks.or.cz
 Group:     Applications/Internet
@@ -164,6 +164,9 @@ exit 0
 %{_mandir}/man5/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.12-0.38.pre6
+- 为 Magic 3.0 重建
+
 * Wed Sep 18 2013 Kamil Dudka <kdudka@redhat.com> - 0.12-0.37.pre6
 - verify server certificate hostname with nss_compat_ossl (#881411)
 

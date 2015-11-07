@@ -4,7 +4,7 @@
 
 Name:				fbsplash-theme-%{THEME_NAME}
 Version:			%{THEME_VER}
-Release:			%{THEME_REL}.1
+Release:			%{THEME_REL}.2
 BuildArch:			noarch
 
 Source:				%{THEME_NAME}.tar.bz2

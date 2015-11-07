@@ -2,7 +2,7 @@
 
 Name:    felix-main
 Version: 4.4.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Apache Felix Main
 Group:   Development/Libraries
 License: ASL 2.0
@@ -62,6 +62,9 @@ This package contains API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.4.0-3
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 4.4.0-2
 - 为 Magic 3.0 重建
 

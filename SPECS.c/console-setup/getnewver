@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.de.debian.org/debian/pool/main/c/console-setup/?C=M;O=D"
+url="http://ftp.de.debian.org/debian/pool/main/c/console-setup/?C=M&O=D"
 new1="console-setup_"
 new2=".tar.xz"
 downcommand="wget -q" 

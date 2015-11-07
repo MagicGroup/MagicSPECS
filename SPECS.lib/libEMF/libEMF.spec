@@ -2,7 +2,7 @@ Summary:	A library for generating Enhanced Metafiles
 Summary(zh_CN.UTF-8): 生成增强元文件(emf)的库
 Name:		libEMF
 Version:	1.0.7
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	LGPLv2+ and GPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -70,6 +70,9 @@ make check
 %{_includedir}/libEMF
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.7-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 31 2014 Liu Di <liudidi@gmail.com> - 1.0.7-4
 - 为 Magic 3.0 重建
 

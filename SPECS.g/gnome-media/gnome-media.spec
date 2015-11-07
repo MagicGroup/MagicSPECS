@@ -13,7 +13,7 @@ Summary:        GNOME media programs
 Summary(zh_CN.UTF-8): GNOME 媒体程序
 Name:           gnome-media
 Version:        3.4.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2+ and GFDL
 Group:          Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -206,6 +206,9 @@ gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor >&/dev/null || :
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.4.0-5
+- 为 Magic 3.0 重建
+
 * Sun Mar 03 2013 Dan Mashal <dan.mashal@fedoraproject.org> - 3.4.0-4
 - Update source URL to correct version
 - Disable scrollkeeper

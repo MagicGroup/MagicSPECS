@@ -1,7 +1,7 @@
 Summary:	Simple date object for perl
 Name:		perl-Date-Simple
 Version:	3.03
-Release:	15%{?dist}
+Release:	16%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Date-Simple/
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Date::Simple*.3pm*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.03-16
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 3.03-15
 - 为 Magic 3.0 重建
 

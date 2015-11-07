@@ -1,6 +1,6 @@
 Name:		openbox
-Version: 3.5.2
-Release: 1%{?dist}
+Version: 3.6.1
+Release: 2%{?dist}
 Summary:	A highly configurable and standards-compliant X11 window manager
 Summary(zh_CN.UTF-8): 高度可配置并标准化的 X11 窗口管理器
 
@@ -212,6 +212,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.6.1-2
+- 更新到 3.6.1
+
 * Tue Mar 03 2015 Liu Di <liudidi@gmail.com> - 3.5.2-1
 - 更新到 3.5.2
 

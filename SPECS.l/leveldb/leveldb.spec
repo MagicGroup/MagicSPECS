@@ -1,6 +1,6 @@
 Name:           leveldb
 Version:        1.12.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A fast and lightweight key/value database library by Google
 Group:          Applications/Databases
 License:        BSD
@@ -92,6 +92,9 @@ make check
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.12.0-7
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 1.12.0-6
 - 为 Magic 3.0 重建
 

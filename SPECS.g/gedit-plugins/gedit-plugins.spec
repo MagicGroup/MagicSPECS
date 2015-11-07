@@ -1,8 +1,8 @@
 %global __python %{__python3}
 
 Name:           gedit-plugins
-Version:	3.12.0
-Release:        1%{?dist}
+Version:	3.18.0
+Release:        2%{?dist}
 Summary:        Plugins for gedit
 Summary(zh_CN.UTF-8): gedit 的插件
 
@@ -79,6 +79,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/help/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
+- 更新到 3.18.0
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0
 

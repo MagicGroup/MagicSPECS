@@ -5,7 +5,7 @@
 
 Name:           xemacs-packages-extra
 Version:        20150919
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Collection of XEmacs lisp packages
 
 Group:          Applications/Editors
@@ -206,6 +206,9 @@ sed -i -e 's/^\(.*[_-]ja\.info.*\)$/%lang(ja) \1/' info-files
 
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 20150919-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 20150919-2
 - 为 Magic 3.0 重建
 

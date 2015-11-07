@@ -2,7 +2,7 @@
 
 Name:           lxmenu-data
 Version:        0.1.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Data files for the LXDE menu
 Summary(zh_CN.UTF-8): LXDE 菜单的数据文件
 Group:          User Interface/Desktops
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.1-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 04 2014 Liu Di <liudidi@gmail.com> - 0.1.1-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           lcms2
-Version:	2.6
-Release:        2%{?dist}
+Version:	2.7
+Release:        3%{?dist}
 Summary:        Color Management Engine
 Summary(zh_CN.UTF-8): 颜色管理系统
 License:        MIT
@@ -96,6 +96,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.7-3
+- 更新到 2.7
+
 * Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 2.6-2
 - 更新到 2.6
 

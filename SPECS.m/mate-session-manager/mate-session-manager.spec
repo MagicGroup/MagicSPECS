@@ -1,6 +1,6 @@
 Name:           mate-session-manager
-Version: 1.9.1
-Release: 1%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 Summary:        MATE Desktop session manager
 Summary(zh_CN.UTF-8): MATE 桌面的会话管理器
 License:        GPLv2+
@@ -98,6 +98,9 @@ fi
 %{_docdir}/mate-session-manager/dbus/mate-session.html
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
 - 更新到 1.9.1
 

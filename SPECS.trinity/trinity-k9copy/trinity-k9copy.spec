@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		1.2.3
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:		DVD backup tool for Trinity
 Summary(zh_CN.UTF-8): Trinity 下的 DVD 备份工具
 Group:			Applications/Utilities
@@ -159,5 +159,8 @@ update-desktop-database %{tde_appdir} &> /dev/null
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:1.2.3-1.1
+- 为 Magic 3.0 重建
+
 * Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.2.3-1
 - Initial release for TDE 14.0.0

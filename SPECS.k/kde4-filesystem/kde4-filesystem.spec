@@ -2,7 +2,7 @@ Summary: KDE filesystem layout
 Summary(zh_CN.UTF-8): KDE4 的文件系统结构
 Name: kde4-filesystem
 Version: 4
-Release: 47%{?dist}
+Release: 48%{?dist}
 
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -135,6 +135,9 @@ rm -rf $RPM_BUILD_ROOT %{name}.list
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4-48
+- 为 Magic 3.0 重建
+
 * Fri May 23 2014 Liu Di <liudidi@gmail.com> - 4-47
 - 为 Magic 3.0 重建
 

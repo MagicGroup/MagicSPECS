@@ -6,8 +6,8 @@
 Summary:	A CHM viewer program for KDE.
 Summary(zh_CN.UTF-8):	KDE下的一个CHM查看程序
 Name:	kde4-%{real_name}
-Version:	7.0
-Release:	1%{?dist}
+Version:	7.3
+Release:	2%{?dist}
 License:	GPL
 Group:		Applications/File
 Group(zh_CN.UTF-8):	应用程序/文件
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{kde4_localedir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 7.3-2
+- 更新到 7.3
+
 * Mon May 26 2014 Liu Di <liudidi@gmail.com> - 7.0-1
 - 更新到 7.0
 

@@ -2,7 +2,7 @@
 
 Name: 		libbeagle
 Version: 	0.3.9
-Release: 	7%{?dist}
+Release: 	8%{?dist}
 Summary:	Beagle C interface
 Summary(zh_CN): Beagle C 接口
 Group: 		Development/Libraries
@@ -116,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.3.9-8
+- 为 Magic 3.0 重建
+
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.3.9-7
 - 为 Magic 3.0 重建
 

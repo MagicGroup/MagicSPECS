@@ -1,9 +1,9 @@
 %define real_name libkgapi
 #%%global		git_commit f18d699
 Name:		kde4-libkgapi
-Version:	2.1.1
+Version:	5.0.0
 #Release:	1.20120530git%%{git_commit}%%{?dist}
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Library to access to Google services
 Summary(zh_CN.UTF-8): 访问谷歌服务的库
 Group:		Development/Libraries
@@ -90,6 +90,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.0.0-3
+- 更新到 5.0.0
+
 * Wed Jun 04 2014 Liu Di <liudidi@gmail.com> - 2.1.1-2
 - 更新到 2.1.1
 

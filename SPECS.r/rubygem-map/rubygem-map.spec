@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 6.5.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: String/symbol indifferent ordered hash
 Group: Development/Languages
 License: Ruby or BSD
@@ -81,6 +81,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.5.5-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 6.5.5-2
 - 为 Magic 3.0 重建
 

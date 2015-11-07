@@ -54,7 +54,7 @@ Group: 		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		%{tde_epoch}
 Version:	2.0.2
-Release:	1%{?dist}%{?_variant}
+Release:	2%{?dist}%{?_variant}
 URL:		http://www.kde-apps.org/content/show.php?content=30375
 #URL:		http://carewolf.com/akode/  
 
@@ -354,5 +354,8 @@ done
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:2.0.2-2.opt
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:2.0.2-1
 - Initial release for TDE 14.0.0

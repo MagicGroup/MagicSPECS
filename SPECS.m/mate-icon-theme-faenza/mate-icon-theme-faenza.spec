@@ -2,7 +2,7 @@
 
 Name:           mate-icon-theme-faenza
 Version:        1.8.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 #Release:        0.1.git%{_internal_version}%{?dist}
 Summary:        Extra set of icon themes for MATE Desktop
 Summary(zh_CN.UTF-8): MATE 桌面的额外图标集合
@@ -80,6 +80,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.8.0-3
 - 为 Magic 3.0 重建
 

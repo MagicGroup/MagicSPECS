@@ -1,6 +1,6 @@
 Name:           perl-Test-MockObject
 Version:	1.20150527
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Perl extension for emulating troublesome interfaces
 
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ PERL_RUN_ALL_TESTS=1 make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.20150527-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.20150527-1
 - 更新到 1.20150527
 

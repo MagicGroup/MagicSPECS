@@ -3,8 +3,8 @@
 %define sofullname libdwarf.so.%{soversion}.%{version}.0
 
 Name:          libdwarf
-Version: 20140519
-Release:       1%{?dist}
+Version: 20150915
+Release:       2%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Summary(zh_CN.UTF-8): 访问 DWARF 调试文件格式的库
 Group:         Development/Libraries
@@ -108,6 +108,9 @@ magic_rpm_clean.sh
 %{_bindir}/dwarfdump
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 20150915-2
+- 更新到 20150915
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 20140519-1
 - 更新到 20140519
 

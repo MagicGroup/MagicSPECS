@@ -1,6 +1,6 @@
 Name:           perl-Tk-TableMatrix
 Version:        1.23
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Perl module for creating and manipulating tables
 
 Group:          Development/Libraries
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.23-19
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 1.23-18
 - 为 Magic 3.0 重建
 

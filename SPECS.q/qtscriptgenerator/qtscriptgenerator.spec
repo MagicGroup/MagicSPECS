@@ -2,7 +2,7 @@
 Name:    qtscriptgenerator
 Summary: A tool to generate Qt bindings for Qt Script
 Version: 0.2.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 License: GPLv2  
 Group:	 System Environment/Libraries
@@ -140,6 +140,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.2.0-7
+- 为 Magic 3.0 重建
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 0.2.0-6
 - 为 Magic 3.0 重建
 

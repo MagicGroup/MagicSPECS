@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/colord/releases/?C=M;O=D"
+url="http://www.freedesktop.org/software/colord/releases/?C=M&O=D"
 new1="colord-gtk-"
 new2=".tar.xz"
 downcommand="wget -q" 

@@ -1,8 +1,8 @@
 %global upstream_build 4126
 
 Name:           pcsc-lite
-Version:	1.8.13
-Release:	1%{?dist}
+Version:	1.8.14
+Release:	2%{?dist}
 Summary:        PC/SC Lite smart card framework and applications
 Summary(zh_CN.UTF-8): PC/SC Lite 智能卡框架和应用程序
 
@@ -180,6 +180,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8.14-2
+- 更新到 1.8.14
+
 * Thu Apr 16 2015 Liu Di <liudidi@gmail.com> - 1.8.13-1
 - 更新到 1.8.13
 

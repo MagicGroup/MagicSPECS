@@ -1,6 +1,6 @@
 Name:           libntlm
 Version: 1.4
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        NTLM authentication library 
 Summary(zh_CN.UTF-8): NTLM 认证库
 
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 22 2014 Liu Di <liudidi@gmail.com> - 1.4-1
 - 更新到 1.4
 

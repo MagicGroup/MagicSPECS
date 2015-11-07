@@ -1,8 +1,8 @@
 Summary: X.Org X11 libXvMC runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXvMC 运行库
 Name: libXvMC
-Version: 1.0.8
-Release: 1%{?dist}
+Version: 1.0.9
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -74,6 +74,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/xvmc.pc
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.9-2
+- 更新到 1.0.9
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.8-1
 - 更新到 1.0.8
 

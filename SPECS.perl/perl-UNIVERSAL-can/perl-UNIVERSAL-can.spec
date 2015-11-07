@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-can
 Version:	1.20140328
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Hack around people calling UNIVERSAL::can() as a function
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ PERL_RUN_ALL_TESTS=1 make test
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.20140328-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.20140328-2
 - 为 Magic 3.0 重建
 

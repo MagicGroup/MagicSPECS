@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.1.9
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
 Summary:	Raw picture decoding C++ library (runtime) [Trinity]
 Summary(zh_CN.UTF-8): RAW 图像解码 C++ 库
 Group: System Environment/Libraries
@@ -229,5 +229,8 @@ magic_rpm_clean.sh
 
 
 %Changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.1.9-1.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 2:0.1.9-1
 - Initial release for TDE R14.0.0

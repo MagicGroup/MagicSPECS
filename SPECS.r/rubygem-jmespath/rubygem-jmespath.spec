@@ -8,7 +8,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.0.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        JMESPath - Ruby Edition
 
 Group:          Development/Languages
@@ -102,6 +102,9 @@ popd
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.2-5
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 1.0.2-4
 - 为 Magic 3.0 重建
 

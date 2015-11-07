@@ -7,7 +7,7 @@
 Summary: Thor is a toolkit for building powerful command-line interfaces
 Name: rubygem-%{gem_name}
 Version: 0.19.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://whatisthor.com/
@@ -94,6 +94,9 @@ popd
 %{gem_instdir}/thor.gemspec
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.19.1-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.19.1-3
 - 为 Magic 3.0 重建
 

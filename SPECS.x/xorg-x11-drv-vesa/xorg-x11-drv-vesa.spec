@@ -6,7 +6,7 @@ Summary:   Xorg X11 vesa video driver
 Summary(zh_CN.UTF-8): Xorg X11 vesa 显卡驱动
 Name:      xorg-x11-drv-vesa
 Version:	2.3.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:       http://www.x.org
 Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 License: MIT
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/vesa.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.3.4-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 2.3.4-2
 - 更新到 2.3.4
 

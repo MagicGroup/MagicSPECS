@@ -7,8 +7,8 @@
 %endif
 
 Name:           ocaml-menhir
-Version:	20141215
-Release:	1%{?dist}
+Version:	匹配到二进制文件
+Release:	2%{?dist}
 Summary:        LR(1) parser generator for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 LR(1) 解析器生成器
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_libdir}/ocaml/menhirLib/
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
+- 更新到 匹配到二进制文件 index.html
+
 * Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 20141215-1
 - 更新到 20141215
 

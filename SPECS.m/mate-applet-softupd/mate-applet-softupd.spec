@@ -1,6 +1,6 @@
 Name:		mate-applet-softupd
-Version:	0.2.11
-Release:	3%{?dist}
+Version: 0.4.3
+Release: 2%{?dist}
 Summary:	MATE Software Update Applet 
 Summary(zh_CN.UTF-8): MATE 软件更新小部件
 Group:		Applications/System
@@ -88,6 +88,9 @@ fi
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.4.3-2
+- 更新到 0.4.3
+
 * Sun Aug 10 2014 Liu Di <liudidi@gmail.com> - 0.2.11-3
 - 为 Magic 3.0 重建
 

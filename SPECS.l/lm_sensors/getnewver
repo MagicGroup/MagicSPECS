@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://dl.lm-sensors.org/lm-sensors/releases/?C=M;O=D"
+url="http://dl.lm-sensors.org/lm-sensors/releases/?C=M&O=D"
 new1="lm_sensors-"
 new2=".tar.bz2"
 downcommand="wget -q" 

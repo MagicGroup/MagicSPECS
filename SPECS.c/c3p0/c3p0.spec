@@ -1,6 +1,6 @@
 Name:    c3p0
 Version: 0.9.5
-Release: 0.2.pre8%{?dist}
+Release: 0.3.pre8%{?dist}
 Summary: JDBC DataSources/Resource Pools
 License: LGPLv2 or EPL
 URL:     https://github.com/swaldman/c3p0
@@ -70,6 +70,9 @@ cp -pr build/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.9.5-0.3.pre8
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0.9.5-0.2.pre8
 - 为 Magic 3.0 重建
 

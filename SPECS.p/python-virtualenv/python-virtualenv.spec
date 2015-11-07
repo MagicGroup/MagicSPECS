@@ -6,7 +6,7 @@
 
 Name:           python-virtualenv
 Version:        13.1.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Tool to create isolated Python environments
 
 Group:          Development/Languages
@@ -112,6 +112,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 13.1.2-3
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 13.1.2-2
 - 为 Magic 3.0 重建
 

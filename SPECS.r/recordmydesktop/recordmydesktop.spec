@@ -1,6 +1,6 @@
 Name:           recordmydesktop
 Version:        0.3.8.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Desktop session recorder with audio and video
 Summary(zh_CN.UTF-8): 带有视频和音频的桌面会话记录器
 
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.8.1-5
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 0.3.8.1-4
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:           %{?scl_prefix}felix-gogo-command
 Version:        0.14.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Apache Felix Gogo Command
 
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ API documentation for %{pkg_name}.
 %doc LICENSE
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.14.0-3
+- 为 Magic 3.0 重建
+
 * Thu Jul 03 2014 Mat Booth <mat.booth@redhat.com> - 0.14.0-2
 - BR/R: gogo-runtime >= 0.12.0
 

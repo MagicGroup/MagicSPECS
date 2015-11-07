@@ -3,8 +3,8 @@
 %endif
 
 Name: mbedtls
-Version: 1.3.11
-Release: 3%{?dist}
+Version:	2.1.2
+Release:	2%{?dist}
 Summary: Light-weight cryptographic and SSL/TLS library
 Summary(zh_CN.UTF-8): 轻量级的加密算法和 SSL/TLS 库
 Group: System Environment/Libraries
@@ -144,6 +144,9 @@ LD_LIBRARY_PATH=$PWD/library ctest --output-on-failure -V
 %doc apidoc/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1.2-2
+- 更新到 2.1.2
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.3.11-3
 - 为 Magic 3.0 重建
 

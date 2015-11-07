@@ -1,6 +1,6 @@
 Name:          jsr-311
 Version:       1.1.1
-Release:       10%{?dist}
+Release:       11%{?dist}
 Summary:       JAX-RS: Java API for RESTful Web Services
 License:       CDDL
 URL:           http://jsr311.java.net
@@ -49,6 +49,9 @@ This package contains javadoc for %{name}.
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.1.1-11
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.1.1-10
 - 为 Magic 3.0 重建
 

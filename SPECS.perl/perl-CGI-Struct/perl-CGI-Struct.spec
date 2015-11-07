@@ -1,6 +1,6 @@
 Name:           perl-CGI-Struct
 Version:        1.21
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Build structures from CGI data
 # BSD License (two clause), according to lib/CGI/Struct.pm
 License:        BSD
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/CGI*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.21-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 1.21-5
 - 为 Magic 3.0 重建
 

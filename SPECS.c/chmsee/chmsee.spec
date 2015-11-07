@@ -4,7 +4,7 @@
 
 Name:		chmsee
 Version:	2.0.2
-Release:	7.%{checkout}%{?dist}
+Release:	8.%{checkout}%{?dist}
 Summary(zh_CN):	CHM 文件阅读工具, 基于 XULRunner
 Summary:	HTML Help viewer for Unix/Linux
 Group:		Applications/Publishing
@@ -120,6 +120,9 @@ touch --no-create %{_datadir}/icons/hicolor || :
 %{_datadir}/icons/hicolor/*/mimetypes/chm.svg
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.2-8.git86d101c9
+- 为 Magic 3.0 重建
+
 * Mon Feb 10 2014 Yijun Yuan <bbbush.yuan@gmail.com> - 2.0.2-7.git86d101c9
 - add missing requires, rhbz1063459
 

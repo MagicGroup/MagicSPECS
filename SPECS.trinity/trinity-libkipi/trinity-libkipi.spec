@@ -51,7 +51,7 @@ Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		%{tde_epoch}
 Version:	0.1.5
-Release:	%{?!preversion:2}%{?preversion:1_%{preversion}}%{?dist}%{?_variant}
+Release:	%{?!preversion:2}%{?preversion:1_%{preversion}}%{?dist}%{?_variant}.1
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
@@ -223,5 +223,8 @@ magic_rpm_clean.sh
 
 
 %Changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.1.5-2.opt.1
+- 为 Magic 3.0 重建
+
 * Fri Jul 05 2013 Francois Andriot <francois.andriot@free.fr> - 0.1.5-2
 - Initial release for TDE 14.0.0

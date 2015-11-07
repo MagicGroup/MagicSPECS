@@ -1,6 +1,6 @@
 Name: sane-frontends
 Version: 1.0.14
-Release: 17%{?dist}
+Release: 18%{?dist}
 Summary: Graphical frontend to SANE
 Summary(zh_CN.UTF-8): SANE 的图形前端
 URL: http://www.sane-project.org
@@ -67,6 +67,9 @@ rm -rf %buildroot
 # intended to be used from the command line
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.14-18
+- 为 Magic 3.0 重建
+
 * Fri Sep 25 2015 Liu Di <liudidi@gmail.com> - 1.0.14-17
 - 为 Magic 3.0 重建
 

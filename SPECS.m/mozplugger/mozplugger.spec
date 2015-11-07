@@ -2,7 +2,7 @@ Summary: A generic mozilla plug-in
 Summary(zh_CN.UTF-8): 通用的 Mozilla 插件
 Name: mozplugger
 Version: 2.1.6
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -74,6 +74,9 @@ rm -rf %{buildroot}
 %{_mandir}/man7/mozplugger.7*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1.6-6
+- 为 Magic 3.0 重建
+
 * Tue Dec 02 2014 Liu Di <liudidi@gmail.com> - 2.1.6-5
 - 为 Magic 3.0 重建
 

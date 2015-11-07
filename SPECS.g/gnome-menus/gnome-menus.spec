@@ -3,8 +3,8 @@
 Summary:  A menu system for the GNOME project
 Summary(zh_CN.UTF-8): GNOME 项目的菜单系统
 Name: gnome-menus
-Version:	3.10.1
-Release: 2%{?dist}
+Version:	3.13.3
+Release: 3%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/GMenu-3.0.gir
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.13.3-3
+- 更新到 3.13.3
+
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.10.1-2
 - 更新到 3.10.1
 

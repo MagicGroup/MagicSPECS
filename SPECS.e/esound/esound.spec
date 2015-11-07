@@ -3,7 +3,7 @@ Summary: Allows several audio streams to play on a single audio device.
 Summary(zh_CN.UTF-8): 允许几个音频流在单个音频设备上播放。
 Name:      esound
 Version:   0.2.41
-Release: 5%{?dist}
+Release: 6%{?dist}
 #Epoch: 1
 License: GPL
 URL: ftp://ftp.gnome.org/pub/GNOME/sources/esound
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.41-6
+- 为 Magic 3.0 重建
+
 * Thu Dec 06 2012 Liu Di <liudidi@gmail.com> - 0.2.41-5
 - 为 Magic 3.0 重建
 

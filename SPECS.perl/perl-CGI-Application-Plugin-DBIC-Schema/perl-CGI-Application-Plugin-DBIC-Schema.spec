@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-DBIC-Schema
 Version:        0.3
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Easy DBIx::Class access from CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.3-24
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.3-23
 - 为 Magic 3.0 重建
 

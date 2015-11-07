@@ -1,6 +1,6 @@
 Name:           perl-Eval-LineNumbers
 Version:	0.34
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Add line numbers to hereis blocks that contain perl source code
 License:        Artistic 2.0 or LGPLv2+
 Group:          Development/Libraries
@@ -37,6 +37,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Eval::LineNumbers.3pm.gz
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.34-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.34-1
 - 更新到 0.34
 

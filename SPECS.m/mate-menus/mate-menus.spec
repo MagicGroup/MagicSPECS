@@ -1,6 +1,6 @@
 Name:           mate-menus
-Version: 1.9.0
-Release: 1%{?dist}
+Version: 1.11.0
+Release: 2%{?dist}
 Summary:        Displays menus for MATE Desktop
 Summary(zh_CN.UTF-8): MATE 桌面的显示菜单
 License:        GPLv2+ and LGPLv2+
@@ -118,6 +118,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
+- 更新到 1.11.0
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-1
 - 更新到 1.9.0
 

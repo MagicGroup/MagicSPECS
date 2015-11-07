@@ -1,7 +1,7 @@
 Name:           speexdsp
 Version:        1.2
 %global rc_ver  rc3
-Release:        0.7.%{rc_ver}%{?dist}
+Release:        0.8.%{rc_ver}%{?dist}
 Summary:        A voice compression format (DSP)
 Summary(zh_CN.UTF-8): 声音压缩格式 (DSP)
 
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 %{_docdir}/speexdsp/manual.pdf
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2-0.8.rc3
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.2-0.7.rc3
 - 为 Magic 3.0 重建
 

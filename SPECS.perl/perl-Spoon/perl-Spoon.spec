@@ -1,6 +1,6 @@
 Name:           perl-Spoon
 Version:        0.24
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        Spiffy Application Building Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.24-25
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.24-24
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 Summary: An SSL-encrypting socket wrapper
 Summary(zh_CN.UTF-8): SSL 加密的 socket wrapper
 Name: stunnel
-Version:	5.23
-Release:	1%{?dist}
+Version:	5.25
+Release:	2%{?dist}
 License: GPLv2
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_sysconfdir}/stunnel/*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.25-2
+- 更新到 5.25
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 5.23-1
 - 更新到 5.23
 

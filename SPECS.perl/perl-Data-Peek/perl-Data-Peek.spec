@@ -1,6 +1,6 @@
 Name:           perl-Data-Peek
 Version:	0.44
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Collection of low-level debug facilities
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.44-3
+- 为 Magic 3.0 重建
+
 * Wed Sep 16 2015 Liu Di <liudidi@gmail.com> - 0.44-2
 - 为 Magic 3.0 重建
 

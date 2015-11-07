@@ -1,6 +1,6 @@
 Name:           perl-Net-IPv4Addr
 Version:        0.10
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Perl extension for manipulating IPv4 addresses
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.10-18
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.10-17
 - 为 Magic 3.0 重建
 

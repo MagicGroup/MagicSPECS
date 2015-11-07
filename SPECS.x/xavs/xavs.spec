@@ -3,7 +3,7 @@ Summary: Audio Video Standard of China
 Summary(zh_CN.UTF-8): 中国的音频视频标准
 Name: xavs
 Version: 0.1.51
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -96,6 +96,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/xavs.pc
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.1.51-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 21 2015 Liu Di <liudidi@gmail.com> - 0.1.51-5
 - 为 Magic 3.0 重建
 

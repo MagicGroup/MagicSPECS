@@ -21,7 +21,7 @@ Summary: RPM package installer/updater/manager
 Summary(zh_CN.UTF-8): RPM 包的安装、更新与管理
 Name: yum
 Version: 3.4.3
-Release: 68%{?dist}
+Release: 69%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -390,6 +390,9 @@ exit 0
 %endif
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.4.3-69
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 3.4.3-68
 - 为 Magic 3.0 重建
 

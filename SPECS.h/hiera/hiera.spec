@@ -10,8 +10,8 @@
 %endif
 
 Name:           hiera
-Version:	1.3.2
-Release:        1%{?dist}
+Version:	3.0.1
+Release:        2%{?dist}
 Summary:        A simple hierarchical database supporting plugin data sources
 Summary(zh_CN.UTF-8): 一个简单的分层数据库支持插件数据源
 
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.0.1-2
+- 更新到 3.0.1
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 1.3.2-1
 - 更新到 1.3.2
 

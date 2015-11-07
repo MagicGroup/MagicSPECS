@@ -2,7 +2,7 @@ Summary: 	A KDE frontend for various vpn clients
 Summary(zh_CN.UTF-8): 多种 vpn 客户端的 KDE 前端
 Name:   	kde4-kvpnc
 Version: 	0.9.6a
-Release: 	3%{?dist}
+Release: 	4%{?dist}
 License: 	GPLv2+
 Group: 		Applications/Networking
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{kde4_localedir}/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.9.6a-4
+- 为 Magic 3.0 重建
+
 * Tue Jun 03 2014 Liu Di <liudidi@gmail.com> - 0.9.6a-3
 - 为 Magic 3.0 重建
 

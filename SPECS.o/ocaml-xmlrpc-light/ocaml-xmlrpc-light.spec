@@ -3,7 +3,7 @@
 
 Name:           ocaml-xmlrpc-light
 Version:        0.6.1
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        OCaml library for writing XML-RPC clients and servers
 Summary(zh_CN.UTF-8): 编写 XML-RPC 客户端和服务端的 OCaml 库
 License:        LGPLv2 with exceptions
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.6.1-18
+- 为 Magic 3.0 重建
+
 * Sat Mar 14 2015 Liu Di <liudidi@gmail.com> - 0.6.1-17
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Database Independent Abstraction Layer for C
 Summary(zh_CN.UTF-8): C 下的数据库无关抽象层
 Name: libdbi
 Version: 0.9.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 %{_docdir}/libdbi-%{version}
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.0-7
+- 为 Magic 3.0 重建
+
 * Mon Jul 14 2014 Liu Di <liudidi@gmail.com> - 0.9.0-6
 - 更新到 0.9.0
 

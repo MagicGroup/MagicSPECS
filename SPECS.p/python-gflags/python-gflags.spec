@@ -2,7 +2,7 @@
 
 Name:           python-%{upstream_name}
 Version:        2.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Commandline flags module for Python
 Summary(zh_CN.UTF-8): Python 的命令行标志模块
 
@@ -118,6 +118,9 @@ popd
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0-6
+- 为 Magic 3.0 重建
+
 * Sat Sep 05 2015 Liu Di <liudidi@gmail.com> - 2.0-5
 - 为 Magic 3.0 重建
 

@@ -11,7 +11,7 @@ Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://synaptiks.lunaryorn.de
 Version: 0.8.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: http://bitbucket.org/lunar/synaptiks/downloads/%{real_name}-%{version}.tar.xz
 Source1: synaptiks.po
 
@@ -73,6 +73,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_localedir}/zh_CN/LC_MESSAGES/synaptiks.mo
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.8.1-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 05 2014 Liu Di <liudidi@gmail.com> - 0.8.1-1
 - 为 Magic 3.0 重建
 

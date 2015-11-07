@@ -1,6 +1,6 @@
 Name:           perl-XML-XQL
 Version:        0.68
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Perl module for querying XML tree structures with XQL
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT %{__perl_provides}
 %{_mandir}/man3/XML::XQL*.3*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.68-23
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.68-22
 - 为 Magic 3.0 重建
 

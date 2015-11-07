@@ -9,7 +9,7 @@ Name:		GeoIP-GeoLite-data
 # The geolite databases are updated on the first Tuesday of each month,
 # hence we use a versioning scheme of YYYY.MM for the Fedora package
 Version:	2015.09
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Free GeoLite IP geolocation country database
 Summary(zh_CN.UTF-8): 自由的 GeoLite IP 地理位置国家库
 # License specified at http://dev.maxmind.com/geoip/legacy/geolite/#License
@@ -162,6 +162,9 @@ exit 0
 %{_datadir}/GeoIP/GeoLiteASNumv6.dat
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2015.09-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 2015.09-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Role-HasMessage
 Version:	0.006
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Thing with a message method
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.006-2
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.006-1
 - 更新到 0.006
 

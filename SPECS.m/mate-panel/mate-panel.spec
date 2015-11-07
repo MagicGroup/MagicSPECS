@@ -13,8 +13,8 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-panel
-Version: 1.9.1
-Release: 1%{?dist}
+Version: 1.11.1
+Release: 2%{?dist}
 #Release: 1%{?dist}
 Summary:        MATE Desktop panel and applets
 Summary(zh_CN.UTF-8): MATE 桌面面板和小部件
@@ -179,6 +179,9 @@ update-desktop-database &> /dev/null || :
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.1-2
+- 更新到 1.11.1
+
 * Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.1-1
 - 更新到 1.9.1
 

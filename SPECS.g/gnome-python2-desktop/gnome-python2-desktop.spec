@@ -28,7 +28,7 @@
 
 Name: gnome-python2-desktop
 Version: 2.32.0
-Release: 15%{?dist}
+Release: 16%{?dist}
 License: GPLv2+
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -292,6 +292,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/gtk-2.0/gnomekeyring.so
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.32.0-16
+- 为 Magic 3.0 重建
+
 * Thu Aug 28 2014 Liu Di <liudidi@gmail.com> - 2.32.0-15
 - 为 Magic 3.0 重建
 

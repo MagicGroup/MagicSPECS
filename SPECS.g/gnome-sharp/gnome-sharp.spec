@@ -1,6 +1,6 @@
 Name:           gnome-sharp
 Version:        2.24.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        GTK+ and GNOME bindings for Mono
 Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的 Mono 绑定
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/gconf-sharp-peditors-2.0.pc
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.24.2-4
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

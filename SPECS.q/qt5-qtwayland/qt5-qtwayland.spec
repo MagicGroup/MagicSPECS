@@ -7,8 +7,8 @@
 Summary:        Qt5 - Wayland platform support and QtCompositor module
 Summary(zh_CN.UTF-8): Qt5 - Wayland 平台支持和 QtCompositor 模块
 Name:           qt5-%{qt_module}
-Version: 5.5.0
-Release: 1%{?dist}
+Version: 5.5.1
+Release: 2%{?dist}
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
 Url:            http://qt-project.org/wiki/QtWayland
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -153,6 +153,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
+- 更新到 5.5.1
+
 * Fri Sep 11 2015 Liu Di <liudidi@gmail.com> - 5.5.0-1
 - 更新到 5.5.0
 

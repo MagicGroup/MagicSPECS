@@ -7,7 +7,7 @@ Name:    tidy
 Summary: Utility to clean up and pretty print HTML/XHTML/XML
 Summary(zh_CN.UTF-8): 清理和完美打印 HTML/XHTML/XML 的工具
 Version: 0.99.0
-Release: 25.%{snap}%{?dist}
+Release: 26.%{snap}%{?dist}
 
 Group:   Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.99.0-26.20091203
+- 为 Magic 3.0 重建
+
 * Sat Oct 03 2015 Liu Di <liudidi@gmail.com> - 0.99.0-25.20091203
 - 为 Magic 3.0 重建
 

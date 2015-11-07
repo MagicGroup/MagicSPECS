@@ -5,7 +5,7 @@
 Summary: OAuth Core Ruby implementation
 Name: rubygem-%{gem_name}
 Version: 0.4.7
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/oauth-xx/oauth-ruby
@@ -103,6 +103,9 @@ popd
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.7-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.7-9
 - 为 Magic 3.0 重建
 

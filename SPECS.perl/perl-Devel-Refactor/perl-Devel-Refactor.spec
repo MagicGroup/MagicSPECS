@@ -1,6 +1,6 @@
 Name:           perl-Devel-Refactor
 Version:        0.05
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl extension for refactoring Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.05-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.05-13
 - 为 Magic 3.0 重建
 

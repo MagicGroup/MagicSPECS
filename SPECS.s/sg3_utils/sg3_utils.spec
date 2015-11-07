@@ -4,7 +4,7 @@ Summary: Utilities for devices that use SCSI command sets
 Summary(zh_CN.UTF-8): 使用 SCSI 命令集设备的工具 
 Name: sg3_utils
 Version:	1.41
-Release:	1%{?dist}
+Release:	2%{?dist}
 License: GPLv2+ and BSD
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -114,6 +114,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.41-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 26 2015 Liu Di <liudidi@gmail.com> - 1.41-1
 - 更新到 1.41
 

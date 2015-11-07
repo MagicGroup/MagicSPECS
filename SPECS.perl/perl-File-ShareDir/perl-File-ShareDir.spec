@@ -1,6 +1,6 @@
 Name:           perl-File-ShareDir
 Version:	1.102
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Locate per-dist and per-module shared files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.102-3
+- 为 Magic 3.0 重建
+
 * Mon Sep 14 2015 Liu Di <liudidi@gmail.com> - 1.102-2
 - 为 Magic 3.0 重建
 

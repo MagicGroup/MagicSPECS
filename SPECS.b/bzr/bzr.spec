@@ -18,7 +18,7 @@
 %global bzrmajor 2.6
 %global bzrminor .0
 #global bzrrc b6
-%global release 2
+%global release 3
 
 Name:           bzr
 Version:        %{bzrmajor}%{?bzrminor}
@@ -167,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_pkgdocdir}/contrib/
 
 %changelog
+* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.6.0-3
+- 为 Magic 3.0 重建
+
 * Tue Aug  6 2013 Toshio Kuratomi <toshio@fedoraproject.org> - -
 - Move the documentation in the bzr-doc subpackage into _pkgdocdir.  This is
   a cleanup prompted by

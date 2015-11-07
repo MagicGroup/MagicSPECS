@@ -1,6 +1,6 @@
 Name:           perl-Unicode-Collate
 Version:        1.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Unicode Collation Algorithm
 License:        (GPL+ or Artistic) and UCD
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.14-3
+- 为 Magic 3.0 重建
+
 * Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 1.14-2
 - 为 Magic 3.0 重建
 

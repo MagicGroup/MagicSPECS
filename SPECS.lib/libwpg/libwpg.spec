@@ -1,6 +1,6 @@
 Name:           libwpg
 Version: 0.3.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        Library for reading WordPerfect Graphics images
 Summary(zh_CN.UTF-8): 读取 WordPerfect 图形图像的库
 
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.3.0-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.3.0-1
 - 更新到 0.3.0
 

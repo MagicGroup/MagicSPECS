@@ -12,8 +12,8 @@
 	%{nil}
 
 Name:		hmaccalc
-Version:	0.9.13
-Release:	1%{?dist}
+Version:	0.9.14
+Release:	2%{?dist}
 Summary:	Tools for computing and checking HMAC values for files
 Summary(zh_CN.UTF-8): 计算和检查文件 HMAC 值的工具
 
@@ -70,6 +70,9 @@ make check
 %{_mandir}/*/*
 
 %changelog
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.9.14-2
+- 更新到 0.9.14
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 0.9.13-1
 - 更新到 0.9.13
 

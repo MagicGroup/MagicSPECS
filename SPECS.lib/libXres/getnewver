@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://ftp.x.org/pub/individual/lib/?C=M;O=D"
+url="http://ftp.x.org/pub/individual/lib/?C=M&O=D"
 new1="libXres-"
 new2=".tar.gz"
 downcommand="wget -q" 

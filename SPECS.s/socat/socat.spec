@@ -4,7 +4,7 @@ Summary: Bidirectional data relay between two data channels ('netcat++')
 Summary(zh_CN.UTF-8): 两个数据信道间的双向数据中继 ('netcat++')
 Name: socat
 Version: 1.7.2.4
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2
 Url:  http://www.dest-unreach.org/%{name}
 Source: http://www.dest-unreach.org/socat/download/%{name}-%{version}.tar.gz
@@ -70,6 +70,9 @@ export OD_C=/usr/bin/od
 %doc %{_mandir}/man1/socat.1*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.7.2.4-7
+- 为 Magic 3.0 重建
+
 * Mon Sep 28 2015 Liu Di <liudidi@gmail.com> - 1.7.2.4-6
 - 为 Magic 3.0 重建
 

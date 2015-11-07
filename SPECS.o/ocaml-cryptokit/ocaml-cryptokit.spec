@@ -2,7 +2,7 @@
 
 Name:           ocaml-cryptokit
 Version: 1.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary:        OCaml library of cryptographic and hash functions
 Summary(zh_CN.UTF-8): 密码和哈希函数的 OCaml 库
 License:        LGPLv2 with exceptions
@@ -107,6 +107,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.10-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 05 2015 Liu Di <liudidi@gmail.com> - 1.10-1
 - 更新到 1.10
 

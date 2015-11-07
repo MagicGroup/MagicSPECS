@@ -1,7 +1,7 @@
 Name:           systemd-ui
 Url:            http://www.freedesktop.org/wiki/Software/systemd
 Version:        1
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        GPLv2+
 Group:          Applications/System
 Summary:        Graphical front-end for systemd
@@ -43,6 +43,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/systemadm.*
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1-4
+- 为 Magic 3.0 重建
+
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1-3
 - 为 Magic 3.0 重建
 

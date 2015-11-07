@@ -1,6 +1,6 @@
 Name:           perl-Class-Accessor
 Version:        0.34
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Automated accessor generation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.34-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.34-14
 - 为 Magic 3.0 重建
 

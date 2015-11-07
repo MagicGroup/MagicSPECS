@@ -2,7 +2,7 @@ Name:           f2c
 Summary:        A Fortran 77 to C/C++ conversion program
 Summary(zh_CN.UTF-8): Fortran 77 到 C/C++ 的转换程序
 Version:        20110801
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        MIT
 Group:          Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20110801-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20110801-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

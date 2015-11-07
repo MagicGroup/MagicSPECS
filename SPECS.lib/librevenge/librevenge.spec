@@ -1,8 +1,8 @@
 %global apiversion 0.0
 
 Name: librevenge
-Version: 0.0.1
-Release: 3%{?dist}
+Version: 0.0.2
+Release: 2%{?dist}
 Summary: A base library for writing document import filters
 Summary(zh_CN.UTF-8): 编写文档导入过滤器的基本库
 
@@ -97,6 +97,9 @@ make %{?_smp_mflags} check
 %doc docs/doxygen/html
 
 %changelog
+* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.2-2
+- 更新到 0.0.2
+
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 0.0.1-3
 - 为 Magic 3.0 重建
 

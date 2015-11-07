@@ -1,5 +1,5 @@
 #!/bin/bash
-url="http://www.freedesktop.org/software/accountsservice/?C=M;O=D"
+url="http://www.freedesktop.org/software/accountsservice/?C=M&O=D"
 new1="a href=\"accountsservice\-"
 new2=".tar.xz"
 downcommand="wget -q" 

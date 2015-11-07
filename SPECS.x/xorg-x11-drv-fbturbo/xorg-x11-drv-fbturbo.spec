@@ -9,7 +9,7 @@ Summary:   Xorg X11 fbturbo driver
 Summary(zh_CN.UTF-8): Xorg X11 fbturbo 驱动
 Name:      xorg-x11-drv-fbturbo
 Version:   0.5.1
-Release:   0.7%{?gitrev}%{?dist}
+Release:   0.8%{?gitrev}%{?dist}
 URL:       https://github.com/ssvb/xf86-video-fbturbo
 License:   MIT and GPLv2
 Group:     User Interface/X Hardware Support
@@ -74,6 +74,9 @@ find %{buildroot} -type f -name "*.la" -delete
 %{_mandir}/man4/fbturbo.4*
 
 %changelog
+* Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.5.1-0.8.20150221
+- 为 Magic 3.0 重建
+
 * Mon Oct 26 2015 Liu Di <liudidi@gmail.com> - 0.5.1-0.7.20150221
 - 为 Magic 3.0 重建
 

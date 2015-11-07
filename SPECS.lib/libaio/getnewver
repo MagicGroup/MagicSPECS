@@ -1,5 +1,5 @@
 #!/bin/bash
-url="https://fedorahosted.org/releases/l/i/libaio/?C=M;O=D"
+url="https://fedorahosted.org/releases/l/i/libaio/?C=M&O=D"
 new1="libaio-"
 new2=".tar.gz"
 downcommand="wget -q" 

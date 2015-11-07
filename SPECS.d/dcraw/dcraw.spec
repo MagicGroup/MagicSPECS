@@ -1,8 +1,8 @@
 Summary: Tool for decoding raw image data from digital cameras
 Summary(zh_CN.UTF-8): 从数码相机中解码 raw 图像数据的工具
 Name: dcraw
-Version: 9.20
-Release: 1%{?dist}
+Version: 9.26.0
+Release: 2%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 License: GPLv2+
@@ -70,6 +70,9 @@ rm -rf %buildroot
 %{_mandir}/man1/*
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 9.26.0-2
+- 更新到 9.26.0
+
 * Wed Mar 19 2014 Liu Di <liudidi@gmail.com> - 9.20-1
 - 更新到 9.20
 

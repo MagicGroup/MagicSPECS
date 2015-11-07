@@ -1,6 +1,6 @@
 Name:           flite
 Version:        1.3
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Small, fast speech synthesis engine (text-to-speech)
 Summary(zh_CN.UTF-8): 小而快速的语音合成引擎（文本转语音）
 
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3-22
+- 为 Magic 3.0 重建
+
 * Mon Jan  6 2014 Rui Matos <rmatos@redhat.com> - 1.3-21
 - Resolves: (CVE-2014-0027) flite: insecure temporary file use
 

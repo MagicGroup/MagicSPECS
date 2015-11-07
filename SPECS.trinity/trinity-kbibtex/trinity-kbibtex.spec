@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:        0.2.3
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:        A BibTeX editor for TDE
 Summary(zh_CN.UTF-8): TDE 下的 BibTeX 编辑器
 Group:          Applications/Internet
@@ -163,6 +163,9 @@ update-desktop-database %{tde_tdeappdir} > /dev/null
 
 
 %changelog
+* Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.2.3-1.2
+- 为 Magic 3.0 重建
+
 * Sat Oct 10 2015 Liu Di <liudidi@gmail.com> - 2:0.2.3-1.1
 - 为 Magic 3.0 重建
 

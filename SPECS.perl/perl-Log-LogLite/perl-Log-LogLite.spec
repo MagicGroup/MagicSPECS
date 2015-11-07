@@ -1,6 +1,6 @@
 Name:           perl-Log-LogLite
 Version:        0.82
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Create simple logs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.82-13
+- 为 Magic 3.0 重建
+
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.82-12
 - 为 Magic 3.0 重建
 

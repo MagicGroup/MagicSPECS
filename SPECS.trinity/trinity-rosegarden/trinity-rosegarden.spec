@@ -40,7 +40,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.7.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Music editor and MIDI/audio sequencer [Trinity]
 Summary(zh_CN.UTF-8): MIDI 音频编辑器
 Group:		Applications/Multimedia
@@ -231,5 +231,8 @@ done
 
 
 %changelog
+* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.7.0-1.1
+- 为 Magic 3.0 重建
+
 * Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.7.0-1
 - Initial release for TDE 14.0.0
