@@ -20,12 +20,12 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # for ppc64le).
 %global build_multilib 0
 
-%ifarch x86_64
+%ifarch x86_64 mips64el
  %global build_multilib 1
 %endif
 
 # Note s390x doesn't have an openmpi port available.
-%ifarch %{ix86} x86_64 ppc ppc64 ppc64le %{arm} aarch64
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le %{arm} aarch64 mips64el
 %global build_openmpi 1
 %else
 %global build_openmpi 0
@@ -63,6 +63,9 @@ Patch7: valgrind-3.11.0-rexw-cvtps2pd.patch
 # KDE#353680 Crash with certain glibc versions due to non-implemented TBEGIN
 Patch8: valgrind-3.11.0-s390-hwcap.patch
 
+# mips64el
+Patch10: valgrind-3.11.0-fix-mips64el.patch
+
 %if %{build_multilib}
 # Ensure glibc{,-devel} is installed for both multilib arches
 BuildRequires: /lib/libc.so.6 /usr/lib/libc.so /lib64/libc.so.6 /usr/lib64/libc.so
@@ -90,7 +93,7 @@ BuildRequires: perl(Getopt::Long)
 
 %{?scl:Requires:%scl_runtime}
 
-ExclusiveArch: %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64
+ExclusiveArch: %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64 mips64el
 %ifarch %{ix86}
 %define valarch x86
 %define valsecarch %{nil}
@@ -126,6 +129,10 @@ ExclusiveArch: %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64
 %ifarch aarch64
 %define valarch arm64
 %define valsecarch %{nil}
+%endif
+%ifarch mips64el
+%define valarch mips64
+%define valsecarch mips
 %endif
 
 %description
@@ -180,6 +187,7 @@ Valgrind User Manual for details.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch10 -p1
 
 %build
 # We need to use the software collection compiler and binutils if available.

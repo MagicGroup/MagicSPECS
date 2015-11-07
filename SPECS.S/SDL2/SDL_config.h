@@ -66,6 +66,8 @@
 #include "SDL_config-sparc.h"
 #elif defined(__aarch64__)
 #include "SDL_config-aarch64.h"
+#elif defined(__mips64) && defined(__MIPSEL)
+#include "SDL_config-mips64el.h"
 #else
 #error "The SDL2-devel package is not usable with the architecture."
 #endif

@@ -100,7 +100,7 @@ Requires:	gdisk
 Requires(post):	chkconfig
 Requires(preun):chkconfig
 Requires(preun):initscripts
-%ifnarch s390 s390x
+%ifnarch s390 s390x mips64 mips64el
 BuildRequires:	gperftools-devel
 %endif
 %endif
@@ -455,7 +455,7 @@ EXTRA_LDFLAGS="-lpthread"
 		--with-debug \
 		--enable-cephfs-java \
 		--with-librocksdb-static=check \
-%ifarch s390 s390x
+%ifarch s390 s390x mips64 mips64el
 		--without-tcmalloc \
 %endif
 		$MY_CONF_OPT \

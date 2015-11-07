@@ -192,7 +192,9 @@ autoreconf -fiv
 
 %build
 # HK_CLASSES specific variables !
+%ifnarch mips64el
 export CXXFLAGS="${RPM_OPT_FLAGS} -DHAVE_IO_H"
+%endif
 %if "%_lib" == "lib64"
 export want_64bit=yes
 %endif

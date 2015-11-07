@@ -17,7 +17,7 @@
 %define build_m32r		%{build_all}
 %define build_m68k		%{build_all}
 %define build_microblaze	%{build_all}
-%define build_mips64		%{build_all}
+%define build_mips64el		%{build_all}
 %define build_mn10300		%{build_all}
 %define build_nios2		%{build_all}
 %define build_powerpc64		%{build_all}
@@ -40,7 +40,7 @@
 
 # 32-bit packages we don't build as we can use the 64-bit package instead
 %define build_i386		0
-%define build_mips		0
+%define build_mipsel		0
 %define build_powerpc		0
 %define build_s390		0
 %define build_sh4		0
@@ -258,8 +258,8 @@ the number of packages. \
 %do_package m68k-linux-gnu	%{build_m68k}
 %do_package metag-linux-gnu	%{build_metag}
 %do_package microblaze-linux-gnu %{build_microblaze}
-%do_package mips-linux-gnu	%{build_mips}
-%do_package mips64-linux-gnu	%{build_mips64}
+%do_package mipsel-linux-gnu	%{build_mips}
+%do_package mips64el-linux-gnu	%{build_mips64el}
 %do_package mn10300-linux-gnu	%{build_mn10300}
 %do_package nios2-linux-gnu	%{build_nios2}
 %do_package openrisc-linux-gnu	%{build_openrisc}
@@ -408,8 +408,8 @@ chmod 755 split-debuginfo.sh
     prep_target m68k-linux-gnu		%{build_m68k}
     prep_target metag-linux-gnu		%{build_metag}
     prep_target microblaze-linux-gnu	%{build_microblaze}
-    prep_target mips-linux-gnu		%{build_mips}
-    prep_target mips64-linux-gnu	%{build_mips64}
+    prep_target mipsel-linux-gnu	%{build_mipsel}
+    prep_target mips64el-linux-gnu	%{build_mips64el}
     prep_target mn10300-linux-gnu	%{build_mn10300}
     prep_target nios2-linux-gnu		%{build_nios2}
     prep_target openrisc-linux-gnu	%{build_openrisc}
@@ -537,10 +537,13 @@ function config_target () {
 	x86_64-*)
 	    CONFIG_FLAGS="--with-arch_32=i686 --with-tune=generic"
 	    ;;
+	mips64*)
+            CONFIG_FLAGS="--with-arch=mips3 --with-abi=64 --with-arch_32=mips1 --enable-targets=o32,n64 --with-linker-hash-style=sysv"
+            ;;
     esac
 
     case $arch in
-	alpha|powerpc*|ppc*|s390*|sparc*)
+	alpha|powerpc*|ppc*|s390*|sparc*|mips64*)
 	    CONFIG_FLAGS="$CONFIG_FLAGS --with-long-double-128" ;;
     esac
 
@@ -899,8 +902,8 @@ rm -rf %{buildroot}
 %do_files m68k-linux-gnu	%{build_m68k}
 %do_files metag-linux-gnu	%{build_metag}
 %do_files microblaze-linux-gnu	%{build_microblaze}
-%do_files mips-linux-gnu	%{build_mips}
-%do_files mips64-linux-gnu	%{build_mips64}
+%do_files mipsel-linux-gnu	%{build_mipsel}
+%do_files mips64el-linux-gnu	%{build_mips64el}
 %do_files mn10300-linux-gnu	%{build_mn10300}
 %do_files nios2-linux-gnu	%{build_nios2}
 %do_files openrisc-linux-gnu	%{build_openrisc}

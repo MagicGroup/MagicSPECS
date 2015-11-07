@@ -16,6 +16,8 @@ Obsoletes: mplayer-win32codec
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 Autoreq: no
 
+BuildArch: %{ix86} x86_64
+
 %description
 These are Video and Audio codecs binary packages add support for codecs that are not yet
 implemented natively, like newer RealVideo variants and a lot of uncommon formats. Note that
