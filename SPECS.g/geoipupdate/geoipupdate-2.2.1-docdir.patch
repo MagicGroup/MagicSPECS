@@ -1,0 +1,33 @@
+--- configure.ac
++++ configure.ac
+@@ -10,6 +10,7 @@ AC_PREREQ
+ 
+ AC_PROG_CC_C99
+ AC_PROG_LIBTOOL
++AC_PROG_MKDIR_P
+ 
+ AC_CHECK_TYPE(byte,[AC_DEFINE(HAVE_BYTE_TYPEDEF)],[])
+ AC_CHECK_TYPE(ushort,[AC_DEFINE(HAVE_USHORT_TYPEDEF)],[])
+--- conf/Makefile.am
++++ conf/Makefile.am
+@@ -1,8 +1,10 @@
+-dist_sysconf_DATA = GeoIP.conf.default
+-
+ DEFAULT_CONFIG_FILE = $(sysconfdir)/GeoIP.conf
+ 
+ install-exec-hook:
++	@if test ! -d "$(DESTDIR)$(sysconfdir)" ; then \
++		echo "$(MKDIR_P) $(DESTDIR)$(sysconfdir)" ; \
++		$(MKDIR_P) "$(DESTDIR)$(sysconfdir)" ; \
++	fi
+ 	@if test -f "$(DESTDIR)$(DEFAULT_CONFIG_FILE)" ; then \
+ 	        echo "$@ will not overwrite existing $(DESTDIR)$(DEFAULT_CONFIG_FILE)" ; \
+ 	else \
+--- Makefile.am
++++ Makefile.am
+@@ -8,3 +8,5 @@ SUBDIRS =   \
+     man
+ 
+ EXTRA_DIST = ChangeLog.md LICENSE README.md bootstrap
++
++doc_DATA = ChangeLog.md README.md conf/GeoIP.conf.default

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# This updates the IPv4 databases based on product numbers in /etc/GeoIP.conf
+geoipupdate > /dev/null

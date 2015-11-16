@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+
+# This script is based on geolite-mirror-simple.pl from Maxmind's Geo::IP perl module
+
+use strict;
+our $VERSION = '0.01';
+use LWP::Simple qw/ mirror RC_NOT_MODIFIED RC_OK $ua /;
+use File::Copy qw/ mv /;
+use File::Spec;
+use PerlIO::gzip;
+
+# Make sure the directories exist
+-d ( my $download_dir = '/usr/share/GeoIP/download' ) or die $!;
+-d ( my $dest_dir     = '/usr/share/GeoIP' )          or die $!;
+
+my %mirror = (    # local-filename       geolite-name
+    'GeoIPv6.dat.gz'       => 'http://geolite.maxmind.com/download/geoip/database/GeoIPv6.dat.gz',
+    'GeoLiteCityv6.dat.gz' => 'http://geolite.maxmind.com/download/geoip/database/GeoLiteCityv6-beta/GeoLiteCityv6.dat.gz',
+    'GeoIPASNumv6.dat.gz'  => 'http://download.maxmind.com/download/geoip/database/asnum/GeoIPASNumv6.dat.gz'
+);
+
+$ua->agent("geoipupdate6.cron/$VERSION");
+
+chdir $download_dir or die $!;
+for my $f ( keys %mirror ) {
+    my $rc = mirror( $mirror{$f}, $f );
+    next if $rc == RC_NOT_MODIFIED;
+    if ( $rc == RC_OK ) {
+        ( my $outfile = $f ) =~ s/\.gz$//;
+        open my $in,  '<:gzip', $f       or die $!;
+        open my $out, '>',      $outfile or die $!;
+        print $out $_ or die $! while <$in>;
+        mv( $outfile, File::Spec->catfile( $dest_dir, $outfile ) ) or die $!;
+    }
+}
+exit 0;
+
