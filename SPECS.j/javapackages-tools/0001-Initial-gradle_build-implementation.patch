@@ -1,0 +1,152 @@
+From 2e56f8b1adb6b53e9541658c24fa1dbf46c91482 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Tue, 27 Oct 2015 16:20:35 +0100
+Subject: [PATCH] Initial %gradle_build implementation
+
+---
+ gradle/init.gradle            | 16 +++++++---------
+ java-utils/mvn_build.py       | 35 +++++++++++++++++++++++++++--------
+ macros.d/macros.fjava         | 12 ++++++++++++
+ test/data/mvn_build/all_out   |  2 +-
+ test/data/mvn_build/debug_out |  2 +-
+ 5 files changed, 48 insertions(+), 19 deletions(-)
+
+diff --git a/gradle/init.gradle b/gradle/init.gradle
+index 17c9afe..c523717 100644
+--- a/gradle/init.gradle
++++ b/gradle/init.gradle
+@@ -1,11 +1,9 @@
+-allprojects {
+-    buildscript {
+-        repositories {
+-            xmvn()
+-        }
+-    }
+-
+-    repositories {
+-        xmvn()
++initscript {
++    dependencies {
++        classpath files('/usr/share/java/xmvn/xmvn-connector-gradle.jar')
++        classpath files('/usr/share/java/xmvn/xmvn-api.jar')
++        classpath files('/usr/share/java/xmvn/xmvn-launcher.jar')
+     }
+ }
++
++apply plugin: org.fedoraproject.xmvn.connector.gradle.XMvnGradlePlugin
+diff --git a/java-utils/mvn_build.py b/java-utils/mvn_build.py
+index eb40aa0..2ad9ae4 100644
+--- a/java-utils/mvn_build.py
++++ b/java-utils/mvn_build.py
+@@ -81,6 +81,9 @@ if __name__ == "__main__":
+                       action="callback",
+                       callback=goal_callback,
+                       help="Run Maven goals after default XMvn goals.")
++    parser.add_option("--gradle",
++                      action="store_true",
++                      help="Invoke Gradle instead of Maven.")
+     parser.add_option("-i", "--skip-install",
+                       action="store_true",
+                       help="Skip artifact installation.")
+@@ -99,8 +102,12 @@ if __name__ == "__main__":
+     (options, args) = parser.parse_args()
+     xc = XMvnConfig()
+ 
+-    base_goal = "verify"
+-    mvn_args = ["xmvn", "--batch-mode"]
++    if options.gradle:
++        base_goal = "build"
++        mvn_args = ["gradle-local", "--no-daemon"]
++    else:
++        base_goal = "verify"
++        mvn_args = ["xmvn", "--batch-mode"]
+ 
+     if not options.bootstrap:
+         mvn_args.append("--offline")
+@@ -109,7 +116,7 @@ if __name__ == "__main__":
+         mvn_args.append("-Dxmvn.compat=20-rpmbuild-raw")
+ 
+     if options.debug:
+-        mvn_args.append("-X")
++        mvn_args.append("--debug")
+ 
+     if options.xmvn_debug or options.debug:
+         mvn_args.append("-Dorg.slf4j.simpleLogger.log.org.fedoraproject.xmvn=debug")
+@@ -117,7 +124,10 @@ if __name__ == "__main__":
+     if options.force:
+         mvn_args.append("-Dmaven.test.skip=true")
+         xc.add_custom_option("buildSettings/skipTests", "true")
+-        base_goal = "package"
++        if options.gradle:
++            base_goal = "assemble"
++        else:
++            base_goal = "package"
+ 
+     if mock_socket and os.path.exists(mock_socket):
+         interpreter = sys.executable
+@@ -133,12 +143,21 @@ if __name__ == "__main__":
+     mvn_args.append(base_goal)
+ 
+     if not options.skip_install:
+-        mvn_args.append("org.fedoraproject.xmvn:xmvn-mojo:install")
++        if options.gradle:
++            mvn_args.append("xmvnInstall")
++        else:
++            mvn_args.append("org.fedoraproject.xmvn:xmvn-mojo:install")
+ 
+     if not options.skip_javadoc:
+-        mvn_args.append("org.apache.maven.plugins:maven-javadoc-plugin:aggregate")
+-
+-    mvn_args.append("org.fedoraproject.xmvn:xmvn-mojo:builddep")
++        if options.gradle:
++            # Automatic javadoc generation for Gradle is not yet implemented in XMvn
++            pass
++        else:
++            mvn_args.append("org.apache.maven.plugins:maven-javadoc-plugin:aggregate")
++
++    if not options.gradle:
++        # Build dependency generation for Gradle is not yet implemented in XMvn
++        mvn_args.append("org.fedoraproject.xmvn:xmvn-mojo:builddep")
+ 
+     if options.goal_after:
+         mvn_args.extend(options.goal_after)
+diff --git a/macros.d/macros.fjava b/macros.d/macros.fjava
+index bb419ae..75969b1 100644
+--- a/macros.d/macros.fjava
++++ b/macros.d/macros.fjava
+@@ -134,6 +134,18 @@
+ %mvn_build %{pyinterpreter} %{javadir}-utils/mvn_build.py %{?xmvn_bootstrap: -b} %{?_without_javadoc: -j $(> .mfiles-javadoc)}%{?_without_tests: -f}
+ 
+ 
++# %gradle_build - build Gradle project
++#
++# Usage: %mvn_build [options]
++#
++# This macro causes Gradle project to be built (usually compiled and
++# packaged). It is intended to be placed in %build section of spec file.
++#
++# For summary of accepted options execute `mvn-build --help` command.
++#
++%gradle_build %{pyinterpreter} %{javadir}-utils/mvn_build.py --gradle %{?xmvn_bootstrap: -b} %{?_without_javadoc: -j $(> .mfiles-javadoc)}%{?_without_tests: -f}
++
++
+ # %mvn_install - install Maven project
+ #
+ # Usage: %mvn_install
+diff --git a/test/data/mvn_build/all_out b/test/data/mvn_build/all_out
+index 9c34337..a4f4177 100644
+--- a/test/data/mvn_build/all_out
++++ b/test/data/mvn_build/all_out
+@@ -1 +1 @@
+---batch-mode --offline -X -Dorg.slf4j.simpleLogger.log.org.fedoraproject.xmvn=debug -Dmaven.test.skip=true package org.fedoraproject.xmvn:xmvn-mojo:builddep
++--batch-mode --offline --debug -Dorg.slf4j.simpleLogger.log.org.fedoraproject.xmvn=debug -Dmaven.test.skip=true package org.fedoraproject.xmvn:xmvn-mojo:builddep
+diff --git a/test/data/mvn_build/debug_out b/test/data/mvn_build/debug_out
+index 170e108..3b0f6d4 100644
+--- a/test/data/mvn_build/debug_out
++++ b/test/data/mvn_build/debug_out
+@@ -1 +1 @@
+---batch-mode --offline -X -Dorg.slf4j.simpleLogger.log.org.fedoraproject.xmvn=debug verify org.fedoraproject.xmvn:xmvn-mojo:install org.apache.maven.plugins:maven-javadoc-plugin:aggregate org.fedoraproject.xmvn:xmvn-mojo:builddep
++--batch-mode --offline --debug -Dorg.slf4j.simpleLogger.log.org.fedoraproject.xmvn=debug verify org.fedoraproject.xmvn:xmvn-mojo:install org.apache.maven.plugins:maven-javadoc-plugin:aggregate org.fedoraproject.xmvn:xmvn-mojo:builddep
+-- 
+2.4.3
+

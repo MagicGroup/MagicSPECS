@@ -1,38 +1,46 @@
+# Don't generate requires on jpackage-utils and java-headless for
+# provided pseudo-artifacts: com.sun:tools and sun.jdk:jconsole.
+%global __requires_exclude_from %{?__requires_exclude_from:%__requires_exclude_from|}/maven-metadata/javapackages-metadata.xml$
+
+# Avoid circular dependency on itself when bootstrapping
+%{!?_with_bootstrap: %global bootstrap 0}
+
+%bcond_without tests
+
 Name:           javapackages-tools
-Version:        4.1.0
-Release:        6%{?dist}
+Version:        4.6.0
+Release:        11%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
 License:        BSD
-URL:            https://fedorahosted.org/javapackages/
+URL:            https://git.fedorahosted.org/git/javapackages.git
 Source0:        https://fedorahosted.org/released/javapackages/javapackages-%{version}.tar.xz
-
-Patch0:         0001-maven.req-XMvn-sets-resolvedVersion-to-UNKNOWN-for-u.patch
+Patch0:         0001-Initial-gradle_build-implementation.patch
 
 BuildArch:      noarch
 
+BuildRequires:  python3-devel
+BuildRequires:  python3-lxml
+BuildRequires:  python3-setuptools
+BuildRequires:  python3-nose
+BuildRequires:  python3-six
+BuildRequires:  make
 BuildRequires:  asciidoc
 BuildRequires:  xmlto
-BuildRequires:  python-lxml
-BuildRequires:  python2-devel
-BuildRequires:  python-setuptools
-BuildRequires:  python-formencode
 BuildRequires:  scl-utils-build
-BuildRequires:  python-nose
 BuildRequires:  dia
-BuildRequires:  PyXB >= 1.2.3
+%if ! 0%{?bootstrap}
 BuildRequires:  javapackages-tools >= 4.0.0
-BuildRequires:  xmvn-resolve >= 2.0.0
+BuildRequires:  xmvn-resolve >= 2
+%endif
 
 Requires:       coreutils
-Requires:       libxslt
 Requires:       lua
-Requires:       python
-Requires:       python-javapackages = %{version}-%{release}
+Requires:       python3-javapackages = %{version}-%{release}
+Requires:       python3
 
 Provides:       jpackage-utils = %{version}-%{release}
-Obsoletes:      jpackage-utils < %{version}-%{release}
 
 %description
 This package provides macros and scripts to support Java packaging.
@@ -58,7 +66,6 @@ Requires:       mojo-parent
 Requires:       objectweb-pom
 Requires:       plexus-components-pom
 Requires:       plexus-pom
-Requires:       plexus-tools-pom
 Requires:       sonatype-oss-parent
 Requires:       weld-parent
 # Common Maven plugins required by almost every build. It wouldn't make
@@ -79,6 +86,17 @@ Requires:       maven-surefire-provider-testng
 %description -n maven-local
 This package provides macros and scripts to support packaging Maven artifacts.
 
+%package -n gradle-local
+Summary:        Local mode for Gradle
+Requires:       %{name} = %{version}-%{release}
+Requires:       javapackages-local = %{version}-%{release}
+Requires:       gradle >= 2.2.1-2
+Requires:       xmvn-connector-gradle >= 2
+
+%description -n gradle-local
+This package implements local mode for Gradle, which allows artifact
+resolution using XMvn resolver.
+
 %package -n ivy-local
 Summary:        Local mode for Apache Ivy
 Requires:       %{name} = %{version}-%{release}
@@ -90,22 +108,15 @@ Requires:       xmvn-connector-ivy >= 2
 This package implements local mode fow Apache Ivy, which allows
 artifact resolution using XMvn resolver.
 
-%package -n python-javapackages
+%package -n python3-javapackages
 Summary:        Module for handling various files for Java packaging
-Requires:       PyXB >= 1.2.3
-Requires:       python-lxml
+Requires:       python3-lxml
+Requires:       python3-six
+Obsoletes:      python-javapackages < %{version}-%{release}
 
-%description -n python-javapackages
+%description -n python3-javapackages
 Module for handling, querying and manipulating of various files for Java
 packaging in Linux distributions
-
-%package -n fedora-review-plugin-java
-Summary:        fedora-review plugin for checking Java packaging guidelines
-License:        GPLv2+
-Requires:       fedora-review
-
-%description -n fedora-review-plugin-java
-%{summary}.
 
 %package doc
 Summary:        Guide for Java packaging
@@ -119,76 +130,171 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       xmvn-install >= 2
 Requires:       xmvn-subst >= 2
 Requires:       xmvn-resolve >= 2
-# We want to use OpenJDK 8 for building packages as it is default
-# implementation used in Fedora.  Due to YUM bugs and limitations,
-# sometimes Java 7 may be installed alone.  To workaround this
-# maven-local explicitly requires version 8 of OpenJDK.  (If needed
-# Maven can still work with Java 7, but this needs to be enabled
-# explicitly in the spec file.)
-Requires:       java-1.8.0-openjdk-devel >= 1:1.8
+# Java build systems don't have hard requirement on java-devel, so it should be there
+Requires:       java-devel
 
 %description -n javapackages-local
 This package provides non-essential macros and scripts to support Java packaging.
 
 %prep
 %setup -q -n javapackages-%{version}
-
 %patch0 -p1
 
+sed -i '/fedora-review/d' install
+
 %build
-%configure
+%configure --pyinterpreter=%{__python3}
 ./build
-pushd python
-%{__python} setup.py build
-popd
 
 %install
 ./install
 sed -e 's/.[17]$/&.gz/' -e 's/.py$/&*/' -i files-*
 
 pushd python
-%{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
+  %{__python3} setup.py install -O1 --skip-build --root %{buildroot}
 popd
 
-rm -rf %{buildroot}%{_datadir}/fedora-review
-
+%if %{with tests}
 %check
 ./check
-
+%endif
 
 %files -f files-common
-%doc LICENSE
 
 %files -n javapackages-local -f files-local
 
 %files -n maven-local -f files-maven
 
+%files -n gradle-local -f files-gradle
+
 %files -n ivy-local -f files-ivy
 
-%files -n python-javapackages
-%doc LICENSE
-%{python_sitelib}/javapackages*
-
-%if 0
-%files -n fedora-review-plugin-java
-%{_datadir}/fedora-review/plugins/*
-%endif
+%files -n python3-javapackages
+%license LICENSE
+%{python3_sitelib}/javapackages*
 
 %files doc -f files-doc
-%doc LICENSE
+%license LICENSE
 
 %changelog
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.1.0-6
-- 为 Magic 3.0 重建
+* Wed Nov 11 2015 Kalev Lember <klember@redhat.com> - 4.6.0-11
+- Disable bootstrap
 
-* Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 4.1.0-5
-- 为 Magic 3.0 重建
+* Wed Nov 11 2015 Kalev Lember <klember@redhat.com> - 4.6.0-10
+- Add bootstrap macro (#1280209)
+- Enable bootstrap for Python 3.5 rebuilds
 
-* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 4.1.0-4
-- 为 Magic 3.0 重建
+* Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-9
+- Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
 
-* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 4.1.0-3
-- 为 Magic 3.0 重建
+* Wed Oct 28 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.6.0-8
+- Backport %%gradle_build macro from 4.7.0-SNAPSHOT
+
+* Mon Oct 19 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.6.0-7
+- Don't generate requires on java-headless
+- Resolves: rhbz#1272145
+
+* Tue Jul 14 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.6.0-6
+- Use %%license macro
+
+* Fri Jul 10 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.6.0-5
+- Add requires on java-devel to javapackages-local
+
+* Tue Jun 30 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.6.0-4
+- Remove jpackage-utils obsoletes
+
+* Mon Jun 22 2015 Michal Srb <msrb@redhat.com> - 4.6.0-3
+- Rebuild to fix provides
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Jun 15 2015 Michal Srb <msrb@redhat.com> - 4.6.0-1
+- Update to upstream version 4.6.0
+
+* Thu Apr 23 2015 Michal Srb <msrb@redhat.com> - 4.5.0-3
+- Fix "UnboundLocalError: local variable 'pom_requires' referenced before assignment"
+
+* Tue Apr 21 2015 Michael Simacek <msimacek@redhat.com> - 4.5.0-2
+- Remove fedora-review-plugin-java subpackage
+
+* Thu Apr 09 2015 Michal Srb <msrb@redhat.com> - 4.5.0-1
+- Update to upstream version 4.5.0
+
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.4.0-4
+- Remove requires on plexus-tools-pom
+
+* Tue Mar 24 2015 Michael Simacek <msimacek@redhat.com> - 4.4.0-3
+- Handle non-utf-8 poms in pom_editor
+
+* Mon Feb 16 2015 Michael Simacek <msimacek@redhat.com> - 4.4.0-2
+- Write temporary XML file as UTF-8 in pom_editor
+
+* Mon Feb 16 2015 Michal Srb <msrb@redhat.com> - 4.4.0-1
+- Update to upstream version 4.4.0
+
+* Fri Feb 13 2015 Michal Srb <msrb@redhat.com> - 4.3.2-6
+- Fix TypeError in maven_depmap (see: rhbz#1191657)
+
+* Thu Feb 12 2015 Michael Simacek <msimacek@redhat.com> - 4.3.2-5
+- Workaround for XMvn version bump (rhbz#1191657)
+
+* Fri Jan 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.3.2-4
+- Add gradle-local subpackage
+- Allow conditional builds with tests skipped
+
+* Mon Jan 19 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.3.2-3
+- Port to lua 5.3.0
+
+* Thu Jan 15 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.3.2-2
+- Replace all dashes with dots in versioned provides and requires
+
+* Mon Jan 05 2015 Michal Srb <msrb@redhat.com> - 4.3.2-1
+- Update to upstream version 4.3.2
+- Fix TypeError in mvn_artifact
+
+* Tue Dec 23 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.3.1-1
+- Update to upstream version 4.3.1
+
+* Sun Dec 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.3.0-1
+- Update to upstream version 4.3.0
+
+* Fri Nov 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-11
+- Remove dependency on libxslt
+
+* Fri Nov 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-10
+- Scan lib64/ in OSGi dep generators
+- Related: rhbz#1166156
+
+* Wed Nov 26 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-9
+- Revert adding namespace support in %%mvn_artifact
+
+* Mon Nov 24 2014 Michal Srb <msrb@redhat.com> - 4.2.0-8
+- Add namespace support in %%mvn_artifact
+
+* Fri Nov 21 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-7
+- Fix OSGi provides/requires generation in Java libdir
+- Resolves: rhbz#1166156
+
+* Wed Nov 12 2014 Michal Srb <msrb@redhat.com> - 4.2.0-6
+- Fix cache problem (Resolves: rhbz#1155185)
+
+* Thu Oct 30 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 4.2.0-5
+- Use wrapper script to inject ABRT agent JVM argument
+- Fix path to ABRT agent DSO
+- Resolves: rhbz#1153652
+
+* Tue Oct 21 2014 Michael Simacek <msimacek@redhat.com> - 4.2.0-4
+- Fix pom_editor missing space between xmlns declarations
+
+* Wed Sep 24 2014 Michal Srb <msrb@redhat.com> - 4.2.0-3
+- Do not generate OSGi R on eclipse-platform
+
+* Thu Sep 18 2014 Michal Srb <msrb@redhat.com> - 4.2.0-2
+- Fix mvn_artifact: generate R, if it's not explicitly disabled
+
+* Thu Jul 24 2014 Michal Srb <msrb@redhat.com> - 4.2.0-1
+- Update to upstream version 4.2.0
 
 * Thu Jul 10 2014 Michal Srb <msrb@redhat.com> - 4.1.0-2
 - Backport upstream patch for maven.req
