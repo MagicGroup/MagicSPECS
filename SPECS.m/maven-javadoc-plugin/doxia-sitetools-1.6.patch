@@ -1,0 +1,11 @@
+--- src/main/java/org/apache/maven/plugin/javadoc/JavadocReport.java~	2015-04-09 14:51:50.000000000 +0200
++++ src/main/java/org/apache/maven/plugin/javadoc/JavadocReport.java	2015-04-10 10:24:02.875694254 +0200
+@@ -24,7 +24,7 @@
+ import java.util.Locale;
+ import java.util.ResourceBundle;
+ 
+-import org.apache.maven.doxia.sink.render.RenderingContext;
++import org.apache.maven.doxia.siterenderer.RenderingContext;
+ import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
+ import org.apache.maven.plugin.MojoExecutionException;
+ import org.apache.maven.plugin.MojoFailureException;

@@ -1,0 +1,13 @@
+--- src/main/java/org/apache/maven/plugin/javadoc/AbstractJavadocMojo.java~	2015-03-18 05:08:28.705580671 +0100
++++ src/main/java/org/apache/maven/plugin/javadoc/AbstractJavadocMojo.java	2015-03-18 05:08:33.398510806 +0100
+@@ -3407,10 +3407,6 @@
+             throw new MavenReportException( "Unable to build the Maven project for the artifact:" + javadocArtifact,
+                                             e );
+         }
+-        catch ( InvalidDependencyVersionException e )
+-        {
+-            throw new MavenReportException( "Unable to resolve artifact:" + javadocArtifact, e );
+-        }
+     }
+ 
+     /**
