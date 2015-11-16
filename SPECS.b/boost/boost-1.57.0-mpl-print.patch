@@ -1,15 +1,7 @@
-Index: boost/mpl/print.hpp
-===================================================================
---- boost/mpl/print.hpp	(revision 83411)
-+++ boost/mpl/print.hpp	(working copy)
-@@ -45,22 +45,21 @@
-     : mpl::identity<T>
- #if defined(__MWERKS__)
-     , aux::print_base
--#endif 
-+#endif
- {
- #if defined(BOOST_MSVC)
+diff -up boost_1_57_0/boost/mpl/print.hpp\~ boost_1_57_0/boost/mpl/print.hpp
+--- boost_1_57_0/boost/mpl/print.hpp~	2014-07-09 23:12:31.000000000 +0200
++++ boost_1_57_0/boost/mpl/print.hpp	2015-01-20 12:44:59.621400948 +0100
+@@ -52,16 +52,15 @@ struct print
      enum { n = sizeof(T) + -1 };
  #elif defined(__MWERKS__)
      void f(int);
@@ -35,3 +27,5 @@ Index: boost/mpl/print.hpp
  };
  
  #if defined(BOOST_MSVC)
+
+Diff finished.  Tue Jan 20 12:45:03 2015
