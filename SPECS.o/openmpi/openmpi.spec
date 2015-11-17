@@ -21,57 +21,63 @@
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:			openmpi%{?_cc_name_suffix}
-Version:		1.8.4
-Release:		9.20150324gitg9ad2aa8%{?dist}
+Version:		1.10.1
+Release:		3%{?dist}
 Summary:		Open Message Passing Interface
 Group:			Development/Libraries
 License:		BSD, MIT and Romio
 URL:			http://www.open-mpi.org/
 
 # We can't use %{name} here because of _cc_name_suffix
-#Source0:		http://www.open-mpi.org/software/ompi/v1.8/downloads/openmpi-%{version}.tar.bz2
-Source0:		http://www.open-mpi.org/nightly/v1.8/openmpi-v1.8.4-134-g9ad2aa8.tar.bz2
+Source0:		http://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-%{version}.tar.bz2
 Source1:		openmpi.module.in
-Source2:		macros.openmpi
-# Upstream patch to fix atomics on 32bit
-Patch0:			openmpi-atomic.patch
-# Patch to use system ltdl for tests
-Patch1:			openmpi-ltdl.patch
-# Fix typo in liboshmem name
-# https://github.com/open-mpi/ompi/pull/221
-Patch2:                 openmpi-oshmem.patch
-# Upstream patch to fix race/hang on 32-bit
-# https://github.com/open-mpi/ompi/pull/503
-Patch3:                 openmpi-vader.patch
+Source2:		openmpi.pth.py2
+Source3:		openmpi.pth.py3
+Source4:		macros.openmpi
+# Upstream fix for mpi4py tests
+# http://www.open-mpi.org/community/lists/users/2015/11/28027.php
+Patch0:                 http://www.open-mpi.org/community/lists/users/att-28030/nbc_copy.patch
 
 BuildRequires:		gcc-gfortran
-#sparc64 don't have valgrind
-%ifnarch %{sparc}
+%ifnarch s390
 BuildRequires:		valgrind-devel
 %endif
 BuildRequires:		libibverbs-devel >= 1.1.3, opensm-devel > 3.3.0
 BuildRequires:		librdmacm-devel libibcm-devel
+# Doesn't compile:
+# vt_dyn.cc:958:28: error: 'class BPatch_basicBlockLoop' has no member named 'getLoopHead'
+#                      loop->getLoopHead()->getStartAddress(), loop_stmts );
+#BuildRequires:		dyninst-devel
 BuildRequires:		hwloc-devel
 # So configure can find lstopo
-BuildRequires:		hwloc
+BuildRequires:		hwloc-gui
 BuildRequires:		java-devel
 BuildRequires:		libevent-devel
+BuildRequires:		libfabric-devel
 BuildRequires:		papi-devel
-BuildRequires:		python libtool-ltdl-devel
+BuildRequires:		perl(Getopt::Long)
+BuildRequires:		python
+BuildRequires:		python2-devel
+BuildRequires:		python3-devel
+BuildRequires:		libtool-ltdl-devel
 BuildRequires:		torque-devel
+BuildRequires:		zlib-devel
+BuildRequires:		rpm-mpi-hooks
 
 Provides:		mpi
-Requires:		environment-modules
+Requires:		environment(modules)
 # openmpi currently requires ssh to run
 # https://svn.open-mpi.org/trac/ompi/ticket/4228
 Requires:		openssh-clients
+# otf appears to be bundled
+Provides:               bundled(otf) =  1.12.3
 
 # s390 is unlikely to have the hardware we want, and some of the -devel
 # packages we require aren't available there.
 ExcludeArch: s390 s390x
 
 # Private openmpi libraries
-%global __provides_exclude_from %{_libdir}/openmpi/lib/(lib(mca|ompi|open-(pal|rte|trace)|otf|v)|openmpi/).*.so
+%global __provides_exclude_from %{_libdir}/openmpi/lib/(lib(mca|ompi|open-(pal|rte|trace)|otf)|openmpi/).*.so
 %global __requires_exclude lib(mca|ompi|open-(pal|rte|trace)|otf|vt).*
 
 %description
@@ -88,6 +94,7 @@ Summary:	Development files for openmpi
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}, gcc-gfortran
 Provides:	mpi-devel
+Requires:	rpm-mpi-hooks
 
 %description devel
 Contains development headers and libraries for openmpi.
@@ -119,13 +126,8 @@ Contains development wrapper for compiling Java with openmpi.
 %global namearch openmpi-%{_arch}%{?_cc_name_suffix}
 
 %prep
-%setup -q -n openmpi-v%{version}-134-g9ad2aa8
-%patch0 -p1 -b .atomic
-%patch1 -p1 -b .ltdl
-%patch2 -p1 -b .oshmem
-%patch3 -p1 -b .vader
-# Make sure we don't use the local libltdl library
-rm -r opal/libltdl
+%setup -q -n openmpi-%{version}
+%patch0 -p1
 
 %build
 ./configure --prefix=%{_libdir}/%{name} \
@@ -135,9 +137,8 @@ rm -r opal/libltdl
 	--disable-silent-rules \
 	--enable-mpi-java \
 	--with-libevent=/usr \
-	--with-verbs=/usr \
 	--with-sge \
-%ifnarch %{sparc}
+%ifnarch s390
 	--with-valgrind \
 	--enable-memchecker \
 %endif
@@ -148,6 +149,7 @@ rm -r opal/libltdl
 	CFLAGS="%{?opt_cflags} %{!?opt_cflags:$RPM_OPT_FLAGS}" \
 	CXXFLAGS="%{?opt_cxxflags} %{!?opt_cxxflags:$RPM_OPT_FLAGS}" \
 	FC=%{opt_fc} FCFLAGS="%{?opt_fcflags} %{!?opt_fcflags:$RPM_OPT_FLAGS}"
+#        --with-contrib-vt-flags='CXXFLAGS="-I%{_includedir}/dyninst -L%{_libdir}/dyninst"' \
 
 make %{?_smp_mflags} V=1
 
@@ -164,15 +166,38 @@ mkdir %{buildroot}%{_mandir}/%{namearch}/man{2,4,5,6,8,9,n}
 # Make the environment-modules file
 mkdir -p %{buildroot}%{_sysconfdir}/modulefiles/mpi
 # Since we're doing our own substitution here, use our own definitions.
-sed 's#@LIBDIR@#'%{_libdir}/%{name}'#g;s#@ETCDIR@#'%{_sysconfdir}/%{namearch}'#g;s#@FMODDIR@#'%{_fmoddir}/%{name}'#g;s#@INCDIR@#'%{_includedir}/%{namearch}'#g;s#@MANDIR@#'%{_mandir}/%{namearch}'#g;s#@PYSITEARCH@#'%{python_sitearch}/%{name}'#g;s#@COMPILER@#openmpi-'%{_arch}%{?_cc_name_suffix}'#g;s#@SUFFIX@#'%{?_cc_name_suffix}'_openmpi#g' < %SOURCE1 > %{buildroot}%{_sysconfdir}/modulefiles/mpi/%{namearch}
+sed 's#@LIBDIR@#%{_libdir}/%{name}#;
+     s#@ETCDIR@#%{_sysconfdir}/%{namearch}#;
+     s#@FMODDIR@#%{_fmoddir}/%{name}#;
+     s#@INCDIR@#%{_includedir}/%{namearch}#;
+     s#@MANDIR@#%{_mandir}/%{namearch}#;
+     s#@PY2SITEARCH@#%{python2_sitearch}/%{name}#;
+     s#@PY3SITEARCH@#%{python3_sitearch}/%{name}#;
+     s#@COMPILER@#openmpi-%{_arch}%{?_cc_name_suffix}#;
+     s#@SUFFIX@#%{?_cc_name_suffix}_openmpi#' \
+     <%{SOURCE1} \
+     >%{buildroot}%{_sysconfdir}/modulefiles/mpi/%{namearch}
 
 # make the rpm config file
-install -Dpm 644 %{SOURCE2} %{buildroot}/%{macrosdir}/macros.%{namearch}
+install -Dpm 644 %{SOURCE4} %{buildroot}/%{macrosdir}/macros.%{namearch}
+
+# Link the fortran module to proper location
 mkdir -p %{buildroot}/%{_fmoddir}/%{name}
-mkdir -p %{buildroot}/%{python_sitearch}/openmpi%{?_cc_name_suffix}
+for mod in %{buildroot}%{_libdir}/%{name}/lib/*.mod
+do
+  modname=$(basename $mod)
+  ln -s ../../../%{name}/lib/${modname} %{buildroot}/%{_fmoddir}/%{name}/
+done
+
 # Remove extraneous wrapper link libraries (bug 814798)
 sed -i -e s/-ldl// -e s/-lhwloc// \
   %{buildroot}%{_libdir}/%{name}/share/openmpi/*-wrapper-data.txt
+
+# install .pth files
+mkdir -p %{buildroot}/%{python2_sitearch}/%{name}
+install -pDm0644 %{SOURCE2} %{buildroot}/%{python2_sitearch}/openmpi.pth
+mkdir -p %{buildroot}/%{python3_sitearch}/%{name}
+install -pDm0644 %{SOURCE3} %{buildroot}/%{python3_sitearch}/openmpi.pth
 
 %check
 make check
@@ -185,8 +210,10 @@ make check
 %dir %{_libdir}/%{name}/lib/openmpi
 %dir %{_mandir}/%{namearch}
 %dir %{_mandir}/%{namearch}/man*
-%dir %{_fmoddir}/%{name}
-%dir %{python_sitearch}/%{name}
+%dir %{python2_sitearch}/%{name}
+%{python2_sitearch}/openmpi.pth
+%dir %{python3_sitearch}/%{name}
+%{python3_sitearch}/openmpi.pth
 %config(noreplace) %{_sysconfdir}/%{namearch}/*
 %{_libdir}/%{name}/bin/mpi[er]*
 %{_libdir}/%{name}/bin/ompi*
@@ -201,6 +228,8 @@ make check
 %{_mandir}/%{namearch}/man1/ompi*
 %{_mandir}/%{namearch}/man1/orte[-dr_]*
 %{_mandir}/%{namearch}/man1/oshmem_info*
+%{_mandir}/%{namearch}/man1/oshrun*
+%{_mandir}/%{namearch}/man1/shmemrun*
 %{_mandir}/%{namearch}/man7/ompi*
 %{_mandir}/%{namearch}/man7/orte*
 %{_libdir}/%{name}/lib/openmpi/*
@@ -223,11 +252,14 @@ make check
 %{_libdir}/%{name}/bin/shmem[cf]*
 %{_libdir}/%{name}/bin/vt*
 %{_includedir}/%{namearch}/*
+%{_fmoddir}/%{name}/
 %{_libdir}/%{name}/lib/*.so
 %{_libdir}/%{name}/lib/lib*.a
 %{_libdir}/%{name}/lib/*.mod
 %{_libdir}/%{name}/lib/pkgconfig/
 %{_mandir}/%{namearch}/man1/mpi[cCf]*
+%{_mandir}/%{namearch}/man1/osh[cCf]*
+%{_mandir}/%{namearch}/man1/shmem[cCf]*
 %{_mandir}/%{namearch}/man1/opal_*
 %{_mandir}/%{namearch}/man3/*
 %{_mandir}/%{namearch}/man7/opal*
@@ -248,11 +280,59 @@ make check
 
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8.4-9.20150324gitg9ad2aa8
-- 为 Magic 3.0 重建
+* Tue Nov 10 2015 Orion Poplawski <orion@cora.nwra.com> - 1.10.1-3
+- Add upstream patch to fix zero size message
 
-* Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 1.8.4-8.20150324gitg9ad2aa8
-- 为 Magic 3.0 重建
+* Tue Nov 10 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Changes/python3.5
+
+* Thu Nov 5 2015 Orion Poplawski <orion@cora.nwra.com> - 1.10.1-1
+- Update to 1.10.1
+- Require environment(modules)
+- Fixup fortran module install (bug #1154982)
+
+* Tue Oct 6 2015 Orion Poplawski <orion@cora.nwra.com> - 1.10.0-3
+- Do not set CFLAGS in %%_openmpi_load
+
+* Wed Sep 16 2015 Orion Poplawski <orion@cora.nwra.com> - 1.10.0-2
+- Add patch to add needed opal/util/argv.h includes
+
+* Tue Sep 15 2015 Orion Poplawski <orion@cora.nwra.com> - 1.10.0-1
+- Update to 1.10.0
+
+* Thu Aug 27 2015 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1.8.8-5
+- Use .pth files to set the python path (https://fedorahosted.org/fpc/ticket/563)
+
+* Mon Aug 24 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.8-4
+- Disable valgrind only on s390
+
+* Mon Aug 17 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.8-3
+- Do not filter libvt* provides as some dependencies link to it
+
+* Mon Aug 10 2015 Sandro Mani <manisandro@gmail.com> - 1.8.8-2
+- Require, BuildRequire: rpm-mpi-hooks
+
+* Mon Aug 10 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.8-1
+- Update to 1.8.8
+- Drop atomic patch applied upstream
+
+* Wed Jul 15 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.7-1
+- Update to 1.8.7
+
+* Tue Jun 23 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.6-1
+- Update to 1.8.6
+
+* Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Tue May 5 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.5-1
+- Update to 1.8.5
+
+* Fri May 1 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.5-0.2.rc3
+- Update to 1.8.5rc3
+
+* Sun Apr 5 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.5-0.1.rc1
+- Update to 1.8.5rc1
 
 * Mon Mar 30 2015 Orion Poplawski <orion@cora.nwra.com> 1.8.4-7.20150324gitg9ad2aa8
 - Add upstream patch to fix race/hang on 32bit machines
