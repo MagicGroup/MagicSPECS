@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
-Export-Package: org.apache.tomcat;version="7.0.21"
+Export-Package: org.apache.tomcat;version="8.0.26"
 Bundle-Vendor: %bundleProvider
 Bundle-ClassPath: .
-Bundle-Version: 7.0.21
+Bundle-Version: 8.0.26
 Bundle-Name: %bundleName
 Bundle-Localization: plugin
 Bundle-ManifestVersion: 2

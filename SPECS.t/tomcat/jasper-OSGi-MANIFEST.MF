@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
-Export-Package: org.apache.jasper;version="7.0.21",org.apache.jasper.c
- ompiler;version="7.0.21",org.apache.jasper.compiler.tagplugin;version
- ="7.0.21",org.apache.jasper.resources;version="7.0.21",org.apache.jas
- per.runtime;version="7.0.21",org.apache.jasper.security;version="7.0.
- 19",org.apache.jasper.servlet;version="7.0.21",org.apache.jasper.tagp
- lugins.jstl;version="7.0.21",org.apache.jasper.tagplugins.jstl.core;v
- ersion="7.0.21",org.apache.jasper.util;version="7.0.21",org.apache.ja
- sper.xmlparser;version="7.0.21"
+Export-Package: org.apache.jasper;version="8.0.26",org.apache.jasper.c
+ ompiler;version="8.0.26",org.apache.jasper.compiler.tagplugin;version
+ ="8.0.26",org.apache.jasper.resources;version="8.0.26",org.apache.jas
+ per.runtime;version="8.0.26",org.apache.jasper.security;version="7.0.
+ 19",org.apache.jasper.servlet;version="8.0.26",org.apache.jasper.tagp
+ lugins.jstl;version="8.0.26",org.apache.jasper.tagplugins.jstl.core;v
+ ersion="8.0.26",org.apache.jasper.util;version="8.0.26",org.apache.ja
+ sper.xmlparser;version="8.0.26"
 Bundle-Vendor: %bundleProvider
 Bundle-ClassPath: .
-Bundle-Version: 7.0.21
+Bundle-Version: 8.0.26
 Bundle-Localization: plugin
 Bundle-Name: %bundleName
 Bundle-ManifestVersion: 2
@@ -24,8 +24,8 @@ Import-Package: javax.servlet;version="[2.4.0, 3.0.0]",javax.servlet.h
  on:=optional,org.apache.tools.ant.taskdefs;resolution:=optional,org.a
  pache.tools.ant.types;resolution:=optional,org.apache.tools.ant.util;
  resolution:=optional,org.w3c.dom,org.xml.sax,org.xml.sax.ext,org.xml.
- sax.helpers,org.apache.tomcat;version="7.0.21",org.apache.juli.loggin
- g;version="7.0.21",javax.el;version="2.2.0",org.eclipse.jdt.internal.
+ sax.helpers,org.apache.tomcat;version="8.0.26",org.apache.juli.loggin
+ g;version="8.0.26",javax.el;version="2.2.0",org.eclipse.jdt.internal.
  compiler,org.eclipse.jdt.internal.compiler.parser,org.eclipse.jdt.int
  ernal.compiler.parser.diagnose,org.eclipse.jdt.internal.compiler.flow
  ,org.eclipse.jdt.internal.compiler.util,org.eclipse.jdt.internal.comp

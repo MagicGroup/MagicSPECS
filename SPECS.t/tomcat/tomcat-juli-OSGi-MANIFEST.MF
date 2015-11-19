@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
-Export-Package: org.apache.juli;version="7.0.21",org.apache.juli.loggi
- ng;version="7.0.21"
+Export-Package: org.apache.juli;version="8.0.26",org.apache.juli.loggi
+ ng;version="8.0.26"
 Bundle-Vendor: %bundleProvider
 Bundle-ClassPath: .
-Bundle-Version: 7.0.21
+Bundle-Version: 8.0.26
 Bundle-Name: %bundleName
 Bundle-Localization: plugin
 Bundle-ManifestVersion: 2
