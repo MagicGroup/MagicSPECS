@@ -1,10 +1,9 @@
 Name:			antlr-maven-plugin
 Version:		2.2
-Release:		14%{?dist}
+Release:		15%{?dist}
 Summary:		Maven plugin that generates files based on grammar file(s)
 License:		ASL 2.0
 URL:			http://mojo.codehaus.org/antlr-maven-plugin/
-Group:			Development/Libraries
 
 Source0:		http://repo1.maven.org/maven2/org/codehaus/mojo/%{name}/%{version}/%{name}-%{version}-source-release.zip
 
@@ -17,17 +16,11 @@ Patch3:			0001-MANTLR-34-Fix-NPE-when-building-Jenkins.patch
 
 BuildArch:		noarch
 
-BuildRequires:		java-devel
-BuildRequires:		jpackage-utils
 BuildRequires:		antlr
 BuildRequires:		maven-local
 BuildRequires:		maven-plugin-bundle
-BuildRequires:		maven-plugin-cobertura
 BuildRequires:		apache-commons-exec
 BuildRequires:		modello
-
-Provides:		maven2-plugin-antlr = %{version}-%{release}
-Obsoletes:		maven2-plugin-antlr <= 2.0.8
 
 %description
 The Antlr Plugin has two goals:
@@ -37,7 +30,6 @@ The Antlr Plugin has two goals:
 
 %package javadoc
 Summary:		Javadocs for %{name}
-Group:			Documentation
 
 %description javadoc
 This package contains the API documentation for %{name}.
@@ -45,7 +37,7 @@ This package contains the API documentation for %{name}.
 %prep
 %setup -q
 %patch0 -p1 -b .modello
-%patch2 -p1 -b .sink
+%patch2 -b .sink
 %patch3 -p1 -b .fixnpe
 
 # reporting eventually pulls in another antlr and we'd break with weird errors
@@ -72,8 +64,12 @@ find -name '*.jar' -exec rm -f '{}' \;
 %files javadoc -f .mfiles-javadoc
 
 %changelog
-* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 2.2-14
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Mat Booth <mat.booth@redhat.com> - 2.2-15
+- Fix FTBFS
+- Remove ancient provides/obsoletes
+
+* Tue Jun 16 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
