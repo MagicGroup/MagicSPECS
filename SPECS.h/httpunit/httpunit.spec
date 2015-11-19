@@ -30,7 +30,7 @@
 
 Name:           httpunit
 Version:        1.7
-Release:        17%{?dist}
+Release:        19%{?dist}
 Epoch:          0
 Summary:        Automated web site testing toolkit
 License:        MIT and ASL 2.0
@@ -43,9 +43,9 @@ Source3:        https://raw.github.com/apache/tomcat/TOMCAT_7_0_42/java/javax/se
 Source4:        https://raw.github.com/apache/tomcat/TOMCAT_7_0_42/java/javax/servlet/resources/web-app_2_4.xsd
 # sources 2-4 are licensed under ASL 2.0
 Source5:        http://www.apache.org/licenses/LICENSE-2.0.txt
-Patch1:         %{name}-JavaScript-NotAFunctionException.patch
+Patch1:         %{name}-rhino-1.7.7.patch
 Patch2:         %{name}-servlettest.patch
-Patch3:         %{name}-not-implemented.patch
+Patch3:         %{name}-servlet31.patch
 Patch4:         junit4.patch
 URL:            http://httpunit.sourceforge.net/
 BuildRequires:  jpackage-utils >= 0:1.6
@@ -53,13 +53,13 @@ BuildRequires:  ant >= 0:1.6
 BuildRequires:  nekohtml
 BuildRequires:  jtidy
 BuildRequires:  junit >= 0:3.8
-BuildRequires:  tomcat-servlet-3.0-api
+BuildRequires:  tomcat-servlet-3.1-api
 BuildRequires:  javamail >= 0:1.3
 BuildRequires:  rhino
 BuildRequires:  java-devel >= 1:1.6.0
 
 Requires:       junit >= 0:3.8
-Requires:       tomcat-servlet-3.0-api
+Requires:       tomcat-servlet-3.1-api
 # As of 1.5, requires either nekohtml or jtidy, and prefers nekohtml.
 Requires:       nekohtml
 Requires:       rhino
@@ -90,8 +90,8 @@ Documentation for %{name}
 
 %prep
 %setup -q
-# patch to work with rhino 1.5
-%patch1 -b .sav
+# patch to work with rhino 1.7.7
+%patch1 -p1
 # add META-INF
 %patch2
 %patch3 -p1
@@ -114,12 +114,11 @@ ln -s \
   %{_javadir}/xerces-j2.jar \
   jars
 
-#原来是 mv，但是会导致打包失败。
-cp %{SOURCE1} pom.xml
-cp %{SOURCE2} META-INF/
-cp %{SOURCE3} META-INF/
-cp %{SOURCE4} META-INF/
-cp %{SOURCE5} LICENSE-ASL
+mv %{SOURCE1} pom.xml
+mv %{SOURCE2} META-INF/
+mv %{SOURCE3} META-INF/
+mv %{SOURCE4} META-INF/
+mv %{SOURCE5} LICENSE-ASL
 
 
 %build
@@ -161,11 +160,18 @@ popd
 %doc doc/*
 
 %changelog
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0:1.7-17
-- 为 Magic 3.0 重建
+* Wed Sep 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.7-19
+- Port to Rhino 1.7.7
+- Resolves: rhbz#1263627
 
-* Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 0:1.7-16
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.7-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon Mar 09 2015 Michal Srb <msrb@redhat.com> - 0:1.7-17
+- Port to servlet 3.1
+
+* Thu Mar 5 2015 Alexander Kurtakov <akurtako@redhat.com> 0:1.7-16
+- Rebuild for servlet 3.1.
 
 * Fri Jun 27 2014 Yaakov Selkowitz <yselkowi@redhat.com> - 0:1.7-15
 - Fix FTBFS due to xmvn changes (#1106777)
