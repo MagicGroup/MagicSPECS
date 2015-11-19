@@ -1,0 +1,145 @@
+From 60cd6ac1bf9e2ca9c2de1f33ed4fe3b7225f8f08 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Tue, 28 Apr 2015 17:02:29 +0200
+Subject: [PATCH 2/3] Inline namespace constants
+
+---
+ .../src/aQute/bnd/obr/OBRFragment.java             | 22 ++++++++++------------
+ biz.aQute.bndlib/src/aQute/bnd/osgi/Contracts.java | 18 ++++++++----------
+ 2 files changed, 18 insertions(+), 22 deletions(-)
+
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/obr/OBRFragment.java b/biz.aQute.bndlib/src/aQute/bnd/obr/OBRFragment.java
+index 5311772..fb1c029 100644
+--- a/biz.aQute.bndlib/src/aQute/bnd/obr/OBRFragment.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/obr/OBRFragment.java
+@@ -9,9 +9,7 @@ import java.util.regex.*;
+ import org.osgi.framework.Constants;
+ import org.osgi.framework.Version;
+ import org.osgi.framework.namespace.*;
+-import org.osgi.namespace.service.*;
+ import org.osgi.resource.*;
+-import org.osgi.service.repository.*;
+ 
+ import aQute.bnd.header.*;
+ import aQute.bnd.osgi.*;
+@@ -206,10 +204,10 @@ public class OBRFragment {
+ 			//
+ 
+ 			for (Entry<String,Attrs> export : d.getParameters(Constants.EXPORT_SERVICE).entrySet()) {
+-				CapReqBuilder exportedService = new CapReqBuilder(ServiceNamespace.SERVICE_NAMESPACE);
++				CapReqBuilder exportedService = new CapReqBuilder("osgi.service");
+ 				String service = Processor.removeDuplicateMarker(export.getKey());
+-				exportedService.addAttribute(ServiceNamespace.SERVICE_NAMESPACE, service);
+-				exportedService.addAttribute(ServiceNamespace.CAPABILITY_OBJECTCLASS_ATTRIBUTE,
++				exportedService.addAttribute("osgi.service", service);
++				exportedService.addAttribute("objectClass",
+ 						export.getValue().get("objectclass"));
+ 				resource.addCapability(exportedService);
+ 			}
+@@ -219,10 +217,10 @@ public class OBRFragment {
+ 			//
+ 
+ 			for (Entry<String,Attrs> imported : d.getParameters(Constants.IMPORT_SERVICE).entrySet()) {
+-				CapReqBuilder importedService = new CapReqBuilder(ServiceNamespace.SERVICE_NAMESPACE);
++				CapReqBuilder importedService = new CapReqBuilder("osgi.service");
+ 				String service = Processor.removeDuplicateMarker(imported.getKey());
+ 				importedService.addDirective(Namespace.REQUIREMENT_FILTER_DIRECTIVE,
+-						filter(ServiceNamespace.SERVICE_NAMESPACE, service, imported.getValue()));
++						filter("osgi.service", service, imported.getValue()));
+ 				resource.addRequirement(importedService);
+ 			}
+ 
+@@ -266,16 +264,16 @@ public class OBRFragment {
+ 			if (!reporter.isOk())
+ 				return reporter;
+ 
+-			CapReqBuilder content = new CapReqBuilder(ContentNamespace.CONTENT_NAMESPACE);
++			CapReqBuilder content = new CapReqBuilder("osgi.content");
+ 			String sha = SHA1.digest(file).asHex();
+-			content.addAttribute(ContentNamespace.CONTENT_NAMESPACE, sha);
+-			content.addAttribute(ContentNamespace.CAPABILITY_SIZE_ATTRIBUTE, (long) file.length());
+-			content.addAttribute(ContentNamespace.CAPABILITY_MIME_ATTRIBUTE, MIME_TYPE_OSGI_BUNDLE);
++			content.addAttribute("osgi.content", sha);
++			content.addAttribute("size", (long) file.length());
++			content.addAttribute("mime", MIME_TYPE_OSGI_BUNDLE);
+ 
+ 			if (base != null) {
+ 				String path = file.getAbsolutePath();
+ 				if (base.startsWith(path)) {
+-					content.addAttribute(ContentNamespace.CAPABILITY_URL_ATTRIBUTE, path.substring(base.length())
++					content.addAttribute("url", path.substring(base.length())
+ 							.replace(File.separatorChar, '/'));
+ 				} else {
+ 					reporter.error("Base path %s is not parent of file path: %s", base, file.getAbsolutePath());
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/osgi/Contracts.java b/biz.aQute.bndlib/src/aQute/bnd/osgi/Contracts.java
+index f32c5b0..887247b 100644
+--- a/biz.aQute.bndlib/src/aQute/bnd/osgi/Contracts.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/osgi/Contracts.java
+@@ -3,8 +3,6 @@ package aQute.bnd.osgi;
+ import java.util.*;
+ import java.util.Map.Entry;
+ 
+-import org.osgi.namespace.contract.*;
+-
+ import aQute.bnd.header.*;
+ import aQute.bnd.osgi.Descriptors.PackageRef;
+ import aQute.bnd.version.*;
+@@ -69,13 +67,13 @@ class Contracts {
+ 		contract: for (Entry<String,Attrs> p : pcs.entrySet()) {
+ 			String namespace = p.getKey();
+ 
+-			if (namespace.equals(ContractNamespace.CONTRACT_NAMESPACE)) {
++			if (namespace.equals("osgi.contract")) {
+ 				Attrs capabilityAttrs = p.getValue();
+ 
+-				String name = capabilityAttrs.get(ContractNamespace.CONTRACT_NAMESPACE);
++				String name = capabilityAttrs.get("osgi.contract");
+ 				if (name == null) {
+ 					analyzer.warning("No name (attr %s) defined in bundle %s from contract namespace: %s",
+-							ContractNamespace.CONTRACT_NAMESPACE, from, capabilityAttrs);
++							"osgi.contract", from, capabilityAttrs);
+ 					continue contract;
+ 				}
+ 
+@@ -92,7 +90,7 @@ class Contracts {
+ 						Contract c = new Contract();
+ 						c.name = name;
+ 
+-						String list = capabilityAttrs.get(ContractNamespace.CAPABILITY_USES_DIRECTIVE + ":");
++						String list = capabilityAttrs.get("uses" + ":");
+ 						if (list == null || list.length() == 0) {
+ 							analyzer.warning("Contract %s has no uses: directive in %s.", name, from);
+ 							continue contract; // next contract
+@@ -100,7 +98,7 @@ class Contracts {
+ 
+ 						c.uses = Processor.split(list);
+ 
+-						c.version = (Version) capabilityAttrs.getTyped(ContractNamespace.CAPABILITY_VERSION_ATTRIBUTE);
++						c.version = (Version) capabilityAttrs.getTyped("version");
+ 						c.from = from;
+ 
+ 						if (c.version == null) {
+@@ -156,9 +154,9 @@ class Contracts {
+ 	void addToRequirements(Parameters requirements) {
+ 		for (Contract c : contracts) {
+ 			Attrs attrs = new Attrs(c.decorators);
+-			attrs.put(ContractNamespace.CONTRACT_NAMESPACE, c.name);
++			attrs.put("osgi.contract", c.name);
+ 			String range = analyzer.applyVersionPolicy(c.version.toString(), c.decorators.getVersion(), false);
+-			String name = ContractNamespace.CONTRACT_NAMESPACE;
++			String name = "osgi.contract";
+ 			while (requirements.containsKey(name))
+ 				name += "~";
+ 
+@@ -166,7 +164,7 @@ class Contracts {
+ 
+ 			Formatter f = new Formatter();
+ 			try {
+-				f.format("(&(%s=%s)%s)", ContractNamespace.CONTRACT_NAMESPACE, c.name, r.toFilter());
++				f.format("(&(%s=%s)%s)", "osgi.contract", c.name, r.toFilter());
+ 
+ 				// TODO : shall we also assert the attributes?
+ 
+-- 
+2.1.0
+

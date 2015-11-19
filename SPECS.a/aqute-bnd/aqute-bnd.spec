@@ -1,66 +1,28 @@
-# Copyright (c) 2000-2008, JPackage Project
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the
-#    distribution.
-# 3. Neither the name of the JPackage Project nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-
 Name:           aqute-bnd
-Version:        0.0.363
-Release:        16%{?dist}
+Version:        2.4.1
+Release:        2%{?dist}
 Summary:        BND Tool
 License:        ASL 2.0
-URL:            http://www.aQute.biz/Code/Bnd
-
-# NOTE : sources for 0.0.363 are no longer available
-# The following links would work for 0.0.370-0.0.401 version range, but
-# we need to stay by 0.0.363 to minimize problems during the 1.43.0 introduction
-Source0:        http://www.aqute.biz/repo/biz/aQute/bnd/%{version}/bnd-%{version}.jar
-Source1:        http://www.aqute.biz/repo/biz/aQute/bnd/%{version}/bnd-%{version}.pom
-Source2:        aqute-service.tar.gz
-
-# from Debian, add source compatibility with ant 1.9
-Patch0:         %{name}-%{version}-ant19.patch
-# fixing base64 class ambiguity
-Patch1:         %{name}-%{version}-ambiguous-base64.patch
-
-
+URL:            http://www.aqute.biz/Bnd/Bnd
 BuildArch:      noarch
 
-BuildRequires:  jpackage-utils
-BuildRequires:  java-devel
-BuildRequires:  ant
-BuildRequires:  felix-osgi-compendium
-BuildRequires:  felix-osgi-core
-BuildRequires:  junit
+Source0:        https://github.com/bndtools/bnd/archive/%{version}.REL.tar.gz
+# Auxiliary parent pom, packager-written
+Source1:        parent.pom
+Source2:        https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.bnd/%{version}/biz.aQute.bnd-%{version}.pom
+Source3:        https://repo1.maven.org/maven2/biz/aQute/bnd/biz.aQute.bndlib/%{version}/biz.aQute.bndlib-%{version}.pom
 
-Requires:       java-headless
+Patch0:         0001-Port-to-Java-8.patch
+Patch1:         0002-Inline-namespace-constants.patch
+Patch2:         0003-Use-equinox-s-annotations.patch
+
+BuildRequires:  maven-local
+BuildRequires:  mvn(ant:ant)
+BuildRequires:  mvn(org.eclipse.osgi:org.eclipse.osgi)
+BuildRequires:  mvn(org.eclipse.osgi:org.eclipse.osgi.services)
 
 %description
-The bnd tool helps you create and diagnose OSGi R4 bundles.
+The bnd tool helps you create and diagnose OSGi bundles.
 The key functions are:
 - Show the manifest and JAR contents of a bundle
 - Wrap a JAR so that it becomes a bundle
@@ -72,105 +34,114 @@ The tool is capable of acting as:
 - Directives
 - Use of macros
 
+%package -n aqute-bndlib
+Summary:        BND library
+
+%description -n aqute-bndlib
+%{summary}.
+
 %package javadoc
 Summary:        Javadoc for %{name}
 
 %description javadoc
-Javadoc for %{name}.
+API documentation for %{name}.
 
 %prep
-%setup -q -c
+%setup -q -n bnd-%{version}.REL
 
-mkdir -p target/site/apidocs/
-mkdir -p target/classes/
-mkdir -p src/main/
-mv OSGI-OPT/src src/main/java
-pushd src/main/java
-tar xfs %{SOURCE2}
+rm gradlew*
+find -name '*.jar' -delete
+find -name '*.class' -delete
+
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+
+# reference to Base64 is ambiguous
+find -name '*.java' -not -name 'Base64.java' | xargs sed -i 's/\<Base64\>/aQute.lib.base64.Base64/g'
+
+cp -p %{SOURCE1} pom.xml
+
+build_section='
+<build>
+    <sourceDirectory>src</sourceDirectory>
+    <resources>
+        <resource>
+            <directory>src/</directory>
+            <excludes>
+                <exclude>**/*.java</exclude>
+                <exclude>**/packageinfo</exclude>
+            </excludes>
+        </resource>
+    </resources>
+</build>'
+
+pushd biz.aQute.bnd
+cp -p %{SOURCE2} pom.xml
+%pom_add_parent biz.aQute.bnd:parent:%{version}
+%pom_xpath_inject /pom:project "$build_section"
+
+%pom_add_dep ant:ant
+%pom_add_dep biz.aQute.bnd:biz.aQute.bndlib:%{version}
+%pom_add_dep org.eclipse.osgi:org.eclipse.osgi
+%pom_add_dep org.eclipse.osgi:org.eclipse.osgi.services
+# The common library is expected to be included in all artifacts
+cp -r ../aQute.libg/src/* src/
 popd
-sed -i "s|import aQute.lib.filter.*;||g" src/main/java/aQute/bnd/make/ComponentDef.java
-sed -i "s|import aQute.lib.filter.*;||g" src/main/java/aQute/bnd/make/ServiceComponent.java
 
-# get rid of eclipse plugins which are not usable anyway and complicate
-# things
-rm -rf src/main/java/aQute/bnd/annotation/Test.java \
-       src/main/java/aQute/bnd/{classpath,jareditor,junit,launch,plugin} \
-       aQute/bnd/classpath/messages.properties
+pushd biz.aQute.bndlib
+cp -p %{SOURCE3} pom.xml
+%pom_add_parent biz.aQute.bnd:parent:%{version}
+%pom_xpath_inject /pom:project "$build_section"
 
-# remove bundled stuff
-find aQute/ -type f -name "*.class" -delete
+%pom_add_dep org.eclipse.osgi:org.eclipse.osgi
+%pom_add_dep org.eclipse.osgi:org.eclipse.osgi.services
+# The common library is expected to be included in all artifacts
+cp -r ../aQute.libg/src/* src/
 
-%patch0 -p1 -b .ant19
-%patch1 -p1 -b .base64
+sed -i 's|${Bundle-Version}|%{version}|' src/aQute/bnd/osgi/bnd.info
 
-# Convert CR+LF to LF
-sed -i "s|\r||g" LICENSE
-mkdir temp
-(
-cd temp
-mkdir -p target/classes/
-mkdir -p src/main/
-%jar -xf ../aQute/bnd/test/aQute.runtime.jar
-mv OSGI-OPT/src src/main/java
-find aQute -type f -name "*.class" -delete
-)
-rm -rf aQute/bnd/test/aQute.runtime.jar
+# We don't have metatype-annotations and I haven't found any proper release of it
+rm -r src/aQute/bnd/metatype
+
+popd
+
+%mvn_alias biz.aQute.bnd:biz.aQute.bnd :bnd biz.aQute:bnd
+%mvn_alias biz.aQute.bnd:biz.aQute.bndlib :bndlib biz.aQute:bndlib
+
+%mvn_package biz.aQute.bnd:biz.aQute.bndlib bndlib
+%mvn_package biz.aQute.bnd:parent __noinstall
 
 %build
-export LANG=en_US.utf8
-
-
-(
-cd temp
-%{javac} -d target/classes -target 1.5 -source 1.5 -classpath $(build-classpath junit felix/org.osgi.core felix/org.osgi.compendium) $(find src/main/java -type f -name "*.java")
-for f in $(find aQute/ -type f -not -name "*.class"); do
-    cp -p $f target/classes/$f
-done
-  (
-   cd target/classes
-   %jar cmf ../../META-INF/MANIFEST.MF ../../../aQute/bnd/test/aQute.runtime.jar *
-  )
-)
-rm -r temp
-export OPT_JAR_LIST=:
-export CLASSPATH=$(build-classpath ant)
-
-%{javac} -d target/classes -target 1.5 -source 1.5 $(find src/main/java -type f -name "*.java")
-%{javadoc} -d target/site/apidocs -sourcepath src/main/java aQute.lib.header aQute.lib.osgi aQute.lib.qtokens aQute.lib.filter
-cp -p LICENSE maven-dependencies.txt plugin.xml pom.xml target/classes
-for f in $(find aQute/ -type f -not -name "*.class"); do
-    cp -p $f target/classes/$f
-done
-pushd target/classes
-%{jar} cmf ../../META-INF/MANIFEST.MF ../%{name}-%{version}.jar *
-popd
+%mvn_build -- -Dproject.build.sourceEncoding=UTF-8
 
 %install
-# jars
-install -Dpm 644 target/%{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
+%mvn_install
 
-# pom
-install -Dm 644 %{SOURCE1} %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-
-# javadoc
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
-
-%add_maven_depmap
+%jpackage_script bnd "" "" aqute-bnd bnd 1
 
 %files -f .mfiles
-%doc LICENSE
+%doc biz.aQute.bnd/LICENSE
+%{_bindir}/bnd
 
-%files javadoc
-%doc LICENSE
-%{_javadocdir}/%{name}
+%files -n aqute-bndlib -f .mfiles-bndlib
+%doc biz.aQute.bnd/LICENSE
+
+%files javadoc -f .mfiles-javadoc
+%doc biz.aQute.bnd/LICENSE
 
 %changelog
-* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.0.363-16
-- 为 Magic 3.0 重建
+* Fri Jul 17 2015 Michael Simacek <msimacek@redhat.com> - 2.4.1-2
+- Fix Tool header generation
 
-* Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 0.0.363-15
-- 为 Magic 3.0 重建
+* Wed Jul 08 2015 Michael Simacek <msimacek@redhat.com> - 2.4.1-1
+- Update to upstream version 2.4.1
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.363-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu May 14 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0.0.363-15
+- Disable javadoc doclint
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0.363-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild

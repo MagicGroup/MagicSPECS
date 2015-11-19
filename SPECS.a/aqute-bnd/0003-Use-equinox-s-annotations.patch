@@ -1,0 +1,238 @@
+From 46db98329dc88e039948f58aa34d151c1aaa7a05 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Wed, 8 Jul 2015 13:46:30 +0200
+Subject: [PATCH 3/3] Use equinox's annotations
+
+---
+ .../src/aQute/bnd/component/AnnotationReader.java     | 19 +++++--------------
+ .../src/aQute/bnd/component/ComponentDef.java         | 13 ++++---------
+ .../src/aQute/bnd/component/HeaderReader.java         |  1 -
+ .../src/aQute/bnd/component/ReferenceScope.java       | 13 +++++++++++++
+ .../src/aQute/bnd/component/ServiceScope.java         | 14 ++++++++++++++
+ .../src/aQute/bnd/metatype/DesignateReader.java       | 13 +++----------
+ biz.aQute.bndlib/src/aQute/bnd/osgi/Builder.java      |  3 ---
+ 7 files changed, 39 insertions(+), 37 deletions(-)
+ create mode 100644 biz.aQute.bndlib/src/aQute/bnd/component/ReferenceScope.java
+ create mode 100644 biz.aQute.bndlib/src/aQute/bnd/component/ServiceScope.java
+
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/component/AnnotationReader.java b/biz.aQute.bndlib/src/aQute/bnd/component/AnnotationReader.java
+index f979187..8505d8c 100644
+--- a/biz.aQute.bndlib/src/aQute/bnd/component/AnnotationReader.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/component/AnnotationReader.java
+@@ -412,7 +412,7 @@ public class AnnotationReader extends ClassDataCollector {
+ 		String annoService = raw.get("service");
+ 		if (annoService != null) 
+ 			annoService = Clazz.objectDescriptorToFQN(annoService);
+-		ReferenceScope scope = reference.scope();
++		ReferenceScope scope = ReferenceScope.BUNDLE;
+ 
+ 		String service = determineReferenceType(method.getDescriptor().toString(), def, annoService, scope);
+ 		
+@@ -446,7 +446,7 @@ public class AnnotationReader extends ClassDataCollector {
+ 		def.cardinality = reference.cardinality();
+ 		def.policy = reference.policy();
+ 		def.policyOption = reference.policyOption();
+-		def.scope = reference.scope();
++		def.scope = ReferenceScope.BUNDLE;
+ 	}
+ 
+ 	private String determineReferenceType(String methodDescriptor, ReferenceDef def, String annoService, ReferenceScope scope) {
+@@ -545,20 +545,10 @@ public class AnnotationReader extends ClassDataCollector {
+ 			component.immediate = comp.immediate();
+ 		if (annotation.get("servicefactory") != null)
+ 			component.scope = comp.servicefactory()? ServiceScope.BUNDLE: ServiceScope.SINGLETON;
+-		if (annotation.get("scope") != null && comp.scope() != ServiceScope.DEFAULT) {
+-			component.scope = comp.scope();
+-			if (comp.scope() == ServiceScope.PROTOTYPE) {
+-				component.updateVersion(V1_3);
+-			}
+-		}
+ 
+ 		if (annotation.get("configurationPid") != null) {
+ 			component.configurationPid = comp.configurationPid();
+-			if (component.configurationPid.length > 1) {
+-				component.updateVersion(V1_3);
+-			} else {
+ 				component.updateVersion(V1_2);
+-			}
+ 		}
+ 
+ 		if (annotation.get("xmlns") != null)
+@@ -601,6 +591,7 @@ public class AnnotationReader extends ClassDataCollector {
+ 				component.service[i] = ref;
+ 			}
+ 		}
++                /*
+ 		Object[] refAnnotations = annotation.get("reference");
+ 		if (refAnnotations != null) {
+ 			for (Object o: refAnnotations) {
+@@ -613,11 +604,11 @@ public class AnnotationReader extends ClassDataCollector {
+ 				refdef.policy = ref.policy();
+ 				refdef.policyOption = ref.policyOption();
+ 				refdef.target = ref.target();
+-				refdef.scope = ref.scope();
++				refdef.scope = ReferenceScope.BUNDLE;
+ 				component.references.put(refdef.name, refdef);
+ 			}
+ 		}
+-
++                */
+ 	}
+ 
+ 	/**
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/component/ComponentDef.java b/biz.aQute.bndlib/src/aQute/bnd/component/ComponentDef.java
+index d5719c2..f975dda 100644
+--- a/biz.aQute.bndlib/src/aQute/bnd/component/ComponentDef.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/component/ComponentDef.java
+@@ -39,7 +39,7 @@ class ComponentDef {
+ 	String							modified;
+ 	Boolean							enabled;
+ 	String							xmlns;
+-	String[]						configurationPid;
++	String						configurationPid;
+ 	List<Tag>						propertyTags	= new ArrayList<Tag>();
+ 
+ 	/**
+@@ -162,13 +162,8 @@ class ComponentDef {
+ 
+ 		if (configurationPid != null) {
+ 			StringBuilder b = new StringBuilder();
+-			String space = "";
+-			for (String pid: configurationPid) {
+-				if ("$".equals(pid))
+-					pid = name;
+-				b.append(space).append(pid);
+-				space = " ";
+-			}
++                        if (configurationPid != null)
++                            b.append("$".equals(configurationPid)?name:configurationPid);
+ 			component.addAttribute("configuration-pid", b.toString());
+ 		}
+ 		Tag impl = new Tag(component, "implementation");
+@@ -252,4 +247,4 @@ class ComponentDef {
+ 		return b;
+ 	}
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/component/HeaderReader.java b/biz.aQute.bndlib/src/aQute/bnd/component/HeaderReader.java
+index f2ed67f..17539d3 100644
+--- a/biz.aQute.bndlib/src/aQute/bnd/component/HeaderReader.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/component/HeaderReader.java
+@@ -16,7 +16,6 @@ import org.osgi.service.component.annotations.ConfigurationPolicy;
+ import org.osgi.service.component.annotations.ReferenceCardinality;
+ import org.osgi.service.component.annotations.ReferencePolicy;
+ import org.osgi.service.component.annotations.ReferencePolicyOption;
+-import org.osgi.service.component.annotations.ServiceScope;
+ 
+ import aQute.bnd.component.error.*;
+ import aQute.bnd.component.error.DeclarativeServicesAnnotationError.*;
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/component/ReferenceScope.java b/biz.aQute.bndlib/src/aQute/bnd/component/ReferenceScope.java
+new file mode 100644
+index 0000000..70f2b78
+--- /dev/null
++++ b/biz.aQute.bndlib/src/aQute/bnd/component/ReferenceScope.java
+@@ -0,0 +1,13 @@
++package aQute.bnd.component;
++enum ReferenceScope {
++    BUNDLE("bundle"),
++    PROTOTYPE("prototype"),
++    PROTOTYPE_REQUIRED("prototype_required");
++    private final String value;
++    ReferenceScope(String value) {
++        this.value = value;
++    }
++    public String toString() {
++        return value;
++    }
++}
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/component/ServiceScope.java b/biz.aQute.bndlib/src/aQute/bnd/component/ServiceScope.java
+new file mode 100644
+index 0000000..aa49766
+--- /dev/null
++++ b/biz.aQute.bndlib/src/aQute/bnd/component/ServiceScope.java
+@@ -0,0 +1,14 @@
++package aQute.bnd.component;
++enum ServiceScope {
++    SINGLETON("singleton"),
++    BUNDLE("bundle"),
++    PROTOTYPE("prototype"),
++    DEFAULT("<<default>>");
++    private final String value;
++    ServiceScope(String value) {
++        this.value = value;
++    }
++    public String toString() {
++        return value;
++    }
++}
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/metatype/DesignateReader.java b/biz.aQute.bndlib/src/aQute/bnd/metatype/DesignateReader.java
+index 29ebbdb..f1dd9d4 100644
+--- a/biz.aQute.bndlib/src/aQute/bnd/metatype/DesignateReader.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/metatype/DesignateReader.java
+@@ -13,7 +13,7 @@ public class DesignateReader extends ClassDataCollector {
+ 	private Clazz	clazz;
+ 	private Map<String, OCDDef> classToOCDMap;
+ 	
+-	private String[] pids;
++	private String pid;
+ 	private Annotation designate;
+ 
+ 	DesignateReader(Analyzer analyzer, Clazz clazz, Map<String, OCDDef> classToOCDMap) {
+@@ -29,14 +29,7 @@ public class DesignateReader extends ClassDataCollector {
+ 
+ 	private DesignateDef getDef() throws Exception {
+ 		clazz.parseClassFileWithCollector(this);
+-		if (pids != null && designate != null) {
+-			if (pids.length != 1) {
+-				analyzer.error(
+-						"DS Component %s specifies multiple pids %s, and a Designate which requires exactly one pid",
+-						clazz.getClassName().getFQN(), Arrays.asList(pids));
+-				return null;				
+-			}
+-			String pid = pids[0];
++		if (pid != null && designate != null) {
+ 			String ocdClass = ((String) designate.get("ocd"));
+ 			ocdClass = ocdClass.substring(1, ocdClass.length() - 1);
+ 			OCDDef ocd = classToOCDMap.get(ocdClass);
+@@ -61,7 +54,7 @@ public class DesignateReader extends ClassDataCollector {
+ 			if (a instanceof Designate)
+ 				designate = annotation;
+ 			else if (a instanceof Component)
+-				pids = ((Component)a).configurationPid();
++				pid = ((Component)a).configurationPid();
+ 		}
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+diff --git a/biz.aQute.bndlib/src/aQute/bnd/osgi/Builder.java b/biz.aQute.bndlib/src/aQute/bnd/osgi/Builder.java
+index b326c97..52d42c8 100755
+--- a/biz.aQute.bndlib/src/aQute/bnd/osgi/Builder.java
++++ b/biz.aQute.bndlib/src/aQute/bnd/osgi/Builder.java
+@@ -14,7 +14,6 @@ import aQute.bnd.make.*;
+ import aQute.bnd.make.component.*;
+ import aQute.bnd.make.metatype.*;
+ import aQute.bnd.maven.*;
+-import aQute.bnd.metatype.*;
+ import aQute.bnd.osgi.Descriptors.PackageRef;
+ import aQute.bnd.osgi.Descriptors.TypeRef;
+ import aQute.bnd.service.*;
+@@ -1548,7 +1547,6 @@ public class Builder extends Analyzer {
+ 	static ServiceComponent	serviceComponent	= new ServiceComponent();
+ 	static DSAnnotations	dsAnnotations		= new DSAnnotations();
+ 	static MetatypePlugin	metatypePlugin		= new MetatypePlugin();
+-	static MetatypeAnnotations	metatypeAnnotations		= new MetatypeAnnotations();
+ 
+ 	@Override
+ 	protected void setTypeSpecificPlugins(Set<Object> list) {
+@@ -1557,7 +1555,6 @@ public class Builder extends Analyzer {
+ 		list.add(serviceComponent);
+ 		list.add(dsAnnotations);
+ 		list.add(metatypePlugin);
+-		list.add(metatypeAnnotations);
+ 		super.setTypeSpecificPlugins(list);
+ 	}
+ 
+-- 
+2.1.0
+
