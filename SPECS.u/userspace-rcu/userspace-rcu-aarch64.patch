@@ -1,0 +1,36 @@
+From: Dimitri John Ledkov <xnox@ubuntu.com>
+Date: Wed, 12 Mar 2014 12:17:51 +0000 (-0400)
+Subject: Use gcc atomics on aarch64/powerpc64le
+X-Git-Url: http://git.lttng.org/?p=userspace-rcu.git;a=commitdiff_plain;h=3913336f0e763b4ab614aa6b6e41e20b481e50c3
+
+Use gcc atomics on aarch64/powerpc64le
+
+Currently there are two fairly recent architectures, which at the
+moment can only be compiled with "gcc atomics" code path.
+The two new architectures are (GNU Types):
+* aarch64-linux-gnu (aka ARMv8, ARM64, AARCH64, etc)
+* powerpc64le-linux-gnu
+
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+
+diff --git a/configure.ac b/configure.ac
+index 079c145..3368b33 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -69,6 +69,7 @@ AS_CASE([$host_cpu],
+ 	[powerpc], [ARCHTYPE="ppc"],
+ 	[ppc64], [ARCHTYPE="ppc"],
+ 	[powerpc64], [ARCHTYPE="ppc"],
++	[powerpc64le], [ARCHTYPE="gcc"],
+ 	[ppc], [ARCHTYPE="ppc"],
+ 	[s390], [ARCHTYPE="s390"],
+ 	[s390x], [ARCHTYPE="s390"],
+@@ -77,6 +78,7 @@ AS_CASE([$host_cpu],
+ 	[alpha*], [ARCHTYPE="alpha"],
+ 	[ia64], [ARCHTYPE="gcc"],
+ 	[arm*], [ARCHTYPE="arm"],
++	[aarch64], [ARCHTYPE="gcc"],
+ 	[mips*], [ARCHTYPE="mips"],
+ 	[tile*], [ARCHTYPE="gcc"],
+ 	[ARCHTYPE="unknown"]
