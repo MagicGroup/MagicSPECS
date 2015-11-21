@@ -1,0 +1,23 @@
+diff -up libatomic_ops-7.4.2/src/Makefile.am.no_undefined libatomic_ops-7.4.2/src/Makefile.am
+--- libatomic_ops-7.4.2/src/Makefile.am.no_undefined	2014-05-02 10:52:15.000000000 -0500
++++ libatomic_ops-7.4.2/src/Makefile.am	2014-05-13 18:51:29.620033510 -0500
+@@ -12,6 +12,7 @@ libatomic_ops_la_LDFLAGS = -version-info
+ 
+ libatomic_ops_gpl_la_SOURCES = atomic_ops_stack.c atomic_ops_malloc.c
+ libatomic_ops_gpl_la_LDFLAGS = -version-info 1:3:0 -no-undefined
++libatomic_ops_gpl_la_LIBADD = libatomic_ops.la 
+ 
+ EXTRA_DIST = Makefile.msft atomic_ops/sysdeps/README \
+         atomic_ops/generalize-arithm.template \
+diff -up libatomic_ops-7.4.2/src/Makefile.in.no_undefined libatomic_ops-7.4.2/src/Makefile.in
+--- libatomic_ops-7.4.2/src/Makefile.in.no_undefined	2014-05-02 10:56:32.000000000 -0500
++++ libatomic_ops-7.4.2/src/Makefile.in	2014-05-13 18:51:55.352602385 -0500
+@@ -139,7 +139,7 @@ libatomic_ops_la_LINK = $(LIBTOOL) $(AM_
+ 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+ 	$(AM_CFLAGS) $(CFLAGS) $(libatomic_ops_la_LDFLAGS) $(LDFLAGS) \
+ 	-o $@
+-libatomic_ops_gpl_la_LIBADD =
++libatomic_ops_gpl_la_LIBADD = libatomic_ops.la
+ am_libatomic_ops_gpl_la_OBJECTS = atomic_ops_stack.lo \
+ 	atomic_ops_malloc.lo
+ libatomic_ops_gpl_la_OBJECTS = $(am_libatomic_ops_gpl_la_OBJECTS)
