@@ -1,0 +1,74 @@
+From e37087972ac0039913259ae5e4df27150407b202 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Fri, 22 Feb 2013 10:56:19 +0100
+Subject: [PATCH 1/2] Port to jetty 9
+
+---
+ .../apache/maven/plugins/site/run/SiteRunMojo.java | 28 +++++++++++-----------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/src/main/java/org/apache/maven/plugins/site/run/SiteRunMojo.java b/src/main/java/org/apache/maven/plugins/site/run/SiteRunMojo.java
+index fbaba2a..0854183 100644
+--- a/src/main/java/org/apache/maven/plugins/site/run/SiteRunMojo.java
++++ b/src/main/java/org/apache/maven/plugins/site/run/SiteRunMojo.java
+@@ -38,12 +38,13 @@ import org.apache.maven.plugins.annotations.Parameter;
+ import org.apache.maven.plugins.site.render.AbstractSiteRenderingMojo;
+ import org.apache.maven.reporting.exec.MavenReportExecution;
+ import org.codehaus.plexus.util.IOUtil;
+-import org.mortbay.jetty.Connector;
+-import org.mortbay.jetty.Handler;
+-import org.mortbay.jetty.Server;
+-import org.mortbay.jetty.handler.DefaultHandler;
+-import org.mortbay.jetty.nio.SelectChannelConnector;
+-import org.mortbay.jetty.webapp.WebAppContext;
++import org.eclipse.jetty.server.Connector;
++import org.eclipse.jetty.server.Handler;
++import org.eclipse.jetty.server.Server;
++import org.eclipse.jetty.server.handler.DefaultHandler;
++import org.eclipse.jetty.server.handler.HandlerList;
++import org.eclipse.jetty.server.ServerConnector;
++import org.eclipse.jetty.webapp.WebAppContext;
+ 
+ /**
+  * Starts the site up, rendering documents as requested for faster editing.
+@@ -79,7 +80,7 @@ public class SiteRunMojo
+         Server server = new Server();
+         server.setStopAtShutdown( true );
+ 
+-        Connector defaultConnector = getDefaultConnector();
++        ServerConnector defaultConnector = getDefaultConnector( server );
+         server.setConnectors( new Connector[] { defaultConnector } );
+ 
+         WebAppContext webapp = createWebApplication();
+@@ -88,10 +89,9 @@ public class SiteRunMojo
+         DefaultHandler defaultHandler = new DefaultHandler();
+         defaultHandler.setServer( server );
+ 
+-        Handler[] handlers = new Handler[2];
+-        handlers[0] = webapp;
+-        handlers[1] = defaultHandler;
+-        server.setHandlers( handlers );
++        HandlerList handlers = new HandlerList();
++        handlers.setHandlers(new Handler[] { webapp, defaultHandler } );
++        server.setHandler( handlers );
+ 
+         getLog().info( "Starting Jetty on http://localhost:" + port + "/" );
+         try
+@@ -214,11 +214,11 @@ public class SiteRunMojo
+         return webapp;
+     }
+ 
+-    private Connector getDefaultConnector()
++    private ServerConnector getDefaultConnector( Server server )
+     {
+-        Connector connector = new SelectChannelConnector();
++        ServerConnector connector = new ServerConnector( server );
+         connector.setPort( port );
+-        connector.setMaxIdleTime( MAX_IDLE_TIME );
++        connector.setIdleTimeout( MAX_IDLE_TIME );
+         return connector;
+     }
+ 
+-- 
+1.9.3
+

@@ -1,0 +1,52 @@
+From fe5fa34b05982ac6a62aa82e2eb0f29fec1e407d Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Fri, 22 Feb 2013 11:13:23 +0100
+Subject: [PATCH 2/2] Fix jetty dependencies
+
+---
+ pom.xml | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index bd415c7..18d17a5 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -401,18 +401,31 @@ under the License.
+     </dependency>
+ 
+     <dependency>
+-      <groupId>org.mortbay.jetty</groupId>
+-      <artifactId>jetty</artifactId>
++      <groupId>org.eclipse.jetty</groupId>
++      <artifactId>jetty-server</artifactId>
+       <version>6.1.25</version>
+     </dependency>
++
++    <dependency>
++      <groupId>org.eclipse.jetty</groupId>
++      <artifactId>jetty-webapp</artifactId>
++      <version>6.1.25</version>
++    </dependency>
++
++    <dependency>
++      <groupId>org.eclipse.jetty</groupId>
++      <artifactId>jetty-servlet</artifactId>
++      <version>6.1.25</version>
++    </dependency>
++
+     <dependency>
+-      <groupId>org.mortbay.jetty</groupId>
++      <groupId>org.eclipse.jetty</groupId>
+       <artifactId>jetty-util</artifactId>
+       <version>6.1.25</version>
+     </dependency>
+ 
+     <dependency>
+-      <groupId>org.mortbay.jetty</groupId>
++      <groupId>org.eclipse.jetty</groupId>
+       <artifactId>jetty-client</artifactId>
+       <version>6.1.25</version>
+       <scope>test</scope>
+-- 
+1.9.3
+
