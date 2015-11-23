@@ -1,0 +1,28 @@
+From facd79a4d7b7710a6939e4bd1c96eac44f8f9805 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Tue, 2 Jun 2015 22:52:21 +0200
+Subject: [PATCH] Fedora jetty.home
+
+---
+ .../java/org/eclipse/jetty/start/config/CommandLineConfigSource.java | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/jetty-start/src/main/java/org/eclipse/jetty/start/config/CommandLineConfigSource.java b/jetty-start/src/main/java/org/eclipse/jetty/start/config/CommandLineConfigSource.java
+index c6f2368..472a0ed 100644
+--- a/jetty-start/src/main/java/org/eclipse/jetty/start/config/CommandLineConfigSource.java
++++ b/jetty-start/src/main/java/org/eclipse/jetty/start/config/CommandLineConfigSource.java
+@@ -116,7 +116,10 @@ public class CommandLineConfigSource implements ConfigSource
+                 // ${jetty.home} is relative to found BaseHome class
+                 try
+                 {
+-                    return new File(new URI(m.group(1))).getParentFile().toPath();
++                    File homePath = new File(new URI(m.group(1))).getParentFile();
++                    if (homePath.getPath().endsWith("/usr/share/java/jetty"))
++                        return new File(homePath.getPath().replaceAll("java/jetty$", "jetty")).toPath();
++                    return homePath.toPath();
+                 }
+                 catch (URISyntaxException e)
+                 {
+-- 
+2.1.0
+

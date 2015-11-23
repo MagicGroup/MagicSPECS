@@ -129,22 +129,19 @@ then
   exit 1
 fi
 
+# workaround for httpd_execmem being off by default
+command -v getenforce &>/dev/null && getenforce | fgrep -qi enforcing && getsebool httpd_execmem | grep -q 'off$' \
+&& (
+# chain of echos because journal doesn't show multiline logs correctly
+echo "Warning: Jetty needs SELinux boolean httpd_execmem to be set to work properly."
+echo "To set it, use:"
+echo "setsebool -P httpd_execmem 1"
+echo "to allow execmem acces for processes in the httpd domain. Please bear in mind"
+echo "that this might affect other processess. See man httpd_selinux(8)."
+)
+
 RUN_ARGS=(${JAVA_OPTIONS[@]} -jar "$JETTY_START" ${JETTY_ARGS[*]})
 RUN_CMD=("$JAVA" ${RUN_ARGS[@]})
 
 echo -n "Starting Jetty: "
-set +e
-${RUN_CMD[*]}
-
-RET="$?"
-if [ "$RET" -ne 0 ]; then
-cat << EOF
-If jvm exited with Out of Memory Error it is quite likely that your SELinux
-policy doesn't allow execmem access for the JVM. To solve this problem, use:
-setsebool -P httpd_execmem 1
-to allow execmem acces for processes in the httpd domain. Please bear in mind
-that this might affect other processess. For more information see
-httpd_selinux(8).
-EOF
-exit "$RET"
-fi
+exec ${RUN_CMD[*]}
