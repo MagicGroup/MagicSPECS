@@ -1,25 +1,29 @@
-%global gitver 093bbb4
+%global gitver f80d6b9
 %global gcc_target_platform x86_64-nacl
 %global bootstrap 0
 
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl
 Version:	4.4.3
-Release:	11.git%{gitver}%{?dist}
+Release:	15.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-gcc.git
-# (Checkout ID taken from chromium-35.0.1916.114/native_client/tools/REVISIONS)
+# (Checkout ID taken from chromium-42.0.2311.135/native_client/tools/REVISIONS)
 # cd nacl-gcc
-# git checkout 093bbb415942cc3406656f90a3a5b2f0aef58d06
+# git checkout f80d6b9ee7f94755c697ffb7194fb01dd0c537dd
 # cd ..
 # For gcc version, cat gcc/BASE-VER
-# mv nacl-gcc nacl-gcc-4.4.3-git093bbb4
-# tar --exclude-vcs -cjf nacl-gcc-4.4.3-git093bbb4.tar.bz2 nacl-gcc-4.4.3-git093bbb4
+# mv nacl-gcc nacl-gcc-4.4.3-gitf80d6b9
+# tar --exclude-vcs -cjf nacl-gcc-4.4.3-gitf80d6b9.tar.bz2 nacl-gcc-4.4.3-gitf80d6b9
 License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions
 Source0:	nacl-gcc-%{version}-git%{gitver}.tar.bz2
 Patch0:		nacl-gcc-4.4.3-git0622fce-tex-fixes.patch
+Patch1:		nacl-gcc-4.4.3-gcc5-fixes.patch
 URL:		http://sourceware.org/gcc/
-BuildRequires:	gmp-devel, mpfr-devel, cloog-devel
+%if 0%{?fedora} <= 21
+BuildRequires:	cloog-ppl-devel
+%endif
+BuildRequires:	gmp-devel, mpfr-devel
 BuildRequires:	ppl-pwl-devel, elfutils-devel
 BuildRequires:	nacl-binutils
 %if %{bootstrap} < 1
@@ -35,6 +39,7 @@ for nacl targets.
 %prep
 %setup -q -n %{name}-%{version}-git%{?gitver}
 %patch0 -p1 -b .texfix
+%patch1 -p1 -b .gcc5
 
 %build
 rm -fr obj-%{gcc_target_platform}
@@ -64,7 +69,9 @@ GCC_DEFINES="-Dinhibit_libc -D__gthr_posix_h"
 	--disable-libssp \
 	--disable-libstdcxx-pch \
 	--disable-shared \
+%if 0%{?fedora} <= 21
 	--with-ppl --with-cloog \
+%endif
 	CC="$CC" \
 	CFLAGS="$OPT_FLAGS $GCC_DEFINES" \
 	CXXFLAGS="`echo $OPT_FLAGS | sed 's/ -Wall / /g'`" \
@@ -136,14 +143,27 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 %endif
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.4.3-11.git093bbb4
-- 为 Magic 3.0 重建
+* Thu Oct  1 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-15.gitf80d6b9
+- disable bootstrap
 
-* Mon Aug 03 2015 Liu Di <liudidi@gmail.com> - 4.4.3-10.git093bbb4
-- 为 Magic 3.0 重建
+* Thu Oct  1 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-14.gitf80d6b9
+- rebuild for all targets, enable bootstrap, no code changes
 
-* Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 4.4.3-9.git093bbb4
-- 为 Magic 3.0 重建
+* Wed May  6 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-13.gitf80d6b9
+- disable bootstrap
+
+* Mon May  4 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-12.gitf80d6b9
+- conditionalize cloog/ppl for older Fedora
+
+* Mon May  4 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-11.gitf80d6b9
+- update for chromium 42.0.2311.135
+- fix compile with gcc5 (thanks to Stefan Becker)
+
+* Thu Feb 26 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-10.git7faaabb
+- update for chromium 40.0.2214.115
+
+* Fri Jan 16 2015 Tom Callaway <spot@fedoraproject.org> 4.4.3-9.git093bbb4
+- bump and rebuild because rawhide changed cloog
 
 * Mon Jun  2 2014 Tom Callaway <spot@fedoraproject.org> 4.4.3-8.git093bbb4
 - update for chromium 35
