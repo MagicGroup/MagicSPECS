@@ -7,7 +7,7 @@
 # For NaCl, the crossarch is x86_64-nacl
 
 %global binutils_target x86_64-nacl
-%global gitver 7dc2f25
+%global gitver 1d8592c
 
 ExclusiveArch: i686 x86_64
 
@@ -30,13 +30,13 @@ Group: Development/Tools
 URL: http://sources.redhat.com/binutils
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-binutils.git
-# (Checkout ID taken from chromium-35.0.1916.114/native_client/tools/REVISIONS)
+# (Checkout ID taken from chromium-42.0.2311.135/native_client/tools/REVISIONS)
 # cd nacl-binutils
-# git checkout 7dc2f2590e3e0dcec737a0c91e3f86d91c10db7f
+# git checkout 1d8592cc9f02cc9aeaef992c296376a8fd4c8761
 # cd ..
 # For binutils version, grep "AM_INIT_AUTOMAKE(bfd, " bfd/configure.in
-# mv nacl-binutils nacl-binutils-2.24-git7dc2f25
-# tar --exclude-vcs -cjf nacl-binutils-2.24-git7dc2f25.tar.bz2 nacl-binutils-2.24-git7dc2f25
+# mv nacl-binutils nacl-binutils-2.24-git1d8592c
+# tar --exclude-vcs -cjf nacl-binutils-2.24-git1d8592c.tar.bz2 nacl-binutils-2.24-git1d8592c
 Source: nacl-binutils-%{version}-git%{gitver}.tar.bz2
 Source2: binutils-2.19.50.0.1-output-format.sed
 
@@ -427,11 +427,11 @@ exit 0
 %endif # %{isnative}
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.24-3.git7dc2f25
-- 为 Magic 3.0 重建
+* Thu Oct  1 2015 Tom Callaway <spot@fedoraproject.org> - 2.24-3.git1d8592c
+- rebuild for all targets, no code change
 
-* Mon Jan 19 2015 Liu Di <liudidi@gmail.com> - 2.24-2.git7dc2f25
-- 为 Magic 3.0 重建
+* Mon May  4 2015 Tom Callaway <spot@fedoraproject.org> - 2.24-2.git1d8592c
+- update for chromium 42.0.2311.135
 
 * Mon Jun  2 2014 Tom Callaway <spot@fedoraproject.org> - 2.24-1.git7dc2f25
 - update for chromium 35
