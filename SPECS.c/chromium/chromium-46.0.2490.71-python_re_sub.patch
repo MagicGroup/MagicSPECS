@@ -1,0 +1,23 @@
+diff -up chromium-46.0.2490.71/third_party/catapult/tracing/third_party/tvcm/tvcm/html_module.py.python_re_sub chromium-46.0.2490.71/third_party/catapult/tracing/third_party/tvcm/tvcm/html_module.py
+--- chromium-46.0.2490.71/third_party/catapult/tracing/third_party/tvcm/tvcm/html_module.py.python_re_sub	2015-10-15 23:36:19.644012461 -0400
++++ chromium-46.0.2490.71/third_party/catapult/tracing/third_party/tvcm/tvcm/html_module.py	2015-10-15 23:39:23.808965316 -0400
+@@ -131,13 +131,13 @@ def HasPolymerCall(js):
+ 
+ def UpdatePolymerCallsGivenElementName(js, polymer_element_name):
+   if re.search(_POLYMER_RE_1, js) is not None:
+-    return re.sub(_POLYMER_RE_1,
+-                  'Polymer\g<1>(\g<2>\'%s\', {' % polymer_element_name,
+-                  js, 0, re.DOTALL)
++    regex = re.compile (_POLYMER_RE_1, re.DOTALL);
++    return regex.sub('Polymer\g<1>(\g<2>\'%s\', {' % polymer_element_name,
++                  js, 0)
+   if re.search(_POLYMER_RE_2, js) is not None:
+-    return re.sub(_POLYMER_RE_2,
+-                  'Polymer\g<1>(\g<2>\'%s\')' % polymer_element_name,
+-                  js, 0, re.DOTALL)
++    regex = re.compile (_POLYMER_RE_2, re.DOTALL);
++    return regex.sub('Polymer\g<1>(\g<2>\'%s\')' % polymer_element_name,
++                  js, 0)
+   assert False, 'This should never be reached'
+ 
+ 

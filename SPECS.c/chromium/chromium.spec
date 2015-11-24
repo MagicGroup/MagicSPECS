@@ -1,646 +1,1017 @@
-#
-# spec file for package chromium
-#
-# Copyright (c) 2014 SUSE LINUX Products GmbH, Nuernberg, Germany.
-#
-# All modifications and additions to the file contributed by third parties
-# remain the property of their copyright owners, unless otherwise agreed
-# upon. The license for this file, and modifications and additions to the
-# file, is the same license as for the pristine package itself (unless the
-# license for the pristine package is not an Open Source License, in which
-# case the license is the MIT License). An "Open Source License" is a
-# license that conforms to the Open Source Definition (Version 1.9)
-# published by the Open Source Initiative.
-
-# Please submit bugfixes or comments via http://bugs.opensuse.org/
-#
-
-
-%define chromium_no_dlopen 1
-%define chromium_system_libs 1
-
-%define pnacl_version 12534
-%define newlib_version 12464
-%define glibc_version 12421
-
-Name:           chromium
-Version:        33.0.1750.117
-Release:        1%{?dist}
-Summary:        Google's opens source browser project
-Summary(zh_CN.UTF-8): Google 的开放源代码浏览器项目
-License:        BSD-3-Clause and LGPL-2.1+
-Group:          Applications/Internet
-Group(zh_CN.UTF-8): 应用程序/互联网
-Url:            http://code.google.com/p/chromium/
-Source0:        http://gsdview.appspot.com/chromium-browser-official/%{name}-%{version}.tar.xz
-Source1:        http://gsdview.appspot.com/nativeclient-archive2/x86_toolchain/r%{glibc_version}/toolchain_linux_x86.tar.bz2
-Source2:        http://gsdview.appspot.com/nativeclient-archive2/toolchain/%{newlib_version}/naclsdk_linux_x86.tgz
-Source3:        http://gsdview.appspot.com/nativeclient-archive2/toolchain/%{pnacl_version}/naclsdk_pnacl_linux_x86.tgz
-Source4:        http://gsdview.appspot.com/nativeclient-archive2/toolchain/%{pnacl_version}/naclsdk_pnacl_translator.tgz
-Source20:       chromium-vendor.patch.in
-Source30:       master_preferences
-Source31:       default_bookmarks.html
-Source99:       chrome-wrapper
-Source100:      chromium-browser.sh
-Source101:      chromium-browser.desktop
-Source102:      chromium-browser.xml
-Source103:      chromium.default
-Source104:      chromium-icons.tar.bz2
-Source998:      gn-binaries.tar.xz
-# This is the update script to get the new tarballs
-Source999:      update_chromium
-Provides:       chromium-based-browser = %{version}
-Provides:       chromium-browser = %{version}
-Provides:       browser(npapi)
-Obsoletes:      chromium-browser < %{version}
-Conflicts:      otherproviders(chromium-browser)
-# There is no v8 for ppc and thus chromium won't run on ppc. For aarch64 certain buildrequires are missing (e.g. valgrind)
-ExcludeArch:    aarch64 ppc ppc64 ppc64le
-
-## Start Patches
-# Many changes to the gyp systems so we can use system libraries
-# PATCH-FIX-OPENSUSE Test sources have been removed to shrink the tarball
-Patch1:         chromium-23.0.1245-no-test-sources.patch
-# PATCH-FIX-OPENSUSE Make the 1-click-install ymp file always download [bnc#836059]
-Patch2:         exclude_ymp.diff
-# PATCH-FIX-OPENSUSE Disable the download of the NaCl tarballs
-Patch3:         no-download-nacl.diff
-# PATCH-FIX-OPENSUSE Remove the sysroot for ARM builds. This is causing issues when finding include-files
-Patch4:         chromium-fix-arm-sysroot.patch
-# PATCH-FIX-OPENSUSE Don't use -m32 for the ARM builds
-Patch5:         chromium-fix-arm-icu.patch
-# PATCH-FIX-OPENSUSE Fix the WEBRTC cpu-features for the ARM builds
-Patch6:         chromium-arm-webrtc-fix.patch
-# PATCH-FIX-OPENSUSE Dont use GN for ARM builds
-Patch7:         arm_disable_gn.patch
-# PATCH-FIX-OPENSUSE removes build part for courgette
-Patch13:        chromium-no-courgette.patch
-# PATCH-FIX-OPENSUSE enables reading of the master preference
-Patch14:        chromium-master-prefs-path.patch
-# PATCH-FIX-OPENSUSE Fix some includes specifically for the GCC version used
-Patch20:        chromium-gcc-fixes.patch
-# PATCH-FIX-UPSTREAM Add more charset aliases
-Patch64:        chromium-more-codec-aliases.patch
-# PATCH-FIX-OPENSUSE Compile the sandbox with -fPIE settings
-Patch66:        chromium-sandbox-pie.patch
-# PATCH-FIX-OPENSUSE Adjust ldflags for better building
-Patch67:        adjust-ldflags-no-keep-memory.patch
-
-BuildRequires:  alsa-lib-devel
-BuildRequires:  bison
-BuildRequires:  cups-devel
-BuildRequires:  desktop-file-utils
-BuildRequires:  fdupes
-BuildRequires:  flac-devel
-BuildRequires:  flex
-BuildRequires:  freetype-devel
-BuildRequires:  gcc
-BuildRequires:  gcc-c++
-BuildRequires:  gperf
-BuildRequires:  hicolor-icon-theme
-BuildRequires:  hunspell-devel
-BuildRequires:  krb5-devel
-BuildRequires:  libcap-devel
-BuildRequires:  libdrm-devel
-BuildRequires:  elfutils-libelf-devel
-BuildRequires:  expat-devel
-BuildRequires:  libgcrypt-devel
-BuildRequires:  libgnome-keyring-devel
-BuildRequires:  libicu-devel >= 4.0
-BuildRequires:  pulseaudio-libs-devel
-%if !0%{?packman_bs}
-BuildRequires:  ninja
+# %%{nil} for Stable; -beta for Beta; -dev for Devel
+# dash in -beta and -dev is intentional !
+%define chromium_channel %{nil}
+%define chromium_browser_channel chromium-browser%{chromium_channel}
+%if 0%{?rhel}
+%define chromium_path /opt/chromium-browser%{chromium_channel}
+%else
+%define chromium_path %{_libdir}/chromium-browser%{chromium_channel}
 %endif
-BuildRequires:  pam-devel
-BuildRequires:  pciutils-devel
-BuildRequires:  pkgconfig
-BuildRequires:  python
-BuildRequires:  python-devel
-BuildRequires:  sqlite-devel
-BuildRequires:  util-linux
-BuildRequires:  valgrind-devel
-BuildRequires:  wdiff
-BuildRequires:  perl(Switch)
-BuildRequires:  pkgconfig(cairo) >= 1.6
-BuildRequires:  pkgconfig(dbus-1)
-BuildRequires:  pkgconfig(gconf-2.0)
-BuildRequires:  pkgconfig(glib-2.0)
-BuildRequires:  pkgconfig(gtk+-2.0)
-BuildRequires:  pkgconfig(libudev)
-BuildRequires:  pkgconfig(libxslt)
-BuildRequires:  pkgconfig(nspr) >= 4.9.5
-BuildRequires:  pkgconfig(nss) >= 3.14
-BuildRequires:  pkgconfig(x11)
-BuildRequires:  pkgconfig(xcomposite)
-BuildRequires:  pkgconfig(xcursor)
-BuildRequires:  pkgconfig(xdamage)
-BuildRequires:  pkgconfig(xext)
-BuildRequires:  pkgconfig(xfixes)
-BuildRequires:  pkgconfig(xi)
-BuildRequires:  pkgconfig(xrandr)
-BuildRequires:  pkgconfig(xrender)
-BuildRequires:  pkgconfig(xscrnsaver)
-BuildRequires:  pkgconfig(xt)
-BuildRequires:  pkgconfig(xtst)
-%if 0%{?chromium_system_libs}
-BuildRequires:  libjpeg-devel
-%endif
-BuildRequires:  perl-JSON
-BuildRequires:  usbutils
-BuildRequires:  yasm
-BuildRequires:  pkgconfig(libevent)
-BuildRequires:  pkgconfig(libmtp)
-BuildRequires:  pkgconfig(libpng)
-BuildRequires:  pkgconfig(libusb-1.0)
-BuildRequires:  pkgconfig(libxslt)
-BuildRequires:  pkgconfig(opus)
-BuildRequires:  pkgconfig(protobuf)
-BuildRequires:  pkgconfig(speex)
+%define tests 0
+%define debug 0
 
-# For NaCl
-%ifarch x86_64
-BuildRequires:  gcc-c++(x86-32)
-BuildRequires:  glibc(x86-32)
+### Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+### Note: These are for Fedora use ONLY.
+### For your own distribution, please get your own set of keys.
+### http://lists.debian.org/debian-legal/2013/11/msg00006.html
+%define api_key AIzaSyDUIXvzVrt5OkVsgXhQ6NFfvWlA44by-aw
+%define default_client_id 449907151817.apps.googleusercontent.com
+%define default_client_secret miEreAep8nuvTdvLums6qyLK
+
+Name:		chromium%{chromium_channel}
+Version:	46.0.2490.80
+Release:	1%{?dist}
+Summary:	A WebKit (Blink) powered web browser
+Url:		http://www.chromium.org/Home
+License:	BSD and LGPLv2+ and ASL 2.0 and IJG and MIT and GPLv2+ and ISC and OpenSSL and (MPLv1.1 or GPLv2 or LGPLv2)
+Group:		Applications/Internet
+
+# We can't do a functional pointer to macro..
+Patch1:		chromium-34.0.1847.132-gnome_keyring_fix.patch
+Patch2:		chromium-39.0.2171.36-link_gio.patch
+
+### Chromium Python Patches ###
+Patch50:	chromium-31.0.1650.57-python_simplejson.patch
+Patch51:	chromium-37.0.2062.20-python_tld_cleanup.patch
+Patch52:	chromium-46.0.2490.71-python_re_sub.patch
+Patch53:	chromium-45.0.2454.101-python_dict_generators.patch
+# We don't have python-argparse in RHEL6, so bundle it like in Firefox package
+Patch54:	chromium-35.0.1916.114-python_argparse.patch
+Patch55:	chromium-39.0.2171.42-python_zipfile.patch
+
+### Chromium Fedora Patches ###
+Patch102:	chromium-46.0.2490.71-gcc5.patch
+Patch103:	chromium-45.0.2454.101-linux-path-max.patch
+Patch104:	chromium-45.0.2454.101-addrfix.patch
+# Google patched their bundled copy of icu 54 to include API functionality that wasn't added until 55.
+# :P
+Patch105:	chromium-45.0.2454.101-system-icu-54-does-not-have-detectHostTimeZone.patch
+Patch106:	chromium-46.0.2490.71-notest.patch
+
+### Chromium Tests Patches ###
+
+### Chromium Debug Build Patches ###
+
+# Use chromium-latest.py to generate clean tarball from released build tarballs, found here:
+# http://build.chromium.org/buildbot/official/
+# For Chromium RHEL use chromium-latest.py --stable --ffmpegclean --tests
+# For Chromium Fedora use chromium-latest.py --stable --ffmpegclean
+# https://commondatastorage.googleapis.com/chromium-browser-official/chromium-%%{version}.tar.xz
+Source0:	chromium-%{version}-clean.tar.xz
+%if %{tests}
+Source1:	https://commondatastorage.googleapis.com/chromium-browser-official/chromium-%{version}-testdata.tar.xz
+%endif
+# https://chromium.googlesource.com/chromium/tools/depot_tools.git/+archive/d5a1ab12efbc1c790a9bf3da57a74bf37d7205bc.tar.gz
+Source2:	depot_tools.git-master.tar.gz
+Source3:	chromium-browser.sh
+Source4:	%{chromium_browser_channel}.desktop
+# Also, only used if you want to reproduce the clean tarball.
+Source5:	clean_ffmpeg.sh
+Source6:	chromium-latest.py
+Source7:	process_ffmpeg_gyp.py
+# GNOME stuff
+Source8:	chromium-browser.xml
+
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+%if 0%{?rhel}
+BuildRequires:	devtoolset-2-gcc-c++
+BuildRequires:	devtoolset-2-gcc
+BuildRequires:	devtoolset-2-binutils
+%else
+# We can assume gcc and binutils.
+BuildRequires:	gcc-c++
 %endif
 
-Requires:       alsa
-Requires:       ffmpegsumo = %{version}
-Requires:       hicolor-icon-theme
-Requires:       update-alternatives
-Requires:       xdg-utils
-
-#Requirements to build a fully functional ffmpeg
-# This can only be done on packman OBS
-%if 0%{?packman_bs}
-BuildRequires:  SDL-devel
-BuildRequires:  dirac-devel >= 1.0.0
-BuildRequires:  imlib2-devel
-BuildRequires:  libdc1394
-BuildRequires:  libdc1394-devel
-BuildRequires:  libfaac-devel >= 1.28
-BuildRequires:  libgsm
-BuildRequires:  libgsm-devel
-BuildRequires:  libjack-devel
-BuildRequires:  libmp3lame-devel
-BuildRequires:  libogg-devel
-BuildRequires:  liboil-devel >= 0.3.15
-BuildRequires:  libopencore-amr-devel
-BuildRequires:  libtheora-devel >= 1.1
-BuildRequires:  libvdpau-devel
-BuildRequires:  libvorbis-devel
-BuildRequires:  libvpx-devel
-BuildRequires:  libx264-devel
-BuildRequires:  libxvidcore-devel
-BuildRequires:  ncurses-devel
-BuildRequires:  schroedinger-devel
-BuildRequires:  slang-devel
-BuildRequires:  texinfo
+BuildRequires:	alsa-lib-devel
+BuildRequires:	atk-devel
+BuildRequires:	bison
+BuildRequires:	cups-devel
+BuildRequires:	dbus-devel
+BuildRequires:	desktop-file-utils
+BuildRequires:	expat-devel
+BuildRequires:	flex
+BuildRequires:	fontconfig-devel
+BuildRequires:	GConf2-devel
+BuildRequires:	glib2-devel
+BuildRequires:	gnome-keyring-devel
+BuildRequires:	gtk2-devel
+BuildRequires:	glibc-devel
+BuildRequires:	gperf
+BuildRequires:	libcap-devel
+BuildRequires:	libdrm-devel
+BuildRequires:	libexif-devel
+BuildRequires:	libgcrypt-devel
+BuildRequires:	libudev-devel
+BuildRequires:	libusb-devel
+BuildRequires:	libXdamage-devel
+BuildRequires:	libXScrnSaver-devel
+BuildRequires:	libXtst-devel
+BuildRequires:	nss-devel >= 3.12.3
+BuildRequires:	pciutils-devel
+BuildRequires:	pulseaudio-libs-devel
+%if %{?tests}
+BuildRequires:	pam-devel
+# Tests needs X
+BuildRequires:	Xvfb
 %endif
 
-Requires(pre):  permissions
+%if 0%{?fedora}
+# Fedora turns on NaCl
+# NaCl needs these
+BuildRequires:	libstdc++-devel, openssl-devel
+BuildRequires:	nacl-gcc, nacl-binutils, nacl-newlib
+BuildRequires:	nacl-arm-gcc, nacl-arm-binutils, nacl-arm-newlib
+# pNaCl needs this monster
+BuildRequires:	native_client
+# Fedora tries to use system libs whenever it can.
+BuildRequires:	bzip2-devel
+BuildRequires:	dbus-glib-devel
+BuildRequires:	elfutils-libelf-devel
+BuildRequires:	flac-devel
+BuildRequires:	hwdata
+BuildRequires:	jsoncpp-devel
+BuildRequires:	kernel-headers
+BuildRequires:	libevent-devel
+BuildRequires:	libexif-devel
+%if 0%{?fedora} >= 22
+# Chromium needs icu 5.4 now, which isn't in older Fedora.
+BuildRequires:	libicu-devel >= 5.4
+%global bundleicu 0
+%else
+%global bundleicu 1
+%endif
+BuildRequires:	libjpeg-devel
+BuildRequires:	libpng-devel
+BuildRequires:	libsrtp-devel >= 1.4.4
+BuildRequires:	libudev-devel
+Requires:	libusbx >= 1.0.20-101
+BuildRequires:	libusbx-devel >= 1.0.20-101
+# We don't use libvpx anymore because Chromium loves to 
+# use bleeding edge revisions here that break other things
+# ... so we just use the bundled libvpx.
+# Same is true for libwebp.
+BuildRequires:	libxslt-devel
+# Same here, it seems.
+# BuildRequires:	libyuv-devel
+BuildRequires:	minizip-devel
+BuildRequires:	nspr-devel
+BuildRequires:	opus-devel
+BuildRequires:	perl(Switch)
+BuildRequires:	pulseaudio-libs-devel
+BuildRequires:	python-jinja2
+BuildRequires:	python-markupsafe
+BuildRequires:	python-ply
+Requires:	re2 >= 20131024
+BuildRequires:	re2-devel >= 20131024
+BuildRequires:	speech-dispatcher-devel
+BuildRequires:	speex-devel = 1.2
+BuildRequires:	yasm
+BuildRequires:	pkgconfig(gnome-keyring-1)
+%endif
 
-Requires:       %{name}-suid-helper = %{version}
+# We pick up an automatic requires on the library, but we need the version check
+# because the nss shared library is unversioned.
+# This is to prevent someone from hitting http://code.google.com/p/chromium/issues/detail?id=26448
+Requires:	nss%{_isa} >= 3.12.3
+Requires:	nss-mdns%{_isa}
+
+# GTK modules it expects to find for some reason.
+Requires:	libcanberra-gtk2%{_isa}
+# semanage
+Requires:	policycoreutils-python
+
+# Once upon a time, we tried to split these out... but that's not worth the effort anymore.
+Provides:	chromium-ffmpegsumo = %{version}-%{release}
+Obsoletes:	chromium-ffmpegsumo <= 35.0.1916.114
+# This is a lie. v8 has its own version... but I'm being lazy and not using it here.
+# Barring Google getting much faster on the v8 side (or much slower on the Chromium side)
+# the true v8 version will be much smaller than the Chromium version that it came from.
+Provides:	chromium-v8 = %{version}-%{release}
+Obsoletes:	chromium-v8 <= 3.25.28.18
+# This is a lie. webrtc never had any real version. 0.2 is greater than 0.1
+Provides:	webrtc = 0.2
+Obsoletes:	webrtc <= 0.1
+# This is a lie, but it keeps older upgrades semi-sane
+Provides:	chromium-libs = %{version}-%{release}
+Obsoletes:	chromium-libs <= %{version}-%{release}
+
+ExclusiveArch:	x86_64
+
+# Bundled bits (I'm sure I've missed some)
+Provides: bundled(angle) = 2422
+Provides: bundled(bintrees) = 1.0.1
+## This is a fork of openssl.
+Provides: bundled(boringssl)
+Provides: bundled(brotli)
+Provides: bundled(bspatch)
+Provides: bundled(cacheinvalidation) = 20150720
+Provides: bundled(cardboard) = 0.5.4
+Provides: bundled(colorama) = 799604a104
+Provides: bundled(crashpad)
+Provides: bundled(dmg_fp)
+Provides: bundled(expat) = 2.1.0
+Provides: bundled(fdmlibm) = 5.3
+# Don't get too excited. MPEG and other legally problematic stuff is stripped out.
+Provides: bundled(ffmpeg) = 2.6
+Provides: bundled(fips181) = 2.2.3
+Provides: bundled(fontconfig) = 2.11.0
+Provides: bundled(gperftools) = svn144
+Provides: bundled(gtk3) = 3.1.4
+Provides: bundled(hunspell) = 1.3.2
+Provides: bundled(iccjpeg)
+%if 0%{?bundleicu}
+Provides: bundled(icu) = 54.1 
+%endif
+Provides: bundled(kitchensink) = 1
+Provides: bundled(leveldb) = r80
+Provides: bundled(libaddressinput) = 0
+Provides: bundled(libjingle) = 9564
+Provides: bundled(libphonenumber) = svn584
+Provides: bundled(libvpx) = 1.4.0
+Provides: bundled(libwebp) = 0.4.3
+Provides: bundled(libXNVCtrl) = 302.17
+Provides: bundled(libyuv) = 1444
+Provides: bundled(lzma) = 9.20
+Provides: bundled(libudis86) = 1.7.1
+Provides: bundled(mesa) = 9.0.3
+Provides: bundled(NSBezierPath) = 1.0
+Provides: bundled(mozc)
+Provides: bundled(mt19937ar) = 2002.1.26
+Provides: bundled(ots) = 767d6040439e6ebcdb867271fcb686bd3f8ac739
+Provides: bundled(protobuf) = r476
+Provides: bundled(qcms) = 4
+Provides: bundled(sfntly) = svn111
+Provides: bundled(skia)
+Provides: bundled(SMHasher) = 0
+Provides: bundled(snappy) = r80
+Provides: bundled(speech-dispatcher) = 0.7.1
+Provides: bundled(sqlite) = 3.8.7.4
+Provides: bundled(superfasthash) = 0
+Provides: bundled(talloc) = 2.0.1
+Provides: bundled(usrsctp) = 0
+Provides: bundled(v8) = 4.5.103.35
+Provides: bundled(webrtc) = 90usrsctp
+Provides: bundled(woff2) = 445f541996fe8376f3976d35692fd2b9a6eedf2d
+Provides: bundled(xdg-mime)
+Provides: bundled(xdg-user-dirs)
+Provides: bundled(x86inc) = 0
+Provides: bundled(zlib) = 1.2.5
 
 %description
-Chromium is the open-source project behind Google Chrome. We invite you to join us in our effort to help build a safer, faster, and more stable way for all Internet users to experience the web, and to create a powerful platform for developing a new generation of web applications.
-
-%package ffmpegsumo
-Summary:        Library to provide ffmpeg support to Chromium
-License:        BSD-3-Clause and LGPL-2.1+
-Group:          Productivity/Networking/Web/Browsers
-Provides:       ffmpegsumo = %{version}
-Conflicts:      otherproviders(ffmpegsumo)
-Requires:       %{name}
-
-%description ffmpegsumo
-The is the multimedia codec library for Chromium. It is based on the internal ffmpeg source code and contains only the open source codecs from ffmpeg. Proprietary codecs (e.g. H.264) are not part of this library, but are provided in an external package
-
-%package desktop-kde
-
-Summary:        Update to chromium to use KDE's kwallet to store passwords
-License:        BSD-3-Clause and LGPL-2.1+
-Group:          Productivity/Networking/Web/Browsers
-Conflicts:      otherproviders(chromium-password)
-Provides:       chromium-password = %{version}
-Requires(post): chromium = %{version}
-
-%description desktop-kde
-By using the openSUSE update-alternatives the password store for Chromium is changed to utilize
-KDE's kwallet. Please be aware that by this change the old password are no longer accessible and
-are also not converted to kwallet.
-
-%package desktop-gnome
-
-Summary:        Update to chromium to use Gnome keyring to store passwords
-License:        BSD-3-Clause and LGPL-2.1+
-Group:          Productivity/Networking/Web/Browsers
-Conflicts:      otherproviders(chromium-password)
-Provides:       chromium-password = %{version}
-Requires(post): chromium = %{version}
-Requires:       libgnome
-
-%description desktop-gnome
-By using the openSUSE update-alternatives the password store for Chromium is changed to utilize
-Gnome's Keyring. Please be aware that by this change the old password are no longer accessible and
-are also not converted to Gnome's Keyring.
-
-%package suid-helper
-
-Summary:        A suid helper to let a process willingly drop privileges on Linux
-License:        BSD-3-Clause and LGPL-2.1+
-Group:          Productivity/Networking/Web/Browsers
-Url:            http://code.google.com/p/setuid-sandbox/
-Requires(pre):  permissions
-
-%description suid-helper
-t will allow a process to execute a target executable that will be able to drop privileges:
-
- * The suid sandbox will create a new PID namespace or will switch uid/gid to isolate the process
- * a helper process, sharing the filesystem view of the existing process, will be created.  It
-   will accept a request to chroot() the process to an empty directory
-
-This is convenient because an executable can be launched, load libraries and open files and get
-chroot()-ed to an empty directory when it wants to drop filesystem access.
-
-%package -n chromedriver
-
-Summary:        WebDriver for Google Chrome/Chromium
-License:        BSD-3-Clause
-Group:          Development/Tools/Other
-Url:            http://code.google.com/p/chromedriver/
-
-%description -n chromedriver
-WebDriver is an open source tool for automated testing of webapps across many browsers. It provides capabilities for navigating to web pages, user input, JavaScript execution, and more. ChromeDriver is a standalone server which implements WebDriver's wire protocol for Chromium. It is being developed by members of the Chromium and WebDriver teams.
-
-
-%if 0%{?packman_bs}
-%package ffmpeg
-Summary:        The ffmpeg lib for Google's opens source browser Chromium
-License:        BSD-3-Clause and LGPL-2.1+
-Group:          Productivity/Networking/Web/Browsers
-Provides:       ffmpegsumo = %{version}
-Conflicts:      otherproviders(ffmpegsumo)
-Requires:       %{name}
-
-%description ffmpeg
-FFMPEG library built from the chromium sources.
-%endif
+Chromium is an open-source web browser, powered by WebKit (Blink).
 
 %prep
-%setup -q -n %{name}-%{version} -a 998
-
-%patch1 -p0
-%patch2 -p0
-%patch3 -p0
-%ifarch armv7hl
-%patch4 -p0
-%patch5 -p0
-%patch6 -p0
-%patch7 -p1
+%setup -q -T -c -n depot_tools -a 2
+%if %{tests}
+%setup -q -n chromium-%{version} -b 1
+%else
+%setup -q -n chromium-%{version}
 %endif
-%patch64 -p0
-%patch13 -p0
-%patch14 -p0
-%patch20 -p0
-%patch66 -p0
-%patch67 -p0
-#Upstream fixes
 
-# apply vendor patch after substitution
-sed "s:RPM_VERSION:%{version}:" %{SOURCE20} | patch -p0
-sed -i 's|icu)|icu-i18n)|g' build/linux/system.gyp
+# %%patch0 -p1 -b .libudev_extern_c
+%patch1 -p1 -b .gnome_keyring_fix
+%patch2 -p1 -b .link_gio
 
-%if !0%{?packman_bs}
-# Install the Native Client tarballs to the right location
-mkdir -p native_client/toolchain/.tars
-cp %{SOURCE1} native_client/toolchain/.tars/
-cp %{SOURCE2} native_client/toolchain/.tars/
-cp %{SOURCE3} native_client/toolchain/.tars/
-cp %{SOURCE4} native_client/toolchain/.tars/
-
-# Extract the NaCl tarballs 
-python ./build/download_nacl_toolchains.py --no-arm-trusted --keep
+### Chromium Python Patches ###
+%patch50 -p1 -b .python_simplejson
+%patch51 -p1 -b .python_tld_cleanup
+%patch52 -p1 -b .python_re_sub
+%patch53 -p1 -b .python_dict_generators
+%if 0%{?rhel}
+%patch54 -p1 -b .python_argparse
+%patch55 -p1 -b .python_zipfile.patch
 %endif
+
+### Chromium Fedora Patches ###
+%patch102 -p1 -b .gcc5
+%patch103 -p1 -b .pathmax
+%patch104 -p1 -b .addrfix
+%patch105 -p1 -b .system-icu
+%patch106 -p1 -b .notest
+
+### Chromium Tests Patches ###
+
+### Chromium Debug Build Patches ###
+
+%if 0%{?rhel}
+# Set PYTHON PATH to directory which contains python argparse module
+export PYTHONPATH=`pwd`/third_party/python-argparse
+# Use the compiler from Red Hat Developer ToolSet 2.0 to get the C++11 compliant compiler.
+export CC=/opt/rh/devtoolset-2/root/usr/bin/gcc
+export CXX=/opt/rh/devtoolset-2/root/usr/bin/g++
+export AR=/opt/rh/devtoolset-2/root/usr/bin/gcc-ar
+export RANLIB=/opt/rh/devtoolset-2/root/usr/bin/gcc-ranlib
+%else
+export CC="gcc"
+export CXX="g++"
+export AR="ar"
+export RANLIB="ranlib"
+%endif
+
+%if 0%{?fedora}
+# prep the nacl tree
+mkdir -p out/Release/gen/sdk/linux_x86/nacl_x86_newlib
+cp -a --no-preserve=context /usr/%{_arch}-nacl/* out/Release/gen/sdk/linux_x86/nacl_x86_newlib
+
+mkdir -p out/Release/gen/sdk/linux_x86/nacl_arm_newlib
+cp -a --no-preserve=context /usr/arm-nacl/* out/Release/gen/sdk/linux_x86/nacl_arm_newlib
+
+# Not sure if we need this or not, but better safe than sorry.
+pushd out/Release/gen/sdk/linux_x86
+ln -s nacl_x86_newlib nacl_x86_newlib_raw
+ln -s nacl_arm_newlib nacl_arm_newlib_raw
+popd
+
+mkdir -p out/Release/gen/sdk/linux_x86/nacl_x86_newlib/bin
+pushd out/Release/gen/sdk/linux_x86/nacl_x86_newlib/bin
+ln -s /usr/bin/%{_arch}-nacl-gcc gcc
+ln -s /usr/bin/%{_arch}-nacl-gcc %{_arch}-nacl-gcc
+ln -s /usr/bin/%{_arch}-nacl-g++ g++
+ln -s /usr/bin/%{_arch}-nacl-g++ %{_arch}-nacl-g++
+# ln -s /usr/bin/x86_64-nacl-ar ar
+ln -s /usr/bin/%{_arch}-nacl-ar %{_arch}-nacl-ar
+# ln -s /usr/bin/x86_64-nacl-as as
+ln -s /usr/bin/%{_arch}-nacl-as %{_arch}-nacl-as
+# ln -s /usr/bin/x86_64-nacl-ranlib ranlib
+ln -s /usr/bin/%{_arch}-nacl-ranlib %{_arch}-nacl-ranlib
+popd
+
+mkdir -p out/Release/gen/sdk/linux_x86/nacl_arm_newlib/bin
+pushd out/Release/gen/sdk/linux_x86/nacl_arm_newlib/bin
+ln -s /usr/bin/arm-nacl-gcc gcc
+ln -s /usr/bin/arm-nacl-gcc arm-nacl-gcc
+ln -s /usr/bin/arm-nacl-g++ g++
+ln -s /usr/bin/arm-nacl-g++ arm-nacl-g++
+ln -s /usr/bin/arm-nacl-ar arm-nacl-ar
+ln -s /usr/bin/arm-nacl-as arm-nacl-as
+ln -s /usr/bin/arm-nacl-ranlib arm-nacl-ranlib
+popd
+
+touch out/Release/gen/sdk/linux_x86/nacl_x86_newlib/stamp.untar out/Release/gen/sdk/linux_x86/nacl_x86_newlib/stamp.prep
+touch out/Release/gen/sdk/linux_x86/nacl_x86_newlib/nacl_x86_newlib.json
+touch out/Release/gen/sdk/linux_x86/nacl_arm_newlib/stamp.untar out/Release/gen/sdk/linux_x86/nacl_arm_newlib/stamp.prep
+touch out/Release/gen/sdk/linux_x86/nacl_arm_newlib/nacl_arm_newlib.json
+
+pushd out/Release/gen/sdk/linux_x86/
+mkdir -p pnacl_newlib pnacl_translator
+# Might be able to do symlinks here, but eh.
+cp -a --no-preserve=context /usr/pnacl_newlib/* pnacl_newlib/
+cp -a --no-preserve=context /usr/pnacl_translator/* pnacl_translator/
+for i in lib/libc.a lib/libc++.a lib/libg.a lib/libm.a; do
+	/usr/pnacl_newlib/bin/pnacl-ranlib pnacl_newlib/x86_64_bc-nacl/$i
+	/usr/pnacl_newlib/bin/pnacl-ranlib pnacl_newlib/i686_bc-nacl/$i
+done
+
+for i in lib/clang/3.7.0/lib/x86_64_bc-nacl/libpnaclmm.a lib/clang/3.7.0/lib/i686_bc-nacl/libpnaclmm.a; do
+	/usr/pnacl_newlib/bin/pnacl-ranlib pnacl_newlib/$i
+done
+
+popd
+
+mkdir -p native_client/toolchain/.tars/linux_x86
+touch native_client/toolchain/.tars/linux_x86/pnacl_translator.json
+
+pushd native_client/toolchain
+ln -s ../../out/Release/gen/sdk/linux_x86 linux_x86
+popd
+
+%endif
+
+export CHROMIUM_BROWSER_GYP_DEFINES="\
+%ifarch x86_64
+	-Dtarget_arch=x64 \
+	-Dsystem_libdir=lib64 \
+%endif
+	-Dgoogle_api_key="%{api_key}" \
+	-Dgoogle_default_client_id="%{default_client_id}" \
+	-Dgoogle_default_client_secret="%{default_client_secret}" \
+	-Ddisable_glibc=1 \
+%if 0%{?rhel}
+	-Ddisable_nacl=1 \
+%else
+	-Ddisable_newlib_untar=1 \
+	-Ddisable_pnacl_untar=1 \
+%endif
+	-Ddisable_sse2=1 \
+	-Duse_gconf=0 \
+	-Duse_gio=0 \
+	-Duse_gnome_keyring=1 \
+	-Duse_pulseaudio=1 \
+%if 0%{?fedora}
+	-Duse_system_bzip2=1 \
+	-Duse_system_flac=1 \
+	-Duse_system_harfbuzz=1 \
+%if 0%{?fedora} >= 22
+	-Duse_system_icu=1 \
+%endif
+	-Dicu_use_data_file_flag=0 \
+	-Duse_system_jsoncpp=1 \
+	-Duse_system_libevent=1 \
+	-Duse_system_libexif=1 \
+	-Duse_system_libjpeg=1 \
+	-Duse_system_libpng=1 \
+	-Duse_system_libusb=1 \
+	-Duse_system_libxml=1 \
+	-Duse_system_libxslt=1 \
+	-Duse_system_minizip=1 \
+	-Duse_system_nspr=1 \
+	-Duse_system_opus=1 \
+	-Duse_system_protobuf=0 \
+	-Duse_system_re2=1 \
+	-Duse_system_speex=1 \
+	-Duse_system_libsrtp=1 \
+	-Duse_system_xdg_utils=1 \
+	-Duse_system_yasm=1 \
+	-Duse_system_zlib=0 \
+	-Duse_system_libevent=1 \
+	-Dusb_ids_path=/usr/share/hwdata/usb.ids \
+	-Dlinux_link_libspeechd=1 \
+	-Dlibspeechd_h_prefix=speech-dispatcher/ \
+	-Dpnacl_newlib_toolchain=out/Release/gen/sdk/linux_x86/pnacl_newlib/ \
+	-Dpnacl_translator_dir=/usr/pnacl_translator \
+%endif
+	-Dffmpeg_branding=Chromium \
+	-Dproprietary_codecs=0 \
+	-Dlinux_link_gnome_keyring=1 \
+	-Dlinux_link_gsettings=1 \
+	-Dlinux_link_libpci=1 \
+	-Dlinux_link_libgps=0 \
+	-Dlinux_sandbox_path=%{chromium_path}/chrome-sandbox \
+	-Dlinux_sandbox_chrome_path=%{chromium_path}/chromium-browser \
+	-Dlinux_strip_binary=1 \
+	-Dlinux_use_bundled_binutils=0 \
+	-Dlinux_use_bundled_gold=0 \
+	-Dlinux_use_gold_binary=0 \
+	-Dlinux_use_gold_flags=0 \
+	-Dlinux_use_libgps=0 \
+	-Dno_strict_aliasing=1 \
+	-Dv8_no_strict_aliasing=1 \
+	-Dclang=0 \
+	-Dhost_clang=0 \
+	-Dremove_webcore_debug_symbols=1 \
+	-Dlogging_like_official_build=1 \
+	-Denable_hotwording=0 \
+	-Dwerror="
+
+%if 0%{?fedora}
+# Look, I don't know. This package is spit and chewing gum. Sorry.
+rm -rf third_party/jinja2 third_party/markupsafe
+ln -s %{python_sitelib}/jinja2 third_party/jinja2
+ln -s %{python_sitearch}/markupsafe third_party/markupsafe
+%endif
+
+# Update gyp files according to our configuration
+# If you will change something in the configuration please update it
+# for build/gyp_chromium as well (and vice versa).
+build/linux/unbundle/replace_gyp_files.py $CHROMIUM_BROWSER_GYP_DEFINES
+
+build/gyp_chromium \
+	--depth . \
+	$CHROMIUM_BROWSER_GYP_DEFINES
 
 %build
 
-PARSED_OPT_FLAGS=`echo \'%{optflags} -D_GNU_SOURCE\' | sed "s/ /',/g" | sed "s/',/', '/g"`
-#'
-sed -i "s|'-O<(release_optimize)'|$PARSED_OPT_FLAGS|g" build/common.gypi
-
-myconf+="-Dwerror=
-                     -Dlinux_sandbox_chrome_path=%{_libdir}/chromium/chromium
-                     -Duse_openssl=0
-                     -Duse_system_ffmpeg=0
-                     -Dbuild_ffmpegsumo=1
-                     -Dproprietary_codecs=1
-                     -Dremove_webcore_debug_symbols=1
-                     -Dlogging_like_official_build=1
-                     -Dlinux_fpic=1 
-                     -Ddisable_sse2=1"
-
-%if 0%{?packman_bs}
-myconf+=" -Dffmpeg_branding=Chrome"
+%if %{?tests}
+# Tests targets taken from testing/buildbot/chromium.linux.json
+export CHROMIUM_BROWSER_UNIT_TESTS="\
+	aura_unittests \
+	base_unittests \
+	browser_tests \
+	cacheinvalidation_unittests \
+	cast_unittests \
+	cc_unittests \
+	chromedriver_unittests \
+	components_unittests \
+	compositor_unittests \
+	content_browsertests \
+	content_unittests \
+	crypto_unittests \
+	dbus_unittests \
+	device_unittests \
+	display_unittests \
+	events_unittests \
+	extensions_unittests \
+	gcm_unit_tests \
+	gfx_unittests \
+	google_apis_unittests \
+	gpu_unittests \
+	interactive_ui_tests \
+	ipc_mojo_unittests \
+	ipc_tests \
+	jingle_unittests \
+	media_unittests \
+	mojo_application_manager_unittests \
+	mojo_apps_js_unittests \
+	mojo_common_unittests \
+	mojo_js_unittests \
+	mojo_public_bindings_unittests \
+	mojo_public_environment_unittests \
+	mojo_public_system_unittests \
+	mojo_public_utility_unittests \
+	mojo_shell_tests \
+	mojo_system_unittests \
+	mojo_view_manager_unittests \
+%if 0%{?fedora}
+	nacl_loader_unittests \
 %endif
-
-%ifarch armv7hl
-myconf+=" -Dlinux_use_tcmalloc=0
-          -DCAN_USE_ARMV7_INSTRUCTIONS=1
-          -DV8_TARGET_ARCH_ARM
-          -Dtarget_arch=arm
-          -DARMV7=1
-          -Darm_neon=0
-          -Darm_fpu=vfpv3-d16
-          -Drelease_extra_cflags=$CFLAGS -DUSE_EABI_HARDFLOAT
-          -Dv8_use_arm_eabi_hardfloat=true
-          -Darm_float_abi=hard
-          -Ddisable_nacl=1
-          -Ddisable_glibc=1
-          -Ddisable_pnacl=1
-          -Ddisable_newlib_untar=0
-          -Darm_version=7"
+	net_unittests \
+	ppapi_unittests \
+	printing_unittests \
+	remoting_unittests \
+	sandbox_linux_unittests \
+	sql_unittests \
+	sync_integration_tests \
+	ui_unittests \
+	sync_unit_tests \
+	unit_tests \
+	url_unittests \
+	views_unittests \
+	wm_unittests"
+# We are disabling the following tests on RHEL :
+# nacl_loader_unittests - we have NaCl disabled
 %else
-myconf+=" -Ddisable_nacl=0
-          -Ddisable_glibc=1
-          -Ddisable_pnacl=0
-          -Ddisable_newlib_untar=0"
+export CHROMIUM_BROWSER_UNIT_TESTS=
 %endif
 
-%ifarch x86_64
-myconf+=" -Dtarget_arch=x64"
-%endif
-
-%if 0%{?chromium_system_libs}
-myconf+=" -Duse_system_flac=1
-                     -Duse_system_speex=1
-                     -Duse_system_libexif=1 
-                     -Duse_system_libevent=1 
-                     -Duse_system_libmtp=1
-                     -Duse_system_opus=1 
-                     -Duse_system_bzip2=1 
-                     -Duse_system_harfbuzz=1 
-                     -Duse_system_libjpeg=1 
-                     -Duse_system_libpng=1 
-                     -Duse_system_libxslt=1 
-                     -Duse_system_libyuv=1 
-                     -Duse_system_nspr=1 
-                     -Duse_system_protobuf=1 
-                     -Duse_system_yasm=1"
-
-myconf+=" -Duse_system_icu=1"
-
-%endif
-
-%if 0%{?chromium_no_dlopen}
-myconf+=" -Duse_pulseaudio=1 
-                     -Dlinux_link_libpci=1 
-                     -Dlinux_link_gnome_keyring=1
-                     -Dlinux_link_gsettings=1 
-                     -Dlinux_link_libgps=1"
-
-%ifnarch %ix86
-#myconf+=" -Dlinux_link_kerberos=1" 
-%endif
-
-%endif
-
-myconf+=" -Dpython_ver=2.7"
-%ifarch x86_64
-myconf+=" -Dsystem_libdir=lib64"
-%endif
-
-myconf+=" -Djavascript_engine=v8 
-                     -Dlinux_use_gold_binary=0 
-                     -Dlinux_use_gold_flags=0"
-
-# Set up Google API keys, see http://www.chromium.org/developers/how-tos/api-keys
-# Note: these are for the openSUSE Chromium builds ONLY. For your own distribution,
-# please get your own set of keys.
-
-myconf+=" -Dgoogle_api_key=AIzaSyD1hTe85_a14kr1Ks8T3Ce75rvbR1_Dx7Q 
-          -Dgoogle_default_client_id=4139804441.apps.googleusercontent.com 
-          -Dgoogle_default_client_secret=KDTRKEZk2jwT_7CDpcmMA--P"
-
-build/linux/unbundle/replace_gyp_files.py $myconf
-
-%if 0%{?packman_bs}
-    ./build/gyp_chromium -f make third_party/ffmpeg/ffmpeg.gyp --no-parallel --depth . $myconf
-    cd third_party/ffmpeg
-    make -r %{?_smp_mflags} -f ffmpeg.Makefile BUILDTYPE=Release V=1
+%if %{?debug}
+%define target out/Debug
 %else
-%if 0
-    export GYP_GENERATORS='ninja'
-    ./build/gyp_chromium build/all.gyp --depth .  $myconf
-
-    ninja -C out/Release chrome
-
-    # Build the required SUID_SANDBOX helper
-    ninja -C out/Release chrome_sandbox
-
-    # Build the ChromeDriver test suite
-    ninja -C out/Release chromedriver
-%else
-    ./build/gyp_chromium -f make build/all.gyp --depth . $myconf
-
-    make -r %{?_smp_mflags} chrome V=1 BUILDTYPE=Release
-
-    # Build the required SUID_SANDBOX helper
-    make -r %{?_smp_mflags} chrome_sandbox V=1 BUILDTYPE=Release
-
-    # Build the ChromeDriver test suite
-    make -r %{?_smp_mflags} chromedriver V=1 BUILDTYPE=Release
+%define target out/Release
 %endif
+
+%if 0%{?rhel}
+# Set PYTHON PATH to directory which contains python argparse module
+export PYTHONPATH=`pwd`/third_party/python-argparse
 %endif
+
+../depot_tools/ninja -C %{target} -vvv chrome chrome_sandbox $CHROMIUM_BROWSER_UNIT_TESTS
 
 %install
-mkdir -p %{buildroot}%{_libdir}/chromium/
-%if 0%{?packman_bs}
-	pushd third_party/ffmpeg/out/Release
-	cp -a lib*.so %{buildroot}%{_libdir}/chromium/
-	popd
-%else
-	%ifarch x86_64
-	mkdir -p %{buildroot}%{_prefix}/lib/
-	%endif
-	install -m 755 %{SOURCE100} %{buildroot}%{_libdir}/chromium/chromium-generic
+rm -rf %{buildroot}
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{chromium_path}
+cp -a %{SOURCE3} %{buildroot}%{chromium_path}/%{chromium_browser_channel}.sh
+export BUILDTARGET=`cat /etc/redhat-release`
+export CHROMIUM_PATH=%{chromium_path}
+export CHROMIUM_BROWSER_CHANNEL=%{chromium_browser_channel}
+sed -i "s|@@BUILDTARGET@@|$BUILDTARGET|g" %{buildroot}%{chromium_path}/%{chromium_browser_channel}.sh
+sed -i "s|@@CHROMIUM_PATH@@|$CHROMIUM_PATH|g" %{buildroot}%{chromium_path}/%{chromium_browser_channel}.sh
+sed -i "s|@@CHROMIUM_BROWSER_CHANNEL@@|$CHROMIUM_BROWSER_CHANNEL|g" %{buildroot}%{chromium_path}/%{chromium_browser_channel}.sh
+ln -s %{chromium_path}/%{chromium_browser_channel}.sh %{buildroot}%{_bindir}/%{chromium_browser_channel}
+mkdir -p %{buildroot}%{_mandir}/man1/
 
-	# x86_64 capable systems need this
-	sed -i "s|/usr/lib/chromium|%{_libdir}/chromium|g" %{buildroot}%{_libdir}/chromium/chromium-generic
-
-	#update the password-store settings for each alternative
-	sed "s|password-store=basic|password-store=kwallet|g" %{buildroot}%{_libdir}/chromium/chromium-generic > %{buildroot}%{_libdir}/chromium/chromium-kde
-	sed "s|password-store=basic|password-store=gnome|g" %{buildroot}%{_libdir}/chromium/chromium-generic > %{buildroot}%{_libdir}/chromium/chromium-gnome
-	mkdir -p %{buildroot}%{_mandir}/man1/
-	pushd out/Release
-
-	# Install the file /etc/default/chromium which defines the chromium flags
-	mkdir -p %{buildroot}%{_sysconfdir}/default
-	install -m 644 %{SOURCE103} %{buildroot}%{_sysconfdir}/default/chromium
-
-	# Recent Chromium builds now wants to have the sandbox in the same directory. So let's create a symlink to the one in /usr/lib
-	cp -a chrome_sandbox %{buildroot}%{_prefix}/lib/
-	ln -s -f %{_prefix}/lib/chrome_sandbox %{buildroot}/%{_libdir}/chromium/chrome-sandbox
-
-	cp -a *.pak locales xdg-mime %{buildroot}%{_libdir}/chromium/
-	cp -a chromedriver %{buildroot}%{_libdir}/chromium/
-
-	# Patch xdg-settings to use the chromium version of xdg-mime as that the system one is not KDE4 compatible
-	sed "s|xdg-mime|%{_libdir}/chromium/xdg-mime|g" xdg-settings > %{buildroot}%{_libdir}/chromium/xdg-settings
-
-	cp -a resources.pak %{buildroot}%{_libdir}/chromium/
-	cp -a chrome %{buildroot}%{_libdir}/chromium/chromium
-	cp -a chrome.1 %{buildroot}%{_mandir}/man1/chrome.1
-	cp -a chrome.1 %{buildroot}%{_mandir}/man1/chromium.1
-	%fdupes %{buildroot}%{_mandir}/man1/
-
-%ifarch armv7hl
-# Native Client doesn't build yet for ARM
-%else
-	# NaCl
-	cp -a nacl_helper %{buildroot}%{_libdir}/chromium/
-	cp -a nacl_helper_bootstrap %{buildroot}%{_libdir}/chromium/
-	cp -a nacl_irt_*.nexe %{buildroot}%{_libdir}/chromium/
-	cp -a libppGoogleNaClPluginChrome.so %{buildroot}%{_libdir}/chromium/
+pushd %{target}
+cp -a *.pak *.bin locales resources %{buildroot}%{chromium_path}
+%if 0%{?fedora}
+cp -a nacl_helper* *.nexe %{buildroot}%{chromium_path}
+# libppGoogleNaClPluginChrome.so went away?
+cp -a protoc pnacl pseudo_locales pyproto tls_edit %{buildroot}%{chromium_path}
+chmod -x %{buildroot}%{chromium_path}/nacl_helper_bootstrap* *.nexe
 %endif
+cp -a chrome %{buildroot}%{chromium_path}/%{chromium_browser_channel}
+cp -a chrome_sandbox %{buildroot}%{chromium_path}/chrome-sandbox
+cp -a chrome.1 %{buildroot}%{_mandir}/man1/%{chromium_browser_channel}.1
+# This is now compiled in too... :/
+# cp -a libffmpegsumo.so %%{buildroot}%%{chromium_path}
+# Looks like this is compiled in now? *sigh*
+# cp -a libpdf.so %%{buildroot}%%{chromium_path}/libpdf.so
+%if 0%{?rhel}
+cp -a icudtl.dat %{buildroot}%{chromium_path}
+%endif
+popd
 
-	#libffmpegsumo
-	cp -a libffmpegsumo.so %{buildroot}%{_libdir}/chromium/
+mkdir -p %{buildroot}%{_datadir}/icons/hicolor/256x256/apps
+cp -a chrome/app/theme/chromium/product_logo_256.png %{buildroot}%{_datadir}/icons/hicolor/256x256/apps/%{chromium_browser_channel}.png
+
+mkdir -p %{buildroot}%{_datadir}/applications/
+desktop-file-install --dir %{buildroot}%{_datadir}/applications %{SOURCE4}
+
+mkdir -p %{buildroot}%{_datadir}/gnome-control-center/default-apps/
+cp -a %{SOURCE8} %{buildroot}%{_datadir}/gnome-control-center/default-apps/
+
+%check
+%if %{tests}
+	Xvfb :9 -screen 0 1024x768x24 &
+
+	export XVFB_PID=$!
+	export DISPLAY=:9
+	export LC_ALL="en_US.utf8"
+
+	sleep 5
+
+	# Run tests and disable the failed ones
+	# In sandbox_linux_unittests we are disabling most of the tests
+	# as RHEL 6 does not have suport for BPF in kernel.
+	pushd %{target}
+	(
+	cp chrome-sandbox chrome-test-sandbox
+	echo "Test sandbox needs to be owned by root and have the suid set"
+	sudo chown root:root chrome-test-sandbox
+	sudo chmod 4755 chrome-test-sandbox
+
+	export CHROME_DEVEL_SANDBOX=`pwd`/chrome-test-sandbox
+
+	./aura_unittests && \
+	./base_unittests \
+		--gtest_filter=-"\
+			OutOfMemoryDeathTest.ViaSharedLibraries\
+		" \
+	&& \
+	./browser_tests \
+		--gtest_filter=-"\
+			PrerenderBrowserTestWithNaCl.PrerenderNaClPluginEnabled:\
+			SandboxStatusUITest.testBPFSandboxEnabled:\
+			PlatformAppBrowserTest.AppWindowRestoreState:\
+			SyncFileSystemApiTest.GetFileStatuses:\
+			SyncFileSystemTest.AuthorizationTest\
+			AutofillEditAddressAsyncWebUITest.testAutofillPhoneValueListDoneValidating:\
+			BrowserViewTest.DevToolsUpdatesBrowserWindow:\
+			CalculatorBrowserTest.Model:\
+			ChromeWhispernetClientTest.Audible:\
+			ChromeWhispernetClientTest.DecodeSamples:\
+			ChromeWhispernetClientTest.DetectBroadcast:\
+			ChromeWhispernetClientTest.EncodeToken:\
+			ChromeWhispernetClientTest.Initialize:\
+			HotwordPrivateApiTest.AlwaysOnEnabled:\
+			OptionsUIBrowserTest.VerifyManagedSignout:\
+			ProfileManagerBrowserTest.DeletePasswords\
+		" \
+	&& \
+	./cacheinvalidation_unittests && \
+	./cast_unittests && \
+	./cc_unittests && \
+	./chromedriver_unittests && \
+	./components_unittests && \
+	./compositor_unittests && \
+	./content_browsertests && \
+	./content_unittests \
+		--gtest_filter=-"\
+			SharedCryptoTest.AesKwRawSymkeyUnwrapCorruptData\
+		" \
+	&& \
+	./crypto_unittests && \
+	./dbus_unittests \
+		--gtest_filter=-"\
+			EndToEndAsyncTest.InvalidObjectPath:\
+			EndToEndAsyncTest.InvalidServiceName:\
+			EndToEndSyncTest.InvalidObjectPath:\
+			EndToEndSyncTest.InvalidServiceName:\
+			MessageTest.SetInvalidHeaders\
+		" \
+	&& \
+	./device_unittests && \
+	./display_unittests && \
+	./events_unittests && \
+	./extensions_unittests && \
+	./gcm_unit_tests && \
+	./gfx_unittests \
+		--gtest_filter=-"\
+			FontListTest.Fonts_GetHeight_GetBaseline:\
+			FontRenderParamsTest.Default:\
+			FontRenderParamsTest.ForceFullHintingWhenAntialiasingIsDisabled:\
+			FontRenderParamsTest.MissingFamily:\
+			FontRenderParamsTest.OnlySetConfiguredValues:\
+			FontRenderParamsTest.Scalable:\
+			FontRenderParamsTest.Size:\
+			FontRenderParamsTest.Style:\
+			FontRenderParamsTest.SubstituteFamily:\
+			FontRenderParamsTest.UseBitmaps:\
+			FontTest.GetActualFontNameForTesting:\
+			FontTest.LoadArial:\
+			FontTest.LoadArialBold:\
+			PlatformFontPangoTest.FamilyList:\
+			RenderTextTest.SetFontList:\
+			RenderTextTest.StringSizeRespectsFontListMetrics\
+		" \
+	&& \
+	./google_apis_unittests && \
+	./gpu_unittests && \
+	./interactive_ui_tests \
+		--gtest_filter=-"\
+			OmniboxViewViewsTest.DeactivateTouchEditingOnExecuteCommand:\
+			OmniboxViewViewsTest.SelectAllOnTap\
+		" \
+	&& \
+	./ipc_mojo_unittests && \
+	./ipc_tests && \
+	./jingle_unittests && \
+	./media_unittests && \
+	./mojo_application_manager_unittests && \
+	./mojo_apps_js_unittests && \
+	./mojo_common_unittests && \
+	./mojo_js_unittests && \
+	./mojo_public_bindings_unittests && \
+	./mojo_public_environment_unittests && \
+	./mojo_public_system_unittests && \
+	./mojo_public_utility_unittests && \
+	./mojo_shell_tests && \
+	./mojo_system_unittests && \
+	./mojo_view_manager_unittests && \
+%if 0%{?fedora}
+	./nacl_loader_unittests && \
+%endif
+	./net_unittests \
+		--gtest_filter=-"\
+			EndToEndTests/EndToEndTest.*:\
+			QuicEndToEndTest.LargeGetWithNoPacketLoss:\
+			QuicEndToEndTest.LargePostWithPacketLoss:\
+			QuicEndToEndTest.UberTest:\
+			Spdy/SpdyNetworkTransactionNoTLSUsageCheckTest.TLSCipherSuiteSucky/0:\
+			Spdy/SpdyNetworkTransactionNoTLSUsageCheckTest.TLSCipherSuiteSucky/1:\
+			Spdy/SpdyNetworkTransactionNoTLSUsageCheckTest.TLSCipherSuiteSucky/2:\
+			Spdy/SpdyNetworkTransactionNoTLSUsageCheckTest.TLSVersionTooOld/0:\
+			Spdy/SpdyNetworkTransactionNoTLSUsageCheckTest.TLSVersionTooOld/1:\
+			Spdy/SpdyNetworkTransactionNoTLSUsageCheckTest.TLSVersionTooOld/2:\
+			Spdy/SpdyNetworkTransactionTLSUsageCheckTest.TLSCipherSuiteSucky/0:\
+			Spdy/SpdyNetworkTransactionTLSUsageCheckTest.TLSVersionTooOld/0\
+		" \
+	&& \
+	./ppapi_unittests && \
+	./printing_unittests && \
+	./remoting_unittests && \
+	./sandbox_linux_unittests \
+		--gtest_filter=-"\
+			BaselinePolicy.*:\
+			SandboxBPF.*:\
+			BPFDSL.*:\
+			BPFTest.*:\
+			ParameterRestrictions.*:\
+			Syscall.SyntheticSixArgs\
+		" \
+	./sql_unittests && \
+	./ui_unittests && \
+	./sync_unit_tests && \
+	./unit_tests \
+		--gtest_filter=-"\
+			SpellCheckTest.CreateTextCheckingResults:\
+			SpellCheckTest.DictionaryFiles:\
+			SpellCheckTest.EnglishWords:\
+			SpellCheckTest.GetAutoCorrectionWord_EN_US:\
+			SpellCheckTest.LogicalSuggestions:\
+			SpellCheckTest.MisspelledWords:\
+			SpellCheckTest.NoSuggest:\
+			SpellCheckTest.SpellCheckParagraphLongSentenceMultipleMisspellings:\
+			SpellCheckTest.SpellCheckParagraphMultipleMisspellings:\
+			SpellCheckTest.SpellCheckParagraphSingleMisspellings:\
+			SpellCheckTest.SpellCheckStrings_EN_US:\
+			SpellCheckTest.SpellCheckSuggestions_EN_US:\
+			SpellCheckTest.SpellingEngine_CheckSpelling:\
+			SpellCheckTest.RequestSpellCheckWithMisspellings:\
+			SpellCheckTest.RequestSpellCheckWithMultipleRequests:\
+			SpellCheckTest.RequestSpellCheckWithSingleMisspelling\
+		" \
+	&& \
+	./url_unittests && \
+	./views_unittests \
+		--gtest_filter=-"\
+			DesktopWindowTreeHostX11Test.Shape:\
+			LabelTest.FontPropertySymbol:\
+			WidgetTest.WindowMouseModalityTest\
+		" \
+	&& \
+	./wm_unittests \
+	) || (kill $XVFB_PID || unset XVFB_PID)
 	popd
 
-	mkdir -p %{buildroot}%{_datadir}/icons/
-	pushd %{buildroot}%{_datadir}/icons/
-	tar -xjf %{SOURCE104}
-	mv oxygen hicolor
-	popd
-
-	mkdir -p %{buildroot}%{_datadir}/applications/
-	desktop-file-install --dir %{buildroot}%{_datadir}/applications %{SOURCE101}
-
-	mkdir -p %{buildroot}%{_datadir}/gnome-control-center/default-apps/
-	cp -a %{SOURCE102} %{buildroot}%{_datadir}/gnome-control-center/default-apps/
-
-	# link to browser plugin path.  Plugin patch doesn't work. Why?
-	mkdir -p %{buildroot}%{_libdir}/browser-plugins
-	pushd %{buildroot}%{_libdir}/%{name}
-	ln -s ../browser-plugins plugins
-
-	# Install the master_preferences file
-	mkdir -p %{buildroot}%{_sysconfdir}/%{name}
-	install -m 0644 %{SOURCE30} %{buildroot}%{_sysconfdir}/%{name}
-	install -m 0644 %{SOURCE31} %{buildroot}%{_sysconfdir}/%{name}
-
-	# Set the right attributes
-	chmod 755 %{buildroot}%{_libdir}/%{name}/xdg-settings
-	chmod 755 %{buildroot}%{_libdir}/%{name}/xdg-mime
-
-	# create a dummy target for /etc/alternatives/chromium
-	mkdir -p %{buildroot}%{_sysconfdir}/alternatives
-	mkdir -p %{buildroot}%{_bindir}
-	touch %{buildroot}%{_sysconfdir}/alternatives/chromium
-	ln -s -f %{_sysconfdir}/alternatives/chromium %{buildroot}/%{_bindir}/chromium
+	kill $XVFB_PID
+	unset XVFB_PID
 %endif
 
 %clean
 rm -rf %{buildroot}
 
-%pre
-if [ -f %{_bindir}/chromium -a ! -L %{_bindir}/chromium ] ; then rm -f %{_bindir}/chromium
-fi
-
-# Add snipplets to update the GTK cache on package install.
-
-%verifyscript suid-helper
-%verify_permissions -e %{_prefix}/lib/chrome_sandbox 
-
-%post suid-helper
-%set_permissions %{_prefix}/lib/chrome_sandbox
-
 %post
-%icon_theme_cache_post
-%desktop_database_post
-"%_sbindir/update-alternatives" --install %{_bindir}/chromium chromium %{_libdir}/chromium/chromium-generic 10
+# Set SELinux labels
+# Not sure how to fix this yet. Changing the pathing in the semanage commands does not work.
+# ValueError: File spec /usr/lib64/chromium-browser/chromium-browser conflicts with equivalency rule '/usr/lib64 /usr/lib'; Try adding '/usr/lib/chromium-browser/chromium-browser' instead
+# ValueError: File spec /usr/lib64/chromium-browser/chromium-browser.sh conflicts with equivalency rule '/usr/lib64 /usr/lib'; Try adding '/usr/lib/chromium-browser/chromium-browser.sh' instead
+# ValueError: File spec /usr/lib64/chromium-browser/chrome-sandbox conflicts with equivalency rule '/usr/lib64 /usr/lib'; Try adding '/usr/lib/chromium-browser/chrome-sandbox' instead
+
+semanage fcontext -a -t execmem_exec_t %{chromium_path}/%{chromium_browser_channel}
+semanage fcontext -a -t bin_t %{chromium_path}/%{chromium_browser_channel}.sh
+semanage fcontext -a -t chrome_sandbox_exec_t %{chromium_path}/chrome-sandbox
+restorecon -R -v %{chromium_path}/%{chromium_browser_channel}
+
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+update-desktop-database &> /dev/null || :
 
 %postun
-%icon_theme_cache_postun
-%desktop_database_postun
-if [ $1 -eq 0 ]; then
-update-alternatives --remove-all chromium
+if [ $1 -eq 0 ] ; then
+	touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+	gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
+update-desktop-database &> /dev/null || :
 
-%post desktop-kde 
-if [ ! -e /.buildenv ]; then
-"%_sbindir/update-alternatives" --install %{_bindir}/chromium chromium %{_libdir}/chromium/chromium-kde 15
-"%_sbindir/update-alternatives" --auto chromium
-fi
-
-%preun desktop-kde
-if [ $1 -eq 0 -a ! -e /.buildenv ]; then
-"%_sbindir/update-alternatives" --remove chromium %{_libdir}/chromium/chromium-kde
-"%_sbindir/update-alternatives" --auto chromium
-fi
-
-%post desktop-gnome
-if [ ! -e /.buildenv ]; then
-"%_sbindir/update-alternatives" --install %{_bindir}/chromium chromium %{_libdir}/chromium/chromium-gnome 15
-"%_sbindir/update-alternatives" --auto chromium
-fi
-
-%postun desktop-gnome
-if [ $1 -eq 0 -a ! -e /.buildenv ]; then
-"%_sbindir/update-alternatives" --remove chromium %{_libdir}/chromium/chromium-gnome
-"%_sbindir/update-alternatives" --auto chromium
-fi
-
-# Files!
-
-%if 0%{?packman_bs}
-
-%files ffmpeg
-%defattr(-,root,root,-)
-%dir %{_libdir}/chromium
-%{_libdir}/chromium/lib*.so
-
-%else
+%posttrans
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS LICENSE
-%config %{_sysconfdir}/%{name}
-%config(noreplace) %{_sysconfdir}/default/chromium
-%dir %{_datadir}/gnome-control-center
-%dir %{_datadir}/gnome-control-center/default-apps
-%{_libdir}/chromium/
-%{_mandir}/man1/chrom*
+%{_bindir}/%{chromium_browser_channel}
+%dir %{chromium_path}
+%{chromium_path}/*.bin
+%{chromium_path}/*.pak
+%{chromium_path}/%{chromium_browser_channel}
+%{chromium_path}/%{chromium_browser_channel}.sh
+%if 0%{?fedora}
+%{chromium_path}/nacl_helper*
+%{chromium_path}/protoc
+%{chromium_path}/tls_edit
+%{chromium_path}/*.nexe
+# %%{chromium_path}/libppGoogleNaClPluginChrome.so
+# %%{chromium_path}/remoting_locales/
+%{chromium_path}/pseudo_locales/
+%{chromium_path}/pnacl/
+# %%{chromium_path}/plugins/
+%{chromium_path}/pyproto/
+%endif
+%attr(4755, root, root) %{chromium_path}/chrome-sandbox
+# %%{chromium_path}/libffmpegsumo.so
+# %%{chromium_path}/libpdf.so
+%if 0%{?rhel}
+%{chromium_path}/icudtl.dat
+%endif
+%{chromium_path}/locales/
+%{chromium_path}/resources/
+%{_mandir}/man1/%{chromium_browser_channel}.*
+%{_datadir}/icons/hicolor/256x256/apps/%{chromium_browser_channel}.png
 %{_datadir}/applications/*.desktop
 %{_datadir}/gnome-control-center/default-apps/chromium-browser.xml
-%{_datadir}/icons/hicolor/
-%exclude %{_libdir}/chromium/libffmpegsumo.so
-%exclude %{_libdir}/chromium/chromium-kde
-%exclude %{_libdir}/chromium/chromium-gnome
-%exclude %{_libdir}/chromium/chromedriver
-%exclude %{_libdir}/chromium/chrome-sandbox
-%_bindir/chromium
-%ghost %_sysconfdir/alternatives/chromium
-
-%files ffmpegsumo
-%defattr(-,root,root,-)
-%{_libdir}/chromium/libffmpegsumo.so
-
-%files desktop-kde
-%attr(755, root, root) %{_libdir}/chromium/chromium-kde
-
-%files desktop-gnome
-%attr(755, root, root) %{_libdir}/chromium/chromium-gnome
-
-%files suid-helper
-%defattr(-,root,root,-)
-%verify(not mode) %{_prefix}/lib/chrome_sandbox
-%{_libdir}/chromium/chrome-sandbox
-
-%files -n chromedriver
-%defattr(-,root,root,-)
-%{_libdir}/chromium/chromedriver
-%endif
 
 %changelog
+* Fri Oct 23 2015 Tom Callaway <spot@fedoraproject.org> 46.0.2490.80-1
+- update to 46.0.2490.80
+
+* Thu Oct 15 2015 Tom Callaway <spot@fedoraproject.org> 46.0.2490.71-1
+- update to 46.0.2490.71
+
+* Thu Oct 15 2015 Tom Callaway <spot@fedoraproject.org> 45.0.2454.101-2
+- fix icu handling for f21 and older
+
+* Mon Oct  5 2015 Tom Callaway <spot@fedoraproject.org> 45.0.2454.101-1
+- update to 45.0.2454.101
+
+* Thu Jun 11 2015 Tom Callaway <spot@fedoraproject.org> 43.0.2357.124-1
+- update to 43.0.2357.124
+
+* Tue Jun  2 2015 Tom Callaway <spot@fedoraproject.org> 43.0.2357.81-1
+- update to 43.0.2357.81
+
+* Thu Feb 26 2015 Tom Callaway <spot@fedoraproject.org> 40.0.2214.115-1
+- update to 40.0.2214.115
+
+* Thu Feb 19 2015 Tom Callaway <spot@fedoraproject.org> 40.0.2214.111-1
+- update to 40.0.2214.111
+
+* Mon Feb  2 2015 Tom Callaway <spot@fedoraproject.org> 40.0.2214.94-1
+- update to 40.0.2214.94
+
+* Tue Jan 27 2015 Tom Callaway <spot@fedoraproject.org> 40.0.2214.93-1
+- update to 40.0.2214.93
+
+* Sat Jan 24 2015 Tom Callaway <spot@fedoraproject.org> 40.0.2214.91-1
+- update to 40.0.2214.91
+
+* Wed Jan 21 2015 Tom Callaway <spot@fedoraproject.org> 39.0.2171.95-3
+- use bundled icu on Fedora < 21, we need 5.2
+
+* Tue Jan  6 2015 Tom Callaway <spot@fedoraproject.org> 39.0.2171.95-2
+- rebase off Tomas's spec file for Fedora
+
+* Fri Dec 12 2014 Tomas Popela <tpopela@redhat.com> 39.0.2171.95-1
+- Update to 39.0.2171.95
+- Resolves: rhbz#1173448
+
+* Wed Nov 26 2014 Tomas Popela <tpopela@redhat.com> 39.0.2171.71-1
+- Update to 39.0.2171.71
+- Resolves: rhbz#1168128
+
+* Wed Nov 19 2014 Tomas Popela <tpopela@redhat.com> 39.0.2171.65-2
+- Revert the chrome-sandbox rename to chrome_sandbox
+- Resolves: rhbz#1165653
+
+* Wed Nov 19 2014 Tomas Popela <tpopela@redhat.com> 39.0.2171.65-1
+- Update to 39.0.2171.65
+- Use Red Hat Developer Toolset for compilation
+- Set additional SELinux labels
+- Add more unit tests
+- Resolves: rhbz#1165653
+
+* Fri Nov 14 2014 Tomas Popela <tpopela@redhat.com> 38.0.2125.122-1
+- Update to 38.0.2125.122
+- Resolves: rhbz#1164116
+
+* Wed Oct 29 2014 Tomas Popela <tpopela@redhat.com> 38.0.2125.111-1
+- Update to 38.0.2125.111
+- Resolves: rhbz#1158347
+
+* Fri Oct 24 2014 Tomas Popela <tpopela@redhat.com> 38.0.2125.104-2
+- Fix the situation when the return key (and keys from numpad) does not work
+  in HTML elements with input
+- Resolves: rhbz#1153988
+- Dynamically determine the presence of the PepperFlash plugin
+- Resolves: rhbz#1154118
+
+* Thu Oct 16 2014 Tomas Popela <tpopela@redhat.com> 38.0.2125.104-1
+- Update to 38.0.2125.104
+- Resolves: rhbz#1153012
+
+* Thu Oct 09 2014 Tomas Popela <tpopela@redhat.com> 38.0.2125.101-2
+- The boringssl is used for tests, without the possibility of using
+  the system openssl instead. Remove the openssl and boringssl sources
+  when not building the tests.
+- Resolves: rhbz#1004948
+
+* Wed Oct 08 2014 Tomas Popela <tpopela@redhat.com> 38.0.2125.101-1
+- Update to 38.0.2125.101
+- System openssl is used for tests, otherwise the bundled boringssl is used
+- Don't build with clang
+- Resolves: rhbz#1004948
+
+* Wed Sep 10 2014 Tomas Popela <tpopela@redhat.com> 37.0.2062.120-1
+- Update to 37.0.2062.120
+- Resolves: rhbz#1004948
+
+* Wed Aug 27 2014 Tomas Popela <tpopela@redhat.com> 37.0.2062.94-1
+- Update to 37.0.2062.94
+- Include the pdf viewer library
+
+* Wed Aug 13 2014 Tomas Popela <tpopela@redhat.com> 36.0.1985.143-1
+- Update to 36.0.1985.143
+- Use system openssl instead of bundled one
+- Resolves: rhbz#1004948
+
+* Thu Jul 17 2014 Tomas Popela <tpopela@redhat.com> 36.0.1985.125-1
+- Update to 36.0.1985.125
+- Add libexif as BR
+- Resolves: rhbz#1004948
+
+* Wed Jun 11 2014 Tomas Popela <tpopela@redhat.com> 35.0.1916.153-1
+- Update to 35.0.1916.153
+- Resolves: rhbz#1004948
+
+* Wed May 21 2014 Tomas Popela <tpopela@redhat.com> 35.0.1916.114-1
+- Update to 35.0.1916.114
+- Bundle python-argparse
+- Resolves: rhbz#1004948
+
+* Wed May 14 2014 Tomas Popela <tpopela@redhat.com> 34.0.1847.137-1
+- Update to 34.0.1847.137
+- Resolves: rhbz#1004948
+
+* Mon May 5 2014 Tomas Popela <tpopela@redhat.com> 34.0.1847.132-1
+- Update to 34.0.1847.132
+- Bundle depot_tools and switch from make to ninja
+- Remove PepperFlash
+- Resolves: rhbz#1004948
+
+* Mon Feb 3 2014 Tomas Popela <tpopela@redhat.com> 32.0.1700.102-1
+- Update to 32.0.1700.102
+
+* Thu Jan 16 2014 Tomas Popela <tpopela@redhat.com> 32.0.1700.77-1
+- Update to 32.0.1700.77
+- Properly kill Xvfb when tests fails
+- Add libdrm as BR
+- Add libcap as BR
+
+* Tue Jan 7 2014 Tomas Popela <tpopela@redhat.com> 31.0.1650.67-2
+- Minor changes in spec files and scripts
+- Add Xvfb as BR for tests
+- Add policycoreutils-python as Requires
+- Compile unittests and run them in chech phase, but turn them off by default
+  as many of them are failing in Brew
+
+* Thu Dec 5 2013 Tomas Popela <tpopela@redhat.com> 31.0.1650.67-1
+- Update to 31.0.1650.63
+
+* Thu Nov 21 2013 Tomas Popela <tpopela@redhat.com> 31.0.1650.57-1
+- Update to 31.0.1650.57
+
+* Wed Nov 13 2013 Tomas Popela <tpopela@redhat.com> 31.0.1650.48-1
+- Update to 31.0.1650.48
+- Minimal supported RHEL6 version is now RHEL 6.5 due to GTK+
+
+* Fri Oct 25 2013 Tomas Popela <tpopela@redhat.com> 30.0.1599.114-1
+- Update to 30.0.1599.114
+- Hide the infobar with warning that this version of OS is not supported
+- Polished the chromium-latest.py
+
+* Thu Oct 17 2013 Tomas Popela <tpopela@redhat.com> 30.0.1599.101-1
+- Update to 30.0.1599.101
+- Minor changes in scripts
+
+* Wed Oct 2 2013 Tomas Popela <tpopela@redhat.com> 30.0.1599.66-1
+- Update to 30.0.1599.66
+- Automated the script for cleaning the proprietary sources from ffmpeg.
+
+* Thu Sep 19 2013 Tomas Popela <tpopela@redhat.com> 29.0.1547.76-1
+- Update to 29.0.1547.76
+- Added script for removing the proprietary sources from ffmpeg. This script is called during cleaning phase of ./chromium-latest --rhel
+
+* Mon Sep 16 2013 Tomas Popela <tpopela@redhat.com> 29.0.1547.65-2
+- Compile with Dproprietary_codecs=0 and Dffmpeg_branding=Chromium to disable proprietary codecs (i.e. MP3)
+
+* Mon Sep 9 2013 Tomas Popela <tpopela@redhat.com> 29.0.1547.65-1
+- Initial version based on Tom Callaway's <spot@fedoraproject.org> work
 

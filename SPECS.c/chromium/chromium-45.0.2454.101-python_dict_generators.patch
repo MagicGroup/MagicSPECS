@@ -1,0 +1,25 @@
+diff -up chromium-45.0.2454.101/third_party/WebKit/Source/build/scripts/css_properties.py.python_dict_generators chromium-45.0.2454.101/third_party/WebKit/Source/build/scripts/css_properties.py
+diff -up chromium-45.0.2454.101/third_party/WebKit/Source/build/scripts/make_style_shorthands.py.python_dict_generators chromium-45.0.2454.101/third_party/WebKit/Source/build/scripts/make_style_shorthands.py
+--- chromium-45.0.2454.101/third_party/WebKit/Source/build/scripts/make_style_shorthands.py.python_dict_generators	2015-09-24 16:23:03.000000000 -0400
++++ chromium-45.0.2454.101/third_party/WebKit/Source/build/scripts/make_style_shorthands.py	2015-10-05 10:03:06.659316756 -0400
+@@ -47,7 +47,7 @@ class StylePropertyShorthandWriter(css_p
+ 
+         self._longhand_dictionary = defaultdict(list)
+ 
+-        self._properties = {property_id: property for property_id, property in self._properties.items() if property['longhands']}
++        self._properties = dict((property_id, property) for property_id, property in self._properties.items() if property['longhands'])
+ 
+         for property in self._properties.values():
+             property['longhand_property_ids'] = map(css_properties.css_name_to_enum, property['longhands'].split(';'))
+diff -up chromium-45.0.2454.101/third_party/WebKit/Source/devtools/scripts/modular_build.py.python_dict_generators chromium-45.0.2454.101/third_party/WebKit/Source/devtools/scripts/modular_build.py
+--- chromium-45.0.2454.101/third_party/WebKit/Source/devtools/scripts/modular_build.py.python_dict_generators	2015-09-24 16:23:03.000000000 -0400
++++ chromium-45.0.2454.101/third_party/WebKit/Source/devtools/scripts/modular_build.py	2015-10-05 10:03:06.660316734 -0400
+@@ -151,7 +151,7 @@ class DescriptorLoader:
+         for application_descriptor_name in application_descriptor_names:
+             module_descriptors = {}
+             application_descriptor_filename = path.join(self.application_dir, application_descriptor_name)
+-            application_descriptor = {desc['name']: desc for desc in load_and_parse_json(application_descriptor_filename)}
++            application_descriptor = dict((desc['name'], desc) for desc in load_and_parse_json(application_descriptor_filename))
+ 
+             for name in application_descriptor:
+                 merged_application_descriptor[name] = application_descriptor[name]

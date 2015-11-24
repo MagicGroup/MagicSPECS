@@ -1,0 +1,11 @@
+diff -up chromium-34.0.1847.132/chrome/browser/password_manager/native_backend_gnome_x.h.gnome_keyring_fix chromium-34.0.1847.132/chrome/browser/password_manager/native_backend_gnome_x.h
+--- chromium-34.0.1847.132/chrome/browser/password_manager/native_backend_gnome_x.h.gnome_keyring_fix	2014-05-06 09:14:55.551280062 +0200
++++ chromium-34.0.1847.132/chrome/browser/password_manager/native_backend_gnome_x.h	2014-05-06 09:15:02.564279927 +0200
+@@ -44,7 +44,6 @@ class GnomeKeyringLoader {
+   F(result_to_message)
+ #define GNOME_KEYRING_FOR_EACH_NON_MOCKED_FUNC(F)  \
+   F(attribute_list_free)                           \
+-  F(attribute_list_new)                            \
+   F(attribute_list_append_string)                  \
+   F(attribute_list_append_uint32)
+ #define GNOME_KEYRING_FOR_EACH_FUNC(F)             \

@@ -1,0 +1,15 @@
+diff -up chromium-37.0.2062.20/net/tools/tld_cleanup/make_dafsa.py.python_tld_cleanup chromium-37.0.2062.20/net/tools/tld_cleanup/make_dafsa.py
+--- chromium-37.0.2062.20/net/tools/tld_cleanup/make_dafsa.py.python_tld_cleanup	2014-07-21 11:13:36.401490671 +0200
++++ chromium-37.0.2062.20/net/tools/tld_cleanup/make_dafsa.py	2014-07-21 11:14:01.044841728 +0200
+@@ -460,8 +460,9 @@ def main():
+   if len(sys.argv) != 3:
+     print('usage: %s infile outfile' % sys.argv[0])
+     return 1
+-  with open(sys.argv[1], 'r') as infile, open(sys.argv[2], 'w') as outfile:
+-    outfile.write(words_to_cxx(parse_gperf(infile)))
++  with open(sys.argv[1], 'r') as infile:
++    with open(sys.argv[2], 'w') as outfile:
++      outfile.write(words_to_cxx(parse_gperf(infile)))
+   return 0
+ 
+ 
