@@ -129,6 +129,27 @@ typedef struct {
   int dummy; /**< Reserved; condition variables don't have attributes */
 } pthread_condattr_t;
 
+/**
+ * A structure representing a rwlock. It should be considered an
+ * opaque record; the names of the fields can change anytime.
+ */
+typedef struct {
+  pthread_mutex_t mutex; /* mutex for all values in the structure */
+  int reader_count;
+  int writers_waiting;
+  struct __nc_basic_thread_data *writer_thread_id;
+  pthread_cond_t read_possible;
+  pthread_cond_t write_possible;
+} pthread_rwlock_t;
+
+/**
+ * A structure representing rwlock attributes. It should be considered an
+ * opaque record.
+ */
+typedef struct {
+  int type;
+} pthread_rwlockattr_t;
+
 /** A value that represents an uninitialized handle. */
 #define NC_INVALID_HANDLE -1
 
@@ -153,6 +174,8 @@ typedef struct {
 /** Statically initializes a condition variable (pthread_cond_t). */
 #define PTHREAD_COND_INITIALIZER {0, NC_INVALID_HANDLE}
 
+#define PTHREAD_PROCESS_PRIVATE  0
+#define PTHREAD_PROCESS_SHARED   1
 
 
 /* Functions for mutex handling.  */
@@ -207,7 +230,7 @@ extern int pthread_mutex_lock(pthread_mutex_t *mutex);
 
 /* Wait until lock becomes available, or specified time passes. */
 extern int pthread_mutex_timedlock(pthread_mutex_t *mutex,
-                                   struct timespec *abstime);
+                                   const struct timespec *abstime);
 
 /** @nqPosix
 * Unlocks a mutex.
@@ -353,7 +376,7 @@ int pthread_cond_timedwait_abs(pthread_cond_t *cond,
                                pthread_mutex_t *mutex,
                                const struct timespec *abstime);
 
- /** @nqPosix
+/** @nqPosix
 * Waits for condition variable cond to be signaled or broadcast; wait time is
 * limited by reltime.
 *
@@ -376,6 +399,31 @@ int pthread_cond_timedwait_rel(pthread_cond_t *cond,
  */
 #define pthread_cond_timedwait pthread_cond_timedwait_abs
 
+/* Functions for rwlock handling.  */
+
+int pthread_rwlockattr_init(pthread_rwlockattr_t *attr);
+int pthread_rwlockattr_getpshared(const pthread_rwlockattr_t *attr,
+                                  int *pshared);
+int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *attr, int pshared);
+int pthread_rwlockattr_destroy(pthread_rwlockattr_t *attr);
+
+int pthread_rwlock_init(pthread_rwlock_t *rwlock,
+                        const pthread_rwlockattr_t *attr);
+
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_timedrdlock(pthread_rwlock_t *rwlock,
+                               const struct timespec *abstime);
+
+
+int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock,
+                               const struct timespec *abstime);
+
+int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);
+
 
 /* Threads */
 /** Thread entry function type. */
@@ -394,6 +442,11 @@ typedef struct {
 #define PTHREAD_CREATE_JOINABLE 1
 /** Detached thread type; for use with pthread_attr_setdetachstate(). */
 #define PTHREAD_CREATE_DETACHED 0
+
+/** For use with pthread_attr_setscope(). */
+#define PTHREAD_SCOPE_PROCESS 0
+/** For use with pthread_attr_setscope(). */
+#define PTHREAD_SCOPE_SYSTEM  1
 
 /** Minimum stack size; for use with pthread_attr_setstacksize(). */
 #define PTHREAD_STACK_MIN     (1024)
@@ -494,6 +547,7 @@ extern int pthread_kill(pthread_t thread_id,
                         int sig);
 
 /* Functions for handling thread attributes.  */
+
 /** @nqPosix
 * Initializes thread attributes structure attr with default attributes
 * (detachstate is PTHREAD_CREATE_JOINABLE).
@@ -541,8 +595,35 @@ extern int pthread_attr_setdetachstate(pthread_attr_t *attr,
 *
 * @return 0 on success, non-zero error code otherwise.
 */
-extern int pthread_attr_getdetachstate(pthread_attr_t *attr,
+extern int pthread_attr_getdetachstate(const pthread_attr_t *attr,
                                        int *detachstate);
+
+/** @nqPosix
+* Sets the contention scope attribute in thread attributes.
+* Native Client (like Linux) only supports PTHREAD_SCOPE_SYSTEM.
+*
+* @linkPthread
+*
+* @param attr Pointer to thread attributes structure.
+* @param scope Value to be set, determines the contention scope of the thread.
+*
+* @return 0 on success, non-zero error code otherwise.
+*/
+extern int pthread_attr_setscope(pthread_attr_t *attr, int scope);
+
+/** @nqPosix
+* Gets the contention scope attribute from thread attributes.
+* Native Client (like Linux) only supports PTHREAD_SCOPE_SYSTEM.
+*
+* @linkPthread
+*
+* @param attr Pointer to thread attributes structure.
+* @param scope Location where the value of `scope` is stored upon
+* successful completion.
+*
+* @return 0 on success, non-zero error code otherwise.
+*/
+extern int pthread_attr_getscope(const pthread_attr_t *attr, int *scope);
 
 /** @nqPosix
 * Sets the stacksize attribute in thread attributes.  Has no effect if the
@@ -568,7 +649,7 @@ extern int pthread_attr_setstacksize(pthread_attr_t *attr,
 *
 * @return 0 on success, non-zero error code otherwise.
 */
-extern int pthread_attr_getstacksize(pthread_attr_t *attr,
+extern int pthread_attr_getstacksize(const pthread_attr_t *attr,
                                      size_t *stacksize);
 
 /** @nqPosix
