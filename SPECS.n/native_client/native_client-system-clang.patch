@@ -1,0 +1,69 @@
+diff -up native_client/pnacl/build.sh.system-clang native_client/pnacl/build.sh
+--- native_client/pnacl/build.sh.system-clang	2015-10-01 23:02:38.000000000 -0400
++++ native_client/pnacl/build.sh	2015-10-02 08:24:08.679099715 -0400
+@@ -113,8 +113,8 @@ readonly PNACL_STRIP="${INSTALL_BIN}/pna
+ readonly ILLEGAL_TOOL="${INSTALL_BIN}"/pnacl-illegal
+ 
+ # Tools for building the LLVM BuildTools in the translator build
+-readonly HOST_CLANG_PATH="${GCLIENT_ROOT}/third_party/llvm-build/Release+Asserts/bin"
+-readonly HOST_CLANG="${HOST_CLANG_PATH}/clang"
++readonly HOST_CLANG_PATH="/usr/bin"
++readonly HOST_CLANG="${HOST_CLANG_PATH}/gcc"
+ # Use toolchain_build's libcxx install directory instead of ${INSTALL_ROOT}/lib
+ # because the latter also has the LLVM shared libs in it, and given how stupid
+ # the LLVM BuildTools build is, who knows what would happen if it found those.
+@@ -256,7 +256,7 @@ llvm-sb-setup() {
+     NM="${PNACL_NM}" \
+     RANLIB="${PNACL_RANLIB}" \
+     BUILD_CC="${HOST_CLANG}" \
+-    BUILD_CXX="${HOST_CLANG}++")
++    BUILD_CXX="g++")
+ }
+ 
+ #+-------------------------------------------------------------------------
+@@ -349,7 +349,6 @@ llvm-sb-configure() {
+         --enable-shared=no \
+         --disable-jit \
+         --enable-optimized \
+-        --enable-libcpp \
+         --target=${CROSS_TARGET_ARM} \
+         llvm_cv_link_use_export_dynamic=no \
+         ac_cv_func_getrusage=no \
+@@ -380,8 +379,8 @@ llvm-sb-make() {
+       VERBOSE=1 \
+       SUBZERO_SRC_ROOT="${TC_SRC_SUBZERO}" \
+       BUILD_CC="${HOST_CLANG}" \
+-      BUILD_CXX="${HOST_CLANG}++" \
+-      BUILD_CXXFLAGS="-stdlib=libc++ -I${HOST_LIBCXX}/include/c++/v1" \
++      BUILD_CXX="g++" \
++      BUILD_CXXFLAGS="" \
+       BUILD_LDFLAGS="-L${HOST_LIBCXX}/lib" \
+       ${export_dyn_env} \
+       make ${MAKE_OPTS} tools-only
+diff -up native_client/toolchain_build/toolchain_build_pnacl.py.system-clang native_client/toolchain_build/toolchain_build_pnacl.py
+--- native_client/toolchain_build/toolchain_build_pnacl.py.system-clang	2015-10-01 23:02:38.000000000 -0400
++++ native_client/toolchain_build/toolchain_build_pnacl.py	2015-10-02 08:32:12.230566695 -0400
+@@ -89,8 +89,7 @@ CROSS_MINGW_LIBPATH = '/usr/lib/gcc/i686
+ MINGW_PATH = os.path.join(NACL_DIR, 'mingw32')
+ MINGW_VERSION = 'i686-w64-mingw32-4.8.1'
+ 
+-CHROME_CLANG = os.path.join(os.path.dirname(NACL_DIR), 'third_party',
+-                            'llvm-build', 'Release+Asserts', 'bin', 'clang')
++CHROME_CLANG = os.path.join('/usr', 'bin', 'clang')
+ CHROME_CLANGXX = CHROME_CLANG + '++'
+ 
+ # Redirectors are small shims acting like sym links with optional arguments.
+@@ -212,12 +211,7 @@ def HostArchToolFlags(host, extra_cflags
+       result['CXXFLAGS'] += extra_cc_flags
+     else:
+       result['CFLAGS'] += extra_cc_flags
+-      result['LDFLAGS'] += ['-L%(' + FlavoredName('abs_libcxx',
+-                                                  host, opts) + ')s/lib']
+-      result['CXXFLAGS'] += ([
+-        '-stdlib=libc++',
+-        '-I%(' + FlavoredName('abs_libcxx', host, opts) + ')s/include/c++/v1'] +
+-        extra_cc_flags)
++      result['CXXFLAGS'] += extra_cc_flags
+   return result
+ 
+ 

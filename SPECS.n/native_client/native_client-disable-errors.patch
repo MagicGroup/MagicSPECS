@@ -1,0 +1,11 @@
+diff -up native_client/toolchain_build/src/llvm/Makefile.rules.no-errors native_client/toolchain_build/src/llvm/Makefile.rules
+--- native_client/toolchain_build/src/llvm/Makefile.rules.no-errors	2015-05-28 15:14:03.240498578 -0400
++++ native_client/toolchain_build/src/llvm/Makefile.rules	2015-05-28 15:35:15.818171598 -0400
+@@ -450,6 +450,7 @@ ifeq ($(HOST_OS),MingW)
+ endif
+ 
+ CPP.BaseFlags += $(CPP.Defines)
++CXX.Flags     += -Wno-error=array-bounds -Wno-error=comment -Wno-error=conversion-null
+ AR.Flags      := cru
+ 
+ # Make Floating point IEEE compliant on Alpha.

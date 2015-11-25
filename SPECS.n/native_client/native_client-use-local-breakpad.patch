@@ -1,0 +1,12 @@
+diff -up native_client/src/untrusted/minidump_generator/nacl.scons.local-breakpad native_client/src/untrusted/minidump_generator/nacl.scons
+--- native_client/src/untrusted/minidump_generator/nacl.scons.local-breakpad	2015-05-13 10:13:12.382720327 -0400
++++ native_client/src/untrusted/minidump_generator/nacl.scons	2015-05-13 10:13:22.972478962 -0400
+@@ -6,7 +6,7 @@
+ Import('env')
+ 
+ # Allow Breakpad headers to #include other Breakpad headers.
+-env.Append(CPPPATH=['${SOURCE_ROOT}/breakpad/src'])
++env.Append(CPPPATH=['breakpad/src'])
+ # Breakpad's headers do not compile with "-pedantic".
+ env.FilterOut(CCFLAGS=['-pedantic'])
+ 
