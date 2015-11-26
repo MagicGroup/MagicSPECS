@@ -1,11 +1,11 @@
 Name: docbook-style-xsl
-Version: 1.76.1
-Release: 5%{?dist}
+Version: 1.78.1
+Release: 4%{?dist}
 Group: Applications/Text
 
 Summary: Norman Walsh's XSL stylesheets for DocBook XML
 
-License: Copyright only
+License: DMIT
 URL: http://docbook.sourceforge.net/projects/xsl/
 
 Provides: docbook-xsl = %{version}
@@ -35,6 +35,8 @@ Patch3: docbook-xsl-newmethods.patch
 Patch4: docbook-xsl-non-constant-expressions.patch
 #added fixes for passivetex extension and list-item-body(#161371)
 Patch5: docbook-xsl-list-item-body.patch
+#workaround missing mandir section problem (#727251)
+Patch6: docbook-xsl-mandir.patch
 
 
 %description
@@ -52,6 +54,7 @@ popd
 %patch3 -p1 -b .newmethods
 %patch4 -p1 -b .nonconstant
 %patch5 -p1 -b .listitembody
+%patch6 -p1 -b .mandir
 
 cp -p %{SOURCE1} Makefile
 
@@ -76,6 +79,7 @@ done
 DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 make install BINDIR=$DESTDIR%{_bindir} DESTDIR=$DESTDIR%{_datadir}/sgml/docbook/xsl-stylesheets-%{version}
+cp -a VERSION.xsl $DESTDIR%{_datadir}/sgml/docbook/xsl-stylesheets-%{version}/VERSION.xsl
 ln -s xsl-stylesheets-%{version} \
 	$DESTDIR%{_datadir}/sgml/docbook/xsl-stylesheets
 
@@ -122,11 +126,44 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
-* Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.76.1-5
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.78.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 1.76.1-4
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.78.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Mon Jul 29 2013 Ondrej Vasik <ovasik@redhat.com> 1.78.1-2
+- use DMIT (modified MIT) as a license for the
+  stylesheets (#988715)
+
+* Mon Mar 18 2013 Ondrej Vasik <ovasik@redhat.com> 1.78.1-1
+- new upstream release 1.78.1
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.78.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Thu Dec 20 2012 Ondrej Vasik <ovasik@redhat.com> 1.78.0-1
+- new upstream release 1.78.0
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.77.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun  5 2012 Ondrej Vasik <ovasik@redhat.com> 1.77.1-2
+- ship VERSION.xsl file (#829014)
+
+* Tue Jun  5 2012 Ondrej Vasik <ovasik@redhat.com> 1.77.1-1
+- new stable upstream release 1.77.1
+- defuzz patches
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.76.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Sep  6 2011 Ondrej Vasik <ovasik@redhat.com> 1.76.1-4
+- revert previous change, workaround the mandir links issue
+  in buildroot (#727251)
+
+* Mon Aug 29 2011 Ondrej Vasik <ovasik@redhat.com> 1.76.1-3
+- make man.output.in.separate.dir "on" by default (#727251)
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.76.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

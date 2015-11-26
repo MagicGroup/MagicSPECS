@@ -1,7 +1,7 @@
 diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagesetup.xsl
 --- docbook-xsl-1.74.0.orig/fo/pagesetup.xsl	2008-06-01 23:36:39.000000000 +0200
 +++ docbook-xsl-1.74.0/fo/pagesetup.xsl	2008-08-06 13:31:11.000000000 +0200
-@@ -1697,36 +1697,81 @@
+@@ -1697,45 +1697,99 @@
          <xsl:with-param name="gentext-key" select="$gentext-key"/>
        </xsl:call-template>
  
@@ -11,6 +11,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 -          <xsl:call-template name="header.footer.width">
 -            <xsl:with-param name="location">header</xsl:with-param>
 -            <xsl:with-param name="position" select="$column1"/>
+-            <xsl:with-param name="pageclass" select="$pageclass"/>
+-            <xsl:with-param name="sequence" select="$sequence"/>
+-            <xsl:with-param name="gentext-key" select="$gentext-key"/>
 -          </xsl:call-template>
 -          <xsl:text>)</xsl:text>
 -        </xsl:attribute>
@@ -21,6 +24,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 -          <xsl:call-template name="header.footer.width">
 -            <xsl:with-param name="location">header</xsl:with-param>
 -            <xsl:with-param name="position" select="2"/>
+-            <xsl:with-param name="pageclass" select="$pageclass"/>
+-            <xsl:with-param name="sequence" select="$sequence"/>
+-            <xsl:with-param name="gentext-key" select="$gentext-key"/>
 -          </xsl:call-template>
 -          <xsl:text>)</xsl:text>
 -        </xsl:attribute>
@@ -31,6 +37,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 -          <xsl:call-template name="header.footer.width">
 -            <xsl:with-param name="location">header</xsl:with-param>
 -            <xsl:with-param name="position" select="$column3"/>
+-            <xsl:with-param name="pageclass" select="$pageclass"/>
+-            <xsl:with-param name="sequence" select="$sequence"/>
+-            <xsl:with-param name="gentext-key" select="$gentext-key"/>
 -          </xsl:call-template>
 -          <xsl:text>)</xsl:text>
 -        </xsl:attribute>
@@ -42,6 +51,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">header</xsl:with-param>
 +                <xsl:with-param name="position" select="$column1"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>%</xsl:text>
 +            </xsl:attribute>
@@ -54,6 +66,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">header</xsl:with-param>
 +                <xsl:with-param name="position" select="$column1"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>)</xsl:text>
 +            </xsl:attribute>
@@ -67,6 +82,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">header</xsl:with-param>
 +                <xsl:with-param name="position" select="2"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>%</xsl:text>
 +            </xsl:attribute>
@@ -79,6 +97,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">header</xsl:with-param>
 +                <xsl:with-param name="position" select="2"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>)</xsl:text>
 +            </xsl:attribute>
@@ -92,6 +113,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">header</xsl:with-param>
 +                <xsl:with-param name="position" select="$column3"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>%</xsl:text>
 +            </xsl:attribute>
@@ -104,6 +128,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">header</xsl:with-param>
 +                <xsl:with-param name="position" select="$column3"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>)</xsl:text>
 +            </xsl:attribute>
@@ -113,7 +140,7 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
  
        <fo:table-body>
          <fo:table-row>
-@@ -2021,36 +2066,81 @@
+@@ -2021,45 +2066,99 @@
          <xsl:with-param name="sequence" select="$sequence"/>
          <xsl:with-param name="gentext-key" select="$gentext-key"/>
        </xsl:call-template>
@@ -123,6 +150,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 -          <xsl:call-template name="header.footer.width">
 -            <xsl:with-param name="location">footer</xsl:with-param>
 -            <xsl:with-param name="position" select="$column1"/>
+-            <xsl:with-param name="pageclass" select="$pageclass"/>
+-            <xsl:with-param name="sequence" select="$sequence"/>
+-            <xsl:with-param name="gentext-key" select="$gentext-key"/>
 -          </xsl:call-template>
 -          <xsl:text>)</xsl:text>
 -        </xsl:attribute>
@@ -133,6 +163,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 -          <xsl:call-template name="header.footer.width">
 -            <xsl:with-param name="location">footer</xsl:with-param>
 -            <xsl:with-param name="position" select="2"/>
+-            <xsl:with-param name="pageclass" select="$pageclass"/>
+-            <xsl:with-param name="sequence" select="$sequence"/>
+-            <xsl:with-param name="gentext-key" select="$gentext-key"/>
 -          </xsl:call-template>
 -          <xsl:text>)</xsl:text>
 -        </xsl:attribute>
@@ -143,6 +176,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 -          <xsl:call-template name="header.footer.width">
 -            <xsl:with-param name="location">footer</xsl:with-param>
 -            <xsl:with-param name="position" select="$column3"/>
+-            <xsl:with-param name="pageclass" select="$pageclass"/>
+-            <xsl:with-param name="sequence" select="$sequence"/>
+-            <xsl:with-param name="gentext-key" select="$gentext-key"/>
 -          </xsl:call-template>
 -          <xsl:text>)</xsl:text>
 -        </xsl:attribute>
@@ -154,6 +190,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">footer</xsl:with-param>
 +                <xsl:with-param name="position" select="$column1"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>%</xsl:text>
 +            </xsl:attribute>
@@ -166,6 +205,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">footer</xsl:with-param>
 +                <xsl:with-param name="position" select="$column1"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>)</xsl:text>
 +            </xsl:attribute>
@@ -179,6 +221,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">footer</xsl:with-param>
 +                <xsl:with-param name="position" select="2"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>%</xsl:text>
 +            </xsl:attribute>
@@ -191,6 +236,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">footer</xsl:with-param>
 +                <xsl:with-param name="position" select="2"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>)</xsl:text>
 +            </xsl:attribute>
@@ -204,6 +252,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">footer</xsl:with-param>
 +                <xsl:with-param name="position" select="$column3"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>%</xsl:text>
 +            </xsl:attribute>
@@ -216,6 +267,9 @@ diff -ruNp docbook-xsl-1.74.0.orig/fo/pagesetup.xsl docbook-xsl-1.74.0/fo/pagese
 +              <xsl:call-template name="header.footer.width">
 +                <xsl:with-param name="location">footer</xsl:with-param>
 +                <xsl:with-param name="position" select="$column3"/>
++                <xsl:with-param name="pageclass" select="$pageclass"/>
++                <xsl:with-param name="sequence" select="$sequence"/>
++                <xsl:with-param name="gentext-key" select="$gentext-key"/>
 +              </xsl:call-template>
 +              <xsl:text>)</xsl:text>
 +            </xsl:attribute>
