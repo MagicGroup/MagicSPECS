@@ -1,6 +1,14 @@
+# XMvn uses OSGi environment provided by Tycho, it shouldn't require
+# any additional bundles.
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^osgi\\($
+
+# Integration tests are disabled by default, but you can run them by
+# adding "--with its" to rpmbuild or mock invocation.
+%bcond_with its
+
 Name:           xmvn
-Version:        2.0.1
-Release:        1%{?dist}
+Version:        2.5.0
+Release:        4%{?dist}
 Summary:        Local Extensions for Apache Maven
 License:        ASL 2.0
 URL:            http://mizdebsk.fedorapeople.org/xmvn
@@ -8,22 +16,26 @@ BuildArch:      noarch
 
 Source0:        https://fedorahosted.org/released/%{name}/%{name}-%{version}.tar.xz
 
-BuildRequires:  maven >= 3.2.1-10
+Patch0:         0001-Copy-core-dependencies-to-lib-core-in-assembly.patch
+
+BuildRequires:  maven >= 3.3.9-2
 BuildRequires:  maven-local
 BuildRequires:  beust-jcommander
 BuildRequires:  cglib
 BuildRequires:  maven-dependency-plugin
 BuildRequires:  maven-plugin-build-helper
 BuildRequires:  maven-assembly-plugin
-BuildRequires:  maven-invoker-plugin
+BuildRequires:  maven-install-plugin
+BuildRequires:  maven-site-plugin
 BuildRequires:  objectweb-asm
 BuildRequires:  modello
 BuildRequires:  xmlunit
 BuildRequires:  apache-ivy
 BuildRequires:  sisu-mojos
 BuildRequires:  junit
+BuildRequires:  gradle >= 2.5
 
-Requires:       maven >= 3.2.1-3
+Requires:       maven >= 3.2.5-2
 Requires:       xmvn-api = %{version}-%{release}
 Requires:       xmvn-connector-aether = %{version}-%{release}
 Requires:       xmvn-core = %{version}-%{release}
@@ -71,6 +83,14 @@ This package provides XMvn Connector for Eclipse Aether, which
 provides integration of Eclipse Aether with XMvn.  It provides an
 adapter which allows XMvn resolver to be used as Aether workspace
 reader.
+
+%package        connector-gradle
+Summary:        XMvn Connector for Gradle
+
+%description    connector-gradle
+This package provides XMvn Connector for Gradle, which provides
+integration of Gradle with XMvn.  It provides an adapter which allows
+XMvn resolver to be used as Gradle resolver.
 
 %package        connector-ivy
 Summary:        XMvn Connector for Apache Ivy
@@ -124,9 +144,9 @@ artifact repository.
 Summary:        XMvn Install
 
 %description    install
-This package provides XMvn Install is a command-line interface to XMvn
-installer.  The installer reads reactor metadata and performs artifact
-installation according to specified configuration.
+This package provides XMvn Install, which is a command-line interface
+to XMvn installer.  The installer reads reactor metadata and performs
+artifact installation according to specified configuration.
 
 %package        javadoc
 Summary:        API documentation for %{name}
@@ -136,11 +156,13 @@ This package provides %{summary}.
 
 %prep
 %setup -q
+%patch0 -p1
 
-%mvn_package :xmvn __noinstall
+%mvn_package ":xmvn{,-it}" __noinstall
 
-# In XMvn 2.x xmvn-connector was renamed to xmvn-connector-aether
-%mvn_alias :xmvn-connector-aether :xmvn-connector
+%if %{without its}
+%pom_disable_module xmvn-it
+%endif
 
 # remove dependency plugin maven-binaries execution
 # we provide apache-maven by symlink
@@ -150,17 +172,11 @@ This package provides %{summary}.
 mver=$(sed -n '/<mavenVersion>/{s/.*>\(.*\)<.*/\1/;p}' \
            xmvn-parent/pom.xml)
 mkdir -p target/dependency/
-ln -s %{_datadir}/maven target/dependency/apache-maven-$mver
-
-# skip ITs for now (mix of old & new XMvn config causes issues)
-rm -rf src/it
-
-# probably bug in configuration/modello?
-sed -i 's|generated-site/resources/xsd/config|generated-site/xsd/config|' xmvn-core/pom.xml
+cp -aL %{_datadir}/maven target/dependency/apache-maven-$mver
 
 %build
-# XXX some tests fail on ARM for unknown reason, see why
-%mvn_build -s -f -X
+# ITs require artifacts to be insalled in local repo
+%mvn_build -s -j -g install
 
 tar --delay-directory-restore -xvf target/*tar.bz2
 chmod -R +rwX %{name}-%{version}*
@@ -176,7 +192,6 @@ cp -r %{name}-%{version}*/* %{buildroot}%{_datadir}/%{name}/
 ln -sf %{_datadir}/maven/bin/mvn %{buildroot}%{_datadir}/%{name}/bin/mvn
 ln -sf %{_datadir}/maven/bin/mvnDebug %{buildroot}%{_datadir}/%{name}/bin/mvnDebug
 ln -sf %{_datadir}/maven/bin/mvnyjp %{buildroot}%{_datadir}/%{name}/bin/mvnyjp
-
 
 # helper scripts
 install -d -m 755 %{buildroot}%{_bindir}
@@ -201,20 +216,17 @@ export M2_HOME="\${M2_HOME:-%{_datadir}/%{name}}"
 exec mvn "\${@}"
 EOF
 
-# make sure our conf is identical to maven so yum won't freak out
-cp -P %{_datadir}/maven/conf/settings.xml %{buildroot}%{_datadir}/%{name}/conf/
+# mvn-local symlink
+ln -s %{name} %{buildroot}%{_bindir}/mvn-local
 
-%pretrans -p <lua>
--- we changed symlink to dir in 0.5.0-1, workaround RPM issues
-for key, dir in pairs({"conf", "conf/logging", "boot"}) do
-    path = "%{_datadir}/%{name}/" .. dir
-    if posix.readlink(path) then
-       os.remove(path)
-    end
-end
+# make sure our conf is identical to maven so yum won't freak out
+install -d -m 755 %{buildroot}%{_datadir}/%{name}/conf/
+cp -P %{_datadir}/maven/conf/settings.xml %{buildroot}%{_datadir}/%{name}/conf/
+cp -P %{_datadir}/maven/bin/m2.conf %{buildroot}%{_datadir}/%{name}/bin/
 
 %files
 %attr(755,-,-) %{_bindir}/%{name}
+%attr(755,-,-) %{_bindir}/mvn-local
 %dir %{_datadir}/%{name}/bin
 %dir %{_datadir}/%{name}/lib
 %{_datadir}/%{name}/lib/*.jar
@@ -242,6 +254,8 @@ end
 %doc AUTHORS README
 
 %files connector-aether -f .mfiles-xmvn-connector-aether
+
+%files connector-gradle -f .mfiles-xmvn-connector-gradle
 
 %files connector-ivy -f .mfiles-xmvn-connector-ivy
 %dir %{_datadir}/%{name}/lib
@@ -279,10 +293,118 @@ end
 %{_datadir}/%{name}/bin/%{name}-install
 %{_datadir}/%{name}/lib/installer
 
-%files javadoc -f .mfiles-javadoc
+%files javadoc
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Nov 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.0-4
+- Remove temporary Maven 3.3.9 workaround
+
+* Mon Nov 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.0-3
+- Add temporary workaround for Maven 3.3.9 transition
+
+* Wed Oct 28 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.0-2
+- Fix symlinks in lib/core
+
+* Wed Oct 28 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.5.0-1
+- Update to upstream version 2.5.0
+
+* Tue Jul 14 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.4.0-5
+- Require persistent artifact files in XML resolver API
+
+* Tue Jun 30 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.4.0-4
+- Port to Gradle 2.5-rc-1
+
+* Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Mon May 11 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.4.0-2
+- Add patches for rhbz#1220394
+
+* Wed May  6 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.4.0-1
+- Update to upstream version 2.4.0
+
+* Fri Apr 24 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-8
+- Port to Gradle 2.4-rc-1
+
+* Thu Apr 16 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-7
+- Disable doclint in javadoc:aggregate MOJO executions
+
+* Thu Apr  9 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-6
+- Install mvn-local symlink
+
+* Wed Mar 25 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-5
+- Remove workarunds for RPM bug #646523
+
+* Wed Mar 25 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-4
+- Port to Gradle 2.3
+
+* Mon Mar 16 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-3
+- Build with Maven 3.3.0
+
+* Mon Mar 16 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-2
+- Add temporary explicit maven-builder-support.jar symlink
+
+* Thu Mar 12 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.2-1
+- Update to upstream version 2.3.2
+
+* Fri Mar 06 2015 Michal Srb <msrb@redhat.com> - 2.3.1-4
+- Rebuild to fix symlinks in lib/core
+
+* Thu Feb 19 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.1-3
+- Remove temporary explicit ASM symlinks
+
+* Wed Feb 18 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.1-2
+- Temporarly add explicit symlinks to ASM
+
+* Fri Feb 13 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.1-1
+- Update to upstream version 2.3.1
+
+* Wed Feb 11 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.3.0-1
+- Update to upstream version 2.3.0
+
+* Wed Feb  4 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.2.1-1
+- Update to upstream version 2.2.1
+
+* Fri Jan 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.2.0-1
+- Update to upstream version 2.2.0
+- Add connector-gradle subpackage
+
+* Wed Jan 21 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.1-2
+- Add BR on maven-site-plugin
+- Resolves: rhbz#1184608
+
+* Mon Jan  5 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.1-1
+- Update to upstream version 2.1.1
+
+* Wed Dec 10 2014 Michal Srb <msrb@redhat.com> - 2.1.0-8
+- Add fully qualified osgi version to install plan when tycho detected
+- Resolves: rhbz#1172225
+
+* Thu Dec  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-7
+- Ignore any system dependencies in Tycho projects
+
+* Wed Nov 26 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-6
+- Use topmost repository namespace during installation
+- Resolves: rhbz#1166743
+
+* Tue Oct 28 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-5
+- Fix conversion of Ivy to XMvn artifacts
+- Resolves: rhbz#1127804
+
+* Mon Oct 13 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-4
+- Fix FTBFS caused by new wersion of plexus-archiver
+
+* Wed Sep 24 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-3
+- Fix installation of attached Eclipse artifacts
+
+* Wed Sep 10 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-2
+- Avoid installing the same attached artifact twice
+
+* Thu Sep  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.1.0-1
+- Update to upstream version 2.1.0
+- Remove p2 subpackage
+
 * Fri Jun  6 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.0.1-1
 - Update to upstream version 2.0.1
 

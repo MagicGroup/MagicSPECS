@@ -1,0 +1,38 @@
+From a2f918fe86c91e1a76d198e824118d5ba474808c Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Wed, 28 Oct 2015 22:26:44 +0100
+Subject: [PATCH] Copy core dependencies to lib/core in assembly
+
+---
+ xmvn-core/pom.xml | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/xmvn-core/pom.xml b/xmvn-core/pom.xml
+index e792f6a..b0ef6b5 100644
+--- a/xmvn-core/pom.xml
++++ b/xmvn-core/pom.xml
+@@ -128,6 +128,21 @@
+           </execution>
+         </executions>
+       </plugin>
++      <plugin>
++        <artifactId>maven-dependency-plugin</artifactId>
++        <executions>
++          <execution>
++            <id>copy-dependencies</id>
++            <phase>package</phase>
++            <goals>
++              <goal>copy-dependencies</goal>
++            </goals>
++            <configuration>
++              <includeScope>runtime</includeScope>
++            </configuration>
++          </execution>
++        </executions>
++      </plugin>
+     </plugins>
+   </build>
+ </project>
+-- 
+2.4.3
+
