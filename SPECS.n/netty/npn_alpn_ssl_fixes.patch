@@ -1,0 +1,4384 @@
+commit b654e334d8df083dca71f330c6d9d7306ab78649
+Author: Severin Gehwolf <sgehwolf@redhat.com>
+Date:   Wed May 20 13:19:37 2015 +0200
+
+    Remove optional NPN/ALPN/OpenSSL handlers.
+
+diff --git a/handler/src/main/java/io/netty/handler/ssl/JdkAlpnApplicationProtocolNegotiator.java b/handler/src/main/java/io/netty/handler/ssl/JdkAlpnApplicationProtocolNegotiator.java
+deleted file mode 100644
+index aaaf5b7..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/JdkAlpnApplicationProtocolNegotiator.java
++++ /dev/null
+@@ -1,120 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import javax.net.ssl.SSLEngine;
+-
+-/**
+- * The {@link JdkApplicationProtocolNegotiator} to use if you need ALPN and are using {@link SslProvider#JDK}.
+- */
+-public final class JdkAlpnApplicationProtocolNegotiator extends JdkBaseApplicationProtocolNegotiator {
+-    private static final SslEngineWrapperFactory ALPN_WRAPPER = new SslEngineWrapperFactory() {
+-        {
+-            if (!JdkAlpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("ALPN unsupported. Is your classpatch configured correctly?"
+-                        + " See http://www.eclipse.org/jetty/documentation/current/alpn-chapter.html#alpn-starting");
+-            }
+-        }
+-
+-        @Override
+-        public SSLEngine wrapSslEngine(SSLEngine engine, JdkApplicationProtocolNegotiator applicationNegotiator,
+-                boolean isServer) {
+-            return new JdkAlpnSslEngine(engine, applicationNegotiator, isServer);
+-        }
+-    };
+-
+-    /**
+-     * Create a new instance.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(Iterable<String> protocols) {
+-        this(false, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(String... protocols) {
+-        this(false, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param failIfNoCommonProtocols Fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(boolean failIfNoCommonProtocols, Iterable<String> protocols) {
+-        this(failIfNoCommonProtocols, failIfNoCommonProtocols, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param failIfNoCommonProtocols Fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(boolean failIfNoCommonProtocols, String... protocols) {
+-        this(failIfNoCommonProtocols, failIfNoCommonProtocols, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param clientFailIfNoCommonProtocols Client side fail with a fatal alert if not common protocols are detected.
+-     * @param serverFailIfNoCommonProtocols Server side fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(boolean clientFailIfNoCommonProtocols,
+-            boolean serverFailIfNoCommonProtocols, Iterable<String> protocols) {
+-        this(serverFailIfNoCommonProtocols ? FAIL_SELECTOR_FACTORY : NO_FAIL_SELECTOR_FACTORY,
+-                clientFailIfNoCommonProtocols ? FAIL_SELECTION_LISTENER_FACTORY : NO_FAIL_SELECTION_LISTENER_FACTORY,
+-                protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param clientFailIfNoCommonProtocols Client side fail with a fatal alert if not common protocols are detected.
+-     * @param serverFailIfNoCommonProtocols Server side fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(boolean clientFailIfNoCommonProtocols,
+-            boolean serverFailIfNoCommonProtocols, String... protocols) {
+-        this(serverFailIfNoCommonProtocols ? FAIL_SELECTOR_FACTORY : NO_FAIL_SELECTOR_FACTORY,
+-                clientFailIfNoCommonProtocols ? FAIL_SELECTION_LISTENER_FACTORY : NO_FAIL_SELECTION_LISTENER_FACTORY,
+-                protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param selectorFactory The factory which provides classes responsible for selecting the protocol.
+-     * @param listenerFactory The factory which provides to be notified of which protocol was selected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(ProtocolSelectorFactory selectorFactory,
+-            ProtocolSelectionListenerFactory listenerFactory, Iterable<String> protocols) {
+-        super(ALPN_WRAPPER, selectorFactory, listenerFactory, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param selectorFactory The factory which provides classes responsible for selecting the protocol.
+-     * @param listenerFactory The factory which provides to be notified of which protocol was selected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkAlpnApplicationProtocolNegotiator(ProtocolSelectorFactory selectorFactory,
+-            ProtocolSelectionListenerFactory listenerFactory, String... protocols) {
+-        super(ALPN_WRAPPER, selectorFactory, listenerFactory, protocols);
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/JdkAlpnSslEngine.java b/handler/src/main/java/io/netty/handler/ssl/JdkAlpnSslEngine.java
+deleted file mode 100644
+index 6cfacb8..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/JdkAlpnSslEngine.java
++++ /dev/null
+@@ -1,117 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import static io.netty.util.internal.ObjectUtil.checkNotNull;
+-import io.netty.handler.ssl.JdkApplicationProtocolNegotiator.ProtocolSelectionListener;
+-import io.netty.handler.ssl.JdkApplicationProtocolNegotiator.ProtocolSelector;
+-import io.netty.util.internal.PlatformDependent;
+-
+-import java.util.LinkedHashSet;
+-import java.util.List;
+-
+-import javax.net.ssl.SSLEngine;
+-import javax.net.ssl.SSLException;
+-
+-import org.eclipse.jetty.alpn.ALPN;
+-import org.eclipse.jetty.alpn.ALPN.ClientProvider;
+-import org.eclipse.jetty.alpn.ALPN.ServerProvider;
+-
+-final class JdkAlpnSslEngine extends JdkSslEngine {
+-    private static boolean available;
+-
+-    static boolean isAvailable() {
+-        updateAvailability();
+-        return available;
+-    }
+-
+-    private static void updateAvailability() {
+-        if (available) {
+-            return;
+-        }
+-
+-        try {
+-            // Always use bootstrap class loader.
+-            Class.forName("sun.security.ssl.ALPNExtension", true, null);
+-            available = true;
+-        } catch (Exception ignore) {
+-            // alpn-boot was not loaded.
+-        }
+-    }
+-
+-    JdkAlpnSslEngine(SSLEngine engine, final JdkApplicationProtocolNegotiator applicationNegotiator, boolean server) {
+-        super(engine);
+-        checkNotNull(applicationNegotiator, "applicationNegotiator");
+-
+-        if (server) {
+-            final ProtocolSelector protocolSelector = checkNotNull(applicationNegotiator.protocolSelectorFactory()
+-                    .newSelector(this, new LinkedHashSet<String>(applicationNegotiator.protocols())),
+-                    "protocolSelector");
+-            ALPN.put(engine, new ServerProvider() {
+-                @Override
+-                public String select(List<String> protocols) {
+-                    try {
+-                        return protocolSelector.select(protocols);
+-                    } catch (Throwable t) {
+-                        PlatformDependent.throwException(t);
+-                        return null;
+-                    }
+-                }
+-
+-                @Override
+-                public void unsupported() {
+-                    protocolSelector.unsupported();
+-                }
+-            });
+-        } else {
+-            final ProtocolSelectionListener protocolListener = checkNotNull(applicationNegotiator
+-                    .protocolListenerFactory().newListener(this, applicationNegotiator.protocols()),
+-                    "protocolListener");
+-            ALPN.put(engine, new ClientProvider() {
+-                @Override
+-                public List<String> protocols() {
+-                    return applicationNegotiator.protocols();
+-                }
+-
+-                @Override
+-                public void selected(String protocol) {
+-                    try {
+-                        protocolListener.selected(protocol);
+-                    } catch (Throwable t) {
+-                        PlatformDependent.throwException(t);
+-                    }
+-                }
+-
+-                @Override
+-                public void unsupported() {
+-                    protocolListener.unsupported();
+-                }
+-            });
+-        }
+-    }
+-
+-    @Override
+-    public void closeInbound() throws SSLException {
+-        ALPN.remove(getWrappedEngine());
+-        super.closeInbound();
+-    }
+-
+-    @Override
+-    public void closeOutbound() {
+-        ALPN.remove(getWrappedEngine());
+-        super.closeOutbound();
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/JdkNpnApplicationProtocolNegotiator.java b/handler/src/main/java/io/netty/handler/ssl/JdkNpnApplicationProtocolNegotiator.java
+deleted file mode 100644
+index c893f05..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/JdkNpnApplicationProtocolNegotiator.java
++++ /dev/null
+@@ -1,120 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import javax.net.ssl.SSLEngine;
+-
+-/**
+- * The {@link JdkApplicationProtocolNegotiator} to use if you need NPN and are using {@link SslProvider#JDK}.
+- */
+-public final class JdkNpnApplicationProtocolNegotiator extends JdkBaseApplicationProtocolNegotiator {
+-    private static final SslEngineWrapperFactory NPN_WRAPPER = new SslEngineWrapperFactory() {
+-        {
+-            if (!JdkNpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("NPN unsupported. Is your classpatch configured correctly?"
+-                        + " See http://www.eclipse.org/jetty/documentation/current/npn-chapter.html#npn-starting");
+-            }
+-        }
+-
+-        @Override
+-        public SSLEngine wrapSslEngine(SSLEngine engine, JdkApplicationProtocolNegotiator applicationNegotiator,
+-                boolean isServer) {
+-            return new JdkNpnSslEngine(engine, applicationNegotiator, isServer);
+-        }
+-    };
+-
+-    /**
+-     * Create a new instance.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(Iterable<String> protocols) {
+-        this(false, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(String... protocols) {
+-        this(false, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param failIfNoCommonProtocols Fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(boolean failIfNoCommonProtocols, Iterable<String> protocols) {
+-        this(failIfNoCommonProtocols, failIfNoCommonProtocols, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param failIfNoCommonProtocols Fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(boolean failIfNoCommonProtocols, String... protocols) {
+-        this(failIfNoCommonProtocols, failIfNoCommonProtocols, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param clientFailIfNoCommonProtocols Client side fail with a fatal alert if not common protocols are detected.
+-     * @param serverFailIfNoCommonProtocols Server side fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(boolean clientFailIfNoCommonProtocols,
+-            boolean serverFailIfNoCommonProtocols, Iterable<String> protocols) {
+-        this(clientFailIfNoCommonProtocols ? FAIL_SELECTOR_FACTORY : NO_FAIL_SELECTOR_FACTORY,
+-                serverFailIfNoCommonProtocols ? FAIL_SELECTION_LISTENER_FACTORY : NO_FAIL_SELECTION_LISTENER_FACTORY,
+-                protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param clientFailIfNoCommonProtocols Client side fail with a fatal alert if not common protocols are detected.
+-     * @param serverFailIfNoCommonProtocols Server side fail with a fatal alert if not common protocols are detected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(boolean clientFailIfNoCommonProtocols,
+-            boolean serverFailIfNoCommonProtocols, String... protocols) {
+-        this(clientFailIfNoCommonProtocols ? FAIL_SELECTOR_FACTORY : NO_FAIL_SELECTOR_FACTORY,
+-                serverFailIfNoCommonProtocols ? FAIL_SELECTION_LISTENER_FACTORY : NO_FAIL_SELECTION_LISTENER_FACTORY,
+-                protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param selectorFactory The factory which provides classes responsible for selecting the protocol.
+-     * @param listenerFactory The factory which provides to be notified of which protocol was selected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(ProtocolSelectorFactory selectorFactory,
+-            ProtocolSelectionListenerFactory listenerFactory, Iterable<String> protocols) {
+-        super(NPN_WRAPPER, selectorFactory, listenerFactory, protocols);
+-    }
+-
+-    /**
+-     * Create a new instance.
+-     * @param selectorFactory The factory which provides classes responsible for selecting the protocol.
+-     * @param listenerFactory The factory which provides to be notified of which protocol was selected.
+-     * @param protocols The order of iteration determines the preference of support for protocols.
+-     */
+-    public JdkNpnApplicationProtocolNegotiator(ProtocolSelectorFactory selectorFactory,
+-            ProtocolSelectionListenerFactory listenerFactory, String... protocols) {
+-        super(NPN_WRAPPER, selectorFactory, listenerFactory, protocols);
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/JdkNpnSslEngine.java b/handler/src/main/java/io/netty/handler/ssl/JdkNpnSslEngine.java
+deleted file mode 100644
+index 422727a..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/JdkNpnSslEngine.java
++++ /dev/null
+@@ -1,122 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-
+-package io.netty.handler.ssl;
+-
+-import static io.netty.util.internal.ObjectUtil.checkNotNull;
+-import io.netty.handler.ssl.JdkApplicationProtocolNegotiator.ProtocolSelectionListener;
+-import io.netty.handler.ssl.JdkApplicationProtocolNegotiator.ProtocolSelector;
+-import io.netty.util.internal.PlatformDependent;
+-
+-import java.util.LinkedHashSet;
+-import java.util.List;
+-
+-import javax.net.ssl.SSLEngine;
+-import javax.net.ssl.SSLException;
+-
+-import org.eclipse.jetty.npn.NextProtoNego;
+-import org.eclipse.jetty.npn.NextProtoNego.ClientProvider;
+-import org.eclipse.jetty.npn.NextProtoNego.ServerProvider;
+-
+-final class JdkNpnSslEngine extends JdkSslEngine {
+-    private static boolean available;
+-
+-    static boolean isAvailable() {
+-        updateAvailability();
+-        return available;
+-    }
+-
+-    private static void updateAvailability() {
+-        if (available) {
+-            return;
+-        }
+-        try {
+-            // Always use bootstrap class loader.
+-            Class.forName("sun.security.ssl.NextProtoNegoExtension", true, null);
+-            available = true;
+-        } catch (Exception ignore) {
+-            // npn-boot was not loaded.
+-        }
+-    }
+-
+-    JdkNpnSslEngine(SSLEngine engine, final JdkApplicationProtocolNegotiator applicationNegotiator, boolean server) {
+-        super(engine);
+-        checkNotNull(applicationNegotiator, "applicationNegotiator");
+-
+-        if (server) {
+-            final ProtocolSelectionListener protocolListener = checkNotNull(applicationNegotiator
+-                    .protocolListenerFactory().newListener(this, applicationNegotiator.protocols()),
+-                    "protocolListener");
+-            NextProtoNego.put(engine, new ServerProvider() {
+-                @Override
+-                public void unsupported() {
+-                    protocolListener.unsupported();
+-                }
+-
+-                @Override
+-                public List<String> protocols() {
+-                    return applicationNegotiator.protocols();
+-                }
+-
+-                @Override
+-                public void protocolSelected(String protocol) {
+-                    try {
+-                        protocolListener.selected(protocol);
+-                    } catch (Throwable t) {
+-                        PlatformDependent.throwException(t);
+-                    }
+-                }
+-            });
+-        } else {
+-            final ProtocolSelector protocolSelector = checkNotNull(applicationNegotiator.protocolSelectorFactory()
+-                    .newSelector(this, new LinkedHashSet<String>(applicationNegotiator.protocols())),
+-                    "protocolSelector");
+-            NextProtoNego.put(engine, new ClientProvider() {
+-                @Override
+-                public boolean supports() {
+-                    return true;
+-                }
+-
+-                @Override
+-                public void unsupported() {
+-                    protocolSelector.unsupported();
+-                }
+-
+-                @Override
+-                public String selectProtocol(List<String> protocols) {
+-                    try {
+-                        return protocolSelector.select(protocols);
+-                    } catch (Throwable t) {
+-                        PlatformDependent.throwException(t);
+-                        return null;
+-                    }
+-                }
+-            });
+-        }
+-    }
+-
+-    @Override
+-    public void closeInbound() throws SSLException {
+-        NextProtoNego.remove(getWrappedEngine());
+-        super.closeInbound();
+-    }
+-
+-    @Override
+-    public void closeOutbound() {
+-        NextProtoNego.remove(getWrappedEngine());
+-        super.closeOutbound();
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/JdkSslContext.java b/handler/src/main/java/io/netty/handler/ssl/JdkSslContext.java
+index 54ee2be..e3ffb67 100644
+--- a/handler/src/main/java/io/netty/handler/ssl/JdkSslContext.java
++++ b/handler/src/main/java/io/netty/handler/ssl/JdkSslContext.java
+@@ -220,50 +220,6 @@ public abstract class JdkSslContext extends SslContext {
+         switch(config.protocol()) {
+         case NONE:
+             return JdkDefaultApplicationProtocolNegotiator.INSTANCE;
+-        case ALPN:
+-            if (isServer) {
+-                switch(config.selectorFailureBehavior()) {
+-                case FATAL_ALERT:
+-                    return new JdkAlpnApplicationProtocolNegotiator(true, config.supportedProtocols());
+-                case NO_ADVERTISE:
+-                    return new JdkAlpnApplicationProtocolNegotiator(false, config.supportedProtocols());
+-                default:
+-                    throw new UnsupportedOperationException(new StringBuilder("JDK provider does not support ")
+-                    .append(config.selectorFailureBehavior()).append(" failure behavior").toString());
+-                }
+-            } else {
+-                switch(config.selectedListenerFailureBehavior()) {
+-                case ACCEPT:
+-                    return new JdkAlpnApplicationProtocolNegotiator(false, config.supportedProtocols());
+-                case FATAL_ALERT:
+-                    return new JdkAlpnApplicationProtocolNegotiator(true, config.supportedProtocols());
+-                default:
+-                    throw new UnsupportedOperationException(new StringBuilder("JDK provider does not support ")
+-                    .append(config.selectedListenerFailureBehavior()).append(" failure behavior").toString());
+-                }
+-            }
+-        case NPN:
+-            if (isServer) {
+-                switch(config.selectedListenerFailureBehavior()) {
+-                case ACCEPT:
+-                    return new JdkNpnApplicationProtocolNegotiator(false, config.supportedProtocols());
+-                case FATAL_ALERT:
+-                    return new JdkNpnApplicationProtocolNegotiator(true, config.supportedProtocols());
+-                default:
+-                    throw new UnsupportedOperationException(new StringBuilder("JDK provider does not support ")
+-                    .append(config.selectedListenerFailureBehavior()).append(" failure behavior").toString());
+-                }
+-            } else {
+-                switch(config.selectorFailureBehavior()) {
+-                case FATAL_ALERT:
+-                    return new JdkNpnApplicationProtocolNegotiator(true, config.supportedProtocols());
+-                case NO_ADVERTISE:
+-                    return new JdkNpnApplicationProtocolNegotiator(false, config.supportedProtocols());
+-                default:
+-                    throw new UnsupportedOperationException(new StringBuilder("JDK provider does not support ")
+-                    .append(config.selectorFailureBehavior()).append(" failure behavior").toString());
+-                }
+-            }
+         default:
+             throw new UnsupportedOperationException(new StringBuilder("JDK provider does not support ")
+             .append(config.protocol()).append(" protocol").toString());
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSsl.java b/handler/src/main/java/io/netty/handler/ssl/OpenSsl.java
+deleted file mode 100644
+index 619768a..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSsl.java
++++ /dev/null
+@@ -1,194 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-
+-package io.netty.handler.ssl;
+-
+-import io.netty.util.internal.NativeLibraryLoader;
+-import io.netty.util.internal.logging.InternalLogger;
+-import io.netty.util.internal.logging.InternalLoggerFactory;
+-import org.apache.tomcat.jni.Library;
+-import org.apache.tomcat.jni.Pool;
+-import org.apache.tomcat.jni.SSL;
+-import org.apache.tomcat.jni.SSLContext;
+-
+-import java.util.Collections;
+-import java.util.LinkedHashSet;
+-import java.util.Set;
+-
+-/**
+- * Tells if <a href="http://netty.io/wiki/forked-tomcat-native.html">{@code netty-tcnative}</a> and its OpenSSL support
+- * are available.
+- */
+-public final class OpenSsl {
+-
+-    private static final InternalLogger logger = InternalLoggerFactory.getInstance(OpenSsl.class);
+-    private static final Throwable UNAVAILABILITY_CAUSE;
+-
+-    private static final Set<String> AVAILABLE_CIPHER_SUITES;
+-
+-    static {
+-        Throwable cause = null;
+-
+-        // Test if netty-tcnative is in the classpath first.
+-        try {
+-            Class.forName("org.apache.tomcat.jni.SSL", false, OpenSsl.class.getClassLoader());
+-        } catch (ClassNotFoundException t) {
+-            cause = t;
+-            logger.debug(
+-                    "netty-tcnative not in the classpath; " +
+-                    OpenSslEngine.class.getSimpleName() + " will be unavailable.");
+-        }
+-
+-        // If in the classpath, try to load the native library and initialize netty-tcnative.
+-        if (cause == null) {
+-            try {
+-                NativeLibraryLoader.load("netty-tcnative", SSL.class.getClassLoader());
+-                Library.initialize("provided");
+-                SSL.initialize(null);
+-            } catch (Throwable t) {
+-                cause = t;
+-                logger.debug(
+-                        "Failed to load netty-tcnative; " +
+-                        OpenSslEngine.class.getSimpleName() + " will be unavailable. " +
+-                        "See http://netty.io/wiki/forked-tomcat-native.html for more information.", t);
+-            }
+-        }
+-
+-        UNAVAILABILITY_CAUSE = cause;
+-
+-        if (cause == null) {
+-            final Set<String> availableCipherSuites = new LinkedHashSet<String>(128);
+-            final long aprPool = Pool.create(0);
+-            try {
+-                final long sslCtx = SSLContext.make(aprPool, SSL.SSL_PROTOCOL_ALL, SSL.SSL_MODE_SERVER);
+-                try {
+-                    SSLContext.setOptions(sslCtx, SSL.SSL_OP_ALL);
+-                    SSLContext.setCipherSuite(sslCtx, "ALL");
+-                    final long ssl = SSL.newSSL(sslCtx, true);
+-                    try {
+-                        for (String c: SSL.getCiphers(ssl)) {
+-                            // Filter out bad input.
+-                            if (c == null || c.length() == 0 || availableCipherSuites.contains(c)) {
+-                                continue;
+-                            }
+-                            availableCipherSuites.add(c);
+-                        }
+-                    } finally {
+-                        SSL.freeSSL(ssl);
+-                    }
+-                } finally {
+-                    SSLContext.free(sslCtx);
+-                }
+-            } catch (Exception e) {
+-                logger.warn("Failed to get the list of available OpenSSL cipher suites.", e);
+-            } finally {
+-                Pool.destroy(aprPool);
+-            }
+-
+-            AVAILABLE_CIPHER_SUITES = Collections.unmodifiableSet(availableCipherSuites);
+-        } else {
+-            AVAILABLE_CIPHER_SUITES = Collections.emptySet();
+-        }
+-    }
+-
+-    /**
+-     * Returns {@code true} if and only if
+-     * <a href="http://netty.io/wiki/forked-tomcat-native.html">{@code netty-tcnative}</a> and its OpenSSL support
+-     * are available.
+-     */
+-    public static boolean isAvailable() {
+-        return UNAVAILABILITY_CAUSE == null;
+-    }
+-
+-    /**
+-     * Returns {@code true} if the used version of openssl supports
+-     * <a href="https://tools.ietf.org/html/rfc7301">ALPN</a>.
+-     */
+-    public static boolean isAlpnSupported() {
+-        return version() >= 0x10002000L;
+-    }
+-
+-    /**
+-     * Returns the version of the used available OpenSSL library or {@code -1} if {@link #isAvailable()}
+-     * returns {@code false}.
+-     */
+-    public static int version() {
+-        if (isAvailable()) {
+-            return SSL.version();
+-        }
+-        return -1;
+-    }
+-
+-    /**
+-     * Returns the version string of the used available OpenSSL library or {@code null} if {@link #isAvailable()}
+-     * returns {@code false}.
+-     */
+-    public static String versionString() {
+-        if (isAvailable()) {
+-            return SSL.versionString();
+-        }
+-        return null;
+-    }
+-
+-    /**
+-     * Ensure that <a href="http://netty.io/wiki/forked-tomcat-native.html">{@code netty-tcnative}</a> and
+-     * its OpenSSL support are available.
+-     *
+-     * @throws UnsatisfiedLinkError if unavailable
+-     */
+-    public static void ensureAvailability() {
+-        if (UNAVAILABILITY_CAUSE != null) {
+-            throw (Error) new UnsatisfiedLinkError(
+-                    "failed to load the required native library").initCause(UNAVAILABILITY_CAUSE);
+-        }
+-    }
+-
+-    /**
+-     * Returns the cause of unavailability of
+-     * <a href="http://netty.io/wiki/forked-tomcat-native.html">{@code netty-tcnative}</a> and its OpenSSL support.
+-     *
+-     * @return the cause if unavailable. {@code null} if available.
+-     */
+-    public static Throwable unavailabilityCause() {
+-        return UNAVAILABILITY_CAUSE;
+-    }
+-
+-    /**
+-     * Returns all the available OpenSSL cipher suites.
+-     * Please note that the returned array may include the cipher suites that are insecure or non-functional.
+-     */
+-    public static Set<String> availableCipherSuites() {
+-        return AVAILABLE_CIPHER_SUITES;
+-    }
+-
+-    /**
+-     * Returns {@code true} if and only if the specified cipher suite is available in OpenSSL.
+-     * Both Java-style cipher suite and OpenSSL-style cipher suite are accepted.
+-     */
+-    public static boolean isCipherSuiteAvailable(String cipherSuite) {
+-        String converted = CipherSuiteConverter.toOpenSsl(cipherSuite);
+-        if (converted != null) {
+-            cipherSuite = converted;
+-        }
+-        return AVAILABLE_CIPHER_SUITES.contains(cipherSuite);
+-    }
+-
+-    static boolean isError(long errorCode) {
+-        return errorCode != SSL.SSL_ERROR_NONE;
+-    }
+-
+-    private OpenSsl() { }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslClientContext.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslClientContext.java
+deleted file mode 100644
+index 85f15d1..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslClientContext.java
++++ /dev/null
+@@ -1,333 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import io.netty.buffer.ByteBuf;
+-import io.netty.buffer.ByteBufInputStream;
+-import org.apache.tomcat.jni.SSL;
+-import org.apache.tomcat.jni.SSLContext;
+-
+-import javax.net.ssl.KeyManagerFactory;
+-import javax.net.ssl.SSLException;
+-import javax.net.ssl.TrustManager;
+-import javax.net.ssl.TrustManagerFactory;
+-import javax.net.ssl.X509ExtendedTrustManager;
+-import javax.net.ssl.X509TrustManager;
+-import javax.security.auth.x500.X500Principal;
+-import java.io.File;
+-import java.io.IOException;
+-import java.security.KeyStore;
+-import java.security.KeyStoreException;
+-import java.security.NoSuchAlgorithmException;
+-import java.security.cert.CertificateException;
+-import java.security.cert.X509Certificate;
+-
+-/**
+- * A client-side {@link SslContext} which uses OpenSSL's SSL/TLS implementation.
+- */
+-public final class OpenSslClientContext extends OpenSslContext {
+-    private final OpenSslSessionContext sessionContext;
+-
+-    /**
+-     * Creates a new instance.
+-     */
+-    public OpenSslClientContext() throws SSLException {
+-        this(null, null, null, null, null, null, null, IdentityCipherSuiteFilter.INSTANCE, null, 0, 0);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format.
+-     *                      {@code null} to use the system default
+-     */
+-    public OpenSslClientContext(File certChainFile) throws SSLException {
+-        this(certChainFile, null);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from servers.
+-     *                            {@code null} to use the default.
+-     */
+-    public OpenSslClientContext(TrustManagerFactory trustManagerFactory) throws SSLException {
+-        this(null, trustManagerFactory);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format.
+-     *                      {@code null} to use the system default
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from servers.
+-     *                            {@code null} to use the default.
+-     */
+-    public OpenSslClientContext(File certChainFile, TrustManagerFactory trustManagerFactory) throws SSLException {
+-        this(certChainFile, trustManagerFactory, null, null, null, null, null,
+-             IdentityCipherSuiteFilter.INSTANCE, null, 0, 0);
+-    }
+-
+-    /**
+-     * @deprecated use {@link #OpenSslClientContext(File, TrustManagerFactory, Iterable,
+-     *             CipherSuiteFilter, ApplicationProtocolConfig, long, long)}
+-     *
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from servers.
+-     *                            {@code null} to use the default..
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param apn Provides a means to configure parameters related to application protocol negotiation.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    @Deprecated
+-    public OpenSslClientContext(File certChainFile, TrustManagerFactory trustManagerFactory, Iterable<String> ciphers,
+-                                ApplicationProtocolConfig apn, long sessionCacheSize, long sessionTimeout)
+-            throws SSLException {
+-        this(certChainFile, trustManagerFactory, null, null, null, null, ciphers, IdentityCipherSuiteFilter.INSTANCE,
+-                apn, sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * @deprecated use {@link #OpenSslClientContext(File, TrustManagerFactory, File, File, String,
+-     * KeyManagerFactory, Iterable, CipherSuiteFilter, ApplicationProtocolConfig,long, long)}
+-     *
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from servers.
+-     *                            {@code null} to use the default..
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     * @param apn Provides a means to configure parameters related to application protocol negotiation.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    @Deprecated
+-    public OpenSslClientContext(File certChainFile, TrustManagerFactory trustManagerFactory, Iterable<String> ciphers,
+-                                CipherSuiteFilter cipherFilter, ApplicationProtocolConfig apn,
+-                                long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(certChainFile, trustManagerFactory, null, null, null, null,
+-             ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     * @param trustCertChainFile an X.509 certificate chain file in PEM format.
+-     *                      {@code null} to use the system default
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from servers.
+-     *                            {@code null} to use the default or the results of parsing {@code trustCertChainFile}
+-     * @param keyCertChainFile an X.509 certificate chain file in PEM format.
+-     *                      This provides the public key for mutual authentication.
+-     *                      {@code null} to use the system default
+-     * @param keyFile a PKCS#8 private key file in PEM format.
+-     *                      This provides the private key for mutual authentication.
+-     *                      {@code null} for no mutual authentication.
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     *                    Ignored if {@code keyFile} is {@code null}.
+-     * @param keyManagerFactory the {@link KeyManagerFactory} that provides the {@link javax.net.ssl.KeyManager}s
+-     *                          that is used to encrypt data being sent to servers.
+-     *                          {@code null} to use the default or the results of parsing
+-     *                          {@code keyCertChainFile} and {@code keyFile}.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     * @param apn Application Protocol Negotiator object.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    public OpenSslClientContext(File trustCertChainFile, TrustManagerFactory trustManagerFactory,
+-                                File keyCertChainFile, File keyFile, String keyPassword,
+-                                KeyManagerFactory keyManagerFactory, Iterable<String> ciphers,
+-                                CipherSuiteFilter cipherFilter, ApplicationProtocolConfig apn,
+-                                long sessionCacheSize, long sessionTimeout)
+-            throws SSLException {
+-        super(ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout, SSL.SSL_MODE_CLIENT);
+-        boolean success = false;
+-        try {
+-            if (trustCertChainFile != null && !trustCertChainFile.isFile()) {
+-                throw new IllegalArgumentException("trustCertChainFile is not a file: " + trustCertChainFile);
+-            }
+-
+-            if (keyCertChainFile != null && !keyCertChainFile.isFile()) {
+-                throw new IllegalArgumentException("keyCertChainFile is not a file: " + keyCertChainFile);
+-            }
+-
+-            if (keyFile != null && !keyFile.isFile()) {
+-                throw new IllegalArgumentException("keyFile is not a file: " + keyFile);
+-            }
+-            if (keyFile == null && keyCertChainFile != null || keyFile != null && keyCertChainFile == null) {
+-                throw new IllegalArgumentException(
+-                        "Either both keyCertChainFile and keyFile needs to be null or none of them");
+-            }
+-            synchronized (OpenSslContext.class) {
+-                if (trustCertChainFile != null) {
+-                    /* Load the certificate chain. We must skip the first cert when server mode */
+-                    if (!SSLContext.setCertificateChainFile(ctx, trustCertChainFile.getPath(), true)) {
+-                        long error = SSL.getLastErrorNumber();
+-                        if (OpenSsl.isError(error)) {
+-                            throw new SSLException(
+-                                    "failed to set certificate chain: "
+-                                            + trustCertChainFile + " (" + SSL.getErrorString(error) + ')');
+-                        }
+-                    }
+-                }
+-                if (keyCertChainFile != null && keyFile != null) {
+-                    /* Load the certificate file and private key. */
+-                    try {
+-                        if (!SSLContext.setCertificate(
+-                                ctx, keyCertChainFile.getPath(), keyFile.getPath(), keyPassword, SSL.SSL_AIDX_RSA)) {
+-                            long error = SSL.getLastErrorNumber();
+-                            if (OpenSsl.isError(error)) {
+-                                throw new SSLException("failed to set certificate: " +
+-                                                       keyCertChainFile + " and " + keyFile +
+-                                                       " (" + SSL.getErrorString(error) + ')');
+-                            }
+-                        }
+-                    } catch (SSLException e) {
+-                        throw e;
+-                    } catch (Exception e) {
+-                        throw new SSLException("failed to set certificate: " + keyCertChainFile + " and " + keyFile, e);
+-                    }
+-                }
+-
+-                SSLContext.setVerify(ctx, SSL.SSL_VERIFY_NONE, VERIFY_DEPTH);
+-
+-                try {
+-                    // Set up trust manager factory to use our key store.
+-                    if (trustManagerFactory == null) {
+-                        trustManagerFactory = TrustManagerFactory.getInstance(
+-                                TrustManagerFactory.getDefaultAlgorithm());
+-                    }
+-                    initTrustManagerFactory(trustCertChainFile, trustManagerFactory);
+-                    final X509TrustManager manager = chooseTrustManager(trustManagerFactory.getTrustManagers());
+-
+-                    // Use this to prevent an error when running on java < 7
+-                    if (useExtendedTrustManager(manager)) {
+-                        final X509ExtendedTrustManager extendedManager = (X509ExtendedTrustManager) manager;
+-                        SSLContext.setCertVerifyCallback(ctx, new AbstractCertificateVerifier() {
+-                            @Override
+-                            void verify(OpenSslEngine engine, X509Certificate[] peerCerts, String auth)
+-                                    throws Exception {
+-                                extendedManager.checkServerTrusted(peerCerts, auth, engine);
+-                            }
+-                        });
+-                    } else {
+-                        SSLContext.setCertVerifyCallback(ctx, new AbstractCertificateVerifier() {
+-                            @Override
+-                            void verify(OpenSslEngine engine, X509Certificate[] peerCerts, String auth)
+-                                    throws Exception {
+-                                manager.checkServerTrusted(peerCerts, auth);
+-                            }
+-                        });
+-                    }
+-                } catch (Exception e) {
+-                    throw new SSLException("unable to setup trustmanager", e);
+-                }
+-            }
+-            sessionContext = new OpenSslClientSessionContext(ctx);
+-            success = true;
+-        } finally {
+-            if (!success) {
+-                destroyPools();
+-            }
+-        }
+-    }
+-
+-    private static void initTrustManagerFactory(File certChainFile, TrustManagerFactory trustManagerFactory)
+-            throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException {
+-        KeyStore ks = KeyStore.getInstance("JKS");
+-        ks.load(null, null);
+-        if (certChainFile != null) {
+-            ByteBuf[] certs = PemReader.readCertificates(certChainFile);
+-            try {
+-                for (ByteBuf buf: certs) {
+-                    X509Certificate cert = (X509Certificate) X509_CERT_FACTORY.generateCertificate(
+-                            new ByteBufInputStream(buf));
+-                    X500Principal principal = cert.getSubjectX500Principal();
+-                    ks.setCertificateEntry(principal.getName("RFC2253"), cert);
+-                }
+-            } finally {
+-                for (ByteBuf buf: certs) {
+-                    buf.release();
+-                }
+-            }
+-        }
+-        trustManagerFactory.init(ks);
+-    }
+-
+-    @Override
+-    public OpenSslSessionContext sessionContext() {
+-        return sessionContext;
+-    }
+-
+-    // No cache is currently supported for client side mode.
+-    private static final class OpenSslClientSessionContext extends OpenSslSessionContext {
+-        private OpenSslClientSessionContext(long context) {
+-            super(context);
+-        }
+-
+-        @Override
+-        public void setSessionTimeout(int seconds) {
+-            if (seconds < 0) {
+-                throw new IllegalArgumentException();
+-            }
+-        }
+-
+-        @Override
+-        public int getSessionTimeout() {
+-            return 0;
+-        }
+-
+-        @Override
+-        public void setSessionCacheSize(int size)  {
+-            if (size < 0) {
+-                throw new IllegalArgumentException();
+-            }
+-        }
+-
+-        @Override
+-        public int getSessionCacheSize() {
+-            return 0;
+-        }
+-
+-        @Override
+-        public void setSessionCacheEnabled(boolean enabled) {
+-            // ignored
+-        }
+-
+-        @Override
+-        public boolean isSessionCacheEnabled() {
+-            return false;
+-        }
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslContext.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslContext.java
+deleted file mode 100644
+index 6cfdc57..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslContext.java
++++ /dev/null
+@@ -1,456 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import io.netty.buffer.ByteBufAllocator;
+-import io.netty.util.internal.PlatformDependent;
+-import io.netty.util.internal.SystemPropertyUtil;
+-import io.netty.util.internal.logging.InternalLogger;
+-import io.netty.util.internal.logging.InternalLoggerFactory;
+-import org.apache.tomcat.jni.CertificateVerifier;
+-import org.apache.tomcat.jni.Pool;
+-import org.apache.tomcat.jni.SSL;
+-import org.apache.tomcat.jni.SSLContext;
+-
+-import javax.net.ssl.SSLEngine;
+-import javax.net.ssl.SSLException;
+-import javax.net.ssl.SSLHandshakeException;
+-import javax.net.ssl.TrustManager;
+-import javax.net.ssl.X509ExtendedTrustManager;
+-import javax.net.ssl.X509TrustManager;
+-import java.security.cert.X509Certificate;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.Collections;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+-
+-import static io.netty.util.internal.ObjectUtil.checkNotNull;
+-import static io.netty.handler.ssl.ApplicationProtocolConfig.SelectorFailureBehavior;
+-import static io.netty.handler.ssl.ApplicationProtocolConfig.SelectedListenerFailureBehavior;
+-
+-public abstract class OpenSslContext extends SslContext {
+-
+-    private static final InternalLogger logger = InternalLoggerFactory.getInstance(OpenSslContext.class);
+-    /**
+-     * To make it easier for users to replace JDK implemention with OpenSsl version we also use
+-     * {@code jdk.tls.rejectClientInitiatedRenegotiation} to allow disabling client initiated renegotiation.
+-     * Java8+ uses this system property as well.
+-     *
+-     * See also <a href="http://blog.ivanristic.com/2014/03/ssl-tls-improvements-in-java-8.html">
+-     * Significant SSL/TLS improvements in Java 8</a>
+-     */
+-    private static final boolean JDK_REJECT_CLIENT_INITIATED_RENEGOTIATION =
+-            SystemPropertyUtil.getBoolean("jdk.tls.rejectClientInitiatedRenegotiation", false);
+-    private static final List<String> DEFAULT_CIPHERS;
+-    private static final AtomicIntegerFieldUpdater<OpenSslContext> DESTROY_UPDATER;
+-
+-    // TODO: Maybe make configurable ?
+-    protected static final int VERIFY_DEPTH = 10;
+-
+-    private final long aprPool;
+-    @SuppressWarnings({ "unused", "FieldMayBeFinal" })
+-    private volatile int aprPoolDestroyed;
+-    private volatile boolean rejectRemoteInitiatedRenegotiation;
+-    private final List<String> unmodifiableCiphers;
+-    private final long sessionCacheSize;
+-    private final long sessionTimeout;
+-    private final OpenSslEngineMap engineMap = new DefaultOpenSslEngineMap();
+-
+-    private final OpenSslApplicationProtocolNegotiator apn;
+-    /** The OpenSSL SSL_CTX object */
+-    protected final long ctx;
+-    private final int mode;
+-
+-    static final OpenSslApplicationProtocolNegotiator NONE_PROTOCOL_NEGOTIATOR =
+-            new OpenSslApplicationProtocolNegotiator() {
+-                @Override
+-                public ApplicationProtocolConfig.Protocol protocol() {
+-                    return ApplicationProtocolConfig.Protocol.NONE;
+-                }
+-
+-                @Override
+-                public List<String> protocols() {
+-                    return Collections.emptyList();
+-                }
+-
+-                @Override
+-                public SelectorFailureBehavior selectorFailureBehavior() {
+-                    return SelectorFailureBehavior.CHOOSE_MY_LAST_PROTOCOL;
+-                }
+-
+-                @Override
+-                public SelectedListenerFailureBehavior selectedListenerFailureBehavior() {
+-                    return SelectedListenerFailureBehavior.ACCEPT;
+-                }
+-            };
+-
+-    static {
+-        List<String> ciphers = new ArrayList<String>();
+-        // XXX: Make sure to sync this list with JdkSslEngineFactory.
+-        Collections.addAll(
+-                ciphers,
+-                "ECDHE-RSA-AES128-GCM-SHA256",
+-                "ECDHE-RSA-AES128-SHA",
+-                "ECDHE-RSA-AES256-SHA",
+-                "AES128-GCM-SHA256",
+-                "AES128-SHA",
+-                "AES256-SHA",
+-                "DES-CBC3-SHA",
+-                "RC4-SHA");
+-        DEFAULT_CIPHERS = Collections.unmodifiableList(ciphers);
+-
+-        if (logger.isDebugEnabled()) {
+-            logger.debug("Default cipher suite (OpenSSL): " + ciphers);
+-        }
+-
+-        AtomicIntegerFieldUpdater<OpenSslContext> updater =
+-                PlatformDependent.newAtomicIntegerFieldUpdater(OpenSslContext.class, "aprPoolDestroyed");
+-        if (updater == null) {
+-            updater = AtomicIntegerFieldUpdater.newUpdater(OpenSslContext.class, "aprPoolDestroyed");
+-        }
+-        DESTROY_UPDATER = updater;
+-    }
+-
+-    OpenSslContext(Iterable<String> ciphers, CipherSuiteFilter cipherFilter, ApplicationProtocolConfig apnCfg,
+-                   long sessionCacheSize, long sessionTimeout, int mode) throws SSLException {
+-        this(ciphers, cipherFilter, toNegotiator(apnCfg), sessionCacheSize, sessionTimeout, mode);
+-    }
+-
+-    OpenSslContext(Iterable<String> ciphers, CipherSuiteFilter cipherFilter,
+-                   OpenSslApplicationProtocolNegotiator apn, long sessionCacheSize,
+-                   long sessionTimeout, int mode) throws SSLException {
+-        OpenSsl.ensureAvailability();
+-
+-        if (mode != SSL.SSL_MODE_SERVER && mode != SSL.SSL_MODE_CLIENT) {
+-            throw new IllegalArgumentException("mode most be either SSL.SSL_MODE_SERVER or SSL.SSL_MODE_CLIENT");
+-        }
+-        this.mode = mode;
+-
+-        if (mode == SSL.SSL_MODE_SERVER) {
+-            rejectRemoteInitiatedRenegotiation =
+-                    JDK_REJECT_CLIENT_INITIATED_RENEGOTIATION;
+-        }
+-        final List<String> convertedCiphers;
+-        if (ciphers == null) {
+-            convertedCiphers = null;
+-        } else {
+-            convertedCiphers = new ArrayList<String>();
+-            for (String c: ciphers) {
+-                if (c == null) {
+-                    break;
+-                }
+-
+-                String converted = CipherSuiteConverter.toOpenSsl(c);
+-                if (converted != null) {
+-                    c = converted;
+-                }
+-                convertedCiphers.add(c);
+-            }
+-        }
+-
+-        unmodifiableCiphers = Arrays.asList(checkNotNull(cipherFilter, "cipherFilter").filterCipherSuites(
+-                convertedCiphers, DEFAULT_CIPHERS, OpenSsl.availableCipherSuites()));
+-
+-        this.apn = checkNotNull(apn, "apn");
+-
+-        // Allocate a new APR pool.
+-        aprPool = Pool.create(0);
+-
+-        // Create a new SSL_CTX and configure it.
+-        boolean success = false;
+-        try {
+-            synchronized (OpenSslContext.class) {
+-                try {
+-                    ctx = SSLContext.make(aprPool, SSL.SSL_PROTOCOL_ALL, mode);
+-                } catch (Exception e) {
+-                    throw new SSLException("failed to create an SSL_CTX", e);
+-                }
+-
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_ALL);
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_NO_SSLv2);
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_NO_SSLv3);
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_CIPHER_SERVER_PREFERENCE);
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_SINGLE_ECDH_USE);
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_SINGLE_DH_USE);
+-                SSLContext.setOptions(ctx, SSL.SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
+-
+-                /* List the ciphers that are permitted to negotiate. */
+-                try {
+-                    SSLContext.setCipherSuite(ctx, CipherSuiteConverter.toOpenSsl(unmodifiableCiphers));
+-                } catch (SSLException e) {
+-                    throw e;
+-                } catch (Exception e) {
+-                    throw new SSLException("failed to set cipher suite: " + unmodifiableCiphers, e);
+-                }
+-
+-                List<String> nextProtoList = apn.protocols();
+-                /* Set next protocols for next protocol negotiation extension, if specified */
+-                if (!nextProtoList.isEmpty()) {
+-                    String[] protocols = nextProtoList.toArray(new String[nextProtoList.size()]);
+-                    int selectorBehavior = opensslSelectorFailureBehavior(apn.selectorFailureBehavior());
+-
+-                    switch (apn.protocol()) {
+-                    case NPN:
+-                        SSLContext.setNpnProtos(ctx, protocols, selectorBehavior);
+-                        break;
+-                    case ALPN:
+-                        SSLContext.setAlpnProtos(ctx, protocols, selectorBehavior);
+-                        break;
+-                    case NPN_AND_ALPN:
+-                        SSLContext.setNpnProtos(ctx, protocols, selectorBehavior);
+-                        SSLContext.setAlpnProtos(ctx, protocols, selectorBehavior);
+-                        break;
+-                    default:
+-                        throw new Error();
+-                    }
+-                }
+-
+-                /* Set session cache size, if specified */
+-                if (sessionCacheSize > 0) {
+-                    this.sessionCacheSize = sessionCacheSize;
+-                    SSLContext.setSessionCacheSize(ctx, sessionCacheSize);
+-                } else {
+-                    // Get the default session cache size using SSLContext.setSessionCacheSize()
+-                    this.sessionCacheSize = sessionCacheSize = SSLContext.setSessionCacheSize(ctx, 20480);
+-                    // Revert the session cache size to the default value.
+-                    SSLContext.setSessionCacheSize(ctx, sessionCacheSize);
+-                }
+-
+-                /* Set session timeout, if specified */
+-                if (sessionTimeout > 0) {
+-                    this.sessionTimeout = sessionTimeout;
+-                    SSLContext.setSessionCacheTimeout(ctx, sessionTimeout);
+-                } else {
+-                    // Get the default session timeout using SSLContext.setSessionCacheTimeout()
+-                    this.sessionTimeout = sessionTimeout = SSLContext.setSessionCacheTimeout(ctx, 300);
+-                    // Revert the session timeout to the default value.
+-                    SSLContext.setSessionCacheTimeout(ctx, sessionTimeout);
+-                }
+-            }
+-            success = true;
+-        } finally {
+-            if (!success) {
+-                destroyPools();
+-            }
+-        }
+-    }
+-
+-    private static int opensslSelectorFailureBehavior(SelectorFailureBehavior behavior) {
+-        switch (behavior) {
+-        case NO_ADVERTISE:
+-            return SSL.SSL_SELECTOR_FAILURE_NO_ADVERTISE;
+-        case CHOOSE_MY_LAST_PROTOCOL:
+-            return SSL.SSL_SELECTOR_FAILURE_CHOOSE_MY_LAST_PROTOCOL;
+-        default:
+-            throw new Error();
+-        }
+-    }
+-
+-    @Override
+-    public final List<String> cipherSuites() {
+-        return unmodifiableCiphers;
+-    }
+-
+-    @Override
+-    public final long sessionCacheSize() {
+-        return sessionCacheSize;
+-    }
+-
+-    @Override
+-    public final long sessionTimeout() {
+-        return sessionTimeout;
+-    }
+-
+-    @Override
+-    public ApplicationProtocolNegotiator applicationProtocolNegotiator() {
+-        return apn;
+-    }
+-
+-    @Override
+-    public final boolean isClient() {
+-        return mode == SSL.SSL_MODE_CLIENT;
+-    }
+-
+-    @Override
+-    public final SSLEngine newEngine(ByteBufAllocator alloc, String peerHost, int peerPort) {
+-        throw new UnsupportedOperationException();
+-    }
+-
+-    /**
+-     * Returns a new server-side {@link javax.net.ssl.SSLEngine} with the current configuration.
+-     */
+-    @Override
+-    public final SSLEngine newEngine(ByteBufAllocator alloc) {
+-        final OpenSslEngine engine = new OpenSslEngine(
+-                ctx, alloc, isClient(), sessionContext(), apn, engineMap, rejectRemoteInitiatedRenegotiation);
+-        engineMap.add(engine);
+-        return engine;
+-    }
+-
+-    /**
+-     * Returns the {@code SSL_CTX} object of this context.
+-     */
+-    public final long context() {
+-        return ctx;
+-    }
+-
+-    /**
+-     * Returns the stats of this context.
+-     * @deprecated use {@link #sessionContext#stats()}
+-     */
+-    @Deprecated
+-    public final OpenSslSessionStats stats() {
+-        return sessionContext().stats();
+-    }
+-
+-    /**
+-     * Specify if remote initiated renegotiation is supported or not. If not supported and the remote side tries
+-     * to initiate a renegotiation a {@link SSLHandshakeException} will be thrown during decoding.
+-     */
+-    public void setRejectRemoteInitiatedRenegotiation(boolean rejectRemoteInitiatedRenegotiation) {
+-        this.rejectRemoteInitiatedRenegotiation = rejectRemoteInitiatedRenegotiation;
+-    }
+-
+-    @Override
+-    @SuppressWarnings("FinalizeDeclaration")
+-    protected final void finalize() throws Throwable {
+-        super.finalize();
+-        synchronized (OpenSslContext.class) {
+-            if (ctx != 0) {
+-                SSLContext.free(ctx);
+-            }
+-        }
+-
+-        destroyPools();
+-    }
+-
+-    /**
+-     * Sets the SSL session ticket keys of this context.
+-     * @deprecated use {@link OpenSslSessionContext#setTicketKeys(byte[])}
+-     */
+-    @Deprecated
+-    public final void setTicketKeys(byte[] keys) {
+-        sessionContext().setTicketKeys(keys);
+-    }
+-
+-    @Override
+-    public abstract OpenSslSessionContext sessionContext();
+-
+-    protected final void destroyPools() {
+-        // Guard against multiple destroyPools() calls triggered by construction exception and finalize() later
+-        if (aprPool != 0 && DESTROY_UPDATER.compareAndSet(this, 0, 1)) {
+-            Pool.destroy(aprPool);
+-        }
+-    }
+-
+-    protected static X509Certificate[] certificates(byte[][] chain) {
+-        X509Certificate[] peerCerts = new X509Certificate[chain.length];
+-        for (int i = 0; i < peerCerts.length; i++) {
+-            peerCerts[i] = new OpenSslX509Certificate(chain[i]);
+-        }
+-        return peerCerts;
+-    }
+-
+-    protected static X509TrustManager chooseTrustManager(TrustManager[] managers) {
+-        for (TrustManager m : managers) {
+-            if (m instanceof X509TrustManager) {
+-                return (X509TrustManager) m;
+-            }
+-        }
+-        throw new IllegalStateException("no X509TrustManager found");
+-    }
+-
+-    /**
+-     * Translate a {@link ApplicationProtocolConfig} object to a
+-     * {@link OpenSslApplicationProtocolNegotiator} object.
+-     * @param config The configuration which defines the translation
+-     * @return The results of the translation
+-     */
+-    static OpenSslApplicationProtocolNegotiator toNegotiator(ApplicationProtocolConfig config) {
+-        if (config == null) {
+-            return NONE_PROTOCOL_NEGOTIATOR;
+-        }
+-
+-        switch (config.protocol()) {
+-        case NONE:
+-            return NONE_PROTOCOL_NEGOTIATOR;
+-        case ALPN:
+-        case NPN:
+-        case NPN_AND_ALPN:
+-            switch (config.selectedListenerFailureBehavior()) {
+-            case CHOOSE_MY_LAST_PROTOCOL:
+-            case ACCEPT:
+-                switch (config.selectorFailureBehavior()) {
+-                case CHOOSE_MY_LAST_PROTOCOL:
+-                case NO_ADVERTISE:
+-                    return new OpenSslDefaultApplicationProtocolNegotiator(
+-                            config);
+-                default:
+-                    throw new UnsupportedOperationException(
+-                            new StringBuilder("OpenSSL provider does not support ")
+-                                    .append(config.selectorFailureBehavior())
+-                                    .append(" behavior").toString());
+-                }
+-            default:
+-                throw new UnsupportedOperationException(
+-                        new StringBuilder("OpenSSL provider does not support ")
+-                                .append(config.selectedListenerFailureBehavior())
+-                                .append(" behavior").toString());
+-            }
+-        default:
+-            throw new Error();
+-        }
+-    }
+-
+-    static boolean useExtendedTrustManager(X509TrustManager trustManager) {
+-         return PlatformDependent.javaVersion() >= 7 && trustManager instanceof X509ExtendedTrustManager;
+-    }
+-
+-    abstract class AbstractCertificateVerifier implements CertificateVerifier {
+-        @Override
+-        public final boolean verify(long ssl, byte[][] chain, String auth) {
+-            X509Certificate[] peerCerts = certificates(chain);
+-            final OpenSslEngine engine = engineMap.remove(ssl);
+-            try {
+-                verify(engine, peerCerts, auth);
+-                return true;
+-            } catch (Throwable cause) {
+-                logger.debug("verification of certificate failed", cause);
+-                SSLHandshakeException e = new SSLHandshakeException("General OpenSslEngine problem");
+-                e.initCause(cause);
+-                engine.handshakeException = e;
+-            }
+-            return false;
+-        }
+-
+-        abstract void verify(OpenSslEngine engine, X509Certificate[] peerCerts, String auth) throws Exception;
+-    }
+-
+-    private static final class DefaultOpenSslEngineMap implements OpenSslEngineMap {
+-        private final Map<Long, OpenSslEngine> engines = PlatformDependent.newConcurrentHashMap();
+-        @Override
+-        public OpenSslEngine remove(long ssl) {
+-            return engines.remove(ssl);
+-        }
+-
+-        @Override
+-        public void add(OpenSslEngine engine) {
+-            engines.put(engine.ssl(), engine);
+-        }
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslEngine.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslEngine.java
+deleted file mode 100644
+index b5c8e6c..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslEngine.java
++++ /dev/null
+@@ -1,1525 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import io.netty.buffer.ByteBuf;
+-import io.netty.buffer.ByteBufAllocator;
+-import io.netty.buffer.Unpooled;
+-import io.netty.util.internal.EmptyArrays;
+-import io.netty.util.internal.PlatformDependent;
+-import io.netty.util.internal.StringUtil;
+-import io.netty.util.internal.logging.InternalLogger;
+-import io.netty.util.internal.logging.InternalLoggerFactory;
+-import org.apache.tomcat.jni.Buffer;
+-import org.apache.tomcat.jni.SSL;
+-
+-import javax.net.ssl.SSLEngine;
+-import javax.net.ssl.SSLEngineResult;
+-import javax.net.ssl.SSLException;
+-import javax.net.ssl.SSLHandshakeException;
+-import javax.net.ssl.SSLPeerUnverifiedException;
+-import javax.net.ssl.SSLSession;
+-import javax.net.ssl.SSLSessionBindingEvent;
+-import javax.net.ssl.SSLSessionBindingListener;
+-import javax.net.ssl.SSLSessionContext;
+-import javax.security.cert.CertificateException;
+-import javax.security.cert.X509Certificate;
+-import java.nio.ByteBuffer;
+-import java.nio.ReadOnlyBufferException;
+-import java.security.Principal;
+-import java.security.cert.Certificate;
+-import java.util.ArrayList;
+-import java.util.Arrays;
+-import java.util.HashMap;
+-import java.util.HashSet;
+-import java.util.List;
+-import java.util.Map;
+-import java.util.Set;
+-import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+-
+-import static io.netty.handler.ssl.ApplicationProtocolConfig.SelectedListenerFailureBehavior;
+-import static io.netty.util.internal.ObjectUtil.checkNotNull;
+-import static javax.net.ssl.SSLEngineResult.HandshakeStatus.*;
+-import static javax.net.ssl.SSLEngineResult.Status.*;
+-
+-/**
+- * Implements a {@link SSLEngine} using
+- * <a href="https://www.openssl.org/docs/crypto/BIO_s_bio.html#EXAMPLE">OpenSSL BIO abstractions</a>.
+- */
+-public final class OpenSslEngine extends SSLEngine {
+-
+-    private static final InternalLogger logger = InternalLoggerFactory.getInstance(OpenSslEngine.class);
+-
+-    private static final Certificate[] EMPTY_CERTIFICATES = EmptyArrays.EMPTY_CERTIFICATES;
+-    private static final X509Certificate[] EMPTY_X509_CERTIFICATES = EmptyArrays.EMPTY_JAVAX_X509_CERTIFICATES;
+-
+-    private static final SSLException ENGINE_CLOSED = new SSLException("engine closed");
+-    private static final SSLException RENEGOTIATION_UNSUPPORTED = new SSLException("renegotiation unsupported");
+-    private static final SSLException ENCRYPTED_PACKET_OVERSIZED = new SSLException("encrypted packet oversized");
+-    static {
+-        ENGINE_CLOSED.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);
+-        RENEGOTIATION_UNSUPPORTED.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);
+-        ENCRYPTED_PACKET_OVERSIZED.setStackTrace(EmptyArrays.EMPTY_STACK_TRACE);
+-
+-        AtomicIntegerFieldUpdater<OpenSslEngine> destroyedUpdater =
+-                PlatformDependent.newAtomicIntegerFieldUpdater(OpenSslEngine.class, "destroyed");
+-        if (destroyedUpdater == null) {
+-            destroyedUpdater = AtomicIntegerFieldUpdater.newUpdater(OpenSslEngine.class, "destroyed");
+-        }
+-        DESTROYED_UPDATER = destroyedUpdater;
+-    }
+-
+-    private static final int MAX_PLAINTEXT_LENGTH = 16 * 1024; // 2^14
+-    private static final int MAX_COMPRESSED_LENGTH = MAX_PLAINTEXT_LENGTH + 1024;
+-    private static final int MAX_CIPHERTEXT_LENGTH = MAX_COMPRESSED_LENGTH + 1024;
+-
+-    // Protocols
+-    private static final String PROTOCOL_SSL_V2_HELLO = "SSLv2Hello";
+-    private static final String PROTOCOL_SSL_V2 = "SSLv2";
+-    private static final String PROTOCOL_SSL_V3 = "SSLv3";
+-    private static final String PROTOCOL_TLS_V1 = "TLSv1";
+-    private static final String PROTOCOL_TLS_V1_1 = "TLSv1.1";
+-    private static final String PROTOCOL_TLS_V1_2 = "TLSv1.2";
+-
+-    private static final String[] SUPPORTED_PROTOCOLS = {
+-            PROTOCOL_SSL_V2_HELLO,
+-            PROTOCOL_SSL_V2,
+-            PROTOCOL_SSL_V3,
+-            PROTOCOL_TLS_V1,
+-            PROTOCOL_TLS_V1_1,
+-            PROTOCOL_TLS_V1_2
+-    };
+-    private static final Set<String> SUPPORTED_PROTOCOLS_SET = new HashSet<String>(Arrays.asList(SUPPORTED_PROTOCOLS));
+-
+-    // Header (5) + Data (2^14) + Compression (1024) + Encryption (1024) + MAC (20) + Padding (256)
+-    static final int MAX_ENCRYPTED_PACKET_LENGTH = MAX_CIPHERTEXT_LENGTH + 5 + 20 + 256;
+-
+-    static final int MAX_ENCRYPTION_OVERHEAD_LENGTH = MAX_ENCRYPTED_PACKET_LENGTH - MAX_PLAINTEXT_LENGTH;
+-
+-    enum ClientAuthMode {
+-        NONE,
+-        OPTIONAL,
+-        REQUIRE,
+-    }
+-
+-    private static final AtomicIntegerFieldUpdater<OpenSslEngine> DESTROYED_UPDATER;
+-
+-    private static final String INVALID_CIPHER = "SSL_NULL_WITH_NULL_NULL";
+-
+-    private static final long EMPTY_ADDR = Buffer.address(Unpooled.EMPTY_BUFFER.nioBuffer());
+-
+-    private static final SSLEngineResult NEED_UNWRAP_OK = new SSLEngineResult(OK, NEED_UNWRAP, 0, 0);
+-    private static final SSLEngineResult NEED_UNWRAP_CLOSED = new SSLEngineResult(CLOSED, NEED_UNWRAP, 0, 0);
+-    private static final SSLEngineResult NEED_WRAP_OK = new SSLEngineResult(OK, NEED_WRAP, 0, 0);
+-    private static final SSLEngineResult NEED_WRAP_CLOSED = new SSLEngineResult(CLOSED, NEED_WRAP, 0, 0);
+-    private static final SSLEngineResult CLOSED_NOT_HANDSHAKING = new SSLEngineResult(CLOSED, NOT_HANDSHAKING, 0, 0);
+-
+-    // OpenSSL state
+-    private long ssl;
+-    private long networkBIO;
+-
+-    /**
+-     * 0 - not accepted, 1 - accepted implicitly via wrap()/unwrap(), 2 - accepted explicitly via beginHandshake() call
+-     */
+-    private int accepted;
+-    private boolean handshakeFinished;
+-    private boolean receivedShutdown;
+-    @SuppressWarnings("UnusedDeclaration")
+-    private volatile int destroyed;
+-
+-    // Use an invalid cipherSuite until the handshake is completed
+-    // See http://docs.oracle.com/javase/7/docs/api/javax/net/ssl/SSLEngine.html#getSession()
+-    private volatile String cipher;
+-    private volatile String applicationProtocol;
+-
+-    // We store this outside of the SslSession so we not need to create an instance during verifyCertificates(...)
+-    private volatile Certificate[] peerCerts;
+-    private volatile ClientAuthMode clientAuth = ClientAuthMode.NONE;
+-
+-    // SSL Engine status variables
+-    private boolean isInboundDone;
+-    private boolean isOutboundDone;
+-    private boolean engineClosed;
+-
+-    private final boolean clientMode;
+-    private final ByteBufAllocator alloc;
+-    private final OpenSslSessionContext sessionContext;
+-    private final OpenSslEngineMap engineMap;
+-    private final OpenSslApplicationProtocolNegotiator apn;
+-    private final boolean rejectRemoteInitiatedRenegation;
+-    private final SSLSession session = new OpenSslSession();
+-
+-    // This is package-private as we set it from OpenSslContext if an exception is thrown during
+-    // the verification step.
+-    SSLHandshakeException handshakeException;
+-
+-    /**
+-     * Creates a new instance
+-     *
+-     * @param sslCtx an OpenSSL {@code SSL_CTX} object
+-     * @param alloc the {@link ByteBufAllocator} that will be used by this engine
+-     */
+-    @Deprecated
+-    public OpenSslEngine(long sslCtx, ByteBufAllocator alloc,
+-                         @SuppressWarnings("unused") String fallbackApplicationProtocol) {
+-        this(sslCtx, alloc, false, null, OpenSslContext.NONE_PROTOCOL_NEGOTIATOR, OpenSslEngineMap.EMPTY, false);
+-    }
+-
+-    /**
+-     * Creates a new instance
+-     *
+-     * @param sslCtx an OpenSSL {@code SSL_CTX} object
+-     * @param alloc the {@link ByteBufAllocator} that will be used by this engine
+-     * @param clientMode {@code true} if this is used for clients, {@code false} otherwise
+-     * @param sessionContext the {@link OpenSslSessionContext} this {@link SSLEngine} belongs to.
+-     */
+-    OpenSslEngine(long sslCtx, ByteBufAllocator alloc,
+-                  boolean clientMode, OpenSslSessionContext sessionContext,
+-                  OpenSslApplicationProtocolNegotiator apn, OpenSslEngineMap engineMap,
+-                  boolean rejectRemoteInitiatedRenegation) {
+-        OpenSsl.ensureAvailability();
+-        if (sslCtx == 0) {
+-            throw new NullPointerException("sslCtx");
+-        }
+-
+-        this.alloc = checkNotNull(alloc, "alloc");
+-        this.apn = checkNotNull(apn, "apn");
+-        ssl = SSL.newSSL(sslCtx, !clientMode);
+-        networkBIO = SSL.makeNetworkBIO(ssl);
+-        this.clientMode = clientMode;
+-        this.sessionContext = sessionContext;
+-        this.engineMap = engineMap;
+-        this.rejectRemoteInitiatedRenegation = rejectRemoteInitiatedRenegation;
+-    }
+-
+-    @Override
+-    public SSLSession getHandshakeSession() {
+-        if (accepted > 0) {
+-            // handshake started we are able to return the session.
+-            return session;
+-        }
+-        // As stated by the javadocs of getHandshakeSession() we should return null if the handshake not started yet.
+-        return null;
+-    }
+-
+-    long ssl() {
+-        return ssl;
+-    }
+-
+-    /**
+-     * Destroys this engine.
+-     */
+-    public synchronized void shutdown() {
+-        if (DESTROYED_UPDATER.compareAndSet(this, 0, 1)) {
+-            engineMap.remove(ssl);
+-            SSL.freeSSL(ssl);
+-            SSL.freeBIO(networkBIO);
+-            ssl = networkBIO = 0;
+-
+-            // internal errors can cause shutdown without marking the engine closed
+-            isInboundDone = isOutboundDone = engineClosed = true;
+-        }
+-    }
+-
+-    /**
+-     * Write plaintext data to the OpenSSL internal BIO
+-     *
+-     * Calling this function with src.remaining == 0 is undefined.
+-     */
+-    private int writePlaintextData(final ByteBuffer src) {
+-        final int pos = src.position();
+-        final int limit = src.limit();
+-        final int len = Math.min(limit - pos, MAX_PLAINTEXT_LENGTH);
+-        final int sslWrote;
+-
+-        if (src.isDirect()) {
+-            final long addr = Buffer.address(src) + pos;
+-            sslWrote = SSL.writeToSSL(ssl, addr, len);
+-            if (sslWrote > 0) {
+-                src.position(pos + sslWrote);
+-                return sslWrote;
+-            }
+-        } else {
+-            ByteBuf buf = alloc.directBuffer(len);
+-            try {
+-                final long addr = memoryAddress(buf);
+-
+-                src.limit(pos + len);
+-
+-                buf.setBytes(0, src);
+-                src.limit(limit);
+-
+-                sslWrote = SSL.writeToSSL(ssl, addr, len);
+-                if (sslWrote > 0) {
+-                    src.position(pos + sslWrote);
+-                    return sslWrote;
+-                } else {
+-                    src.position(pos);
+-                }
+-            } finally {
+-                buf.release();
+-            }
+-        }
+-
+-        throw new IllegalStateException("SSL.writeToSSL() returned a non-positive value: " + sslWrote);
+-    }
+-
+-    /**
+-     * Write encrypted data to the OpenSSL network BIO.
+-     */
+-    private int writeEncryptedData(final ByteBuffer src) {
+-        final int pos = src.position();
+-        final int len = src.remaining();
+-        if (src.isDirect()) {
+-            final long addr = Buffer.address(src) + pos;
+-            final int netWrote = SSL.writeToBIO(networkBIO, addr, len);
+-            if (netWrote >= 0) {
+-                src.position(pos + netWrote);
+-                return netWrote;
+-            }
+-        } else {
+-            final ByteBuf buf = alloc.directBuffer(len);
+-            try {
+-                final long addr = memoryAddress(buf);
+-
+-                buf.setBytes(0, src);
+-
+-                final int netWrote = SSL.writeToBIO(networkBIO, addr, len);
+-                if (netWrote >= 0) {
+-                    src.position(pos + netWrote);
+-                    return netWrote;
+-                } else {
+-                    src.position(pos);
+-                }
+-            } finally {
+-                buf.release();
+-            }
+-        }
+-
+-        return -1;
+-    }
+-
+-    /**
+-     * Read plaintext data from the OpenSSL internal BIO
+-     */
+-    private int readPlaintextData(final ByteBuffer dst) {
+-        if (dst.isDirect()) {
+-            final int pos = dst.position();
+-            final long addr = Buffer.address(dst) + pos;
+-            final int len = dst.limit() - pos;
+-            final int sslRead = SSL.readFromSSL(ssl, addr, len);
+-            if (sslRead > 0) {
+-                dst.position(pos + sslRead);
+-                return sslRead;
+-            }
+-        } else {
+-            final int pos = dst.position();
+-            final int limit = dst.limit();
+-            final int len = Math.min(MAX_ENCRYPTED_PACKET_LENGTH, limit - pos);
+-            final ByteBuf buf = alloc.directBuffer(len);
+-            try {
+-                final long addr = memoryAddress(buf);
+-
+-                final int sslRead = SSL.readFromSSL(ssl, addr, len);
+-                if (sslRead > 0) {
+-                    dst.limit(pos + sslRead);
+-                    buf.getBytes(0, dst);
+-                    dst.limit(limit);
+-                    return sslRead;
+-                }
+-            } finally {
+-                buf.release();
+-            }
+-        }
+-
+-        return 0;
+-    }
+-
+-    /**
+-     * Read encrypted data from the OpenSSL network BIO
+-     */
+-    private int readEncryptedData(final ByteBuffer dst, final int pending) {
+-        if (dst.isDirect() && dst.remaining() >= pending) {
+-            final int pos = dst.position();
+-            final long addr = Buffer.address(dst) + pos;
+-            final int bioRead = SSL.readFromBIO(networkBIO, addr, pending);
+-            if (bioRead > 0) {
+-                dst.position(pos + bioRead);
+-                return bioRead;
+-            }
+-        } else {
+-            final ByteBuf buf = alloc.directBuffer(pending);
+-            try {
+-                final long addr = memoryAddress(buf);
+-
+-                final int bioRead = SSL.readFromBIO(networkBIO, addr, pending);
+-                if (bioRead > 0) {
+-                    int oldLimit = dst.limit();
+-                    dst.limit(dst.position() + bioRead);
+-                    buf.getBytes(0, dst);
+-                    dst.limit(oldLimit);
+-                    return bioRead;
+-                }
+-            } finally {
+-                buf.release();
+-            }
+-        }
+-
+-        return 0;
+-    }
+-
+-    @Override
+-    public synchronized SSLEngineResult wrap(
+-            final ByteBuffer[] srcs, final int offset, final int length, final ByteBuffer dst) throws SSLException {
+-
+-        // Check to make sure the engine has not been closed
+-        if (destroyed != 0) {
+-            return CLOSED_NOT_HANDSHAKING;
+-        }
+-
+-        // Throw required runtime exceptions
+-        if (srcs == null) {
+-            throw new IllegalArgumentException("srcs is null");
+-        }
+-        if (dst == null) {
+-            throw new IllegalArgumentException("dst is null");
+-        }
+-
+-        if (offset >= srcs.length || offset + length > srcs.length) {
+-            throw new IndexOutOfBoundsException(
+-                    "offset: " + offset + ", length: " + length +
+-                            " (expected: offset <= offset + length <= srcs.length (" + srcs.length + "))");
+-        }
+-
+-        if (dst.isReadOnly()) {
+-            throw new ReadOnlyBufferException();
+-        }
+-
+-        // Prepare OpenSSL to work in server mode and receive handshake
+-        if (accepted == 0) {
+-            beginHandshakeImplicitly();
+-        }
+-
+-        // In handshake or close_notify stages, check if call to wrap was made
+-        // without regard to the handshake status.
+-        SSLEngineResult.HandshakeStatus handshakeStatus = handshakeStatus0();
+-
+-        if (handshakeStatus == NEED_UNWRAP) {
+-            if (!handshakeFinished) {
+-                return NEED_UNWRAP_OK;
+-            }
+-            if (engineClosed) {
+-                return NEED_UNWRAP_CLOSED;
+-            }
+-        }
+-
+-        int bytesProduced = 0;
+-        int pendingNet;
+-
+-        // Check for pending data in the network BIO
+-        pendingNet = SSL.pendingWrittenBytesInBIO(networkBIO);
+-        if (pendingNet > 0) {
+-            // Do we have enough room in dst to write encrypted data?
+-            int capacity = dst.remaining();
+-            if (capacity < pendingNet) {
+-                return new SSLEngineResult(BUFFER_OVERFLOW, handshakeStatus, 0, bytesProduced);
+-            }
+-
+-            // Write the pending data from the network BIO into the dst buffer
+-            try {
+-                bytesProduced += readEncryptedData(dst, pendingNet);
+-            } catch (Exception e) {
+-                throw new SSLException(e);
+-            }
+-
+-            // If isOuboundDone is set, then the data from the network BIO
+-            // was the close_notify message -- we are not required to wait
+-            // for the receipt the peer's close_notify message -- shutdown.
+-            if (isOutboundDone) {
+-                shutdown();
+-            }
+-
+-            return new SSLEngineResult(getEngineStatus(), handshakeStatus0(), 0, bytesProduced);
+-        }
+-
+-        // There was no pending data in the network BIO -- encrypt any application data
+-        int bytesConsumed = 0;
+-        int endOffset = offset + length;
+-        for (int i = offset; i < endOffset; ++ i) {
+-            final ByteBuffer src = srcs[i];
+-            if (src == null) {
+-                throw new IllegalArgumentException("srcs[" + i + "] is null");
+-            }
+-            while (src.hasRemaining()) {
+-
+-                // Write plaintext application data to the SSL engine
+-                try {
+-                    bytesConsumed += writePlaintextData(src);
+-                } catch (Exception e) {
+-                    throw new SSLException(e);
+-                }
+-
+-                // Check to see if the engine wrote data into the network BIO
+-                pendingNet = SSL.pendingWrittenBytesInBIO(networkBIO);
+-                if (pendingNet > 0) {
+-                    // Do we have enough room in dst to write encrypted data?
+-                    int capacity = dst.remaining();
+-                    if (capacity < pendingNet) {
+-                        return new SSLEngineResult(
+-                                BUFFER_OVERFLOW, handshakeStatus0(), bytesConsumed, bytesProduced);
+-                    }
+-
+-                    // Write the pending data from the network BIO into the dst buffer
+-                    try {
+-                        bytesProduced += readEncryptedData(dst, pendingNet);
+-                    } catch (Exception e) {
+-                        throw new SSLException(e);
+-                    }
+-
+-                    return new SSLEngineResult(getEngineStatus(), handshakeStatus0(), bytesConsumed, bytesProduced);
+-                }
+-            }
+-        }
+-
+-        return new SSLEngineResult(getEngineStatus(), handshakeStatus0(), bytesConsumed, bytesProduced);
+-    }
+-
+-    private SSLException newSSLException(String msg) {
+-        if (!handshakeFinished) {
+-            return new SSLHandshakeException(msg);
+-        }
+-        return new SSLException(msg);
+-    }
+-
+-    private void checkPendingHandshakeException() throws SSLHandshakeException {
+-        if (handshakeException != null) {
+-            SSLHandshakeException exception = handshakeException;
+-            handshakeException = null;
+-            shutdown();
+-            throw exception;
+-        }
+-    }
+-
+-    public synchronized SSLEngineResult unwrap(
+-            final ByteBuffer[] srcs, int srcsOffset, final int srcsLength,
+-            final ByteBuffer[] dsts, final int dstsOffset, final int dstsLength) throws SSLException {
+-
+-        // Check to make sure the engine has not been closed
+-        if (destroyed != 0) {
+-            return CLOSED_NOT_HANDSHAKING;
+-        }
+-
+-        // Throw requried runtime exceptions
+-        if (srcs == null) {
+-            throw new NullPointerException("srcs");
+-        }
+-        if (srcsOffset >= srcs.length
+-                || srcsOffset + srcsLength > srcs.length) {
+-            throw new IndexOutOfBoundsException(
+-                    "offset: " + srcsOffset + ", length: " + srcsLength +
+-                    " (expected: offset <= offset + length <= srcs.length (" + srcs.length + "))");
+-        }
+-        if (dsts == null) {
+-            throw new IllegalArgumentException("dsts is null");
+-        }
+-        if (dstsOffset >= dsts.length || dstsOffset + dstsLength > dsts.length) {
+-            throw new IndexOutOfBoundsException(
+-                    "offset: " + dstsOffset + ", length: " + dstsLength +
+-                    " (expected: offset <= offset + length <= dsts.length (" + dsts.length + "))");
+-        }
+-        int capacity = 0;
+-        final int endOffset = dstsOffset + dstsLength;
+-        for (int i = dstsOffset; i < endOffset; i ++) {
+-            ByteBuffer dst = dsts[i];
+-            if (dst == null) {
+-                throw new IllegalArgumentException("dsts[" + i + "] is null");
+-            }
+-            if (dst.isReadOnly()) {
+-                throw new ReadOnlyBufferException();
+-            }
+-            capacity += dst.remaining();
+-        }
+-
+-        // Prepare OpenSSL to work in server mode and receive handshake
+-        if (accepted == 0) {
+-            beginHandshakeImplicitly();
+-        }
+-
+-        // In handshake or close_notify stages, check if call to unwrap was made
+-        // without regard to the handshake status.
+-        SSLEngineResult.HandshakeStatus handshakeStatus = handshakeStatus0();
+-        if (handshakeStatus == NEED_WRAP) {
+-            if (!handshakeFinished) {
+-                return NEED_WRAP_OK;
+-            }
+-            if (engineClosed) {
+-                return NEED_WRAP_CLOSED;
+-            }
+-        }
+-
+-        final int srcsEndOffset = srcsOffset + srcsLength;
+-        int len = 0;
+-        for (int i = srcsOffset; i < srcsEndOffset; i++) {
+-            ByteBuffer src = srcs[i];
+-            if (src == null) {
+-                throw new IllegalArgumentException("srcs[" + i + "] is null");
+-            }
+-            len += src.remaining();
+-        }
+-
+-        // protect against protocol overflow attack vector
+-        if (len > MAX_ENCRYPTED_PACKET_LENGTH) {
+-            isInboundDone = true;
+-            isOutboundDone = true;
+-            engineClosed = true;
+-            shutdown();
+-            throw ENCRYPTED_PACKET_OVERSIZED;
+-        }
+-
+-        // Write encrypted data to network BIO
+-        int bytesConsumed = -1;
+-        try {
+-            while (srcsOffset < srcsEndOffset) {
+-                ByteBuffer src = srcs[srcsOffset];
+-                int remaining = src.remaining();
+-                int written = writeEncryptedData(src);
+-                if (written >= 0) {
+-                    if (bytesConsumed == -1) {
+-                        bytesConsumed = written;
+-                    } else {
+-                        bytesConsumed += written;
+-                    }
+-                    if (written == remaining) {
+-                        srcsOffset ++;
+-                    } else if (written == 0) {
+-                        break;
+-                    }
+-                } else {
+-                    break;
+-                }
+-            }
+-        } catch (Exception e) {
+-            throw new SSLException(e);
+-        }
+-        if (bytesConsumed >= 0) {
+-            int lastPrimingReadResult = SSL.readFromSSL(ssl, EMPTY_ADDR, 0); // priming read
+-
+-            // check if SSL_read returned <= 0. In this case we need to check the error and see if it was something
+-            // fatal.
+-            if (lastPrimingReadResult <= 0) {
+-                // Check for OpenSSL errors caused by the priming read
+-                long error = SSL.getLastErrorNumber();
+-                if (OpenSsl.isError(error)) {
+-                    String err = SSL.getErrorString(error);
+-                    if (logger.isDebugEnabled()) {
+-                        logger.debug(
+-                                "SSL_read failed: primingReadResult: " + lastPrimingReadResult +
+-                                        "; OpenSSL error: '" + err + '\'');
+-                    }
+-
+-                    // There was an internal error -- shutdown
+-                    shutdown();
+-                    throw newSSLException(err);
+-                } else {
+-                    checkPendingHandshakeException();
+-                }
+-            }
+-
+-            rejectRemoteInitiatedRenegation();
+-        } else {
+-            // Reset to 0 as -1 is used to signal that nothing was written and no priming read needs to be done
+-            bytesConsumed = 0;
+-        }
+-
+-        // There won't be any application data until we're done handshaking
+-        //
+-        // We first check handshakeFinished to eliminate the overhead of extra JNI call if possible.
+-        int pendingApp = (handshakeFinished || SSL.isInInit(ssl) == 0) ? SSL.pendingReadableBytesInSSL(ssl) : 0;
+-        int bytesProduced = 0;
+-
+-        if (pendingApp > 0) {
+-            // Do we have enough room in dsts to write decrypted data?
+-            if (capacity < pendingApp) {
+-                return new SSLEngineResult(BUFFER_OVERFLOW, handshakeStatus0(), bytesConsumed, 0);
+-            }
+-
+-            // Write decrypted data to dsts buffers
+-            int idx = dstsOffset;
+-            while (idx < endOffset) {
+-                ByteBuffer dst = dsts[idx];
+-                if (!dst.hasRemaining()) {
+-                    idx ++;
+-                    continue;
+-                }
+-
+-                if (pendingApp <= 0) {
+-                    break;
+-                }
+-
+-                int bytesRead;
+-                try {
+-                    bytesRead = readPlaintextData(dst);
+-                } catch (Exception e) {
+-                    throw new SSLException(e);
+-                }
+-
+-                rejectRemoteInitiatedRenegation();
+-
+-                if (bytesRead == 0) {
+-                    break;
+-                }
+-                bytesProduced += bytesRead;
+-                pendingApp -= bytesRead;
+-
+-                if (!dst.hasRemaining()) {
+-                    idx ++;
+-                }
+-            }
+-        }
+-
+-        // Check to see if we received a close_notify message from the peer
+-        if (!receivedShutdown && (SSL.getShutdown(ssl) & SSL.SSL_RECEIVED_SHUTDOWN) == SSL.SSL_RECEIVED_SHUTDOWN) {
+-            receivedShutdown = true;
+-            closeOutbound();
+-            closeInbound();
+-        }
+-
+-        return new SSLEngineResult(getEngineStatus(), handshakeStatus0(), bytesConsumed, bytesProduced);
+-    }
+-
+-    private void rejectRemoteInitiatedRenegation() throws SSLHandshakeException {
+-        if (rejectRemoteInitiatedRenegation && SSL.getHandshakeCount(ssl) > 1) {
+-            // TODO: In future versions me may also want to send a fatal_alert to the client and so notify it
+-            // that the renegotiation failed.
+-            shutdown();
+-            throw new SSLHandshakeException("remote-initiated renegotation not allowed");
+-        }
+-    }
+-
+-    public SSLEngineResult unwrap(final ByteBuffer[] srcs, final ByteBuffer[] dsts) throws SSLException {
+-        return unwrap(srcs, 0, srcs.length, dsts, 0, dsts.length);
+-    }
+-
+-    @Override
+-    public SSLEngineResult unwrap(
+-            final ByteBuffer src, final ByteBuffer[] dsts, final int offset, final int length) throws SSLException {
+-        return unwrap(new ByteBuffer[] { src }, 0, 1, dsts, offset, length);
+-    }
+-
+-    @Override
+-    public Runnable getDelegatedTask() {
+-        // Currently, we do not delegate SSL computation tasks
+-        // TODO: in the future, possibly create tasks to do encrypt / decrypt async
+-
+-        return null;
+-    }
+-
+-    @Override
+-    public synchronized void closeInbound() throws SSLException {
+-        if (isInboundDone) {
+-            return;
+-        }
+-
+-        isInboundDone = true;
+-        engineClosed = true;
+-
+-        shutdown();
+-
+-        if (accepted != 0 && !receivedShutdown) {
+-            throw new SSLException(
+-                    "Inbound closed before receiving peer's close_notify: possible truncation attack?");
+-        }
+-    }
+-
+-    @Override
+-    public synchronized boolean isInboundDone() {
+-        return isInboundDone || engineClosed;
+-    }
+-
+-    @Override
+-    public synchronized void closeOutbound() {
+-        if (isOutboundDone) {
+-            return;
+-        }
+-
+-        isOutboundDone = true;
+-        engineClosed = true;
+-
+-        if (accepted != 0 && destroyed == 0) {
+-            int mode = SSL.getShutdown(ssl);
+-            if ((mode & SSL.SSL_SENT_SHUTDOWN) != SSL.SSL_SENT_SHUTDOWN) {
+-                SSL.shutdownSSL(ssl);
+-            }
+-        } else {
+-            // engine closing before initial handshake
+-            shutdown();
+-        }
+-    }
+-
+-    @Override
+-    public synchronized boolean isOutboundDone() {
+-        return isOutboundDone;
+-    }
+-
+-    @Override
+-    public String[] getSupportedCipherSuites() {
+-        Set<String> availableCipherSuites = OpenSsl.availableCipherSuites();
+-        return availableCipherSuites.toArray(new String[availableCipherSuites.size()]);
+-    }
+-
+-    @Override
+-    public String[] getEnabledCipherSuites() {
+-        final String[] enabled;
+-        synchronized (this) {
+-            if (destroyed == 0) {
+-                enabled = SSL.getCiphers(ssl);
+-            } else {
+-                return EmptyArrays.EMPTY_STRINGS;
+-            }
+-        }
+-        if (enabled == null) {
+-            return EmptyArrays.EMPTY_STRINGS;
+-        } else {
+-            for (int i = 0; i < enabled.length; i++) {
+-                String mapped = toJavaCipherSuite(enabled[i]);
+-                if (mapped != null) {
+-                    enabled[i] = mapped;
+-                }
+-            }
+-            return enabled;
+-        }
+-    }
+-
+-    @Override
+-    public void setEnabledCipherSuites(String[] cipherSuites) {
+-        checkNotNull(cipherSuites, "cipherSuites");
+-
+-        final StringBuilder buf = new StringBuilder();
+-        for (String c: cipherSuites) {
+-            if (c == null) {
+-                break;
+-            }
+-
+-            String converted = CipherSuiteConverter.toOpenSsl(c);
+-            if (converted == null) {
+-                converted = c;
+-            }
+-
+-            if (!OpenSsl.isCipherSuiteAvailable(converted)) {
+-                throw new IllegalArgumentException("unsupported cipher suite: " + c + '(' + converted + ')');
+-            }
+-
+-            buf.append(converted);
+-            buf.append(':');
+-        }
+-
+-        if (buf.length() == 0) {
+-            throw new IllegalArgumentException("empty cipher suites");
+-        }
+-        buf.setLength(buf.length() - 1);
+-
+-        final String cipherSuiteSpec = buf.toString();
+-
+-        synchronized (this) {
+-            if (destroyed == 0) {
+-                try {
+-                    SSL.setCipherSuites(ssl, cipherSuiteSpec);
+-                } catch (Exception e) {
+-                    throw new IllegalStateException("failed to enable cipher suites: " + cipherSuiteSpec, e);
+-                }
+-            } else {
+-                throw new IllegalStateException("failed to enable cipher suites: " + cipherSuiteSpec);
+-            }
+-        }
+-    }
+-
+-    @Override
+-    public String[] getSupportedProtocols() {
+-        return SUPPORTED_PROTOCOLS.clone();
+-    }
+-
+-    @Override
+-    public String[] getEnabledProtocols() {
+-        List<String> enabled = new ArrayList<String>();
+-        // Seems like there is no way to explict disable SSLv2Hello in openssl so it is always enabled
+-        enabled.add(PROTOCOL_SSL_V2_HELLO);
+-
+-        int opts;
+-        synchronized (this) {
+-            if (destroyed == 0) {
+-                opts = SSL.getOptions(ssl);
+-            } else {
+-                return enabled.toArray(new String[1]);
+-            }
+-        }
+-        if ((opts & SSL.SSL_OP_NO_TLSv1) == 0) {
+-            enabled.add(PROTOCOL_TLS_V1);
+-        }
+-        if ((opts & SSL.SSL_OP_NO_TLSv1_1) == 0) {
+-            enabled.add(PROTOCOL_TLS_V1_1);
+-        }
+-        if ((opts & SSL.SSL_OP_NO_TLSv1_2) == 0) {
+-            enabled.add(PROTOCOL_TLS_V1_2);
+-        }
+-        if ((opts & SSL.SSL_OP_NO_SSLv2) == 0) {
+-            enabled.add(PROTOCOL_SSL_V2);
+-        }
+-        if ((opts & SSL.SSL_OP_NO_SSLv3) == 0) {
+-            enabled.add(PROTOCOL_SSL_V3);
+-        }
+-        return enabled.toArray(new String[enabled.size()]);
+-    }
+-
+-    @Override
+-    public void setEnabledProtocols(String[] protocols) {
+-        if (protocols == null) {
+-            // This is correct from the API docs
+-            throw new IllegalArgumentException();
+-        }
+-        boolean sslv2 = false;
+-        boolean sslv3 = false;
+-        boolean tlsv1 = false;
+-        boolean tlsv1_1 = false;
+-        boolean tlsv1_2 = false;
+-        for (String p: protocols) {
+-            if (!SUPPORTED_PROTOCOLS_SET.contains(p)) {
+-                throw new IllegalArgumentException("Protocol " + p + " is not supported.");
+-            }
+-            if (p.equals(PROTOCOL_SSL_V2)) {
+-                sslv2 = true;
+-            } else if (p.equals(PROTOCOL_SSL_V3)) {
+-                sslv3 = true;
+-            } else if (p.equals(PROTOCOL_TLS_V1)) {
+-                tlsv1 = true;
+-            } else if (p.equals(PROTOCOL_TLS_V1_1)) {
+-                tlsv1_1 = true;
+-            } else if (p.equals(PROTOCOL_TLS_V1_2)) {
+-                tlsv1_2 = true;
+-            }
+-        }
+-        synchronized (this) {
+-            if (destroyed == 0) {
+-                // Enable all and then disable what we not want
+-                SSL.setOptions(ssl, SSL.SSL_OP_ALL);
+-
+-                if (!sslv2) {
+-                    SSL.setOptions(ssl, SSL.SSL_OP_NO_SSLv2);
+-                }
+-                if (!sslv3) {
+-                    SSL.setOptions(ssl, SSL.SSL_OP_NO_SSLv3);
+-                }
+-                if (!tlsv1) {
+-                    SSL.setOptions(ssl, SSL.SSL_OP_NO_TLSv1);
+-                }
+-                if (!tlsv1_1) {
+-                    SSL.setOptions(ssl, SSL.SSL_OP_NO_TLSv1_1);
+-                }
+-                if (!tlsv1_2) {
+-                    SSL.setOptions(ssl, SSL.SSL_OP_NO_TLSv1_2);
+-                }
+-            } else {
+-                throw new IllegalStateException("failed to enable protocols: " + protocols);
+-            }
+-        }
+-    }
+-
+-    @Override
+-    public SSLSession getSession() {
+-        return session;
+-    }
+-
+-    @Override
+-    public synchronized void beginHandshake() throws SSLException {
+-        if (engineClosed || destroyed != 0) {
+-            throw ENGINE_CLOSED;
+-        }
+-        switch (accepted) {
+-            case 0:
+-                handshake();
+-                accepted = 2;
+-                break;
+-            case 1:
+-                // A user did not start handshake by calling this method by him/herself,
+-                // but handshake has been started already by wrap() or unwrap() implicitly.
+-                // Because it's the user's first time to call this method, it is unfair to
+-                // raise an exception.  From the user's standpoint, he or she never asked
+-                // for renegotiation.
+-
+-                accepted = 2; // Next time this method is invoked by the user, we should raise an exception.
+-                break;
+-            case 2:
+-                throw RENEGOTIATION_UNSUPPORTED;
+-            default:
+-                throw new Error();
+-        }
+-    }
+-
+-    private void beginHandshakeImplicitly() throws SSLException {
+-        if (engineClosed || destroyed != 0) {
+-            throw ENGINE_CLOSED;
+-        }
+-
+-        if (accepted == 0) {
+-            handshake();
+-            accepted = 1;
+-        }
+-    }
+-
+-    private void handshake() throws SSLException {
+-        int code = SSL.doHandshake(ssl);
+-        if (code <= 0) {
+-            // Check for OpenSSL errors caused by the handshake
+-            long error = SSL.getLastErrorNumber();
+-            if (OpenSsl.isError(error)) {
+-                String err = SSL.getErrorString(error);
+-                if (logger.isDebugEnabled()) {
+-                    logger.debug(
+-                            "SSL_do_handshake failed: OpenSSL error: '" + err + '\'');
+-                }
+-
+-                // There was an internal error -- shutdown
+-                shutdown();
+-                throw newSSLException(err);
+-            }
+-            checkPendingHandshakeException();
+-        } else {
+-            // if SSL_do_handshake returns > 0 it means the handshake was finished. This means we can update
+-            // handshakeFinished directly and so eliminate uncessary calls to SSL.isInInit(...)
+-            handshakeFinished();
+-        }
+-    }
+-
+-    private static long memoryAddress(ByteBuf buf) {
+-        if (buf.hasMemoryAddress()) {
+-            return buf.memoryAddress();
+-        } else {
+-            return Buffer.address(buf.nioBuffer());
+-        }
+-    }
+-
+-    private void handshakeFinished() throws SSLException {
+-        SelectedListenerFailureBehavior behavior = apn.selectedListenerFailureBehavior();
+-        List<String> protocols = apn.protocols();
+-        String applicationProtocol;
+-        switch (apn.protocol()) {
+-            case NONE:
+-                break;
+-            // We always need to check for applicationProtocol == null as the remote peer may not support
+-            // the TLS extension or may have returned an empty selection.
+-            case ALPN:
+-                applicationProtocol = SSL.getAlpnSelected(ssl);
+-                if (applicationProtocol != null) {
+-                    this.applicationProtocol = selectApplicationProtocol(protocols, behavior, applicationProtocol);
+-                }
+-                break;
+-            case NPN:
+-                applicationProtocol = SSL.getNextProtoNegotiated(ssl);
+-                if (applicationProtocol != null) {
+-                    this.applicationProtocol = selectApplicationProtocol(protocols, behavior, applicationProtocol);
+-                }
+-                break;
+-            case NPN_AND_ALPN:
+-                applicationProtocol = SSL.getAlpnSelected(ssl);
+-                if (applicationProtocol == null) {
+-                    applicationProtocol = SSL.getNextProtoNegotiated(ssl);
+-                }
+-                if (applicationProtocol != null) {
+-                    this.applicationProtocol = selectApplicationProtocol(protocols, behavior, applicationProtocol);
+-                }
+-                break;
+-            default:
+-                throw new Error();
+-        }
+-        handshakeFinished = true;
+-    }
+-
+-    private static String selectApplicationProtocol(List<String> protocols,
+-                                             SelectedListenerFailureBehavior behavior,
+-                                             String applicationProtocol) throws SSLException {
+-        applicationProtocol = applicationProtocol.replace(':', '_');
+-        if (behavior == SelectedListenerFailureBehavior.ACCEPT) {
+-            return applicationProtocol;
+-        } else {
+-            int size = protocols.size();
+-            assert size > 0;
+-            if (protocols.contains(applicationProtocol)) {
+-                return applicationProtocol;
+-            } else {
+-                if (behavior == SelectedListenerFailureBehavior.CHOOSE_MY_LAST_PROTOCOL) {
+-                    return protocols.get(size - 1);
+-                } else {
+-                    throw new SSLException("Unknown protocol " + applicationProtocol);
+-                }
+-            }
+-        }
+-    }
+-
+-    private SSLEngineResult.Status getEngineStatus() {
+-        return engineClosed? CLOSED : OK;
+-    }
+-
+-    private SSLEngineResult.HandshakeStatus handshakeStatus0() throws SSLException {
+-        SSLEngineResult.HandshakeStatus status = getHandshakeStatus();
+-        if (status == FINISHED) {
+-            handshakeFinished();
+-        }
+-        checkPendingHandshakeException();
+-
+-        return status;
+-    }
+-
+-    @Override
+-    public synchronized SSLEngineResult.HandshakeStatus getHandshakeStatus() {
+-        if (accepted == 0 || destroyed != 0) {
+-            return NOT_HANDSHAKING;
+-        }
+-
+-        // Check if we are in the initial handshake phase
+-        if (!handshakeFinished) {
+-            // There is pending data in the network BIO -- call wrap
+-            if (SSL.pendingWrittenBytesInBIO(networkBIO) != 0) {
+-                return NEED_WRAP;
+-            }
+-
+-            // No pending data to be sent to the peer
+-            // Check to see if we have finished handshaking
+-            if (SSL.isInInit(ssl) == 0) {
+-                return FINISHED;
+-            }
+-
+-            // No pending data and still handshaking
+-            // Must be waiting on the peer to send more data
+-            return NEED_UNWRAP;
+-        }
+-
+-        // Check if we are in the shutdown phase
+-        if (engineClosed) {
+-            // Waiting to send the close_notify message
+-            if (SSL.pendingWrittenBytesInBIO(networkBIO) != 0) {
+-                return NEED_WRAP;
+-            }
+-
+-            // Must be waiting to receive the close_notify message
+-            return NEED_UNWRAP;
+-        }
+-
+-        return NOT_HANDSHAKING;
+-    }
+-
+-    /**
+-     * Converts the specified OpenSSL cipher suite to the Java cipher suite.
+-     */
+-    private String toJavaCipherSuite(String openSslCipherSuite) {
+-        if (openSslCipherSuite == null) {
+-            return null;
+-        }
+-
+-        String prefix = toJavaCipherSuitePrefix(SSL.getVersion(ssl));
+-        return CipherSuiteConverter.toJava(openSslCipherSuite, prefix);
+-    }
+-
+-    /**
+-     * Converts the protocol version string returned by {@link SSL#getVersion(long)} to protocol family string.
+-     */
+-    private static String toJavaCipherSuitePrefix(String protocolVersion) {
+-        final char c;
+-        if (protocolVersion == null || protocolVersion.length() == 0) {
+-            c = 0;
+-        } else {
+-            c = protocolVersion.charAt(0);
+-        }
+-
+-        switch (c) {
+-        case 'T':
+-            return "TLS";
+-        case 'S':
+-            return "SSL";
+-        default:
+-            return "UNKNOWN";
+-        }
+-    }
+-
+-    @Override
+-    public void setUseClientMode(boolean clientMode) {
+-        if (clientMode != this.clientMode) {
+-            throw new UnsupportedOperationException();
+-        }
+-    }
+-
+-    @Override
+-    public boolean getUseClientMode() {
+-        return clientMode;
+-    }
+-
+-    @Override
+-    public void setNeedClientAuth(boolean b) {
+-        setClientAuth(b ? ClientAuthMode.REQUIRE : ClientAuthMode.NONE);
+-    }
+-
+-    @Override
+-    public boolean getNeedClientAuth() {
+-        return clientAuth == ClientAuthMode.REQUIRE;
+-    }
+-
+-    @Override
+-    public void setWantClientAuth(boolean b) {
+-        setClientAuth(b ? ClientAuthMode.OPTIONAL : ClientAuthMode.NONE);
+-    }
+-
+-    @Override
+-    public boolean getWantClientAuth() {
+-        return clientAuth == ClientAuthMode.OPTIONAL;
+-    }
+-
+-    private void setClientAuth(ClientAuthMode mode) {
+-        if (clientMode) {
+-            return;
+-        }
+-        synchronized (this) {
+-            if (clientAuth == mode) {
+-                // No need to issue any JNI calls if the mode is the same
+-                return;
+-            }
+-            switch (mode) {
+-                case NONE:
+-                    SSL.setVerify(ssl, SSL.SSL_CVERIFY_NONE, OpenSslContext.VERIFY_DEPTH);
+-                    break;
+-                case REQUIRE:
+-                    SSL.setVerify(ssl, SSL.SSL_CVERIFY_REQUIRE, OpenSslContext.VERIFY_DEPTH);
+-                    break;
+-                case OPTIONAL:
+-                    SSL.setVerify(ssl, SSL.SSL_CVERIFY_OPTIONAL, OpenSslContext.VERIFY_DEPTH);
+-                    break;
+-            }
+-            clientAuth = mode;
+-        }
+-    }
+-
+-    @Override
+-    public void setEnableSessionCreation(boolean b) {
+-        if (b) {
+-            throw new UnsupportedOperationException();
+-        }
+-    }
+-
+-    @Override
+-    public boolean getEnableSessionCreation() {
+-        return false;
+-    }
+-
+-    @Override
+-    @SuppressWarnings("FinalizeDeclaration")
+-    protected void finalize() throws Throwable {
+-        super.finalize();
+-        // Call shutdown as the user may have created the OpenSslEngine and not used it at all.
+-        shutdown();
+-    }
+-
+-    private final class OpenSslSession implements SSLSession {
+-        // SSLSession implementation seems to not need to be thread-safe so no need for volatile etc.
+-        private X509Certificate[] x509PeerCerts;
+-
+-        // lazy init for memory reasons
+-        private Map<String, Object> values;
+-
+-        @Override
+-        public byte[] getId() {
+-            final byte[] id;
+-            synchronized (OpenSslEngine.this) {
+-                if (destroyed == 0) {
+-                    id = SSL.getSessionId(ssl);
+-                } else {
+-                    id = EmptyArrays.EMPTY_BYTES;
+-                }
+-            }
+-            // We don't cache that to keep memory usage to a minimum.
+-            if (id == null) {
+-                // The id should never be null, if it was null then the SESSION itself was not valid.
+-                throw new IllegalStateException("SSL session ID not available");
+-            }
+-            return id;
+-        }
+-
+-        @Override
+-        public SSLSessionContext getSessionContext() {
+-            return sessionContext;
+-        }
+-
+-        @Override
+-        public long getCreationTime() {
+-            synchronized (OpenSslEngine.this) {
+-                if (destroyed == 0) {
+-                    // We need ot multiple by 1000 as openssl uses seconds and we need milli-seconds.
+-                    return SSL.getTime(ssl) * 1000L;
+-                }
+-                return 0;
+-            }
+-        }
+-
+-        @Override
+-        public long getLastAccessedTime() {
+-            // TODO: Add proper implementation
+-            return getCreationTime();
+-        }
+-
+-        @Override
+-        public void invalidate() {
+-            // NOOP
+-        }
+-
+-        @Override
+-        public boolean isValid() {
+-            return false;
+-        }
+-
+-        @Override
+-        public void putValue(String name, Object value) {
+-            if (name == null) {
+-                throw new NullPointerException("name");
+-            }
+-            if (value == null) {
+-                throw new NullPointerException("value");
+-            }
+-            Map<String, Object> values = this.values;
+-            if (values == null) {
+-                // Use size of 2 to keep the memory overhead small
+-                values = this.values = new HashMap<String, Object>(2);
+-            }
+-            Object old = values.put(name, value);
+-            if (value instanceof SSLSessionBindingListener) {
+-                ((SSLSessionBindingListener) value).valueBound(new SSLSessionBindingEvent(this, name));
+-            }
+-            notifyUnbound(old, name);
+-        }
+-
+-        @Override
+-        public Object getValue(String name) {
+-            if (name == null) {
+-                throw new NullPointerException("name");
+-            }
+-            if (values == null) {
+-                return null;
+-            }
+-            return values.get(name);
+-        }
+-
+-        @Override
+-        public void removeValue(String name) {
+-            if (name == null) {
+-                throw new NullPointerException("name");
+-            }
+-            Map<String, Object> values = this.values;
+-            if (values == null) {
+-                return;
+-            }
+-            Object old = values.remove(name);
+-            notifyUnbound(old, name);
+-        }
+-
+-        @Override
+-        public String[] getValueNames() {
+-            Map<String, Object> values = this.values;
+-            if (values == null || values.isEmpty()) {
+-                return EmptyArrays.EMPTY_STRINGS;
+-            }
+-            return values.keySet().toArray(new String[values.size()]);
+-        }
+-
+-        private void notifyUnbound(Object value, String name) {
+-            if (value instanceof SSLSessionBindingListener) {
+-                ((SSLSessionBindingListener) value).valueUnbound(new SSLSessionBindingEvent(this, name));
+-            }
+-        }
+-
+-        @Override
+-        public Certificate[] getPeerCertificates() throws SSLPeerUnverifiedException {
+-            // these are lazy created to reduce memory overhead
+-            Certificate[] c = peerCerts;
+-            if (c == null) {
+-                synchronized (OpenSslEngine.this) {
+-                    if (destroyed == 0) {
+-                        if (SSL.isInInit(ssl) != 0) {
+-                            throw new SSLPeerUnverifiedException("peer not verified");
+-                        }
+-                        c = peerCerts = initPeerCertChain();
+-                    } else {
+-                        c = peerCerts = EMPTY_CERTIFICATES;
+-                    }
+-                }
+-            }
+-            return c;
+-        }
+-
+-        @Override
+-        public Certificate[] getLocalCertificates() {
+-            // TODO: Find out how to get these
+-            return EMPTY_CERTIFICATES;
+-        }
+-
+-        @Override
+-        public X509Certificate[] getPeerCertificateChain() throws SSLPeerUnverifiedException {
+-            // these are lazy created to reduce memory overhead
+-            X509Certificate[] c = x509PeerCerts;
+-            if (c == null) {
+-                final byte[][] chain;
+-                synchronized (OpenSslEngine.this) {
+-                    if (destroyed == 0) {
+-                        if (SSL.isInInit(ssl) != 0) {
+-                            throw new SSLPeerUnverifiedException("peer not verified");
+-                        }
+-                        chain = SSL.getPeerCertChain(ssl);
+-                    } else {
+-                        c = x509PeerCerts = EMPTY_X509_CERTIFICATES;
+-                        return c;
+-                    }
+-                }
+-                if (chain == null) {
+-                    throw new SSLPeerUnverifiedException("peer not verified");
+-                }
+-                X509Certificate[] peerCerts = new X509Certificate[chain.length];
+-                for (int i = 0; i < peerCerts.length; i++) {
+-                    try {
+-                        peerCerts[i] = X509Certificate.getInstance(chain[i]);
+-                    } catch (CertificateException e) {
+-                        throw new IllegalStateException(e);
+-                    }
+-                }
+-                c = x509PeerCerts = peerCerts;
+-            }
+-            return c;
+-        }
+-
+-        @Override
+-        public Principal getPeerPrincipal() throws SSLPeerUnverifiedException {
+-            Certificate[] peer = getPeerCertificates();
+-            if (peer == null || peer.length == 0) {
+-                return null;
+-            }
+-            return principal(peer);
+-        }
+-
+-        @Override
+-        public Principal getLocalPrincipal() {
+-            Certificate[] local = getLocalCertificates();
+-            if (local == null || local.length == 0) {
+-                return null;
+-            }
+-            return principal(local);
+-        }
+-
+-        private Principal principal(Certificate[] certs) {
+-            return ((java.security.cert.X509Certificate) certs[0]).getIssuerX500Principal();
+-        }
+-
+-        @Override
+-        public String getCipherSuite() {
+-            if (!handshakeFinished) {
+-                return INVALID_CIPHER;
+-            }
+-            if (cipher == null) {
+-                final String c;
+-                synchronized (OpenSslEngine.this) {
+-                    if (destroyed == 0) {
+-                        c = toJavaCipherSuite(SSL.getCipherForSSL(ssl));
+-                    } else {
+-                        c = INVALID_CIPHER;
+-                    }
+-                }
+-                if (c != null) {
+-                    cipher = c;
+-                }
+-            }
+-            return cipher;
+-        }
+-
+-        @Override
+-        public String getProtocol() {
+-            String applicationProtocol = OpenSslEngine.this.applicationProtocol;
+-            final String version;
+-            synchronized (OpenSslEngine.this) {
+-                if (destroyed == 0) {
+-                    version = SSL.getVersion(ssl);
+-                } else {
+-                    return StringUtil.EMPTY_STRING;
+-                }
+-            }
+-            if (applicationProtocol == null || applicationProtocol.isEmpty()) {
+-                return version;
+-            } else {
+-                return version + ':' + applicationProtocol;
+-            }
+-        }
+-
+-        @Override
+-        public String getPeerHost() {
+-            return null;
+-        }
+-
+-        @Override
+-        public int getPeerPort() {
+-            return 0;
+-        }
+-
+-        @Override
+-        public int getPacketBufferSize() {
+-            return MAX_ENCRYPTED_PACKET_LENGTH;
+-        }
+-
+-        @Override
+-        public int getApplicationBufferSize() {
+-            return MAX_PLAINTEXT_LENGTH;
+-        }
+-
+-        private Certificate[] initPeerCertChain() throws SSLPeerUnverifiedException {
+-            byte[][] chain = SSL.getPeerCertChain(ssl);
+-            final byte[] clientCert;
+-            if (!clientMode) {
+-                // if used on the server side SSL_get_peer_cert_chain(...) will not include the remote peer certificate.
+-                // We use SSL_get_peer_certificate to get it in this case and add it to our array later.
+-                //
+-                // See https://www.openssl.org/docs/ssl/SSL_get_peer_cert_chain.html
+-                clientCert = SSL.getPeerCertificate(ssl);
+-            } else {
+-                clientCert = null;
+-            }
+-
+-            if (chain == null && clientCert == null) {
+-                throw new SSLPeerUnverifiedException("peer not verified");
+-            }
+-            int len = 0;
+-            if (chain != null) {
+-                len += chain.length;
+-            }
+-
+-            int i = 0;
+-            Certificate[] peerCerts;
+-            if (clientCert != null) {
+-                len++;
+-                peerCerts = new Certificate[len];
+-                peerCerts[i++] = new OpenSslX509Certificate(clientCert);
+-            } else {
+-                peerCerts = new Certificate[len];
+-            }
+-            if (chain != null) {
+-                int a = 0;
+-                for (; i < peerCerts.length; i++) {
+-                    peerCerts[i] = new OpenSslX509Certificate(chain[a++]);
+-                }
+-            }
+-            return peerCerts;
+-        }
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslEngineMap.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslEngineMap.java
+deleted file mode 100644
+index 382a28d..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslEngineMap.java
++++ /dev/null
+@@ -1,42 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-interface OpenSslEngineMap {
+-
+-    OpenSslEngineMap EMPTY = new OpenSslEngineMap() {
+-        @Override
+-        public OpenSslEngine remove(long ssl) {
+-            return null;
+-        }
+-
+-        @Override
+-        public void add(OpenSslEngine engine) {
+-            // NOOP
+-        }
+-    };
+-
+-    /**
+-     * Remove the {@link OpenSslEngine} with the given {@code ssl} address and
+-     * return it.
+-     */
+-    OpenSslEngine remove(long ssl);
+-
+-    /**
+-     * Add a {@link OpenSslEngine} to this {@link OpenSslEngineMap}.
+-     */
+-    void add(OpenSslEngine engine);
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslServerContext.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslServerContext.java
+deleted file mode 100644
+index 83ee505..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslServerContext.java
++++ /dev/null
+@@ -1,418 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import io.netty.util.internal.EmptyArrays;
+-import org.apache.tomcat.jni.SSL;
+-import org.apache.tomcat.jni.SSLContext;
+-
+-import javax.net.ssl.KeyManager;
+-import javax.net.ssl.KeyManagerFactory;
+-import javax.net.ssl.SSLException;
+-import javax.net.ssl.TrustManager;
+-import javax.net.ssl.TrustManagerFactory;
+-import javax.net.ssl.X509ExtendedTrustManager;
+-import javax.net.ssl.X509TrustManager;
+-import java.io.File;
+-import java.security.KeyStore;
+-import java.security.cert.X509Certificate;
+-
+-import static io.netty.util.internal.ObjectUtil.*;
+-
+-/**
+- * A server-side {@link SslContext} which uses OpenSSL's SSL/TLS implementation.
+- */
+-public final class OpenSslServerContext extends OpenSslContext {
+-    private final OpenSslServerSessionContext sessionContext;
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     */
+-    public OpenSslServerContext(File certChainFile, File keyFile) throws SSLException {
+-        this(certChainFile, keyFile, null);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     */
+-    public OpenSslServerContext(File certChainFile, File keyFile, String keyPassword) throws SSLException {
+-        this(certChainFile, keyFile, keyPassword, null, IdentityCipherSuiteFilter.INSTANCE,
+-             ApplicationProtocolConfig.DISABLED, 0, 0);
+-    }
+-
+-    /**
+-     * @deprecated use {@link #OpenSslServerContext(
+-     *             File, File, String, Iterable, CipherSuiteFilter, ApplicationProtocolConfig, long, long)}
+-     *
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param apn Provides a means to configure parameters related to application protocol negotiation.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    @Deprecated
+-    public OpenSslServerContext(
+-            File certChainFile, File keyFile, String keyPassword,
+-            Iterable<String> ciphers, ApplicationProtocolConfig apn,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(certChainFile, keyFile, keyPassword, ciphers, IdentityCipherSuiteFilter.INSTANCE,
+-             apn, sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * @deprecated Use the constructors that accepts {@link ApplicationProtocolConfig} or
+-     *             {@link ApplicationProtocolNegotiator} instead.
+-     *
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param nextProtocols the application layer protocols to accept, in the order of preference.
+-     *                      {@code null} to disable TLS NPN/ALPN extension.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    @Deprecated
+-    public OpenSslServerContext(
+-            File certChainFile, File keyFile, String keyPassword,
+-            Iterable<String> ciphers, Iterable<String> nextProtocols,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(certChainFile, keyFile, keyPassword, ciphers,
+-            toApplicationProtocolConfig(nextProtocols), sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param config Application protocol config.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     * @deprecated use {@link #OpenSslServerContext(File, TrustManagerFactory, File, File, String, KeyManagerFactory,
+-     * Iterable, CipherSuiteFilter, ApplicationProtocolConfig, long, long)}
+-     */
+-    @Deprecated
+-    public OpenSslServerContext(
+-            File certChainFile, File keyFile, String keyPassword, TrustManagerFactory trustManagerFactory,
+-            Iterable<String> ciphers, ApplicationProtocolConfig config,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(certChainFile, keyFile, keyPassword, trustManagerFactory, ciphers,
+-                toNegotiator(config), sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param apn Application protocol negotiator.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     * @deprecated use {@link #OpenSslServerContext(File, TrustManagerFactory, File, File, String, KeyManagerFactory,
+-     * Iterable, CipherSuiteFilter, ApplicationProtocolConfig, long, long)}
+-     */
+-    @Deprecated
+-    public OpenSslServerContext(
+-            File certChainFile, File keyFile, String keyPassword, TrustManagerFactory trustManagerFactory,
+-            Iterable<String> ciphers, OpenSslApplicationProtocolNegotiator apn,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(null, trustManagerFactory, certChainFile, keyFile, keyPassword, null,
+-             ciphers, null, apn, sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     * @param apn Provides a means to configure parameters related to application protocol negotiation.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    public OpenSslServerContext(
+-            File certChainFile, File keyFile, String keyPassword,
+-            Iterable<String> ciphers, CipherSuiteFilter cipherFilter, ApplicationProtocolConfig apn,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(null, null, certChainFile, keyFile, keyPassword, null,
+-             ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param trustCertChainFile an X.509 certificate chain file in PEM format.
+-     *                      This provides the certificate chains used for mutual authentication.
+-     *                      {@code null} to use the system default
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from clients.
+-     *                            {@code null} to use the default or the results of parsing {@code trustCertChainFile}.
+-     * @param keyCertChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param keyManagerFactory the {@link KeyManagerFactory} that provides the {@link KeyManager}s
+-     *                          that is used to encrypt data being sent to clients.
+-     *                          {@code null} to use the default or the results of parsing
+-     *                          {@code keyCertChainFile} and {@code keyFile}.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     *                Only required if {@code provider} is {@link SslProvider#JDK}
+-     * @param config Provides a means to configure parameters related to application protocol negotiation.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    public OpenSslServerContext(
+-            File trustCertChainFile, TrustManagerFactory trustManagerFactory,
+-            File keyCertChainFile, File keyFile, String keyPassword, KeyManagerFactory keyManagerFactory,
+-            Iterable<String> ciphers, CipherSuiteFilter cipherFilter, ApplicationProtocolConfig config,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(trustCertChainFile, trustManagerFactory, keyCertChainFile, keyFile, keyPassword, keyManagerFactory,
+-             ciphers, cipherFilter, toNegotiator(config), sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     * @param config Application protocol config.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    @Deprecated
+-    public OpenSslServerContext(File certChainFile, File keyFile, String keyPassword,
+-                                TrustManagerFactory trustManagerFactory, Iterable<String> ciphers,
+-                                CipherSuiteFilter cipherFilter, ApplicationProtocolConfig config,
+-                                long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(null, trustManagerFactory, certChainFile, keyFile, keyPassword, null, ciphers, cipherFilter,
+-                      toNegotiator(config), sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     * @param certChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     * @param apn Application protocol negotiator.
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     * @deprecated use {@link #OpenSslServerContext(File, TrustManagerFactory, File, File, String, KeyManagerFactory,
+-     * Iterable, CipherSuiteFilter, OpenSslApplicationProtocolNegotiator, long, long)}
+-     */
+-    @Deprecated
+-    public OpenSslServerContext(
+-            File certChainFile, File keyFile, String keyPassword, TrustManagerFactory trustManagerFactory,
+-            Iterable<String> ciphers, CipherSuiteFilter cipherFilter, OpenSslApplicationProtocolNegotiator apn,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        this(null, trustManagerFactory, certChainFile, keyFile, keyPassword, null, ciphers, cipherFilter,
+-             apn, sessionCacheSize, sessionTimeout);
+-    }
+-
+-    /**
+-     * Creates a new instance.
+-     *
+-     *
+-     * @param trustCertChainFile an X.509 certificate chain file in PEM format.
+-     *                      This provides the certificate chains used for mutual authentication.
+-     *                      {@code null} to use the system default
+-     * @param trustManagerFactory the {@link TrustManagerFactory} that provides the {@link TrustManager}s
+-     *                            that verifies the certificates sent from clients.
+-     *                            {@code null} to use the default or the results of parsing {@code trustCertChainFile}.
+-     * @param keyCertChainFile an X.509 certificate chain file in PEM format
+-     * @param keyFile a PKCS#8 private key file in PEM format
+-     * @param keyPassword the password of the {@code keyFile}.
+-     *                    {@code null} if it's not password-protected.
+-     * @param keyManagerFactory the {@link KeyManagerFactory} that provides the {@link KeyManager}s
+-     *                          that is used to encrypt data being sent to clients.
+-     *                          {@code null} to use the default or the results of parsing
+-     *                          {@code keyCertChainFile} and {@code keyFile}.
+-     * @param ciphers the cipher suites to enable, in the order of preference.
+-     *                {@code null} to use the default cipher suites.
+-     * @param cipherFilter a filter to apply over the supplied list of ciphers
+-     *                Only required if {@code provider} is {@link SslProvider#JDK}
+-     * @param apn Application Protocol Negotiator object
+-     * @param sessionCacheSize the size of the cache used for storing SSL session objects.
+-     *                         {@code 0} to use the default value.
+-     * @param sessionTimeout the timeout for the cached SSL session objects, in seconds.
+-     *                       {@code 0} to use the default value.
+-     */
+-    public OpenSslServerContext(
+-            File trustCertChainFile, TrustManagerFactory trustManagerFactory,
+-            File keyCertChainFile, File keyFile, String keyPassword, KeyManagerFactory keyManagerFactory,
+-            Iterable<String> ciphers, CipherSuiteFilter cipherFilter, OpenSslApplicationProtocolNegotiator apn,
+-            long sessionCacheSize, long sessionTimeout) throws SSLException {
+-        super(ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout, SSL.SSL_MODE_SERVER);
+-        OpenSsl.ensureAvailability();
+-
+-        checkNotNull(keyCertChainFile, "keyCertChainFile");
+-        if (!keyCertChainFile.isFile()) {
+-            throw new IllegalArgumentException("keyCertChainFile is not a file: " + keyCertChainFile);
+-        }
+-        checkNotNull(keyFile, "keyFile");
+-        if (!keyFile.isFile()) {
+-            throw new IllegalArgumentException("keyFile is not a file: " + keyFile);
+-        }
+-        if (keyPassword == null) {
+-            keyPassword = "";
+-        }
+-
+-        // Create a new SSL_CTX and configure it.
+-        boolean success = false;
+-        try {
+-            synchronized (OpenSslContext.class) {
+-                /* Set certificate verification policy. */
+-                SSLContext.setVerify(ctx, SSL.SSL_CVERIFY_NONE, VERIFY_DEPTH);
+-
+-                /* Load the certificate chain. We must skip the first cert when server mode */
+-                if (!SSLContext.setCertificateChainFile(ctx, keyCertChainFile.getPath(), true)) {
+-                    long error = SSL.getLastErrorNumber();
+-                    if (OpenSsl.isError(error)) {
+-                        String err = SSL.getErrorString(error);
+-                        throw new SSLException(
+-                                "failed to set certificate chain: " + keyCertChainFile + " (" + err + ')');
+-                    }
+-                }
+-
+-                /* Load the certificate file and private key. */
+-                try {
+-                    if (!SSLContext.setCertificate(
+-                            ctx, keyCertChainFile.getPath(), keyFile.getPath(), keyPassword, SSL.SSL_AIDX_RSA)) {
+-                        long error = SSL.getLastErrorNumber();
+-                        if (OpenSsl.isError(error)) {
+-                            String err = SSL.getErrorString(error);
+-                            throw new SSLException("failed to set certificate: " +
+-                                                   keyCertChainFile + " and " + keyFile + " (" + err + ')');
+-                        }
+-                    }
+-                } catch (SSLException e) {
+-                    throw e;
+-                } catch (Exception e) {
+-                    throw new SSLException("failed to set certificate: " + keyCertChainFile + " and " + keyFile, e);
+-                }
+-                try {
+-                    if (trustManagerFactory == null) {
+-                        // Mimic the way SSLContext.getInstance(KeyManager[], null, null) works
+-                        trustManagerFactory = TrustManagerFactory.getInstance(
+-                                TrustManagerFactory.getDefaultAlgorithm());
+-                    }
+-                    if (trustCertChainFile != null) {
+-                        trustManagerFactory = buildTrustManagerFactory(trustCertChainFile, trustManagerFactory);
+-                    } else {
+-                        char[] keyPasswordChars =
+-                                keyPassword == null ? EmptyArrays.EMPTY_CHARS : keyPassword.toCharArray();
+-
+-                        KeyStore ks = buildKeyStore(keyCertChainFile, keyFile, keyPasswordChars);
+-                        trustManagerFactory.init(ks);
+-                    }
+-
+-                    final X509TrustManager manager = chooseTrustManager(trustManagerFactory.getTrustManagers());
+-
+-                    // Use this to prevent an error when running on java < 7
+-                    if (useExtendedTrustManager(manager)) {
+-                        final X509ExtendedTrustManager extendedManager = (X509ExtendedTrustManager) manager;
+-                        SSLContext.setCertVerifyCallback(ctx, new AbstractCertificateVerifier() {
+-                            @Override
+-                            void verify(OpenSslEngine engine, X509Certificate[] peerCerts, String auth)
+-                                    throws Exception {
+-                                extendedManager.checkClientTrusted(peerCerts, auth, engine);
+-                            }
+-                        });
+-                    } else {
+-                        SSLContext.setCertVerifyCallback(ctx, new AbstractCertificateVerifier() {
+-                            @Override
+-                            void verify(OpenSslEngine engine, X509Certificate[] peerCerts, String auth)
+-                                    throws Exception {
+-                                manager.checkClientTrusted(peerCerts, auth);
+-                            }
+-                        });
+-                    }
+-                } catch (Exception e) {
+-                    throw new SSLException("unable to setup trustmanager", e);
+-                }
+-            }
+-            sessionContext = new OpenSslServerSessionContext(ctx);
+-            success = true;
+-        } finally {
+-            if (!success) {
+-                destroyPools();
+-            }
+-        }
+-    }
+-
+-    @Override
+-    public OpenSslServerSessionContext sessionContext() {
+-        return sessionContext;
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslServerSessionContext.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslServerSessionContext.java
+deleted file mode 100644
+index 693801f..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslServerSessionContext.java
++++ /dev/null
+@@ -1,79 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import org.apache.tomcat.jni.SSL;
+-import org.apache.tomcat.jni.SSLContext;
+-
+-
+-/**
+- * {@link OpenSslSessionContext} implementation which offers extra methods which are only useful for the server-side.
+- */
+-public final class OpenSslServerSessionContext extends OpenSslSessionContext {
+-    OpenSslServerSessionContext(long context) {
+-        super(context);
+-    }
+-
+-    @Override
+-    public void setSessionTimeout(int seconds) {
+-        if (seconds < 0) {
+-            throw new IllegalArgumentException();
+-        }
+-        SSLContext.setSessionCacheTimeout(context, seconds);
+-    }
+-
+-    @Override
+-    public int getSessionTimeout() {
+-        return (int) SSLContext.getSessionCacheTimeout(context);
+-    }
+-
+-    @Override
+-    public void setSessionCacheSize(int size) {
+-        if (size < 0) {
+-            throw new IllegalArgumentException();
+-        }
+-        SSLContext.setSessionCacheSize(context, size);
+-    }
+-
+-    @Override
+-    public int getSessionCacheSize() {
+-        return (int) SSLContext.getSessionCacheSize(context);
+-    }
+-
+-    @Override
+-    public void setSessionCacheEnabled(boolean enabled) {
+-        long mode = enabled ? SSL.SSL_SESS_CACHE_SERVER : SSL.SSL_SESS_CACHE_OFF;
+-        SSLContext.setSessionCacheMode(context, mode);
+-    }
+-
+-    @Override
+-    public boolean isSessionCacheEnabled() {
+-        return SSLContext.getSessionCacheMode(context) == SSL.SSL_SESS_CACHE_SERVER;
+-    }
+-
+-    /**
+-     * Set the context within which session be reused (server side only)
+-     * See <a href="http://www.openssl.org/docs/ssl/SSL_CTX_set_session_id_context.html">
+-     *     man SSL_CTX_set_session_id_context</a>
+-     *
+-     * @param sidCtx can be any kind of binary data, it is therefore possible to use e.g. the name
+-     *               of the application and/or the hostname and/or service name
+-     * @return {@code true} if success, {@code false} otherwise.
+-     */
+-    public boolean setSessionIdContext(byte[] sidCtx) {
+-        return SSLContext.setSessionIdContext(context, sidCtx);
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslSessionContext.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslSessionContext.java
+deleted file mode 100644
+index fd17821..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslSessionContext.java
++++ /dev/null
+@@ -1,90 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import org.apache.tomcat.jni.SSLContext;
+-
+-import javax.net.ssl.SSLSession;
+-import javax.net.ssl.SSLSessionContext;
+-import java.util.Enumeration;
+-import java.util.NoSuchElementException;
+-
+-/**
+- * OpenSSL specific {@link SSLSessionContext} implementation.
+- */
+-public abstract class OpenSslSessionContext implements SSLSessionContext {
+-    private static final Enumeration<byte[]> EMPTY = new EmptyEnumeration();
+-
+-    private final OpenSslSessionStats stats;
+-    final long context;
+-
+-    OpenSslSessionContext(long context) {
+-        this.context = context;
+-        stats = new OpenSslSessionStats(context);
+-    }
+-
+-    @Override
+-    public SSLSession getSession(byte[] bytes) {
+-        if (bytes == null) {
+-            throw new NullPointerException("bytes");
+-        }
+-        return null;
+-    }
+-
+-    @Override
+-    public Enumeration<byte[]> getIds() {
+-        return EMPTY;
+-    }
+-
+-    /**
+-     * Sets the SSL session ticket keys of this context.
+-     */
+-    public void setTicketKeys(byte[] keys) {
+-        if (keys == null) {
+-            throw new NullPointerException("keys");
+-        }
+-        SSLContext.setSessionTicketKeys(context, keys);
+-    }
+-
+-    /**
+-     * Enable or disable caching of SSL sessions.
+-     */
+-    public abstract void setSessionCacheEnabled(boolean enabled);
+-
+-    /**
+-     * Return {@code true} if caching of SSL sessions is enabled, {@code false} otherwise.
+-     */
+-    public abstract boolean isSessionCacheEnabled();
+-
+-    /**
+-     * Returns the stats of this context.
+-     */
+-    public OpenSslSessionStats stats() {
+-        return stats;
+-    }
+-
+-    private static final class EmptyEnumeration implements Enumeration<byte[]> {
+-        @Override
+-        public boolean hasMoreElements() {
+-            return false;
+-        }
+-
+-        @Override
+-        public byte[] nextElement() {
+-            throw new NoSuchElementException();
+-        }
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/OpenSslSessionStats.java b/handler/src/main/java/io/netty/handler/ssl/OpenSslSessionStats.java
+deleted file mode 100644
+index 2ec5146..0000000
+--- a/handler/src/main/java/io/netty/handler/ssl/OpenSslSessionStats.java
++++ /dev/null
+@@ -1,122 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-
+-package io.netty.handler.ssl;
+-
+-import org.apache.tomcat.jni.SSLContext;
+-
+-/**
+- * Stats exposed by an OpenSSL session context.
+- *
+- * @see <a href="https://www.openssl.org/docs/ssl/SSL_CTX_sess_number.html"><code>SSL_CTX_sess_number</code></a>
+- */
+-public final class OpenSslSessionStats {
+-
+-    private final long context;
+-
+-    OpenSslSessionStats(long context) {
+-        this.context = context;
+-    }
+-
+-    /**
+-     * Returns the current number of sessions in the internal session cache.
+-     */
+-    public long number() {
+-        return SSLContext.sessionNumber(context);
+-    }
+-
+-    /**
+-     * Returns the number of started SSL/TLS handshakes in client mode.
+-     */
+-    public long connect() {
+-        return SSLContext.sessionConnect(context);
+-    }
+-
+-    /**
+-     * Returns the number of successfully established SSL/TLS sessions in client mode.
+-     */
+-    public long connectGood() {
+-        return SSLContext.sessionConnectGood(context);
+-    }
+-
+-    /**
+-     * Returns the number of start renegotiations in client mode.
+-     */
+-    public long connectRenegotiate() {
+-        return SSLContext.sessionConnectRenegotiate(context);
+-    }
+-
+-    /**
+-     * Returns the number of started SSL/TLS handshakes in server mode.
+-     */
+-    public long accept() {
+-        return SSLContext.sessionAccept(context);
+-    }
+-
+-    /**
+-     * Returns the number of successfully established SSL/TLS sessions in server mode.
+-     */
+-    public long acceptGood() {
+-        return SSLContext.sessionAcceptGood(context);
+-    }
+-
+-    /**
+-     * Returns the number of start renegotiations in server mode.
+-     */
+-    public long acceptRenegotiate() {
+-        return SSLContext.sessionAcceptRenegotiate(context);
+-    }
+-
+-    /**
+-     * Returns the number of successfully reused sessions. In client mode, a session set with {@code SSL_set_session}
+-     * successfully reused is counted as a hit. In server mode, a session successfully retrieved from internal or
+-     * external cache is counted as a hit.
+-     */
+-    public long hits() {
+-        return SSLContext.sessionHits(context);
+-    }
+-
+-    /**
+-     * Returns the number of successfully retrieved sessions from the external session cache in server mode.
+-     */
+-    public long cbHits() {
+-        return SSLContext.sessionCbHits(context);
+-    }
+-
+-    /**
+-     * Returns the number of sessions proposed by clients that were not found in the internal session cache
+-     * in server mode.
+-     */
+-    public long misses() {
+-        return SSLContext.sessionMisses(context);
+-    }
+-
+-    /**
+-     * Returns the number of sessions proposed by clients and either found in the internal or external session cache
+-     * in server mode, but that were invalid due to timeout. These sessions are not included in the {@link #hits()}
+-     * count.
+-     */
+-    public long timeouts() {
+-        return SSLContext.sessionTimeouts(context);
+-    }
+-
+-    /**
+-     * Returns the number of sessions that were removed because the maximum session cache size was exceeded.
+-     */
+-    public long cacheFull() {
+-        return SSLContext.sessionCacheFull(context);
+-    }
+-}
+diff --git a/handler/src/main/java/io/netty/handler/ssl/SslContext.java b/handler/src/main/java/io/netty/handler/ssl/SslContext.java
+index 890b362..42abc14 100644
+--- a/handler/src/main/java/io/netty/handler/ssl/SslContext.java
++++ b/handler/src/main/java/io/netty/handler/ssl/SslContext.java
+@@ -110,11 +110,7 @@ public abstract class SslContext {
+     }
+ 
+     private static SslProvider defaultProvider() {
+-        if (OpenSsl.isAvailable()) {
+-            return SslProvider.OPENSSL;
+-        } else {
+-            return SslProvider.JDK;
+-        }
++    	return SslProvider.JDK;
+     }
+ 
+     /**
+@@ -399,10 +395,6 @@ public abstract class SslContext {
+             return new JdkSslServerContext(
+                     trustCertChainFile, trustManagerFactory, keyCertChainFile, keyFile, keyPassword,
+                     keyManagerFactory, ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout);
+-        case OPENSSL:
+-            return new OpenSslServerContext(
+-                    trustCertChainFile, trustManagerFactory, keyCertChainFile, keyFile, keyPassword,
+-                    keyManagerFactory, ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout);
+         default:
+             throw new Error(provider.toString());
+         }
+@@ -729,10 +721,6 @@ public abstract class SslContext {
+                 return new JdkSslClientContext(
+                         trustCertChainFile, trustManagerFactory, keyCertChainFile, keyFile, keyPassword,
+                         keyManagerFactory, ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout);
+-            case OPENSSL:
+-                return new OpenSslClientContext(
+-                        trustCertChainFile, trustManagerFactory, keyCertChainFile, keyFile, keyPassword,
+-                        keyManagerFactory, ciphers, cipherFilter, apn, sessionCacheSize, sessionTimeout);
+         }
+         // Should never happen!!
+         throw new Error();
+diff --git a/handler/src/main/java/io/netty/handler/ssl/SslHandler.java b/handler/src/main/java/io/netty/handler/ssl/SslHandler.java
+index a3b1716..c492dc4 100644
+--- a/handler/src/main/java/io/netty/handler/ssl/SslHandler.java
++++ b/handler/src/main/java/io/netty/handler/ssl/SslHandler.java
+@@ -161,6 +161,15 @@ import java.util.regex.Pattern;
+  */
+ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundHandler {
+ 
++    private static final int MAX_PLAINTEXT_LENGTH = 16 * 1024; // 2^14
++    private static final int MAX_COMPRESSED_LENGTH = MAX_PLAINTEXT_LENGTH + 1024;
++    private static final int MAX_CIPHERTEXT_LENGTH = MAX_COMPRESSED_LENGTH + 1024;
++
++    // Header (5) + Data (2^14) + Compression (1024) + Encryption (1024) + MAC (20) + Padding (256)
++    static final int MAX_ENCRYPTED_PACKET_LENGTH = MAX_CIPHERTEXT_LENGTH + 5 + 20 + 256;
++
++    static final int MAX_ENCRYPTION_OVERHEAD_LENGTH = MAX_ENCRYPTED_PACKET_LENGTH - MAX_PLAINTEXT_LENGTH;
++
+     private static final InternalLogger logger =
+             InternalLoggerFactory.getInstance(SslHandler.class);
+ 
+@@ -290,7 +299,7 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
+         this.startTls = startTls;
+         maxPacketBufferSize = engine.getSession().getPacketBufferSize();
+ 
+-        boolean opensslEngine = engine instanceof OpenSslEngine;
++        boolean opensslEngine = false;
+         wantsDirectBuffer = opensslEngine;
+         wantsLargeOutboundNetworkBuffer = !opensslEngine;
+ 
+@@ -883,7 +892,7 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
+ 
+         boolean nonSslRecord = false;
+ 
+-        while (totalLength < OpenSslEngine.MAX_ENCRYPTED_PACKET_LENGTH) {
++        while (totalLength < MAX_ENCRYPTED_PACKET_LENGTH) {
+             final int readableBytes = endOffset - offset;
+             if (readableBytes < 5) {
+                 break;
+@@ -904,7 +913,7 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
+             }
+ 
+             int newTotalLength = totalLength + packetLength;
+-            if (newTotalLength > OpenSslEngine.MAX_ENCRYPTED_PACKET_LENGTH) {
++            if (newTotalLength > MAX_ENCRYPTED_PACKET_LENGTH) {
+                 // Don't read too much.
+                 break;
+             }
+@@ -1077,47 +1086,7 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
+     private SSLEngineResult unwrap(
+             SSLEngine engine, ByteBuf in, int readerIndex, int len, ByteBuf out) throws SSLException {
+         int nioBufferCount = in.nioBufferCount();
+-        if (engine instanceof OpenSslEngine && nioBufferCount > 1) {
+-            /**
+-             * If {@link OpenSslEngine} is in use,
+-             * we can use a special {@link OpenSslEngine#unwrap(ByteBuffer[], ByteBuffer[])} method
+-             * that accepts multiple {@link ByteBuffer}s without additional memory copies.
+-             */
+-            OpenSslEngine opensslEngine = (OpenSslEngine) engine;
+-            int overflows = 0;
+-            ByteBuffer[] in0 = in.nioBuffers(readerIndex, len);
+-            try {
+-                for (;;) {
+-                    int writerIndex = out.writerIndex();
+-                    int writableBytes = out.writableBytes();
+-                    ByteBuffer out0;
+-                    if (out.nioBufferCount() == 1) {
+-                        out0 = out.internalNioBuffer(writerIndex, writableBytes);
+-                    } else {
+-                        out0 = out.nioBuffer(writerIndex, writableBytes);
+-                    }
+-                    singleBuffer[0] = out0;
+-                    SSLEngineResult result = opensslEngine.unwrap(in0, singleBuffer);
+-                    out.writerIndex(out.writerIndex() + result.bytesProduced());
+-                    switch (result.getStatus()) {
+-                        case BUFFER_OVERFLOW:
+-                            int max = engine.getSession().getApplicationBufferSize();
+-                            switch (overflows ++) {
+-                                case 0:
+-                                    out.ensureWritable(Math.min(max, in.readableBytes()));
+-                                    break;
+-                                default:
+-                                    out.ensureWritable(max);
+-                            }
+-                            break;
+-                        default:
+-                            return result;
+-                    }
+-                }
+-            } finally {
+-                singleBuffer[0] = null;
+-            }
+-        } else {
++        
+             int overflows = 0;
+             ByteBuffer in0;
+             if (nioBufferCount == 1) {
+@@ -1154,7 +1123,6 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
+                         return result;
+                 }
+             }
+-        }
+     }
+ 
+     /**
+@@ -1514,7 +1482,7 @@ public class SslHandler extends ByteToMessageDecoder implements ChannelOutboundH
+             return allocate(ctx, maxPacketBufferSize);
+         } else {
+             return allocate(ctx, Math.min(
+-                    pendingBytes + OpenSslEngine.MAX_ENCRYPTION_OVERHEAD_LENGTH,
++                    pendingBytes + MAX_ENCRYPTION_OVERHEAD_LENGTH,
+                     maxPacketBufferSize));
+         }
+     }
+diff --git a/handler/src/test/java/io/netty/handler/ssl/JdkSslEngineTest.java b/handler/src/test/java/io/netty/handler/ssl/JdkSslEngineTest.java
+deleted file mode 100644
+index 9482f2b..0000000
+--- a/handler/src/test/java/io/netty/handler/ssl/JdkSslEngineTest.java
++++ /dev/null
+@@ -1,349 +0,0 @@
+-/*
+- * Copyright 2014 The Netty Project
+- *
+- * The Netty Project licenses this file to you under the Apache License,
+- * version 2.0 (the "License"); you may not use this file except in compliance
+- * with the License. You may obtain a copy of the License at:
+- *
+- *   http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+- * License for the specific language governing permissions and limitations
+- * under the License.
+- */
+-package io.netty.handler.ssl;
+-
+-import static org.junit.Assert.assertNull;
+-import static org.junit.Assert.assertTrue;
+-import static org.junit.Assume.assumeNoException;
+-import io.netty.bootstrap.Bootstrap;
+-import io.netty.bootstrap.ServerBootstrap;
+-import io.netty.channel.Channel;
+-import io.netty.channel.ChannelFuture;
+-import io.netty.channel.ChannelHandlerAdapter;
+-import io.netty.channel.ChannelHandlerContext;
+-import io.netty.channel.ChannelInitializer;
+-import io.netty.channel.ChannelPipeline;
+-import io.netty.channel.nio.NioEventLoopGroup;
+-import io.netty.channel.socket.nio.NioServerSocketChannel;
+-import io.netty.channel.socket.nio.NioSocketChannel;
+-import io.netty.handler.ssl.JdkApplicationProtocolNegotiator.ProtocolSelector;
+-import io.netty.handler.ssl.JdkApplicationProtocolNegotiator.ProtocolSelectorFactory;
+-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+-import io.netty.handler.ssl.util.SelfSignedCertificate;
+-import io.netty.util.NetUtil;
+-
+-import java.net.InetSocketAddress;
+-import java.security.cert.CertificateException;
+-import java.util.List;
+-import java.util.Set;
+-import java.util.concurrent.TimeUnit;
+-
+-import javax.net.ssl.SSLEngine;
+-import javax.net.ssl.SSLException;
+-import javax.net.ssl.SSLHandshakeException;
+-
+-import org.junit.Test;
+-
+-public class JdkSslEngineTest extends SSLEngineTest {
+-    private static final String PREFERRED_APPLICATION_LEVEL_PROTOCOL = "my-protocol-http2";
+-    private static final String FALLBACK_APPLICATION_LEVEL_PROTOCOL = "my-protocol-http1_1";
+-    private static final String APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE = "my-protocol-FOO";
+-
+-    @Test
+-    public void testNpn() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkNpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("NPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator apn = new JdkNpnApplicationProtocolNegotiator(true, true,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            mySetup(apn);
+-            runTest();
+-        } catch (RuntimeException e) {
+-            // NPN availability is dependent on the java version. If NPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testNpnNoCompatibleProtocolsNoHandshakeFailure() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkNpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("NPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator clientApn = new JdkNpnApplicationProtocolNegotiator(false, false,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkNpnApplicationProtocolNegotiator(false, false,
+-                    APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE);
+-            mySetup(serverApn, clientApn);
+-            runTest(null);
+-        } catch (Exception e) {
+-            // ALPN availability is dependent on the java version. If ALPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testNpnNoCompatibleProtocolsClientHandshakeFailure() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkNpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("NPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator clientApn = new JdkNpnApplicationProtocolNegotiator(true, true,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkNpnApplicationProtocolNegotiator(false, false,
+-                    APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE);
+-            mySetup(serverApn, clientApn);
+-            assertTrue(clientLatch.await(2, TimeUnit.SECONDS));
+-            assertTrue(clientException instanceof SSLHandshakeException);
+-        } catch (RuntimeException e) {
+-            // NPN availability is dependent on the java version. If NPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testNpnNoCompatibleProtocolsServerHandshakeFailure() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkNpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("NPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator clientApn = new JdkNpnApplicationProtocolNegotiator(false, false,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkNpnApplicationProtocolNegotiator(true, true,
+-                    APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE);
+-            mySetup(serverApn, clientApn);
+-            assertTrue(serverLatch.await(2, TimeUnit.SECONDS));
+-            assertTrue(serverException instanceof SSLHandshakeException);
+-        } catch (RuntimeException e) {
+-            // NPN availability is dependent on the java version. If NPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testAlpn() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkAlpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("ALPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator apn = new JdkAlpnApplicationProtocolNegotiator(true, true,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            mySetup(apn);
+-            runTest();
+-        } catch (Exception e) {
+-            // ALPN availability is dependent on the java version. If ALPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testAlpnNoCompatibleProtocolsNoHandshakeFailure() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkAlpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("ALPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator clientApn = new JdkAlpnApplicationProtocolNegotiator(false, false,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkAlpnApplicationProtocolNegotiator(false, false,
+-                    APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE);
+-            mySetup(serverApn, clientApn);
+-            runTest(null);
+-        } catch (Exception e) {
+-            // ALPN availability is dependent on the java version. If ALPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testAlpnNoCompatibleProtocolsServerHandshakeFailure() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkAlpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("ALPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator clientApn = new JdkAlpnApplicationProtocolNegotiator(false, false,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkAlpnApplicationProtocolNegotiator(true, true,
+-                    APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE);
+-            mySetup(serverApn, clientApn);
+-            assertTrue(serverLatch.await(2, TimeUnit.SECONDS));
+-            assertTrue(serverException instanceof SSLHandshakeException);
+-        } catch (Exception e) {
+-            // ALPN availability is dependent on the java version. If ALPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testAlpnCompatibleProtocolsDifferentClientOrder() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkAlpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("ALPN not on classpath");
+-            }
+-            // Even the preferred application protocol appears second in the client's list, it will be picked
+-            // because it's the first one on server's list.
+-            JdkApplicationProtocolNegotiator clientApn = new JdkAlpnApplicationProtocolNegotiator(false, false,
+-                FALLBACK_APPLICATION_LEVEL_PROTOCOL, PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkAlpnApplicationProtocolNegotiator(true, true,
+-                PREFERRED_APPLICATION_LEVEL_PROTOCOL, FALLBACK_APPLICATION_LEVEL_PROTOCOL);
+-            mySetup(serverApn, clientApn);
+-            assertNull(serverException);
+-            runTest(PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-        } catch (Exception e) {
+-            // ALPN availability is dependent on the java version. If ALPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    @Test
+-    public void testAlpnNoCompatibleProtocolsClientHandshakeFailure() throws Exception {
+-        try {
+-            // Typical code will not have to check this, but will get a initialization error on class load.
+-            // Check in this test just in case we have multiple tests that just the class and we already ignored the
+-            // initialization error.
+-            if (!JdkAlpnSslEngine.isAvailable()) {
+-                throw new RuntimeException("ALPN not on classpath");
+-            }
+-            JdkApplicationProtocolNegotiator clientApn = new JdkAlpnApplicationProtocolNegotiator(true, true,
+-                    PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-            JdkApplicationProtocolNegotiator serverApn = new JdkAlpnApplicationProtocolNegotiator(
+-                    new ProtocolSelectorFactory() {
+-                        @Override
+-                        public ProtocolSelector newSelector(SSLEngine engine, Set<String> supportedProtocols) {
+-                            return new ProtocolSelector() {
+-                                @Override
+-                                public void unsupported() {
+-                                }
+-
+-                                @Override
+-                                public String select(List<String> protocols) {
+-                                    return APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE;
+-                                }
+-                            };
+-                        }
+-                    }, JdkBaseApplicationProtocolNegotiator.FAIL_SELECTION_LISTENER_FACTORY,
+-                    APPLICATION_LEVEL_PROTOCOL_NOT_COMPATIBLE);
+-            mySetup(serverApn, clientApn);
+-            assertTrue(clientLatch.await(2, TimeUnit.SECONDS));
+-            assertTrue(clientException instanceof SSLHandshakeException);
+-        } catch (Exception e) {
+-            // ALPN availability is dependent on the java version. If ALPN is not available because of
+-            // java version incompatibility don't fail the test, but instead just skip the test
+-            assumeNoException(e);
+-        }
+-    }
+-
+-    private void mySetup(JdkApplicationProtocolNegotiator apn) throws InterruptedException, SSLException,
+-            CertificateException {
+-        mySetup(apn, apn);
+-    }
+-
+-    private void mySetup(JdkApplicationProtocolNegotiator serverApn, JdkApplicationProtocolNegotiator clientApn)
+-            throws InterruptedException, SSLException, CertificateException {
+-        SelfSignedCertificate ssc = new SelfSignedCertificate();
+-        serverSslCtx = new JdkSslServerContext(ssc.certificate(), ssc.privateKey(), null, null,
+-                IdentityCipherSuiteFilter.INSTANCE, serverApn, 0, 0);
+-        clientSslCtx = new JdkSslClientContext(null, InsecureTrustManagerFactory.INSTANCE, null,
+-                IdentityCipherSuiteFilter.INSTANCE, clientApn, 0, 0);
+-
+-        serverConnectedChannel = null;
+-        sb = new ServerBootstrap();
+-        cb = new Bootstrap();
+-
+-        sb.group(new NioEventLoopGroup(), new NioEventLoopGroup());
+-        sb.channel(NioServerSocketChannel.class);
+-        sb.childHandler(new ChannelInitializer<Channel>() {
+-            @Override
+-            protected void initChannel(Channel ch) throws Exception {
+-                ChannelPipeline p = ch.pipeline();
+-                p.addLast(serverSslCtx.newHandler(ch.alloc()));
+-                p.addLast(new MessageDelegatorChannelHandler(serverReceiver, serverLatch));
+-                p.addLast(new ChannelHandlerAdapter() {
+-                    @Override
+-                    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+-                        if (cause.getCause() instanceof SSLHandshakeException) {
+-                            serverException = cause.getCause();
+-                            serverLatch.countDown();
+-                        } else {
+-                            ctx.fireExceptionCaught(cause);
+-                        }
+-                    }
+-                });
+-                serverConnectedChannel = ch;
+-            }
+-        });
+-
+-        cb.group(new NioEventLoopGroup());
+-        cb.channel(NioSocketChannel.class);
+-        cb.handler(new ChannelInitializer<Channel>() {
+-            @Override
+-            protected void initChannel(Channel ch) throws Exception {
+-                ChannelPipeline p = ch.pipeline();
+-                p.addLast(clientSslCtx.newHandler(ch.alloc()));
+-                p.addLast(new MessageDelegatorChannelHandler(clientReceiver, clientLatch));
+-                p.addLast(new ChannelHandlerAdapter() {
+-                    @Override
+-                    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+-                        if (cause.getCause() instanceof SSLHandshakeException) {
+-                            clientException = cause.getCause();
+-                            clientLatch.countDown();
+-                        } else {
+-                            ctx.fireExceptionCaught(cause);
+-                        }
+-                    }
+-                });
+-            }
+-        });
+-
+-        serverChannel = sb.bind(new InetSocketAddress(0)).sync().channel();
+-        int port = ((InetSocketAddress) serverChannel.localAddress()).getPort();
+-
+-        ChannelFuture ccf = cb.connect(new InetSocketAddress(NetUtil.LOCALHOST, port));
+-        assertTrue(ccf.awaitUninterruptibly().isSuccess());
+-        clientChannel = ccf.channel();
+-    }
+-
+-    private void runTest() throws Exception {
+-        runTest(PREFERRED_APPLICATION_LEVEL_PROTOCOL);
+-    }
+-
+-    @Override
+-    protected SslProvider sslProvider() {
+-        return SslProvider.JDK;
+-    }
+-}

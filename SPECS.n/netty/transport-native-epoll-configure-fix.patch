@@ -1,0 +1,14 @@
+diff --git a/netty-netty-4.0.27.Final/transport-native-epoll/pom.xml b/netty-netty-4.0.27.Final/transport-native-epoll/pom.xml
+index c9c7b25..b489b3f 100644
+--- a/netty-netty-4.0.27.Final/transport-native-epoll/pom.xml
++++ b/netty-netty-4.0.27.Final/transport-native-epoll/pom.xml
+@@ -73,9 +73,6 @@
+               <platform>.</platform>
+               <forceConfigure>true</forceConfigure>
+               <forceAutogen>true</forceAutogen>
+-              <configureArgs>
+-                <arg>${jni.compiler.args}</arg>
+-              </configureArgs>
+             </configuration>
+             <goals>
+               <goal>generate</goal>
