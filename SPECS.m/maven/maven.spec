@@ -1,25 +1,15 @@
 Name:           maven
-Version:        3.2.2
+Version:        3.3.9
 Release:        2%{?dist}
 Summary:        Java project management and project comprehension tool
 License:        ASL 2.0
 URL:            http://maven.apache.org/
+BuildArch:      noarch
 
 Source0:        http://archive.apache.org/dist/%{name}/%{name}-3/%{version}/source/apache-%{name}-%{version}-src.tar.gz
 Source1:        maven-bash-completion
 Source2:        mvn.1
 Source200:      %{name}-script
-
-# Could be upstreamed probably
-Patch0001:      0001-Use-generics-in-modello-generated-code.patch
-# Could be upstreamed probably
-Patch0002:      0002-Migrate-from-easymock-1-to-easymock-3.patch
-# Forwarded upstream (MNG-5502)
-Patch0003:      0003-Update-Aether-to-0.9.0.M3.patch
-# Forwarded upstream (MNG-5534)
-Patch0004:      0004-Update-to-Sisu-0.1.0-and-Guice-3.1.6.patch
-
-BuildArch:      noarch
 
 # If XMvn is part of the same RPM transaction then it should be
 # installed first to avoid triggering rhbz#1014355.
@@ -35,6 +25,9 @@ BuildRequires:  aether-util >= 1:0
 BuildRequires:  aether-transport-wagon >= 1:0
 BuildRequires:  aopalliance
 BuildRequires:  apache-commons-cli
+BuildRequires:  apache-commons-io
+BuildRequires:  apache-commons-lang
+BuildRequires:  apache-commons-lang3
 BuildRequires:  apache-commons-codec
 BuildRequires:  apache-commons-jxpath
 BuildRequires:  apache-commons-logging
@@ -47,6 +40,7 @@ BuildRequires:  google-guice >= 3.1.6
 BuildRequires:  hamcrest
 BuildRequires:  httpcomponents-core
 BuildRequires:  httpcomponents-client
+BuildRequires:  jsoup
 BuildRequires:  jsr-305
 BuildRequires:  junit
 BuildRequires:  maven-assembly-plugin
@@ -63,6 +57,7 @@ BuildRequires:  maven-wagon-file
 BuildRequires:  maven-wagon-http
 BuildRequires:  maven-wagon-http-shared
 BuildRequires:  maven-wagon-provider-api
+BuildRequires:  objectweb-asm
 BuildRequires:  plexus-cipher
 BuildRequires:  plexus-classworlds
 BuildRequires:  plexus-containers-component-annotations
@@ -80,8 +75,8 @@ BuildRequires:  mvn(org.mockito:mockito-core)
 BuildRequires:  mvn(org.codehaus.modello:modello-maven-plugin)
 
 # Theoretically Maven might be usable with just JRE, but typical Maven
-# workflow requires full JDK, wso we require it here.
-Requires:       java-devel
+# workflow requires full JDK, so we recommend it here.
+Recommends:     java-devel
 
 # XMvn does generate auto-requires, but explicit requires are still
 # needed because some symlinked JARs are not present in Maven POMs or
@@ -97,19 +92,23 @@ Requires:       aether-transport-wagon
 Requires:       aether-util
 Requires:       aopalliance
 Requires:       apache-commons-cli
+Requires:       apache-commons-io
+Requires:       apache-commons-lang
+Requires:       apache-commons-lang3
 Requires:       apache-commons-codec
 Requires:       apache-commons-logging
 Requires:       atinject
-Requires:       geronimo-annotation
 Requires:       google-guice
 Requires:       guava
 Requires:       httpcomponents-client
 Requires:       httpcomponents-core
+Requires:       jsoup
 Requires:       jsr-305
 Requires:       maven-wagon-file
 Requires:       maven-wagon-http
 Requires:       maven-wagon-http-shared
 Requires:       maven-wagon-provider-api
+Requires:       objectweb-asm
 Requires:       plexus-cipher
 Requires:       plexus-classworlds
 Requires:       plexus-containers-component-annotations
@@ -119,13 +118,6 @@ Requires:       plexus-utils
 Requires:       sisu-inject
 Requires:       sisu-plexus
 Requires:       slf4j
-
-# for noarch->arch change
-Obsoletes:      %{name} < 0:%{version}-%{release}
-
-# maven2 bin package no longer exists.
-Obsoletes:      maven2 < 2.2.1-99
-Provides:       maven2 = %{version}-%{release}
 
 # Temporary fix for broken sisu
 Requires:       cdi-api
@@ -145,10 +137,6 @@ Group:          Documentation
 
 %prep
 %setup -q -n apache-%{name}-%{version}%{?ver_add}
-%patch0001 -p1
-%patch0002 -p1
-%patch0003 -p1
-%patch0004 -p1
 
 # not really used during build, but a precaution
 rm maven-ant-tasks-*.jar
@@ -168,7 +156,6 @@ sed -i -e s:'-classpath "${M2_HOME}"/boot/plexus-classworlds-\*.jar':'-classpath
 
 # Disable QA plugins which are not useful for us
 %pom_remove_plugin :animal-sniffer-maven-plugin
-%pom_remove_plugin :maven-enforcer-plugin
 %pom_remove_plugin :apache-rat-plugin
 
 # logback is not really needed by maven in typical use cases, so set
@@ -205,9 +192,12 @@ install -d -m 755 %{buildroot}%{_sysconfdir}/%{name}
 install -d -m 755 %{buildroot}%{_datadir}/bash-completion/completions
 install -d -m 755 %{buildroot}%{_mandir}/man1
 
-install -p -m 755 %{SOURCE200} %{buildroot}%{_bindir}/mvn
+for cmd in mvn mvnDebug mvnyjp; do
+    sed s/@@CMD@@/$cmd/ %{SOURCE200} >%{buildroot}%{_bindir}/$cmd
+    echo ".so man1/mvn.1" >%{buildroot}%{_mandir}/man1/$cmd.1
+done
 install -p -m 644 %{SOURCE2} %{buildroot}%{_mandir}/man1
-install -p -m 644 %{SOURCE1} %{buildroot}%{_datadir}/bash-completion/completions/%{name}
+install -p -m 644 %{SOURCE1} %{buildroot}%{_datadir}/bash-completion/completions/mvn
 mv $M2_HOME/bin/m2.conf %{buildroot}%{_sysconfdir}
 ln -sf %{_sysconfdir}/m2.conf %{buildroot}%{_datadir}/%{name}/bin/m2.conf
 mv $M2_HOME/conf/settings.xml %{buildroot}%{_sysconfdir}/%{name}
@@ -223,16 +213,20 @@ ln -sf $(build-classpath plexus/classworlds) \
 (cd %{buildroot}%{_datadir}/%{name}/lib
     build-jar-repository -s -p . \
         aether/aether-api \
-        aether/aether-connector-basic aether/aether-transport-wagon \
+        aether/aether-connector-basic \
         aether/aether-impl \
         aether/aether-spi \
+        aether/aether-transport-wagon \
         aether/aether-util \
         aopalliance \
         cdi-api \
         commons-cli \
+        commons-io \
+        commons-lang \
+        commons-lang3 \
         guava \
         atinject \
-        geronimo-annotation \
+        jsoup/jsoup \
         jsr-305 \
         org.eclipse.sisu.inject \
         org.eclipse.sisu.plexus \
@@ -246,36 +240,84 @@ ln -sf $(build-classpath plexus/classworlds) \
         slf4j/simple \
         maven-wagon/file \
         maven-wagon/http-shaded \
+        maven-wagon/http-shared \
         maven-wagon/provider-api \
         \
         httpcomponents/httpclient \
         httpcomponents/httpcore \
-        maven-wagon/http-shared \
         commons-logging \
         commons-codec \
+        objectweb-asm/asm \
 )
 
 
 %files -f .mfiles
 %doc LICENSE NOTICE README.md
 %{_datadir}/%{name}
-%{_bindir}/mvn
+%attr(0755,root,root) %{_bindir}/mvn*
 %dir %{_javadir}/%{name}
 %dir %{_sysconfdir}/%{name}
 %dir %{_sysconfdir}/%{name}/logging
 %config(noreplace) %{_sysconfdir}/m2.conf
 %config(noreplace) %{_sysconfdir}/%{name}/settings.xml
 %config(noreplace) %{_sysconfdir}/%{name}/logging/simplelogger.properties
-%{_datadir}/bash-completion/completions/%{name}
-%{_mandir}/man1/mvn.1.gz
+%{_datadir}/bash-completion/completions/mvn
+%{_mandir}/man1/mvn*.1.gz
 
 %files javadoc -f .mfiles-javadoc
 %doc LICENSE NOTICE
 
 
 %changelog
-* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 3.2.2-2
-- 为 Magic 3.0 重建
+* Mon Nov 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-2
+- Fix symlinks: add commons-lang3 and remove geronimo-annotation
+
+* Fri Nov 13 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.9-1
+- Update to upstream version 3.3.9
+
+* Mon Nov  2 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.8-1
+- Update to upstream version 3.3.8
+
+* Fri Jul 10 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.3-3
+- Recommend java-devel instead of requiring it
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Thu Apr 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.3-1
+- Update to upstream version 3.3.3
+
+* Wed Apr  1 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.1-2
+- Install mvnDebug and mvnyjp in bindir
+- Update manpage
+- Resolves: rhbz#1207850
+
+* Mon Mar 16 2015 Michal Srb <msrb@redhat.com> - 3.3.1-1
+- Add commons-io, commons-lang and jsoup to plexus.core (Resolves: rhbz#1202286)
+
+* Fri Mar 13 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.1-1
+- Update to upstream version 3.3.1
+
+* Thu Mar 12 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.3.0-1
+- Update to upstream version 3.3.0
+
+* Wed Feb 18 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.5-2
+- Add objectweb-asm to plexus.core
+
+* Mon Jan 19 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.5-1
+- Update to upstream version 3.2.5
+
+* Sat Dec  6 2014 Ville Skyttä <ville.skytta@iki.fi> - 3.2.3-4
+- Fix bash completion filename
+
+* Tue Oct 14 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.3-3
+- Remove legacy Obsoletes/Provides for maven2
+
+* Mon Sep 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.3-2
+- Update patches
+
+* Fri Aug 22 2014 Michal Srb <msrb@redhat.com> - 3.2.3-1
+- Update to upstream version 3.2.3
 
 * Wed Jun 18 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 3.2.2-1
 - Update to upstream version 3.2.2

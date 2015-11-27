@@ -17,4 +17,4 @@ if [ -f /usr/share/java-utils/java-functions ] ; then
 fi
 
 export M2_HOME="${M2_HOME:-/usr/share/maven}"
-export JAVA_HOME; $M2_HOME/bin/mvn "$@"
+export JAVA_HOME; $M2_HOME/bin/@@CMD@@ "$@"

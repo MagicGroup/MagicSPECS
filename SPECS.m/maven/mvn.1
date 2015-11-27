@@ -1,8 +1,10 @@
-.TH MVN "1" "July 2012" "Apache Maven 3.0.4" "User Commands"
+.TH MVN "1" "April 2015" "Apache Maven 3.3.1" "User Commands"
 .SH NAME
 mvn \- software project management and comprehension tool
 .SH DESCRIPTION
 usage: mvn [options] [<goal(s)>] [<phase(s)>]
+usage: mvnDebug [options] [<goal(s)>] [<phase(s)>]
+usage: mvnyjp [options] [<goal(s)>] [<phase(s)>]
 .SH OPTIONS
 .TP
 \fB\-am\fR,\-\-also\-make
@@ -18,6 +20,10 @@ projects on the list
 \fB\-B\fR,\-\-batch\-mode
 Run in non\-interactive (batch)
 mode
+.TP
+\fB\-b\fR,\-\-builder <arg>
+The id of the build strategy to
+use.
 .TP
 \fB\-C\fR,\-\-strict\-checksums
 Fail the build if checksums don't
@@ -44,7 +50,7 @@ Encrypt server password
 .TP
 \fB\-f\fR,\-\-file <arg>
 Force the use of an alternate POM
-file.
+file (or directory with pom.xml).
 .TP
 \fB\-fae\fR,\-\-fail\-at\-end
 Only fail the build afterwards;
@@ -63,12 +69,23 @@ of project result
 Alternate path for the global
 settings file
 .TP
+\fB\-gt\fR,\-\-global\-toolchains <arg>
+Alternate path for the global
+toolchains file
+.TP
 \fB\-h\fR,\-\-help
 Display help information
 .TP
 \fB\-l\fR,\-\-log\-file <arg>
 Log file to where all build output
 will go.
+.TP
+\fB\-llr\fR,\-\-legacy\-local\-repository
+Use Maven 2 Legacy Local
+Repository behaviour, ie no use of
+_remote.repositories. Can also be
+activated by using
+\fB\-Dmaven\fR.legacyLocalRepo=true
 .TP
 \fB\-N\fR,\-\-non\-recursive
 Do not recurse into sub\-projects
@@ -118,9 +135,9 @@ Alternate path for the user
 toolchains file
 .TP
 \fB\-U\fR,\-\-update\-snapshots
-Forces a check for updated
-releases and snapshots on remote
-repositories
+Forces a check for missing
+releases and updated snapshots on
+remote repositories
 .TP
 \fB\-up\fR,\-\-update\-plugins
 Ineffective, only kept for
