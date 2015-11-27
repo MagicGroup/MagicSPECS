@@ -1,0 +1,51 @@
+From edf158862b170d37ede2b7172f9d63d79f0f05d8 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Mon, 13 Apr 2015 12:27:00 +0200
+Subject: [PATCH 08/15] Port to Ivy 2.4.0
+
+---
+ .../ivyservice/ivyresolve/parser/IvyXmlModuleDescriptorParser.java  | 2 +-
+ .../component/external/model/DefaultIvyModuleResolveMetaData.java   | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/subprojects/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/parser/IvyXmlModuleDescriptorParser.java b/subprojects/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/parser/IvyXmlModuleDescriptorParser.java
+index a1d3b4d..c04dd33 100644
+--- a/subprojects/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/parser/IvyXmlModuleDescriptorParser.java
++++ b/subprojects/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/parser/IvyXmlModuleDescriptorParser.java
+@@ -1135,7 +1135,7 @@ public class IvyXmlModuleDescriptorParser extends AbstractModuleDescriptorParser
+                 buffer = null;
+                 state = State.INFO;
+             } else if (state == State.EXTRA_INFO) {
+-                getMd().getExtraInfo().put(new NamespaceId(uri, localName), buffer == null ? "" : buffer.toString());
++                ((Map)getMd().getExtraInfo()).put(new NamespaceId(uri, localName), buffer == null ? "" : buffer.toString());
+                 buffer = null;
+                 state = State.INFO;
+             } else if (state == State.DESCRIPTION) {
+diff --git a/subprojects/dependency-management/src/main/java/org/gradle/internal/component/external/model/DefaultIvyModuleResolveMetaData.java b/subprojects/dependency-management/src/main/java/org/gradle/internal/component/external/model/DefaultIvyModuleResolveMetaData.java
+index 803a5b3..5f394b9 100644
+--- a/subprojects/dependency-management/src/main/java/org/gradle/internal/component/external/model/DefaultIvyModuleResolveMetaData.java
++++ b/subprojects/dependency-management/src/main/java/org/gradle/internal/component/external/model/DefaultIvyModuleResolveMetaData.java
+@@ -31,17 +31,17 @@ public class DefaultIvyModuleResolveMetaData extends AbstractModuleComponentReso
+ 
+     public DefaultIvyModuleResolveMetaData(ModuleDescriptor moduleDescriptor) {
+         super(moduleDescriptor);
+-        this.extraInfo = moduleDescriptor.getExtraInfo();
++        this.extraInfo = (Map)moduleDescriptor.getExtraInfo();
+     }
+ 
+     public DefaultIvyModuleResolveMetaData(ModuleComponentIdentifier componentIdentifier, ModuleDescriptor moduleDescriptor) {
+         super(DefaultModuleVersionIdentifier.newId(componentIdentifier), moduleDescriptor, componentIdentifier);
+-        this.extraInfo = moduleDescriptor.getExtraInfo();
++        this.extraInfo = (Map)moduleDescriptor.getExtraInfo();
+     }
+ 
+     private DefaultIvyModuleResolveMetaData(ModuleVersionIdentifier identifier, ModuleDescriptor moduleDescriptor, ModuleComponentIdentifier componentIdentifier) {
+         super(identifier, moduleDescriptor, componentIdentifier);
+-        this.extraInfo = moduleDescriptor.getExtraInfo();
++        this.extraInfo = (Map)moduleDescriptor.getExtraInfo();
+     }
+ 
+     public DefaultIvyModuleResolveMetaData(ModuleComponentIdentifier componentIdentifier, Set<IvyArtifactName> artifacts) {
+-- 
+2.5.0
+

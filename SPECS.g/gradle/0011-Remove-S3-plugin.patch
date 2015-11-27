@@ -1,0 +1,99 @@
+From aa1c7053e67a8755675b5c14386830dc7f0ad822 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Tue, 28 Apr 2015 11:35:17 +0200
+Subject: [PATCH 11/15] Remove S3 plugin
+
+S3 plugin depends on non-free AWS SDK library.  For more details see
+https://discuss.gradle.org/t/gradle-2-4-rc1-introduces-a-non-free-dependency/9351
+---
+ build.gradle                                                   | 2 +-
+ gradle/buildSplits.gradle                                      | 2 +-
+ settings.gradle                                                | 1 -
+ subprojects/dependency-management/dependency-management.gradle | 1 -
+ subprojects/ivy/ivy.gradle                                     | 3 +--
+ subprojects/maven/maven.gradle                                 | 1 -
+ 6 files changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index 6309c9c..a9b4250 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -146,7 +146,7 @@ ext {
+         'diagnostics', 'reporting', 'publish', 'ivy', 'jacoco', 'buildInit', 'platformBase',
+         'platformJvm', 'languageJvm', 'languageJava', 'languageGroovy', 'languageScala',
+         'platformNative', 'platformPlay', 'languageNative', 'ideNative', 'testingNative',
+-        'pluginDevelopment', 'pluginUse', 'resourcesHttp', 'resourcesSftp', 'resourcesS3',
++        'pluginDevelopment', 'pluginUse', 'resourcesHttp', 'resourcesSftp',
+         'toolingApiBuilders'
+     ].collect {
+         project(it)
+diff --git a/gradle/buildSplits.gradle b/gradle/buildSplits.gradle
+index 8193532..d750c7b 100644
+--- a/gradle/buildSplits.gradle
++++ b/gradle/buildSplits.gradle
+@@ -26,7 +26,7 @@ def buckets = [
+ 
+     "3": [":launcher", ":plugins", ":codeQuality", ":languageJava",
+         ":ui", ":javascript", ":antlr", ":messaging", ":ear",
+-        ":resourcesS3", ":wrapper", ":resourcesSftp", ":signing", ":modelGroovy", ":baseServices"],
++        ":wrapper", ":resourcesSftp", ":signing", ":modelGroovy", ":baseServices"],
+ 
+     "4": [":docs", ":integTest", ":core", ":languageNative", ":ide", ":platformJvm", ":platformNative",
+           ":modelCore", ":sonar", ":maven", ":testingNative", ":ideNative", ":native"]
+diff --git a/settings.gradle b/settings.gradle
+index 6497b9a..f16ab87 100644
+--- a/settings.gradle
++++ b/settings.gradle
+@@ -24,7 +24,6 @@ include 'launcher'
+ include 'messaging'
+ include 'resources'
+ include 'resourcesHttp'
+-include 'resourcesS3'
+ include 'resourcesSftp'
+ include 'plugins'
+ include 'scala'
+diff --git a/subprojects/dependency-management/dependency-management.gradle b/subprojects/dependency-management/dependency-management.gradle
+index 7b07e34..e73dc2b 100644
+--- a/subprojects/dependency-management/dependency-management.gradle
++++ b/subprojects/dependency-management/dependency-management.gradle
+@@ -27,7 +27,6 @@ dependencies {
+     integTestRuntime project(":ivy")
+     integTestRuntime project(":maven")
+     integTestRuntime project(":resourcesHttp")
+-    integTestRuntime project(":resourcesS3")
+     integTestRuntime project(":resourcesSftp")
+     //this dependency is necessary to run IvySFtpResolverIntegrationTest on ibm jdk
+     //integTestRuntime "org.bouncycastle:bcprov-jdk15:1.46@jar"
+diff --git a/subprojects/ivy/ivy.gradle b/subprojects/ivy/ivy.gradle
+index 6e70135..13ebfba 100644
+--- a/subprojects/ivy/ivy.gradle
++++ b/subprojects/ivy/ivy.gradle
+@@ -24,11 +24,10 @@ dependencies {
+ 
+     testCompile libraries.groovy
+     integTestCompile project(":ear")
+-    integTestRuntime project(":resourcesS3")
+     integTestRuntime project(":resourcesSftp")
+     testFixturesCompile project(":internalIntegTesting")
+ }
+ 
+ useTestFixtures()
+ useTestFixtures(project: ":modelCore")
+-useClassycle()
+\ No newline at end of file
++useClassycle()
+diff --git a/subprojects/maven/maven.gradle b/subprojects/maven/maven.gradle
+index ddfb2d7..9190bcf 100644
+--- a/subprojects/maven/maven.gradle
++++ b/subprojects/maven/maven.gradle
+@@ -31,7 +31,6 @@ dependencies {
+     testCompile libraries.xmlunit
+ 
+     integTestCompile project(":ear")
+-    integTestRuntime project(":resourcesS3")
+     integTestRuntime project(":resourcesSftp")
+ 
+     testFixturesCompile project(":internalIntegTesting")
+-- 
+2.5.0
+

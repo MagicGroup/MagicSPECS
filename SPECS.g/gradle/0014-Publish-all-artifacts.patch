@@ -1,0 +1,37 @@
+From 01e74afcd45d637d8765ebf8f098aff09b612614 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Mon, 23 Nov 2015 15:43:15 +0100
+Subject: [PATCH 14/15] Publish all artifacts
+
+---
+ build.gradle | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index a9b4250..1af9332 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -152,14 +152,12 @@ ext {
+         project(it)
+     }
+     publishedProjects = [
+-        project(':core'),
+-        project(':toolingApi'),
+-        project(':wrapper'),
+-        project(':baseServices'),
+-        project(':baseServicesGroovy'),
+-        project(':messaging'),
+-        project(':resources')
+-    ]
++        'baseServices', 'baseServicesGroovy', 'cli', 'core', 'docs',
++        'launcher', 'messaging', 'modelCore', 'modelGroovy', 'native',
++        'openApi', 'resources', 'toolingApi', 'ui', 'wrapper'
++    ].collect {
++        project(it)
++    } + pluginProjects
+ }
+ 
+ apply from: "gradle/buildReceipt.gradle"
+-- 
+2.5.0
+

@@ -1,0 +1,72 @@
+From 2090b872863aecadcb5a99a4d676463cca6fc0d6 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Sat, 7 Feb 2015 15:28:03 +0100
+Subject: [PATCH 07/15] Use unversioned dependency JAR names
+
+---
+ gradle/groovyProject.gradle                                         | 6 ++++--
+ .../org/gradle/api/internal/classpath/DefaultModuleRegistry.java    | 2 +-
+ .../process/internal/child/WorkerProcessClassPathProvider.java      | 2 +-
+ .../main/groovy/org/gradle/api/internal/plugins/GroovyJarFile.java  | 2 +-
+ 4 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/gradle/groovyProject.gradle b/gradle/groovyProject.gradle
+index b6cb935..478fee1 100644
+--- a/gradle/groovyProject.gradle
++++ b/gradle/groovyProject.gradle
+@@ -96,9 +96,11 @@ class ClasspathManifest extends DefaultTask {
+     @Input
+     Properties getProperties() {
+         def properties = new Properties()
+-        properties.runtime = input.fileCollection {
++        def spec = org.gradle.api.specs.Specs.convertClosureToSpec {
+             (it instanceof ExternalDependency) || (it instanceof FileCollectionDependency)
+-        }.collect { it.name }.join(',')
++        }
++        def artifacts = input.resolvedConfiguration.lenientConfiguration.getArtifacts(spec)
++        properties.runtime = artifacts.collect { it.file.canonicalFile.name }.join(',')
+         properties.projects = input.allDependencies.withType(ProjectDependency).collect { it.dependencyProject.archivesBaseName }.join(',')
+         return properties
+     }
+diff --git a/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultModuleRegistry.java b/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultModuleRegistry.java
+index 14e1d90..30daca8 100644
+--- a/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultModuleRegistry.java
++++ b/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultModuleRegistry.java
+@@ -191,7 +191,7 @@ public class DefaultModuleRegistry implements ModuleRegistry {
+     }
+ 
+     private File findJar(String name) {
+-        Pattern pattern = Pattern.compile(Pattern.quote(name) + "-\\d.+\\.jar");
++        Pattern pattern = Pattern.compile(Pattern.quote(name) + "(?:-\\d.+)?\\.jar");
+         for (File libDir : gradleDistributionLocator.getLibDirs()) {
+             for (File file : libDir.listFiles()) {
+                 if (pattern.matcher(file.getName()).matches()) {
+diff --git a/subprojects/core/src/main/groovy/org/gradle/process/internal/child/WorkerProcessClassPathProvider.java b/subprojects/core/src/main/groovy/org/gradle/process/internal/child/WorkerProcessClassPathProvider.java
+index 1181556..5510a8b 100644
+--- a/subprojects/core/src/main/groovy/org/gradle/process/internal/child/WorkerProcessClassPathProvider.java
++++ b/subprojects/core/src/main/groovy/org/gradle/process/internal/child/WorkerProcessClassPathProvider.java
+@@ -64,7 +64,7 @@ public class WorkerProcessClassPathProvider implements ClassPathProvider, Closea
+             classpath = classpath.plus(moduleRegistry.getModule("gradle-messaging").getImplementationClasspath());
+             classpath = classpath.plus(moduleRegistry.getExternalModule("slf4j-api").getClasspath());
+             classpath = classpath.plus(moduleRegistry.getExternalModule("jul-to-slf4j").getClasspath());
+-            classpath = classpath.plus(moduleRegistry.getExternalModule("guava-jdk5").getClasspath());
++            classpath = classpath.plus(moduleRegistry.getExternalModule("guava").getClasspath());
+             return classpath;
+         }
+         if (name.equals("WORKER_MAIN")) {
+diff --git a/subprojects/plugins/src/main/groovy/org/gradle/api/internal/plugins/GroovyJarFile.java b/subprojects/plugins/src/main/groovy/org/gradle/api/internal/plugins/GroovyJarFile.java
+index 735fb76..29c50b6 100644
+--- a/subprojects/plugins/src/main/groovy/org/gradle/api/internal/plugins/GroovyJarFile.java
++++ b/subprojects/plugins/src/main/groovy/org/gradle/api/internal/plugins/GroovyJarFile.java
+@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+ 
+ public class GroovyJarFile {
+-    private static final Pattern FILE_NAME_PATTERN = Pattern.compile("(groovy(?:-all)?)-(\\d.*?)(-indy)?.jar");
++    private static final Pattern FILE_NAME_PATTERN = Pattern.compile("(groovy(?:-all)?)(?:-(\\d.*?))?(-indy)?.jar");
+ 
+     private final File file;
+     private final Matcher matcher;
+-- 
+2.5.0
+

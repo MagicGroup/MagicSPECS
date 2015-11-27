@@ -1,0 +1,78 @@
+From f283db41734d6d97b513408bbb6e5cac83e3e063 Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Sun, 9 Nov 2014 17:52:30 +0100
+Subject: [PATCH 03/15] Remove Class-Path from manifest
+
+---
+ .../api/internal/classpath/DefaultGradleDistributionLocator.java  | 8 +-------
+ .../groovy/org/gradle/api/internal/classpath/ManifestUtil.java    | 3 +++
+ subprojects/launcher/launcher.gradle                              | 2 +-
+ .../org/gradle/launcher/daemon/client/DefaultDaemonStarter.java   | 6 +-----
+ 4 files changed, 6 insertions(+), 13 deletions(-)
+
+diff --git a/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultGradleDistributionLocator.java b/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultGradleDistributionLocator.java
+index 0f4c3bc..8b9fad9 100644
+--- a/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultGradleDistributionLocator.java
++++ b/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/DefaultGradleDistributionLocator.java
+@@ -69,13 +69,7 @@ public class DefaultGradleDistributionLocator implements GradleDistributionLocat
+     };
+ 
+     private static File findDistDir(Class<?> clazz) {
+-        File codeSource = ClasspathUtil.getClasspathForClass(clazz);
+-        if (codeSource.isFile()) {
+-            return determineDistRootDir(codeSource);
+-        } else {
+-            // Loaded from a classes dir - assume we're running from the ide or tests
+-            return null;
+-        }
++        return new File("/usr/share/gradle");
+     }
+ 
+     /**
+diff --git a/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/ManifestUtil.java b/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/ManifestUtil.java
+index 193f910..2f8bc36 100644
+--- a/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/ManifestUtil.java
++++ b/subprojects/core/src/main/groovy/org/gradle/api/internal/classpath/ManifestUtil.java
+@@ -71,6 +71,9 @@ public class ManifestUtil {
+                 return EMPTY;
+             }
+             String classpathEntry = manifest.getMainAttributes().getValue("Class-Path");
++            if (classpathEntry == null) {
++                classpathEntry = manifest.getMainAttributes().getValue("X-Gradle-Class-Path");
++            }
+             if (classpathEntry == null || classpathEntry.trim().length() == 0) {
+                 return EMPTY;
+             }
+diff --git a/subprojects/launcher/launcher.gradle b/subprojects/launcher/launcher.gradle
+index b4d19b5..61f89d7 100644
+--- a/subprojects/launcher/launcher.gradle
++++ b/subprojects/launcher/launcher.gradle
+@@ -35,7 +35,7 @@ integTestTasks.all {
+ jar {
+     manifest.mainAttributes('Main-Class': "org.gradle.launcher.GradleMain")
+     doFirst {
+-        jar.manifest.mainAttributes('Class-Path': "${project(':core').jar.archivePath.name} ${project(':baseServices').jar.archivePath.name}")
++        jar.manifest.mainAttributes('X-Gradle-Class-Path': "${project(':core').jar.archivePath.name} ${project(':baseServices').jar.archivePath.name}")
+     }
+ }
+ 
+diff --git a/subprojects/launcher/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java b/subprojects/launcher/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java
+index f9d44c7..0eb9f5a 100755
+--- a/subprojects/launcher/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java
++++ b/subprojects/launcher/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java
+@@ -69,11 +69,7 @@ public class DefaultDaemonStarter implements DaemonStarter {
+         ModuleRegistry registry = new DefaultModuleRegistry();
+         ClassPath classpath;
+         List<File> searchClassPath;
+-        if (new DefaultGradleDistributionLocator().getGradleHome() != null) {
+-            // When running from a Gradle distro, only need launcher jar. The daemon can find everything from there.
+-            classpath = registry.getModule("gradle-launcher").getImplementationClasspath();
+-            searchClassPath = Collections.emptyList();
+-        } else {
++        {
+             // When not running from a Gradle distro, need runtime impl for launcher plus the search path to look for other modules
+             classpath = new DefaultClassPath();
+             for (Module module : registry.getModule("gradle-launcher").getAllRequiredModules()) {
+-- 
+2.5.0
+

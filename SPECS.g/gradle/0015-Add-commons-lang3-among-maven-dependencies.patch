@@ -1,0 +1,25 @@
+From 68cc6122365c6db5a6de4fa2a2e1b1c66ce16c03 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Mon, 23 Nov 2015 18:02:15 +0100
+Subject: [PATCH 15/15] Add commons-lang3 among maven dependencies
+
+---
+ gradle/dependencies.gradle | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gradle/dependencies.gradle b/gradle/dependencies.gradle
+index eca9d5c..7547d56 100755
+--- a/gradle/dependencies.gradle
++++ b/gradle/dependencies.gradle
+@@ -140,6 +140,8 @@ libraries.maven3 = dependencies.module("org.apache.maven:maven-core:3.0.4") {
+     dependency "org.eclipse.aether:aether-util:1.0.0.v20140518@jar"
+     dependency 'org.eclipse.aether:aether-connector-basic:1.0.0.v20140518@jar'
+     dependency 'org.eclipse.aether:aether-transport-wagon:1.0.0.v20140518@jar'
++
++    dependency 'org.apache.commons:commons-lang3:3.4@jar'
+ }
+ 
+ libraries.spock = [
+-- 
+2.5.0
+

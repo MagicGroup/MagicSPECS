@@ -1,0 +1,486 @@
+From 44786ad8cd8e460ec7842610f31af7d5a66f13c5 Mon Sep 17 00:00:00 2001
+From: Michal Srb <msrb@redhat.com>
+Date: Fri, 31 Oct 2014 09:01:47 +0100
+Subject: [PATCH 02/15] Port to Jetty 9
+
+---
+ gradle/dependencies.gradle                         |   6 +-
+ subprojects/jetty/jetty.gradle                     |  23 +++--
+ .../api/plugins/jetty/AbstractJettyRunTask.java    |  18 ++--
+ .../org/gradle/api/plugins/jetty/JettyRun.java     |  18 ++--
+ .../org/gradle/api/plugins/jetty/JettyRunWar.java  |   6 +-
+ .../plugins/jetty/internal/Jetty6PluginServer.java |  40 ++++----
+ .../plugins/jetty/internal/JettyConfiguration.java | 101 ++++-----------------
+ .../plugins/jetty/internal/JettyPluginServer.java  |   2 +-
+ .../jetty/internal/JettyPluginWebAppContext.java   |  16 ++--
+ .../gradle/api/plugins/jetty/internal/Monitor.java |   2 +-
+ 10 files changed, 88 insertions(+), 144 deletions(-)
+
+diff --git a/gradle/dependencies.gradle b/gradle/dependencies.gradle
+index 7451e58..0f430ab 100755
+--- a/gradle/dependencies.gradle
++++ b/gradle/dependencies.gradle
+@@ -60,12 +60,12 @@ libraries.logback_classic = dependencies.module('ch.qos.logback:logback-classic:
+ }
+ 
+ // Jetty
+-libraries.servlet_api = "org.mortbay.jetty:servlet-api:2.5-20081211@jar"
+-libraries.jetty_util = dependencies.module("org.mortbay.jetty:jetty-util:6.1.25") {
++libraries.servlet_api = "javax.servlet:javax.servlet-api:3.1.0@jar"
++libraries.jetty_util = dependencies.module("org.eclipse.jetty:jetty-util:9.2.0.v20140526") {
+     dependency libraries.slf4j_api
+     dependency libraries.servlet_api
+ }
+-libraries.jetty = dependencies.module("org.mortbay.jetty:jetty:6.1.25") {
++libraries.jetty = dependencies.module("org.eclipse.jetty:jetty-server:9.2.0.v20140526") {
+     dependency libraries.jetty_util
+     dependency libraries.servlet_api
+ }
+diff --git a/subprojects/jetty/jetty.gradle b/subprojects/jetty/jetty.gradle
+index 8b8e054..06e2367 100644
+--- a/subprojects/jetty/jetty.gradle
++++ b/subprojects/jetty/jetty.gradle
+@@ -23,22 +23,29 @@ dependencies {
+     compile libraries.jetty
+     compile libraries.jetty_util
+     compile libraries.servlet_api
+-    compile module("org.mortbay.jetty:jetty-plus:6.1.25") {
++    compile module("org.eclipse.jetty:jetty-plus:9.2.3.v20140905") {
++        dependency "org.eclipse.jetty:jetty-security:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-webapp:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-servlet:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-xml:9.2.0.v20140526@jar"
+         dependency libraries.jetty
+-        module("org.mortbay.jetty:jetty-naming:6.1.25") {
+-            dependency libraries.jetty
+-        }
+     }
+ 
+-    runtime module("org.mortbay.jetty:jsp-2.1:6.1.14") {
++    runtime module("org.eclipse.jetty:jetty-jsp:9.2.0.v20140526") {
+         dependency "org.eclipse.jdt:core:3.1.1@jar"
+-        dependency "org.mortbay.jetty:jsp-api-2.1:6.1.14@jar"
++        dependency "org.eclipse.jetty:jetty-server:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-util:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-security:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-webapp:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-servlet:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-xml:9.2.0.v20140526@jar"
++        dependency "org.eclipse.jetty:jetty-plus:9.2.3.v20140905@jar"
+         dependency libraries.jetty_util
+         dependency libraries.servlet_api
+     }
+ 
+-    runtime "org.mortbay.jetty:jetty-annotations:6.1.25@jar"
++    runtime "org.eclipse.jetty:jetty-annotations:9.2.0.v20140526@jar"
+     runtime "org.apache.geronimo.specs:geronimo-annotation_1.0_spec:1.0@jar"
+ }
+ 
+-useTestFixtures()
+\ No newline at end of file
++useTestFixtures()
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/AbstractJettyRunTask.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/AbstractJettyRunTask.java
+index b7ab533..7cca81f 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/AbstractJettyRunTask.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/AbstractJettyRunTask.java
+@@ -29,11 +29,11 @@ import org.gradle.api.tasks.TaskAction;
+ import org.gradle.internal.classpath.DefaultClassPath;
+ import org.gradle.logging.ProgressLogger;
+ import org.gradle.logging.ProgressLoggerFactory;
+-import org.mortbay.jetty.Connector;
+-import org.mortbay.jetty.RequestLog;
+-import org.mortbay.jetty.Server;
+-import org.mortbay.jetty.security.UserRealm;
+-import org.mortbay.util.Scanner;
++import org.eclipse.jetty.server.Connector;
++import org.eclipse.jetty.server.RequestLog;
++import org.eclipse.jetty.server.Server;
++import org.eclipse.jetty.security.LoginService;
++import org.eclipse.jetty.util.Scanner;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -110,7 +110,7 @@ public abstract class AbstractJettyRunTask extends ConventionTask {
+     /**
+      * List of security realms to set up. Optional.
+      */
+-    private UserRealm[] userRealms;
++    private LoginService[] userRealms;
+ 
+     /**
+      * A RequestLog implementation to use for the webapp at runtime. Optional.
+@@ -313,7 +313,7 @@ public abstract class AbstractJettyRunTask extends ConventionTask {
+     /**
+      * Run a scanner thread on the given list of files and directories, calling stop/start on the given list of LifeCycle objects if any of the watched files change.
+      */
+-    private void startScanner() {
++    private void startScanner() throws Exception {
+ 
+         // check if scanning is enabled
+         if (getScanIntervalSeconds() <= 0) {
+@@ -536,11 +536,11 @@ public abstract class AbstractJettyRunTask extends ConventionTask {
+         this.connectors = connectors;
+     }
+ 
+-    public UserRealm[] getUserRealms() {
++    public LoginService[] getUserRealms() {
+         return userRealms;
+     }
+ 
+-    public void setUserRealms(UserRealm[] userRealms) {
++    public void setUserRealms(LoginService[] userRealms) {
+         this.userRealms = userRealms;
+     }
+ 
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRun.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRun.java
+index 18d0d29..23df81f 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRun.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRun.java
+@@ -26,15 +26,15 @@ import org.gradle.api.tasks.InputDirectory;
+ import org.gradle.api.tasks.InputFile;
+ import org.gradle.api.tasks.InputFiles;
+ import org.gradle.api.tasks.Optional;
+-import org.mortbay.jetty.Handler;
+-import org.mortbay.jetty.Server;
+-import org.mortbay.jetty.handler.ContextHandler;
+-import org.mortbay.jetty.handler.ContextHandlerCollection;
+-import org.mortbay.jetty.handler.HandlerCollection;
+-import org.mortbay.resource.Resource;
+-import org.mortbay.resource.ResourceCollection;
+-import org.mortbay.util.Scanner;
+-import org.mortbay.xml.XmlConfiguration;
++import org.eclipse.jetty.server.Handler;
++import org.eclipse.jetty.server.Server;
++import org.eclipse.jetty.server.handler.ContextHandler;
++import org.eclipse.jetty.server.handler.ContextHandlerCollection;
++import org.eclipse.jetty.server.handler.HandlerCollection;
++import org.eclipse.jetty.util.resource.Resource;
++import org.eclipse.jetty.util.resource.ResourceCollection;
++import org.eclipse.jetty.util.Scanner;
++import org.eclipse.jetty.xml.XmlConfiguration;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRunWar.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRunWar.java
+index 62ffdbf..58b1c8d 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRunWar.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/JettyRunWar.java
+@@ -17,8 +17,8 @@
+ package org.gradle.api.plugins.jetty;
+ 
+ import org.gradle.api.plugins.jetty.internal.Jetty6PluginServer;
+-import org.mortbay.util.Scanner;
+-import org.mortbay.xml.XmlConfiguration;
++import org.eclipse.jetty.util.Scanner;
++import org.eclipse.jetty.xml.XmlConfiguration;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.gradle.api.tasks.InputFile;
+@@ -51,7 +51,7 @@ public class JettyRunWar extends AbstractJettyRunTask {
+     }
+ 
+     /* (non-Javadoc)
+-    * @see org.mortbay.jetty.plugin.util.AbstractJettyTask#configureScanner()
++    * @see org.eclipse.jetty.plugin.util.AbstractJettyTask#configureScanner()
+     */
+     public void configureScanner() {
+         List<File> scanList = new ArrayList<File>();
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Jetty6PluginServer.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Jetty6PluginServer.java
+index 4ce2fca..afd9bf2 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Jetty6PluginServer.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Jetty6PluginServer.java
+@@ -16,18 +16,21 @@
+ 
+ package org.gradle.api.plugins.jetty.internal;
+ 
+-import org.mortbay.jetty.Connector;
+-import org.mortbay.jetty.Handler;
+-import org.mortbay.jetty.RequestLog;
+-import org.mortbay.jetty.Server;
+-import org.mortbay.jetty.handler.ContextHandlerCollection;
+-import org.mortbay.jetty.handler.DefaultHandler;
+-import org.mortbay.jetty.handler.HandlerCollection;
+-import org.mortbay.jetty.handler.RequestLogHandler;
+-import org.mortbay.jetty.nio.SelectChannelConnector;
+-import org.mortbay.jetty.security.UserRealm;
+-import org.mortbay.jetty.webapp.WebAppContext;
+-import org.mortbay.resource.Resource;
++import java.util.Arrays;
++import java.util.List;
++
++import org.eclipse.jetty.server.Connector;
++import org.eclipse.jetty.server.Handler;
++import org.eclipse.jetty.server.RequestLog;
++import org.eclipse.jetty.server.Server;
++import org.eclipse.jetty.server.ServerConnector;
++import org.eclipse.jetty.server.handler.ContextHandlerCollection;
++import org.eclipse.jetty.server.handler.DefaultHandler;
++import org.eclipse.jetty.server.handler.HandlerCollection;
++import org.eclipse.jetty.server.handler.RequestLogHandler;
++import org.eclipse.jetty.security.LoginService;
++import org.eclipse.jetty.webapp.WebAppContext;
++import org.eclipse.jetty.util.resource.Resource;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+@@ -39,6 +42,7 @@ public class Jetty6PluginServer implements JettyPluginServer {
+ 
+     public static final int DEFAULT_MAX_IDLE_TIME = 30000;
+     private Server server;
++    private List<LoginService> loginServices;
+     private ContextHandlerCollection contexts; //the list of ContextHandlers
+     HandlerCollection handlers; //the list of lists of Handlers
+     private RequestLogHandler requestLogHandler; //the request log handler
+@@ -63,7 +67,7 @@ public class Jetty6PluginServer implements JettyPluginServer {
+ 
+         for (int i = 0; i < connectors.length; i++) {
+             Connector connector = (Connector) connectors[i];
+-            LOGGER.debug("Setting Connector: {} on port {}", connector.getClass().getName(), connector.getPort());
++            LOGGER.debug("Setting Connector: {}", connector.getClass().getName());
+             this.server.addConnector(connector);
+         }
+     }
+@@ -83,8 +87,10 @@ public class Jetty6PluginServer implements JettyPluginServer {
+             return;
+         }
+ 
++        this.loginServices = Arrays.asList((LoginService[]) realms);
++
+         for (int i = 0; i < realms.length; i++) {
+-            this.server.addUserRealm((UserRealm) realms[i]);
++            this.server.addBean((LoginService) realms[i]);
+         }
+     }
+ 
+@@ -92,7 +98,7 @@ public class Jetty6PluginServer implements JettyPluginServer {
+      * @see org.gradle.api.plugins.jetty.internal.JettyPluginServer#getUserRealms()
+      */
+     public Object[] getUserRealms() {
+-        return this.server.getUserRealms();
++        return this.loginServices.toArray();
+     }
+ 
+     public void setRequestLog(Object requestLog) {
+@@ -151,9 +157,9 @@ public class Jetty6PluginServer implements JettyPluginServer {
+     }
+ 
+     public Object createDefaultConnector(int port) throws Exception {
+-        SelectChannelConnector connector = new SelectChannelConnector();
++        ServerConnector connector = new ServerConnector(server);
+         connector.setPort(port);
+-        connector.setMaxIdleTime(DEFAULT_MAX_IDLE_TIME);
++        connector.setIdleTimeout(DEFAULT_MAX_IDLE_TIME);
+ 
+         return connector;
+     }
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyConfiguration.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyConfiguration.java
+index e834678..0b8a211 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyConfiguration.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyConfiguration.java
+@@ -17,28 +17,22 @@
+ package org.gradle.api.plugins.jetty.internal;
+ 
+ import java.io.File;
+-import java.io.IOException;
+-import java.lang.reflect.Method;
+-import java.net.URL;
+ import java.net.URLClassLoader;
+-import java.util.Iterator;
+ import java.util.List;
++import java.util.Arrays;
+ 
+-import org.mortbay.jetty.plus.annotation.InjectionCollection;
+-import org.mortbay.jetty.plus.annotation.LifeCycleCallbackCollection;
+-import org.mortbay.jetty.plus.annotation.RunAsCollection;
+-import org.mortbay.jetty.plus.webapp.Configuration;
+-import org.mortbay.jetty.servlet.FilterHolder;
+-import org.mortbay.jetty.servlet.ServletHolder;
+-import org.mortbay.jetty.webapp.WebAppContext;
+-import org.mortbay.jetty.webapp.WebAppClassLoader;
+-import org.mortbay.log.Log;
+-import org.mortbay.util.LazyList;
++import org.eclipse.jetty.webapp.WebAppContext;
++import org.eclipse.jetty.webapp.WebAppClassLoader;
++import org.eclipse.jetty.webapp.WebXmlConfiguration;
++import org.eclipse.jetty.util.log.Log;
++import org.eclipse.jetty.util.log.Logger;
+ 
+-public class JettyConfiguration extends Configuration {
++public class JettyConfiguration extends WebXmlConfiguration {
+     private List<File> classPathFiles;
+     private File webXmlFile;
+ 
++    private static final Logger LOG = Log.getLogger(JettyConfiguration.class);
++
+     public JettyConfiguration() {
+         super();
+     }
+@@ -54,84 +48,25 @@ public class JettyConfiguration extends Configuration {
+     /**
+      * Set up the classloader for the webapp, using the various parts of the Maven project
+      *
+-     * @see org.mortbay.jetty.webapp.Configuration#configureClassLoader()
++     * @see org.eclipse.jetty.webapp.Configuration#configureClassLoader()
+      */
+-    public void configureClassLoader() throws Exception {
++    @Override
++    public void configure(WebAppContext context) throws Exception {
+         if (classPathFiles != null) {
+-            Log.debug("Setting up classpath ...");
++            LOG.debug("Setting up classpath ...");
+ 
+             //put the classes dir and all dependencies into the classpath
+             for (File classPathFile : classPathFiles) {
+-                ((WebAppClassLoader) getWebAppContext().getClassLoader()).addClassPath(
++                ((WebAppClassLoader) context.getClassLoader()).addClassPath(
+                         classPathFile.getCanonicalPath());
+             }
+ 
+-            if (Log.isDebugEnabled()) {
+-                Log.debug("Classpath = " + LazyList.array2List(
+-                        ((URLClassLoader) getWebAppContext().getClassLoader()).getURLs()));
+-            }
+-        } else {
+-            super.configureClassLoader();
+-        }
+-    }
+-
+-    protected URL findWebXml() throws IOException {
+-        //if an explicit web.xml file has been set (eg for jetty:run) then use it
+-        if (webXmlFile != null && webXmlFile.exists()) {
+-            return webXmlFile.toURI().toURL();
+-        }
+-
+-        //if we haven't overridden location of web.xml file, use the
+-        //standard way of finding it
+-        Log.debug("Looking for web.xml file in WEB-INF");
+-        return super.findWebXml();
+-    }
+-
+-    public void parseAnnotations() throws Exception {
+-        String v = System.getProperty("java.version");
+-        String[] version = v.split("\\.");
+-        if (version == null) {
+-            Log.info("Unable to determine jvm version, annotations will not be supported");
+-            return;
+-        }
+-        int major = Integer.parseInt(version[0]);
+-        int minor = Integer.parseInt(version[1]);
+-        if ((major >= 1) && (minor >= 5)) {
+-            //TODO it would be nice to be able to re-use the parseAnnotations() method on 
+-            //the org.mortbay.jetty.annotations.Configuration class, but it's too difficult?
+-
+-            //able to use annotations on jdk1.5 and above
+-            Class<?> annotationParserClass = Thread.currentThread().getContextClassLoader().loadClass(
+-                    "org.mortbay.jetty.annotations.AnnotationParser");
+-            Method parseAnnotationsMethod = annotationParserClass.getMethod("parseAnnotations", WebAppContext.class,
+-                    Class.class, RunAsCollection.class, InjectionCollection.class, LifeCycleCallbackCollection.class);
+-
+-            //look thru _servlets
+-            Iterator itor = LazyList.iterator(_servlets);
+-            while (itor.hasNext()) {
+-                ServletHolder holder = (ServletHolder) itor.next();
+-                Class servlet = getWebAppContext().loadClass(holder.getClassName());
+-                parseAnnotationsMethod.invoke(null, getWebAppContext(), servlet, _runAsCollection, _injections,
+-                        _callbacks);
+-            }
+-
+-            //look thru _filters
+-            itor = LazyList.iterator(_filters);
+-            while (itor.hasNext()) {
+-                FilterHolder holder = (FilterHolder) itor.next();
+-                Class filter = getWebAppContext().loadClass(holder.getClassName());
+-                parseAnnotationsMethod.invoke(null, getWebAppContext(), filter, null, _injections, _callbacks);
+-            }
+-
+-            //look thru _listeners
+-            itor = LazyList.iterator(_listeners);
+-            while (itor.hasNext()) {
+-                Object listener = itor.next();
+-                parseAnnotationsMethod.invoke(null, getWebAppContext(), listener.getClass(), null, _injections,
+-                        _callbacks);
++            if (LOG.isDebugEnabled()) {
++                Log.getLog().debug("Classpath = " + Arrays.asList(
++                        ((URLClassLoader) context.getClassLoader()).getURLs()));
+             }
+         } else {
+-            Log.info("Annotations are not supported on jvms prior to jdk1.5");
++            super.configure(context);
+         }
+     }
+ }
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginServer.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginServer.java
+index e1f5f30..e8b2274 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginServer.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginServer.java
+@@ -16,7 +16,7 @@
+ 
+ package org.gradle.api.plugins.jetty.internal;
+ 
+-import org.mortbay.jetty.webapp.WebAppContext;
++import org.eclipse.jetty.webapp.WebAppContext;
+ 
+ /**
+  * JettyPluginServer
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginWebAppContext.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginWebAppContext.java
+index 7e13851..0094593 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginWebAppContext.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/JettyPluginWebAppContext.java
+@@ -19,12 +19,11 @@ package org.gradle.api.plugins.jetty.internal;
+ import java.io.File;
+ import java.util.List;
+ 
+-import org.mortbay.jetty.plus.webapp.EnvConfiguration;
+-import org.mortbay.jetty.webapp.Configuration;
+-import org.mortbay.jetty.webapp.JettyWebXmlConfiguration;
+-import org.mortbay.jetty.webapp.TagLibConfiguration;
+-import org.mortbay.jetty.webapp.WebAppContext;
+-import org.mortbay.jetty.webapp.WebInfConfiguration;
++import org.eclipse.jetty.plus.webapp.EnvConfiguration;
++import org.eclipse.jetty.webapp.Configuration;
++import org.eclipse.jetty.webapp.JettyWebXmlConfiguration;
++import org.eclipse.jetty.webapp.WebAppContext;
++import org.eclipse.jetty.webapp.WebInfConfiguration;
+ 
+ /**
+  * Jetty6PluginWebAppContext
+@@ -37,9 +36,8 @@ public class JettyPluginWebAppContext extends WebAppContext {
+     private EnvConfiguration envConfig = new EnvConfiguration();
+     private JettyConfiguration mvnConfig = new JettyConfiguration();
+     private JettyWebXmlConfiguration jettyWebConfig = new JettyWebXmlConfiguration();
+-    private TagLibConfiguration tagConfig = new TagLibConfiguration();
+     private Configuration[] configs = new Configuration[]{
+-            webInfConfig, envConfig, mvnConfig, jettyWebConfig, tagConfig
++            webInfConfig, envConfig, mvnConfig, jettyWebConfig
+     };
+ 
+     public JettyPluginWebAppContext() {
+@@ -108,12 +106,10 @@ public class JettyPluginWebAppContext extends WebAppContext {
+     }
+ 
+     public void doStart() throws Exception {
+-        setShutdown(false);
+         super.doStart();
+     }
+ 
+     public void doStop() throws Exception {
+-        setShutdown(true);
+         //just wait a little while to ensure no requests are still being processed
+         Thread.sleep(500L);
+         super.doStop();
+diff --git a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Monitor.java b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Monitor.java
+index 7f3fb08..a4e1dfb 100644
+--- a/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Monitor.java
++++ b/subprojects/jetty/src/main/java/org/gradle/api/plugins/jetty/internal/Monitor.java
+@@ -16,7 +16,7 @@
+ 
+ package org.gradle.api.plugins.jetty.internal;
+ 
+-import org.mortbay.jetty.Server;
++import org.eclipse.jetty.server.Server;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
+-- 
+2.5.0
+

@@ -1,0 +1,26 @@
+From 2987c1092f76e980f9dfd55a9a033ec0aa15639c Mon Sep 17 00:00:00 2001
+From: Mikolaj Izdebski <mizdebsk@redhat.com>
+Date: Tue, 20 Jan 2015 12:30:09 +0100
+Subject: [PATCH 05/15] Add build dependency on ASM 5.0.3
+
+In Fedora ASM was unbundled from Jar Jar, so it needs to be explicitly
+added as dependency.
+---
+ buildSrc/build.gradle | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/buildSrc/build.gradle b/buildSrc/build.gradle
+index 50dd2a4..7360fa0 100644
+--- a/buildSrc/build.gradle
++++ b/buildSrc/build.gradle
+@@ -41,6 +41,7 @@ dependencies {
+     //it's built from sources at: https://github.com/szczepiq/jarjar
+     //if code changes are needed in this library we need to figure out a better way of distributing them.
+     compile "org.gradle.jarjar:jarjar:1.2.1"
++    compile "org.ow2.asm:asm-all:5.0.3"
+ }
+ apply from: '../gradle/compile.gradle'
+ apply from: '../gradle/taskOrdering.gradle'
+-- 
+2.5.0
+
