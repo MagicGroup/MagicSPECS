@@ -1,0 +1,14 @@
+Index: acpica-unix2-20150930/source/compiler/asllookup.c
+===================================================================
+--- acpica-unix2-20150930.orig/source/compiler/asllookup.c
++++ acpica-unix2-20150930/source/compiler/asllookup.c
+@@ -176,7 +176,8 @@ LkIsObjectUsed (
+                  * We ignore the predefined methods since often, not
+                  * all arguments are needed or used.
+                  */
+-                if ((Node->Name.Ascii[0] != '_') &&
++                ACPI_MOVE_32_TO_32(&tmp.Ascii, Node->Name.Ascii);
++                if ((tmp.Ascii[0] != '_') &&
+                     (!(MethodArgs[i].Flags & ASL_ARG_REFERENCED)))
+                 {
+                     sprintf (MsgBuffer, "Arg%u", i);

@@ -1,0 +1,12 @@
+diff -Naur acpica-unix2-20150930/tests/templates/Makefile acpica-unix2-20150930.patch/tests/templates/Makefile
+--- acpica-unix2-20150930/tests/templates/Makefile	2015-09-30 13:15:56.000000000 -0600
++++ acpica-unix2-20150930.patch/tests/templates/Makefile	2015-10-14 17:43:06.505805126 -0600
+@@ -2,7 +2,7 @@
+ PROG= templates
+ 
+ templates :
+-	sh templates.sh
++	sh templates.sh 1
+ 
+ clean :
+ 	rm -f *.asl *.aml *.dsl *.hex diff.log
