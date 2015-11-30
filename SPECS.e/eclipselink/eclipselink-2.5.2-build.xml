@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- build file by gil -->
+<project name="build-eclipselink" default="package">
+  <property file="build.properties"/>
+  <property name="api.version"    value="2.5.2"/>
+  <property name="reltag.version" value="v20140319-9ad6abd"/>
+  <property name="named.version"  value="${api.version}.${reltag.version}"/>
+
+  <target name="init">
+    <mkdir dir="${dir.build}/classes"/>
+    <mkdir dir="${dir.build}/core-classes"/>
+    <mkdir dir="${dir.build}/dbws-classes"/>
+    <mkdir dir="${dir.build}/jpa-classes"/>
+    <mkdir dir="${dir.build}/jpql-classes"/>
+    <mkdir dir="${dir.build}/modelgen-classes"/>
+    <mkdir dir="${dir.build}/moxy-classes"/>
+    <mkdir dir="${dir.build}/sdo-classes"/>
+
+    <echo message="Bundle-Name: EclipseLink Core${line.separator}Bundle-SymbolicName: org.eclipse.persistence.core${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="core.bnd"/>
+
+    <echo message="Bundle-Name: EclipseLink DBWS${line.separator}Bundle-SymbolicName: org.eclipse.persistence.dbws${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="dbws.bnd"/>
+
+    <echo message="Bundle-Name: EclipseLink JPA${line.separator}Bundle-SymbolicName: org.eclipse.persistence.jpa${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="jpa.bnd"/>
+
+    <echo message="Bundle-Name: EclipseLink Hermes Parser${line.separator}Bundle-SymbolicName: org.eclipse.persistence.jpa.jpql${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="jpql.bnd"/>
+
+    <echo message="Bundle-Name: EclipseLink JPA ModelGen${line.separator}Bundle-SymbolicName: org.eclipse.persistence.jpa.modelgen${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="modelgen.bnd"/>
+
+    <echo message="Bundle-Name: EclipseLink MOXy${line.separator}Bundle-SymbolicName: org.eclipse.persistence.moxy${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="moxy.bnd"/>
+
+    <echo message="Bundle-Name: EclipseLink SDO${line.separator}Bundle-SymbolicName: org.eclipse.persistence.sdo${line.separator}Bundle-Vendor: Eclipse.org - EclipseLink Project${line.separator}Bundle-Version: ${named.version}${line.separator}Export-Package: *${line.separator}Import-Package: *${line.separator}" file="sdo.bnd"/>
+
+  </target>
+
+  <target name="clean">
+    <delete dir="${dir.build}"/>
+  </target>
+
+  <path id="build.classpath">
+    <pathelement location="${dir.build}/classes/**"/>
+    <fileset dir="${dir.build}"    includes="eclipselink.jar"/>
+    <fileset dir="/usr/share/java" includes="ant.jar"/>
+    <fileset dir="/usr/share/java" includes="antlr3-runtime.jar"/>
+    <fileset dir="/usr/share/java" includes="eclipse/osgi.jar"/>
+    <fileset dir="/usr/share/java" includes="geronimo-jms.jar"/>
+    <fileset dir="/usr/share/java" includes="eclipselink-persistence-api.jar"/>
+    <fileset dir="/usr/share/java" includes="jboss-connector-1.7-api/jboss-connector-api_1.7_spec.jar"/>
+    <fileset dir="/usr/share/java" includes="jboss-transaction-1.2-api/jboss-transaction-api_1.2_spec.jar"/>
+    <fileset dir="/usr/share/java" includes="geronimo-validation.jar"/>
+    <fileset dir="/usr/share/java" includes="javamail/mail.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-commons.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-tree.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-util.jar"/>
+    <fileset dir="/usr/share/java" includes="objectweb-asm3/asm-xml.jar"/>
+    <fileset dir="/usr/share/java" includes="tuscany-sdo-api.jar"/>
+    <fileset dir="/usr/share/java" includes="glassfish-servlet-api.jar"/>
+    <fileset dir="/usr/share/java" includes="qname.jar"/>
+    <fileset dir="/usr/share/java" includes="wsdl4j.jar"/>
+    <fileset dir="/usr/share/java" includes="glassfish-jaxb/codemodel.jar"/>
+    <fileset dir="/usr/share/java" includes="glassfish-jaxb/jaxb-core.jar"/>
+    <fileset dir="/usr/share/java" includes="glassfish-jaxb/jaxb-xjc.jar"/>
+    <fileset dir="/usr/share/java" includes="jaxb-api.jar"/>
+    <fileset dir="/usr/share/java" includes="jsr-311.jar"/>
+    <fileset dir="/usr/share/java" includes="cdi-api/cdi-api.jar"/>
+  </path>
+
+  <macrodef name="antlr3">
+    <attribute name="grammar.name"/>
+    <attribute name="package" default="${package}"/>
+    <attribute name="make" default="True"/>
+    <attribute name="verbose" default="True"/>
+    <sequential>
+      <echo message="antlr @{package}/@{grammar.name}" />
+      <antlr:ant-antlr3 xmlns:antlr="antlib:org/apache/tools/ant/antlr"
+        target="@{package}/@{grammar.name}"
+        outputdirectory="@{package}"
+        libdirectory="@{package}"
+        multithreaded="true"
+        make="@{make}"
+        verbose="@{verbose}"
+        report="true"
+        debug="false">
+        <classpath>
+          <pathelement path="/usr/share/java/ant/ant-antlr3.jar"/>
+          <pathelement path="/usr/share/java/antlr3.jar"/>
+          <pathelement path="/usr/share/java/antlr3-runtime.jar"/>
+          <pathelement path="/usr/share/java/stringtemplate4/ST4.jar"/>
+          <!--pathelement path="/usr/share/java/ant.jar"/-->
+          <!--pathelement path="/usr/share/java/antlr.jar"/-->
+          <!--pathelement path="/usr/share/java/stringtemplate.jar"/-->
+        </classpath>
+        <jvmarg value="-Xmx512M"/>
+      </antlr:ant-antlr3>
+    </sequential>
+  </macrodef>
+
+  <target name="compile" depends="init">
+    <!--echo message="Remove Object node = null; in org/eclipse/persistence/internal/jpa/parsing/jpql/antlr/JPQL.g" />
+    < variable node is already defined in method subselectIdentificationVariableDeclaration(List) >
+    <replaceregexp file="org/eclipse/persistence/internal/jpa/parsing/jpql/antlr/JPQL.g" match="Object node = null;" flags="g" replace="" />
+    <antlr3 package="org/eclipse/persistence/internal/jpa/parsing/jpql/antlr"
+      grammar.name="JPQL.g"/>
+      
+    <antlr3 package="org/eclipse/persistence/internal/oxm/record/json"
+      grammar.name="JSON.g"/-->
+
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      classpathref="build.classpath"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/**"/>
+      <include name="commonj/**"/>
+      <!-- Oracle non free -->
+      <exclude name="org/eclipse/persistence/platform/database/oracle/ucp/**" />
+      <exclude name="org/eclipse/persistence/internal/eis/adapters/aq/**" />
+      <exclude name="org/eclipse/persistence/eis/adapters/aq/**" />
+      <exclude name="org/eclipse/persistence/internal/platform/database/oracle/**" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/*.java" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/converters/**" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/dcn/**" />
+      <exclude name="org/eclipse/persistence/tools/profiler/oracle/**" />
+      <exclude name="org/eclipse/persistence/platform/xml/xdk/**" />
+      <!-- Embedded libraries -->
+      <exclude name="org/eclipse/persistence/internal/libraries/**" />
+    </javac>
+    <copy todir="${dir.build}/classes">
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/internal/helper/VendorNameToPlatformMapping.properties"/>
+	<include name="org/eclipse/persistence/*.xsd"/>
+	<include name="org/eclipse/persistence/dbws/*.xsd"/>
+	<include name="org/eclipse/persistence/jpa/*.xsd"/>
+	<include name="org/eclipse/persistence/jpa/jpql/*.properties"/>
+	<include name="org/eclipse/persistence/jaxb/*.xsd"/>
+	<include name="org/eclipse/persistence/jaxb/xmlmodel/*.properties"/>
+	<include name="*.html"/>
+	<include name="org/eclipse/persistence/Version.j"/>
+      </fileset>
+    </copy>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/core-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <exclude name="commonj/**"/>
+      <exclude name="org/eclipse/persistence/jpa/**"/>
+      <exclude name="org/eclipse/persistence/dbws/**"/>
+      <exclude name="org/eclipse/persistence/jaxb/**"/>
+      <exclude name="org/eclipse/persistence/internal/dbws/**"/>
+      <exclude name="org/eclipse/persistence/internal/jaxb/**"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/*.java"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/config"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/deployment"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/jdbc"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/metadata"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/metamodel"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/modelgen"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/querydef"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/transaction"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/weaving"/>
+      <exclude name="org/eclipse/persistence/internal/xr/**"/>
+      <exclude name="org/eclipse/persistence/sdo/**"/>
+      <exclude name="org/eclipse/persistence/tools/weaving/**"/>
+      <!-- Oracle non free -->
+      <exclude name="org/eclipse/persistence/platform/database/oracle/ucp/**" />
+      <exclude name="org/eclipse/persistence/internal/eis/adapters/aq/**" />
+      <exclude name="org/eclipse/persistence/eis/adapters/aq/**" />
+      <exclude name="org/eclipse/persistence/internal/platform/database/oracle/**" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/*.java" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/converters/**" />
+      <exclude name="org/eclipse/persistence/platform/database/oracle/dcn/**" />
+      <exclude name="org/eclipse/persistence/tools/profiler/oracle/**" />
+      <exclude name="org/eclipse/persistence/platform/xml/xdk/**" />
+      <!-- Embedded libraries -->
+      <exclude name="org/eclipse/persistence/internal/libraries/**" />
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+     <copy todir="${dir.build}/core-classes">
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/Version.j"/>
+	<include name="org/eclipse/persistence/*.xsd"/>
+	<include name="org/eclipse/persistence/internal/helper/VendorNameToPlatformMapping.properties"/>
+	<exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/dbws-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/dbws/**"/>
+      <include name="org/eclipse/persistence/jpa/rs/**"/>
+      <include name="org/eclipse/persistence/internal/dbws/**"/>
+      <include name="org/eclipse/persistence/internal/xr/**"/>
+      <include name="org/eclipse/persistence/internal/xr/sxf/**"/>
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+    <copy todir="${dir.build}/dbws-classes">
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/dbws/*.xsd"/>
+	<exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/jpa-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/internal/jpa/**"/>
+      <include name="org/eclipse/persistence/jpa/*.java"/>
+      <include name="org/eclipse/persistence/jpa/config/**"/>
+      <include name="org/eclipse/persistence/jpa/dynamic/**"/>
+      <include name="org/eclipse/persistence/jpa/metadata/**"/>
+      <include name="org/eclipse/persistence/tools/weaving/jpa/**"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/jpql/**"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/modelgen/**"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/parsing/**"/>
+      <exclude name="org/eclipse/persistence/internal/jpa/rs/**"/>
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+     <copy todir="${dir.build}/jpa-classes">
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/jpa/*.xsd"/>
+	<exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/jpql-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/jpa/jpql/**"/>
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+    <copy todir="${dir.build}/jpql-classes">
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/jpa/jpql/*.properties"/>
+	<exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/modelgen-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/internal/jpa/modelgen/**"/>
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/moxy-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="org/eclipse/persistence/jaxb/**"/>
+      <include name="org/eclipse/persistence/internal/jaxb/**"/>
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+    <copy todir="${dir.build}/moxy-classes">
+      <fileset dir="${dir.src}">
+	<include name="org/eclipse/persistence/jaxb/xmlmodel/*.properties"/>
+	<include name="org/eclipse/persistence/jaxb/*.xsd"/>
+	<exclude name="**/*.java"/>
+      </fileset>
+    </copy>
+    <javac
+      srcdir="${dir.src}"
+      destdir="${dir.build}/sdo-classes"
+      debug="${debug}"
+      source="${source}"
+      target="${target}"
+      encoding="utf-8"
+      includeantruntime="false">
+      <include name="commonj/**"/>
+      <include name="org/eclipse/persistence/sdo/**"/>
+      <classpath>
+        <pathelement location="${dir.build}/classes"/>
+        <path refid="build.classpath"/>
+      </classpath>
+    </javac>
+  </target>
+  
+  <taskdef resource="aQute/bnd/ant/taskdef.properties" >
+    <classpath>
+     <fileset dir="/usr/share/java/aqute-bnd" />
+    </classpath>
+  </taskdef>
+
+  <target name="jar" depends="compile ">
+
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.core.jar"
+      basedir="${dir.build}/core-classes">
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.core"/>
+	<attribute name="Specification-Title" value="EclipseLink Core"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.core"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+	<attribute name="Premain-Class" value="org.eclipse.persistence.internal.jpa.deployment.JavaSECMPInitializerAgent"/>
+      </manifest>
+    </jar>
+
+    <bndwrap definitions="${basedir}/core.bnd" output="${dir.build}/org.eclipse.persistence.core-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.core.jar"/>
+    </bndwrap>
+
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.dbws.jar"
+      basedir="${dir.build}/dbws-classes">
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.dbws"/>
+	<attribute name="Specification-Title" value="EclipseLink DBWS"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.dbws"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+      </manifest>
+    </jar>
+
+    <bndwrap definitions="${basedir}/dbws.bnd" output="${dir.build}/org.eclipse.persistence.dbws-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.dbws.jar"/>
+    </bndwrap>
+
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.jpa.jar"
+      basedir="${dir.build}/jpa-classes">
+      <service type="javax.persistence.spi.PersistenceProvider" provider="org.eclipse.persistence.jpa.PersistenceProvider"/>
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="Specification-Title" value="EclipseLink JPA"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.jpa"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+	<attribute name="Premain-Class" value="org.eclipse.persistence.internal.jpa.deployment.JavaSECMPInitializerAgent"/>
+      </manifest>
+    </jar>
+    
+    <bndwrap definitions="${basedir}/jpa.bnd" output="${dir.build}/org.eclipse.persistence.jpa-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.jpa.jar"/>
+    </bndwrap>
+
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.jpa.jpql.jar"
+      basedir="${dir.build}/jpql-classes">
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.jpa.jpql"/>
+	<attribute name="Specification-Title" value="EclipseLink Hermes Parser"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.jpa.jpql"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+      </manifest>
+    </jar>
+
+    <bndwrap definitions="${basedir}/jpql.bnd" output="${dir.build}/org.eclipse.persistence.jpa.jpql-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.jpa.jpql.jar"/>
+    </bndwrap>
+
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.jpa.modelgen.processor.jar"
+      basedir="${dir.build}/modelgen-classes">
+      <service type="javax.annotation.processing.Processor"
+               provider="org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor"/>
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="Eclipse-SourceBundle" value="org.eclipse.persistence.jpa.modelgen;version=&quot;${named.version}&quot;"/>
+	<attribute name="Specification-Title" value="EclipseLink JPA ModelGen"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.jpa.modelgen"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+      </manifest>
+    </jar>
+
+    <bndwrap definitions="${basedir}/modelgen.bnd" output="${dir.build}/org.eclipse.persistence.jpa.modelgen.processor-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.jpa.modelgen.processor.jar"/>
+    </bndwrap>
+    
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.moxy.jar"
+      basedir="${dir.build}/moxy-classes">
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.moxy"/>
+	<attribute name="Specification-Title" value="EclipseLink MOXy"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.moxy"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+      </manifest>
+    </jar>
+
+    <bndwrap definitions="${basedir}/moxy.bnd" output="${dir.build}/org.eclipse.persistence.moxy-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.moxy.jar"/>
+    </bndwrap>
+
+    <jar
+      destfile="${dir.build}/org.eclipse.persistence.sdo.jar"
+      basedir="${dir.build}/sdo-classes">
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Created-By" value="${java.version} (${java.vendor})"/>
+	<attribute name="HK2-Bundle-Name" value="org.eclipse.persistence:org.eclipse.persistence.sdo"/>
+	<attribute name="Specification-Title" value="EclipseLink SDO"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence.sdo"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+      </manifest>
+    </jar>
+
+    <bndwrap definitions="${basedir}/sdo.bnd" output="${dir.build}/org.eclipse.persistence.sdo-${api.version}.jar" trace="true">
+      <fileset dir="${dir.build}" includes="org.eclipse.persistence.sdo.jar"/>
+    </bndwrap>
+
+    <jar
+      destfile="${dir.build}/eclipselink.jar"
+      basedir="${dir.build}/classes">
+      <service type="javax.persistence.spi.PersistenceProvider" provider="org.eclipse.persistence.jpa.PersistenceProvider"/>
+      <manifest>
+	<attribute name="Built-By" value="${user.name}"/>
+	<attribute name="Build-Jdk" value="${java.version}"/>
+	<attribute name="Specification-Title" value="Eclipse Persistence Services"/>
+	<attribute name="Specification-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Specification-Version" value="${api.version}"/>
+	<attribute name="Implementation-Title" value="org.eclipse.persistence"/>
+	<attribute name="Implementation-Version" value="${named.version}"/>
+	<attribute name="Implementation-Vendor" value="Eclipse.org - EclipseLink Project"/>
+	<attribute name="Release-Designation" value="EclipseLink ${api.version}"/>
+	<attribute name="Premain-Class" value="org.eclipse.persistence.internal.jpa.deployment.JavaSECMPInitializerAgent"/>
+	<attribute name="Main-Class" value="org.eclipse.persistence.Version"/>
+      </manifest>
+    </jar>
+
+  </target>
+
+  <target name="javadoc" depends="init">
+    <mkdir dir="${dir.build}/api"/>
+    <javadoc
+      destdir="${dir.build}/api"
+      access="public"
+      windowtitle="EclipseLink ${api.version}, &quot;build ${reltag.version}&quot; API Reference"
+      doctitle="EclipseLink ${api.version}, &quot;build ${reltag.version}&quot; API Reference"
+      bottom="EclipseLink ${api.version}, &quot;build ${reltag.version}&quot; API Reference"
+      encoding="utf-8"
+      additionalparam="-Xdoclint:none"
+      defaultexcludes="yes">
+      <packageset dir="${dir.src}">
+	<include name="org/eclipse/persistence/**"/>
+	<!-- Oracle non free -->
+	<exclude name="org/eclipse/persistence/platform/database/oracle/ucp/**" />
+	<exclude name="org/eclipse/persistence/internal/eis/adapters/aq/**" />
+	<exclude name="org/eclipse/persistence/eis/adapters/aq/**" />
+	<exclude name="org/eclipse/persistence/internal/platform/database/oracle/**" />
+	<exclude name="org/eclipse/persistence/platform/database/oracle/*.java" />
+	<exclude name="org/eclipse/persistence/platform/database/oracle/converters/**" />
+	<exclude name="org/eclipse/persistence/platform/database/oracle/dcn/**" />
+	<exclude name="org/eclipse/persistence/tools/profiler/oracle/**" />
+	<exclude name="org/eclipse/persistence/platform/xml/xdk/**" />
+	<!-- Embedded libraries -->
+	<exclude name="org/eclipse/persistence/internal/libraries/**" />
+      </packageset>
+      <link href="/usr/share/javadoc/java/" packagelistLoc="/usr/share/javadoc/java/package-list"/>
+      <classpath refid="build.classpath"/>
+    </javadoc>
+  </target>
+  <!--  jar.asm, jar.antlr, -->
+  <target name="package" depends="jar, javadoc"/>
+
+</project>

@@ -1,0 +1,90 @@
+diff -Nru eclipselink-2.5.2/org/eclipse/persistence/internal/jaxb/XMLJavaTypeConverter.java eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/jaxb/XMLJavaTypeConverter.java
+--- eclipselink-2.5.2/org/eclipse/persistence/internal/jaxb/XMLJavaTypeConverter.java	2014-03-19 07:47:24.000000000 +0100
++++ eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/jaxb/XMLJavaTypeConverter.java	2015-11-01 14:11:04.755471127 +0100
+@@ -289,7 +289,7 @@
+         	} catch (IllegalAccessException e) {
+ 	            Constructor ctor = null;
+ 	            if (PrivilegedAccessHelper.shouldUsePrivilegedAccess()) {
+-	            	ctor = AccessController.doPrivileged(new PrivilegedGetConstructorFor(xmlAdapterClass, new Class[0], true));	            			            
++	            	ctor = (Constructor) AccessController.doPrivileged(new PrivilegedGetConstructorFor(xmlAdapterClass, new Class[0], true));	            			            
+ 	            } else {
+ 	            	ctor = PrivilegedAccessHelper.getDeclaredConstructorFor(xmlAdapterClass, new Class[0], true);
+ 	            }
+diff -Nru eclipselink-2.5.2/org/eclipse/persistence/internal/oxm/XMLMarshaller.java eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/oxm/XMLMarshaller.java
+--- eclipselink-2.5.2/org/eclipse/persistence/internal/oxm/XMLMarshaller.java	2014-03-19 07:47:20.000000000 +0100
++++ eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/oxm/XMLMarshaller.java	2015-11-01 14:11:04.768470441 +0100
+@@ -68,7 +68,7 @@
+ public abstract class XMLMarshaller<
+     ABSTRACT_SESSION extends CoreAbstractSession,
+     CONTEXT extends Context<ABSTRACT_SESSION, DESCRIPTOR, ?, ?, ?, ?, ?>,
+-    DESCRIPTOR extends Descriptor,
++    DESCRIPTOR extends Descriptor<?,?,?,?,?,?,?,?,?>,
+     MEDIA_TYPE extends MediaType,
+     NAMESPACE_PREFIX_MAPPER extends NamespacePrefixMapper,
+     OBJECT_BUILDER extends ObjectBuilder<?, ABSTRACT_SESSION, ?, XMLMarshaller>> extends Marshaller<CONTEXT, MEDIA_TYPE, NAMESPACE_PREFIX_MAPPER> {
+diff -Nru eclipselink-2.5.2/org/eclipse/persistence/internal/sessions/AbstractSession.java eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/sessions/AbstractSession.java
+--- eclipselink-2.5.2/org/eclipse/persistence/internal/sessions/AbstractSession.java	2014-03-19 07:47:20.000000000 +0100
++++ eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/sessions/AbstractSession.java	2015-11-01 14:11:04.781469756 +0100
+@@ -1142,7 +1142,7 @@
+             if (PrivilegedAccessHelper.shouldUsePrivilegedAccess()){
+                     Class elim = (Class)AccessController.doPrivileged(new PrivilegedClassForName(EntityListenerInjectionManager.DEFAULT_CDI_INJECTION_MANAGER, true, getLoader()));
+                     Constructor constructor = (Constructor) AccessController.doPrivileged(new PrivilegedGetConstructorFor(elim, new Class[] {String.class}, false));
+-                    return AccessController.doPrivileged(new PrivilegedInvokeConstructor(constructor, new Object[] {beanManager}));
++                    return (EntityListenerInjectionManager) AccessController.doPrivileged(new PrivilegedInvokeConstructor(constructor, new Object[] {beanManager}));
+             } else {
+                 Class elim = org.eclipse.persistence.internal.security.PrivilegedAccessHelper.getClassForName(EntityListenerInjectionManager.DEFAULT_CDI_INJECTION_MANAGER, true, getLoader()); 
+                 Constructor constructor = PrivilegedAccessHelper.getConstructorFor(elim, new Class[] {Object.class}, false);
+diff -Nru eclipselink-2.5.2/org/eclipse/persistence/internal/xr/QueryOperation.java eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/xr/QueryOperation.java
+--- eclipselink-2.5.2/org/eclipse/persistence/internal/xr/QueryOperation.java	2014-03-19 07:46:38.000000000 +0100
++++ eclipselink-2.5.2.openjdk/org/eclipse/persistence/internal/xr/QueryOperation.java	2015-11-01 14:11:04.788469386 +0100
+@@ -624,8 +624,8 @@
+                             Class oracleSQLXML;
+                             Method getStringMethod;
+                             if (PrivilegedAccessHelper.shouldUsePrivilegedAccess()) {
+-                                oracleSQLXML = AccessController.doPrivileged(new PrivilegedClassForName(ORACLESQLXML_STR, true, this.getClass().getClassLoader()));
+-                                getStringMethod = AccessController.doPrivileged(new PrivilegedGetDeclaredMethod(oracleSQLXML, GETSTRING_METHOD, new Class[] {}));
++                                oracleSQLXML = (Class)AccessController.doPrivileged(new PrivilegedClassForName(ORACLESQLXML_STR, true, this.getClass().getClassLoader()));
++                                getStringMethod = (Method)AccessController.doPrivileged(new PrivilegedGetDeclaredMethod(oracleSQLXML, GETSTRING_METHOD, new Class[] {}));
+                                 fieldValue = (String) AccessController.doPrivileged(new PrivilegedMethodInvoker(getStringMethod, fieldValue, new Object[] {}));
+                             } else {
+                                 oracleSQLXML = PrivilegedAccessHelper.getClassForName(ORACLESQLXML_STR, true, this.getClass().getClassLoader());
+@@ -644,11 +644,11 @@
+                             Object xmlTypeFactory;
+                             Method getStringMethod;
+                             if (PrivilegedAccessHelper.shouldUsePrivilegedAccess()) {
+-                                oracleOPAQUE = AccessController.doPrivileged(new PrivilegedClassForName(ORACLEOPAQUE_STR, true, this.getClass().getClassLoader()));
+-                                xmlTypeFactoryClass = AccessController.doPrivileged(new PrivilegedClassForName(XMLTYPEFACTORY_STR, true, this.getClass().getClassLoader()));
+-                                xmlTypeFactoryConstructor = AccessController.doPrivileged(new PrivilegedGetConstructorFor(xmlTypeFactoryClass, new Class[0], true));
++                                oracleOPAQUE = (Class)AccessController.doPrivileged(new PrivilegedClassForName(ORACLEOPAQUE_STR, true, this.getClass().getClassLoader()));
++                                xmlTypeFactoryClass = (Class)AccessController.doPrivileged(new PrivilegedClassForName(XMLTYPEFACTORY_STR, true, this.getClass().getClassLoader()));
++                                xmlTypeFactoryConstructor = (Constructor)AccessController.doPrivileged(new PrivilegedGetConstructorFor(xmlTypeFactoryClass, new Class[0], true));
+                                 xmlTypeFactory = AccessController.doPrivileged(new PrivilegedInvokeConstructor(xmlTypeFactoryConstructor, new Object[0]));
+-                                getStringMethod = AccessController.doPrivileged(new PrivilegedGetDeclaredMethod(xmlTypeFactoryClass, GETSTRING_METHOD, new Class[] {oracleOPAQUE}));
++                                getStringMethod = (Method)AccessController.doPrivileged(new PrivilegedGetDeclaredMethod(xmlTypeFactoryClass, GETSTRING_METHOD, new Class[] {oracleOPAQUE}));
+                                 fieldValue = (String) AccessController.doPrivileged(new PrivilegedMethodInvoker(getStringMethod, fieldValue, new Object[] {}));
+                             } else {
+                                 oracleOPAQUE = PrivilegedAccessHelper.getClassForName(ORACLEOPAQUE_STR, false, this.getClass().getClassLoader());
+diff -Nru eclipselink-2.5.2/org/eclipse/persistence/jpa/rs/PersistenceContext.java eclipselink-2.5.2.openjdk/org/eclipse/persistence/jpa/rs/PersistenceContext.java
+--- eclipselink-2.5.2/org/eclipse/persistence/jpa/rs/PersistenceContext.java	2014-03-19 07:46:38.000000000 +0100
++++ eclipselink-2.5.2.openjdk/org/eclipse/persistence/jpa/rs/PersistenceContext.java	2015-11-01 14:11:04.761470811 +0100
+@@ -527,7 +527,7 @@
+                 }
+                 Field[] fields = null;
+                 if (PrivilegedAccessHelper.shouldUsePrivilegedAccess()) {
+-                    fields = AccessController.doPrivileged(new PrivilegedGetDeclaredFields(clazz));
++                    fields = (Field[]) AccessController.doPrivileged(new PrivilegedGetDeclaredFields(clazz));
+                 } else {
+                     fields = PrivilegedAccessHelper.getDeclaredFields(clazz);
+                 }
+diff -Nru eclipselink-2.5.2/org/eclipse/persistence/mappings/converters/ConverterClass.java eclipselink-2.5.2.openjdk/org/eclipse/persistence/mappings/converters/ConverterClass.java
+--- eclipselink-2.5.2/org/eclipse/persistence/mappings/converters/ConverterClass.java	2014-03-19 07:47:20.000000000 +0100
++++ eclipselink-2.5.2.openjdk/org/eclipse/persistence/mappings/converters/ConverterClass.java	2015-11-01 14:11:04.764470652 +0100
+@@ -83,7 +83,7 @@
+             if (PrivilegedAccessHelper.shouldUsePrivilegedAccess()) {
+                 try {
+                     attributeConverterClass = (Class) AccessController.doPrivileged(new PrivilegedClassForName(attributeConverterClassName, true, classLoader));
+-                    attributeConverter = AccessController.doPrivileged(new PrivilegedNewInstanceFromClass(attributeConverterClass));
++                    attributeConverter = (AttributeConverter) AccessController.doPrivileged(new PrivilegedNewInstanceFromClass(attributeConverterClass));
+                 } catch (PrivilegedActionException exception) {
+                     throw ValidationException.classNotFoundWhileConvertingClassNames(attributeConverterClassName, exception.getException());
+                 }
