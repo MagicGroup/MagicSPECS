@@ -1,24 +1,3 @@
-diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java
-index 01b3f12..2009b84 100644
---- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java	
-+++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT Browser/common/org/eclipse/swt/browser/WebBrowser.java	
-@@ -401,6 +401,7 @@ public Object evaluate (String script) throws SWTException {
- 	registerFunction (function);
- 	String functionName = EXECUTE_ID + index;
- 
-+	// Create a function that will execute the given script
- 	StringBuffer buffer = new StringBuffer ("window."); // $NON-NLS-1$
- 	buffer.append (functionName);
- 	buffer.append (" = function "); // $NON-NLS-1$
-@@ -410,6 +411,8 @@ public Object evaluate (String script) throws SWTException {
- 	buffer.append ("\n};"); // $NON-NLS-1$
- 	execute (buffer.toString ());
- 
-+	// Execute the function created above, assign the result to
-+	// a variable then call Java with that result
- 	buffer = new StringBuffer ("if (window."); // $NON-NLS-1$
- 	buffer.append (functionName);
- 	buffer.append (" == undefined) {window.external.callJava("); // $NON-NLS-1$
 diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java
 index 780a82c..c3bedd0 100644
 --- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/common_j2se/org/eclipse/swt/internal/Library.java	
@@ -125,18 +104,18 @@ index 780a82c..c3bedd0 100644
 +
  }
 diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak
-index 6bce587..051c806 100644
+index 6bce587..fea2a5b 100644
 --- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak	
 +++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/make_linux.mak	
-@@ -48,6 +48,7 @@ XULRUNNER_LIB = lib$(XULRUNNER_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
- XULRUNNER24_LIB = lib$(XULRUNNER24_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
+@@ -46,6 +46,7 @@
+ XULRUNNER_LIB = lib$(XULRUNNER_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
  XPCOMINIT_LIB = lib$(XPCOMINIT_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
  WEBKIT_LIB = lib$(WEBKIT_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
 +WEBKIT_EXTENSION = lib$(WEBKIT_PREFIX)-extension-$(SWT_VERSION).so
  GLX_LIB = lib$(GLX_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).so
  
  CAIROCFLAGS = `pkg-config --cflags cairo`
-@@ -298,7 +299,7 @@ xpcominit_stats.o: xpcominit_stats.cpp
+@@ -285,7 +286,7 @@
  #
  # WebKit lib
  #
@@ -145,16 +124,16 @@ index 6bce587..051c806 100644
  
  $(WEBKIT_LIB): $(WEBKIT_OBJECTS)
  	$(CC) $(LFLAGS) -o $(WEBKIT_LIB) $(WEBKIT_OBJECTS)
-@@ -312,6 +313,13 @@ webkit_structs.o: webkitgtk_structs.c
+@@ -299,6 +300,13 @@
  webkit_stats.o: webkitgtk_stats.c webkitgtk_stats.h
  	$(CC) $(CFLAGS) $(WEBKITCFLAGS) -c webkitgtk_stats.c -o webkit_stats.o
  
 +webkit_extension.o: webkit_extension.c webkit_extension.h
-+	$(CC) $(CFLAGS) $(WEBKITCFLAGS) -c webkit_extension.c -o webkit_extension.o `pkg-config --cflags --libs webkit2gtk-3.0`
++	$(CC) $(CFLAGS) $(WEBKITCFLAGS) -c webkit_extension.c -o webkit_extension.o `pkg-config --cflags --libs webkit2gtk-4.0`
 +
 +$(WEBKIT_EXTENSION): webkit_extension.o
 +	$(CC) -g -shared -Wl,-no-undefined,-soname,$(WEBKIT_EXTENSION) \
-+        `pkg-config --cflags --libs webkit2gtk-3.0` -o $(WEBKIT_EXTENSION) webkit_extension.o -lc
++        `pkg-config --cflags --libs webkit2gtk-4.0` -o $(WEBKIT_EXTENSION) webkit_extension.o -lc
 +
  #
  # GLX lib
@@ -773,7 +752,7 @@ diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/o
 index 7ef6236..0e00c09 100644
 --- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/browser/WebKit.java	
 +++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT WebKit/gtk/org/eclipse/swt/browser/WebKit.java	
-@@ -11,12 +11,15 @@
+@@ -12,12 +12,15 @@
  package org.eclipse.swt.browser;
  
  
@@ -797,8 +776,8 @@ index 7ef6236..0e00c09 100644
  import org.eclipse.swt.internal.LONG;
  import org.eclipse.swt.internal.Library;
  import org.eclipse.swt.internal.gtk.GdkEventKey;
-@@ -49,6 +53,8 @@ import org.eclipse.swt.widgets.Shell;
- @SuppressWarnings({"rawtypes", "unchecked"})
+@@ -48,6 +52,8 @@ import org.eclipse.swt.widgets.Shell;
+ 
  class WebKit extends WebBrowser {
  	long /*int*/ webView, webViewData, scrolledWindow;
 +	long pageId;
@@ -806,7 +785,7 @@ index 7ef6236..0e00c09 100644
  	int failureCount, lastKeyCode, lastCharCode;
  	String postData;
  	String[] headers;
-@@ -56,10 +62,61 @@ class WebKit extends WebBrowser {
+@@ -55,10 +61,61 @@ class WebKit extends WebBrowser {
  	byte[] htmlBytes;
  	BrowserFunction eventFunction;
  
@@ -829,7 +808,7 @@ index 7ef6236..0e00c09 100644
  	static int DisabledJSCount;
  	static long /*int*/ ExternalClass, PostString, WebViewType;
  	static boolean IsWebKit14orNewer, LibraryLoaded;
- 	static Hashtable WindowMappings = new Hashtable ();
+ 	static Hashtable<LONG, LONG> WindowMappings = new Hashtable<LONG, LONG> ();
 +	static HashMap<Long, WebKit> browserIdMappings = new HashMap<Long, WebKit>();
 +
 +	private static final String WEBKIT_MAIN_PROCESS_DBUS_NAME_PREFIX = "org.eclipse.webkit_main.";
@@ -1448,14 +1427,14 @@ index 7ef6236..0e00c09 100644
 +			// Extract it.
  			int index = ((Double)convertToJava (ctx, result[0])).intValue ();
  			result[0] = 0;
- 			Object key = new Integer (index);
+ 			Integer key = new Integer (index);
 +
 +			// The second argument is a String that is equal to the token of the function.
  			C.memmove (result, arguments + C.PTR_SIZEOF, C.PTR_SIZEOF);
  			type = WebKitGTK.JSValueGetType (ctx, result[0]);
  			if (type == WebKitGTK.kJSTypeString) {
 @@ -2349,6 +2754,7 @@ long /*int*/ callJava (long /*int*/ ctx, long /*int*/ func, long /*int*/ thisObj
- 				BrowserFunction function = (BrowserFunction)functions.get (key);
+ 				BrowserFunction function = functions.get (key);
  				if (function != null && token.equals (function.token)) {
  					try {
 +						// The third argument is an array of arguments to the Java function.
@@ -1540,15 +1519,6 @@ index 4b8c089..176b44f 100644
  public static char [] mbcsToWcs (String codePage, byte [] buffer) {
  	long /*int*/ [] items_written = new long /*int*/ [1];
  	long /*int*/ ptr = OS.g_utf8_to_utf16 (buffer, buffer.length, null, items_written, null);
-@@ -57,7 +64,7 @@ public static byte [] wcsToMbcs (String codePage, String string, boolean termina
- public static byte [] wcsToMbcs (String codePage, char [] buffer, boolean terminate) {
- 	long /*int*/ [] items_read = new long /*int*/ [1], items_written = new long /*int*/ [1];
- 	/*
--	* Note that g_utf16_to_utf8()  stops converting 
-+	* Note that g_utf16_to_utf8()  stops converting
- 	* when it finds the first NULL.
- 	*/
- 	long /*int*/ ptr = OS.g_utf16_to_utf8 (buffer, buffer.length, items_read, items_written, null);
 diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/GVariantConverter.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/internal/GVariantConverter.java
 new file mode 100644
 index 0000000..dc19b0f
@@ -1684,6 +1654,6 @@ index 763c1fe..b7fbb02 100644
 +	if(WEBKIT2){
 +		return;
 +	}
- 	assertTrue(Browser9.test());
- }
- 
+ 	if (isRunningOnEclipseOrgHudsonGTK) {
+ 		System.out.println("Test_BrowserSuite.testBrowser1() skipped, see bug 465721");
+ 		return;

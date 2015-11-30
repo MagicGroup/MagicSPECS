@@ -1,6 +1,6 @@
 --- rt.equinox.p2/features/org.eclipse.equinox.p2.core.feature/pom.xml.bak	2012-07-25 17:45:43.000000000 +0200
 +++ rt.equinox.p2/features/org.eclipse.equinox.p2.core.feature/pom.xml	2012-07-31 07:41:13.103636303 +0200
-@@ -40,6 +40,24 @@
+@@ -40,6 +40,25 @@
                <excludes>
                  <plugin id="org.sat4j.core"/>
                  <plugin id="org.sat4j.pb"/>
@@ -22,12 +22,13 @@
 +		 <plugin id="org.eclipse.equinox.security.macosx"/>
 +		 <plugin id="org.eclipse.equinox.security.win32.x86"/>
 +		 <plugin id="org.eclipse.equinox.security.win32.x86_64"/>
++                <plugin id="org.tukaani.xz" />
                </excludes>
              </configuration>
            </execution>
 --- eclipse.platform.releng/features/org.eclipse.help-feature/pom.xml.bak	2012-07-31 07:43:57.000000000 +0200
 +++ eclipse.platform.releng/features/org.eclipse.help-feature/pom.xml	2012-07-31 08:05:24.279277920 +0200
-@@ -53,6 +53,17 @@
+@@ -34,6 +34,17 @@
              <goals>
                <goal>source-feature</goal>
              </goals>
@@ -103,12 +104,13 @@
 - plugin@org.w3c.css.sac.source;version=1.3.1.qualifier;unpack="false"
 +generate.feature@org.eclipse.e4.rcp.source=org.eclipse.e4.rcp
 \ No newline at end of file
---- eclipse.platform.releng/features/org.eclipse.platform-feature/pom.xml.orig	2014-03-24 12:58:43.355826288 +0000
-+++ eclipse.platform.releng/features/org.eclipse.platform-feature/pom.xml	2014-03-24 13:04:46.463916138 +0000
-@@ -75,6 +75,12 @@
+--- eclipse.platform.releng/features/org.eclipse.platform-feature/pom.xml.orig  2014-11-28 15:27:07.874872769 +0000
++++ eclipse.platform.releng/features/org.eclipse.platform-feature/pom.xml       2014-11-28 15:31:02.592652099 +0000
+@@ -74,6 +74,13 @@
+                 <plugin id="org.eclipse.core.net.linux.x86_64"/>
                  <plugin id="org.eclipse.core.net.win32.x86"/>
                  <plugin id="org.eclipse.core.net.win32.x86_64"/>
-                 <plugin id="org.eclipse.equinox.security.macosx"/>
++                <plugin id="org.eclipse.equinox.security.macosx"/>
 +                <plugin id="org.eclipse.equinox.security.win32.x86"/>
 +                <plugin id="org.eclipse.equinox.security.win32.x86_64"/>
 +                <plugin id="org.eclipse.compare.win32"/>
@@ -143,8 +145,8 @@
                </excludes>
              </configuration>
            </execution>
---- eclipse.platform.releng/features/org.eclipse.sdk/build.properties.bak	2013-03-14 11:18:11.000000000 +0100
-+++ eclipse.platform.releng/features/org.eclipse.sdk/build.properties	2013-03-14 13:00:08.498377327 +0100
+--- eclipse.platform.releng/features/org.eclipse.sdk/build.properties.orig	2015-03-18 09:32:34.661736950 +0000
++++ eclipse.platform.releng/features/org.eclipse.sdk/build.properties	2015-03-18 09:33:37.948838036 +0000
 @@ -11,31 +11,12 @@
  bin.includes=feature.xml,feature.properties
  
@@ -157,8 +159,8 @@
 -plugin@org.junit.source;version=4.10.0.qualifier;unpack="false",\
 -plugin@org.hamcrest.core.source;version=1.1.0.qualifier;unpack="false",\
  exclude@org.eclipse.jdt.doc.user
--generate.feature@org.eclipse.pde.source=org.eclipse.pde,plugin@org.objectweb.asm.source;version=3.3.1.qualifier;unpack="false",\exclude@org.eclipse.pde.doc.user
-+generate.feature@org.eclipse.pde.source=org.eclipse.pde,\exclude@org.eclipse.pde.doc.user
+-generate.feature@org.eclipse.pde.source=org.eclipse.pde,plugin@org.objectweb.asm.source;version=3.3.1.qualifier;unpack="false",exclude@org.eclipse.pde.doc.user
++generate.feature@org.eclipse.pde.source=org.eclipse.pde,exclude@org.eclipse.pde.doc.user
  generate.feature@org.eclipse.cvs.source=org.eclipse.cvs
 -generate.feature@org.eclipse.help.source=org.eclipse.help,\
 -  plugin@javax.servlet.source;version=3.0.0.qualifier;unpack="false",\
@@ -176,40 +178,30 @@
 -  plugin@org.eclipse.jetty.servlet.source;version=8.1.9.qualifier;unpack="false",\
 -  plugin@org.eclipse.jetty.util.source;version=8.1.9.qualifier;unpack="false",\
 -  plugin@javax.el.source;version=2.2.0.qualifier;unpack="false"
--
 +generate.feature@org.eclipse.help.source=org.eclipse.help
-+  
+ 
  generatedVersionLength=45
 --- eclipse.platform.ui/features/org.eclipse.e4.rcp/pom.xml.orig	2014-05-26 18:37:25.406426611 +0300
 +++ eclipse.platform.ui/features/org.eclipse.e4.rcp/pom.xml	2014-05-26 18:37:47.327449374 +0300
-@@ -54,6 +54,30 @@
+@@ -54,6 +54,21 @@
                  <plugin id="org.eclipse.equinox.launcher.gtk.hpux.ia64"/>
                  <plugin id="org.eclipse.equinox.launcher.win32.win32.x86"/>
                  <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64"/>
++                <plugin id="org.eclipse.equinox.launcher.gtk.linux.arm" />
++                <plugin id="org.eclipse.equinox.launcher.gtk.linux.aarch64" />
++                <plugin id="org.eclipse.e4.ui.workbench.renderers.swt.cocoa" />
++                <plugin id="org.apache.commons.jxpath" />
 +                <plugin id="org.apache.geronimo.specs.geronimo-annotation_1.1_spec" />
-+				<plugin id="org.apache.felix.gogo.command" />
-+               <plugin id="org.apache.batik.css" />
-+               <plugin id="org.w3c.css.sac" />
-+               <plugin id="org.apache.batik.util" />
-+               <plugin id="org.apache.batik.util.gui" />
-+               <plugin id="org.w3c.dom.svg" />
-+				<plugin id="javax.inject" />
-+				<plugin id="com.ibm.icu"/>
-+				<plugin id="org.apache.felix.gogo.runtime" />
-+				<plugin id="org.apache.felix.gogo.shell" />
-+				<plugin id="org.eclipse.equinox.launcher.gtk.linux.arm" />
-+				<plugin id="org.eclipse.equinox.launcher.gtk.linux.aarch64" />
-+				<plugin id="org.eclipse.equinox.launcher.gtk.linux.ppc64le" />
-+				<plugin id="org.eclipse.swt.win32.win32.x86" />
-+				<plugin id="org.eclipse.swt.win32.win32.x86_64" />
-+				<plugin id="org.eclipse.swt.cocoa.macosx.x86_64" />
-+               <plugin id="org.eclipse.swt.gtk.solaris.sparc" />
-+               <plugin id="org.eclipse.swt.gtk.solaris.x86" />
-+               <plugin id="org.eclipse.swt.cocoa.macosx" />
-+               <plugin id="org.eclipse.swt.gtk.aix.ppc" />
-+               <plugin id="org.eclipse.swt.gtk.aix.ppc64" />
-+               <plugin id="org.eclipse.swt.gtk.hpux.ia64" />
-+				<plugin id="org.eclipse.e4.ui.workbench.renderers.swt.cocoa" />
++                <plugin id="org.apache.felix.gogo.command" />
++                <plugin id="org.apache.batik.css" />
++                <plugin id="org.w3c.css.sac" />
++                <plugin id="org.apache.batik.util" />
++                <plugin id="org.apache.batik.util.gui" />
++                <plugin id="org.w3c.dom.svg" />
++                <plugin id="javax.inject" />
++                <plugin id="com.ibm.icu"/>
++                <plugin id="org.apache.felix.gogo.runtime" />
++                <plugin id="org.apache.felix.gogo.shell" />
                </excludes>
              </configuration>
            </execution>

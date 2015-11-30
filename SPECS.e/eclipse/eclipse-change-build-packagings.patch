@@ -1,26 +1,26 @@
 --- eclipse.platform.releng/features/org.eclipse.sdk/feature.xml.orig	2014-04-08 15:47:19.927087084 +0100
 +++ eclipse.platform.releng/features/org.eclipse.sdk/feature.xml	2014-04-08 15:48:00.045367311 +0100
-@@ -19,7 +19,7 @@
-       %license
-    </license>
+@@ -59,7 +59,7 @@
+          id="org.eclipse.help.source"
+          version="0.0.0"/>
  
 -   <requires>
 +   <!--requires>
        <import feature="org.eclipse.emf.common.source" version="2.7.0" match="compatible"/>
        <import feature="org.eclipse.emf.ecore.source" version="2.7.0" match="compatible"/>
-    
-@@ -29,7 +29,7 @@
+       <import feature="org.eclipse.ecf.core.source.feature" version="1.1.0" match="compatible"/>
+@@ -68,7 +68,7 @@
        <import feature="org.eclipse.ecf.filetransfer.httpclient4.source.feature" version="3.8.0" match="compatible"/>
        <import feature="org.eclipse.ecf.filetransfer.httpclient4.ssl.source.feature" version="1.0.0" match="compatible"/>
        <import feature="org.eclipse.ecf.filetransfer.ssl.source.feature" version="1.0.0" match="compatible"/>
 -   </requires>
 +   </requires-->
  
- 
- 
---- eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/category.xml.orig	2014-04-22 19:03:17.404382093 +0100
-+++ eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/category.xml	2014-04-22 19:08:40.599989429 +0100
-@@ -4,33 +4,21 @@
+    <plugin
+          id="org.eclipse.sdk"
+--- eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/category.xml.orig	2015-03-31 10:28:54.530277349 +0100
++++ eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/category.xml	2015-03-31 10:29:46.232519773 +0100
+@@ -4,18 +4,12 @@
      id="org.eclipse.sdk.tests"
      version="0.0.0" />
    <feature
@@ -39,25 +39,20 @@
      id="org.eclipse.sdk.examples.source"
      version="0.0.0" />
    <feature
--    id="org.eclipse.releng.tools"
+@@ -25,9 +19,6 @@
+     id="org.eclipse.swt.tools.feature"
+     version="0.0.0" />
+   <feature
+-    id="org.eclipse.rcp.configuration"
 -    version="0.0.0" />
 -  <feature
      id="org.eclipse.equinox.executable"
      version="0.0.0" />
    <feature
-     id="org.eclipse.sdk"
-     version="0.0.0" />
-   <feature
--    id="org.eclipse.osgi.compatibility.plugins.feature"
--    version="0.0.0" />
--  <feature
-     id="org.eclipse.pde.api.tools.ee.feature"
-     version="0.0.0" />
-   <bundle
---- eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/pom.xml.orig	2014-05-26 18:59:41.877846054 +0300
-+++ eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/pom.xml	2014-05-26 19:06:27.070278740 +0300
-@@ -128,30 +128,10 @@
-                 </repository>
+--- eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/pom.xml.orig	2015-05-05 11:43:27.284457130 +0100
++++ eclipse.platform.releng.tychoeclipsebuilder/eclipse.platform.repository/pom.xml	2015-05-05 11:47:54.058051862 +0100
+@@ -118,30 +118,10 @@
+                 <!-- source repositories to mirror from -->
  
                  <repository>
 -                  <url>${project.baseUri}/../rcp/target/repository</url>

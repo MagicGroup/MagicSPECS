@@ -1,0 +1,47 @@
+From 531d3f18481988494e77b5f1ded92a7f346ea14d Mon Sep 17 00:00:00 2001
+From: Eric Williams
+Date: Wed, 28 Oct 2015 10:52:36 -0400
+Subject: Bug 480986: [Wayland] Workspace chooser won't launch
+
+gtk_size_allocate() in Shell is called more often on Wayland. These
+additional and unexpected calls trigger an infinite recursive call to
+resizeBounds(), which causes non-resizable Shells/Dialogs to crash.
+
+The fix is to only resize Shells that have the SWT.RESIZE attribute
+enabled.
+
+Tested on Gtk3.16 on Wayland, Gtk3.16 on X, and Gtk2.24. AllNonBrowser
+JUnit test cases pass on Gtk3 running X. There are some irregularities
+with test cases on Wayland, as outlined in bug 480893.
+
+Change-Id: I55612d8486cdd512e275a8a7456e0197ed717c75
+Signed-off-by: Eric Williams <ericwill@redhat.com>
+---
+ .../Eclipse SWT/gtk/org/eclipse/swt/widgets/Shell.java           | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Shell.java eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Shell.java
+index d65af5c..49ae036 100644
+--- eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Shell.java	
++++ eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Shell.java	
+@@ -1528,10 +1528,15 @@ long /*int*/ gtk_size_allocate (long /*int*/ widget, long /*int*/ allocation) {
+ 	OS.gtk_widget_get_allocation (shellHandle, widgetAllocation);
+ 	int width = widgetAllocation.width;
+ 	int height = widgetAllocation.height;
+-	if (!resized || oldWidth != width || oldHeight != height) {
++
++	//	Bug 474235: on Wayland gtk_size_allocate() is called more frequently, causing an
++	//  infinitely recursive resize call. This causes non-resizable Shells/Dialogs to
++	//  crash. Fix: only call resizeBounds() on resizable Shells.
++	if ((!resized || oldWidth != width || oldHeight != height)
++			&& (OS.GTK3 && !OS.isX11() ? ((style & SWT.RESIZE) != 0) : true)) {  //Wayland
+ 		oldWidth = width;
+ 		oldHeight = height;
+-		resizeBounds (width, height, true);
++		resizeBounds (width, height, true); //this is called to resize child widgets when the shell is resized.
+ 	}
+ 	return 0;
+ }
+-- 
+cgit v0.11.2-4-g4a35
+

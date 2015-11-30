@@ -1,0 +1,165 @@
+From eec69d54257dd905a06e43fb705f40df9326414e Mon Sep 17 00:00:00 2001
+From: Alexander Kurtakov
+Date: Fri, 20 Nov 2015 13:24:54 +0200
+Subject: Bug 466314 - [GTK3] Text in Forms abbreviated
+
+Switching from gtk_text_view_scroll_mark_onscreen to
+gtk_text_view_scroll_to_mark gives us total control over the alignment
+allowing us to alway position to the 0 0.
+
+Change-Id: I4fc141980e96c81cf65ef076a0224f0e4eee47ba
+Signed-off-by: Alexander Kurtakov <akurtako@redhat.com>
+---
+ .../org.eclipse.swt/Eclipse SWT PI/gtk/library/os.c  | 20 ++++++++++----------
+ .../Eclipse SWT PI/gtk/library/os_stats.c            |  2 +-
+ .../Eclipse SWT PI/gtk/library/os_stats.h            |  2 +-
+ .../gtk/org/eclipse/swt/internal/gtk/OS.java         | 10 +++++++---
+ .../gtk/org/eclipse/swt/widgets/Text.java            | 12 ++++++------
+ 5 files changed, 25 insertions(+), 21 deletions(-)
+
+diff --git a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os.c b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os.c
+index 7e937f0..c0dff7f 100644
+--- a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os.c	
++++ b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os.c	
+@@ -16167,16 +16167,6 @@ JNIEXPORT jintLong JNICALL OS_NATIVE(_1gtk_1text_1view_1new)
+ }
+ #endif
+ 
+-#ifndef NO__1gtk_1text_1view_1scroll_1mark_1onscreen
+-JNIEXPORT void JNICALL OS_NATIVE(_1gtk_1text_1view_1scroll_1mark_1onscreen)
+-	(JNIEnv *env, jclass that, jintLong arg0, jintLong arg1)
+-{
+-	OS_NATIVE_ENTER(env, that, _1gtk_1text_1view_1scroll_1mark_1onscreen_FUNC);
+-	gtk_text_view_scroll_mark_onscreen((GtkTextView *)arg0, (GtkTextMark *)arg1);
+-	OS_NATIVE_EXIT(env, that, _1gtk_1text_1view_1scroll_1mark_1onscreen_FUNC);
+-}
+-#endif
+-
+ #ifndef NO__1gtk_1text_1view_1scroll_1to_1iter
+ JNIEXPORT jboolean JNICALL OS_NATIVE(_1gtk_1text_1view_1scroll_1to_1iter)
+ 	(JNIEnv *env, jclass that, jintLong arg0, jbyteArray arg1, jdouble arg2, jboolean arg3, jdouble arg4, jdouble arg5)
+@@ -16193,6 +16183,16 @@ fail:
+ }
+ #endif
+ 
++#ifndef NO__1gtk_1text_1view_1scroll_1to_1mark
++JNIEXPORT void JNICALL OS_NATIVE(_1gtk_1text_1view_1scroll_1to_1mark)
++	(JNIEnv *env, jclass that, jintLong arg0, jintLong arg1, jdouble arg2, jboolean arg3, jdouble arg4, jdouble arg5)
++{
++	OS_NATIVE_ENTER(env, that, _1gtk_1text_1view_1scroll_1to_1mark_FUNC);
++	gtk_text_view_scroll_to_mark((GtkTextView *)arg0, (GtkTextMark *)arg1, (gdouble)arg2, (gboolean)arg3, (gdouble)arg4, (gdouble)arg5);
++	OS_NATIVE_EXIT(env, that, _1gtk_1text_1view_1scroll_1to_1mark_FUNC);
++}
++#endif
++
+ #ifndef NO__1gtk_1text_1view_1set_1editable
+ JNIEXPORT void JNICALL OS_NATIVE(_1gtk_1text_1view_1set_1editable)
+ 	(JNIEnv *env, jclass that, jintLong arg0, jboolean arg1)
+diff --git a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.c b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.c
+index 82775bd..bd9d7b5 100644
+--- a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.c	
++++ b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.c	
+@@ -1183,8 +1183,8 @@ char * OS_nativeFunctionNames[] = {
+ 	"_1gtk_1text_1view_1get_1visible_1rect",
+ 	"_1gtk_1text_1view_1get_1window",
+ 	"_1gtk_1text_1view_1new",
+-	"_1gtk_1text_1view_1scroll_1mark_1onscreen",
+ 	"_1gtk_1text_1view_1scroll_1to_1iter",
++	"_1gtk_1text_1view_1scroll_1to_1mark",
+ 	"_1gtk_1text_1view_1set_1editable",
+ 	"_1gtk_1text_1view_1set_1justification",
+ 	"_1gtk_1text_1view_1set_1tabs",
+diff --git a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.h b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.h
+index a1d68ed..016b472 100644
+--- a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.h	
++++ b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/library/os_stats.h	
+@@ -1193,8 +1193,8 @@ typedef enum {
+ 	_1gtk_1text_1view_1get_1visible_1rect_FUNC,
+ 	_1gtk_1text_1view_1get_1window_FUNC,
+ 	_1gtk_1text_1view_1new_FUNC,
+-	_1gtk_1text_1view_1scroll_1mark_1onscreen_FUNC,
+ 	_1gtk_1text_1view_1scroll_1to_1iter_FUNC,
++	_1gtk_1text_1view_1scroll_1to_1mark_FUNC,
+ 	_1gtk_1text_1view_1set_1editable_FUNC,
+ 	_1gtk_1text_1view_1set_1justification_FUNC,
+ 	_1gtk_1text_1view_1set_1tabs_FUNC,
+diff --git a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java
+index cf8cda6..0ee6dda 100644
+--- a/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java	
++++ b/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java	
+@@ -12528,12 +12528,16 @@ public static final long /*int*/ gtk_text_view_new() {
+ /**
+  * @param text_view cast=(GtkTextView *)
+  * @param mark cast=(GtkTextMark *)
++ * @param within_margin cast=(gdouble)
++ * @param use_align cast=(gboolean)
++ * @param xalign cast=(gdouble)
++ * @param yalign cast=(gdouble)
+  */
+-public static final native void _gtk_text_view_scroll_mark_onscreen(long /*int*/ text_view, long /*int*/ mark);
+-public static final void gtk_text_view_scroll_mark_onscreen(long /*int*/ text_view, long /*int*/ mark) {
++public static final native void _gtk_text_view_scroll_to_mark(long /*int*/ text_view, long /*int*/ mark, double within_margin, boolean use_align, double xalign, double yalign);
++public static final void gtk_text_view_scroll_to_mark(long /*int*/ text_view, long /*int*/ mark, double within_margin, boolean use_align, double xalign, double yalign) {
+ 	lock.lock();
+ 	try {
+-		_gtk_text_view_scroll_mark_onscreen(text_view, mark);
++		_gtk_text_view_scroll_to_mark(text_view, mark, within_margin, use_align, xalign, yalign);
+ 	} finally {
+ 		lock.unlock();
+ 	}
+diff --git a/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Text.java b/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Text.java
+index 9aa3a52..2865cd5 100644
+--- a/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Text.java	
++++ b/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Text.java	
+@@ -414,7 +414,7 @@ public void append (String string) {
+ 		OS.gtk_text_buffer_insert (bufferHandle, position, buffer, buffer.length);
+ 		OS.gtk_text_buffer_place_cursor (bufferHandle, position);
+ 		long /*int*/ mark = OS.gtk_text_buffer_get_insert (bufferHandle);
+-		OS.gtk_text_view_scroll_mark_onscreen (handle, mark);
++		OS.gtk_text_view_scroll_to_mark (handle, mark, 0, true, 0, 0);
+ 	}
+ 	applySegments ();
+ }
+@@ -1947,7 +1947,7 @@ public void insert (String string) {
+ 		OS.gtk_text_buffer_insert (bufferHandle, start, buffer, buffer.length);
+ 		OS.gtk_text_buffer_place_cursor (bufferHandle, start);
+ 		long /*int*/ mark = OS.gtk_text_buffer_get_insert (bufferHandle);
+-		OS.gtk_text_view_scroll_mark_onscreen (handle, mark);
++		OS.gtk_text_view_scroll_to_mark (handle, mark, 0, true, 0, 0);
+ 	}
+ 	applySegments ();
+ }
+@@ -2340,7 +2340,7 @@ public void setSelection (int start) {
+ 		OS.gtk_text_buffer_get_iter_at_offset (bufferHandle, startIter, start);
+ 		OS.gtk_text_buffer_place_cursor (bufferHandle, startIter);
+ 		long /*int*/ mark = OS.gtk_text_buffer_get_insert (bufferHandle);
+-		OS.gtk_text_view_scroll_mark_onscreen (handle, mark);
++		OS.gtk_text_view_scroll_to_mark (handle, mark, 0, true, 0, 0);
+ 	}
+ }
+ 
+@@ -2563,7 +2563,7 @@ void setText (char [] text) {
+ 		OS.gtk_text_buffer_get_iter_at_offset (bufferHandle, position, 0);
+ 		OS.gtk_text_buffer_place_cursor (bufferHandle, position);
+ 		long /*int*/ mark = OS.gtk_text_buffer_get_insert (bufferHandle);
+-		OS.gtk_text_view_scroll_mark_onscreen (handle, mark);
++		OS.gtk_text_view_scroll_to_mark (handle, mark, 0, true, 0, 0);
+ 		Arrays.fill (buffer, (byte) 0);
+ 	}
+ 	sendEvent (SWT.Modify);
+@@ -2644,9 +2644,9 @@ public void showSelection () {
+ 	checkWidget ();
+ 	if ((style & SWT.SINGLE) != 0) return;
+ 	long /*int*/ mark = OS.gtk_text_buffer_get_selection_bound (bufferHandle);
+-	OS.gtk_text_view_scroll_mark_onscreen (handle, mark);
++	OS.gtk_text_view_scroll_to_mark (handle, mark, 0, true, 0, 0);
+ 	mark = OS.gtk_text_buffer_get_insert (bufferHandle);
+-	OS.gtk_text_view_scroll_mark_onscreen (handle, mark);
++	OS.gtk_text_view_scroll_to_mark (handle, mark, 0, true, 0, 0);
+ }
+ 
+ int translateOffset (int offset) {
+-- 
+cgit v0.11.2-4-g4a35
+
+

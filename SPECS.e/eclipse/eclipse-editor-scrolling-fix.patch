@@ -1,0 +1,47 @@
+From 7db3fba25fe89240fa80661d81a5dffa2f31ff14 Mon Sep 17 00:00:00 2001
+From: Alexander Kurtakov
+Date: Mon, 12 Oct 2015 19:08:43 +0300
+Subject: Bug 479580 - Widgets with V_SCROLL not scrollable
+
+Hiding scrollbar for widget created with style V_SCROLL shouldn't stop
+other means of scrolling e.g. mouse wheel.
+The fix is to use new GTK_POLICY_EXTERNAL (added in GTK 3.16) which
+allows scrolling when scrollbars invisible which was not the possible
+before that.
+
+Change-Id: Icffb3c7792458369a7a7ee07dc317d83bf0757b2
+Signed-off-by: Alexander Kurtakov <akurtako@redhat.com>
+---
+ .../Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java            | 1 +
+ .../Eclipse SWT/gtk/org/eclipse/swt/widgets/Scrollable.java            | 3 +++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java b/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java
+index fe8283d..cf8cda6 100644
+--- a/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java	
++++ b/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT PI/gtk/org/eclipse/swt/internal/gtk/OS.java	
+@@ -363,6 +363,7 @@ public class OS extends C {
+ 	public static final int GTK_POLICY_ALWAYS = 0x0;
+ 	public static final int GTK_POLICY_AUTOMATIC = 0x1;
+ 	public static final int GTK_POLICY_NEVER = 0x2;
++	public static final int GTK_POLICY_EXTERNAL = 0x3;
+ 	public static final int GTK_POS_TOP = 0x2;
+ 	public static final int GTK_POS_BOTTOM = 0x3;
+ 	public static final int GTK_PRINT_CAPABILITY_PAGE_SET     = 1 << 0;
+diff --git a/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Scrollable.java b/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Scrollable.java
+index 2d38a95..7295a27 100644
+--- a/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Scrollable.java	
++++ b/eclipse.platform.swt/bundles/org.eclipse.swt/Eclipse SWT/gtk/org/eclipse/swt/widgets/Scrollable.java	
+@@ -389,6 +389,9 @@ boolean setScrollBarVisible (ScrollBar bar, boolean visible) {
+ 	int [] hsp = new int [1], vsp = new int [1];
+ 	OS.gtk_scrolled_window_get_policy (scrolledHandle, hsp, vsp);
+ 	int policy = visible ? OS.GTK_POLICY_ALWAYS : OS.GTK_POLICY_NEVER;
++	if (OS.GTK_VERSION >= OS.VERSION(3, 16, 0) && !visible) {
++		policy = OS.GTK_POLICY_EXTERNAL;
++	}
+ 	if ((bar.style & SWT.HORIZONTAL) != 0) {
+ 		if (hsp [0] == policy) return false;
+ 		hsp [0] = policy;
+-- 
+cgit v0.11.2-4-g4a35
+

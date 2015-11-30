@@ -1,0 +1,231 @@
+--- eclipse.jdt/org.eclipse.jdt-feature/feature.xml.sav	2015-06-10 10:05:23.943730974 +0300
++++ eclipse.jdt/org.eclipse.jdt-feature/feature.xml	2015-06-10 10:05:50.820612421 +0300
+@@ -161,22 +161,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.jdt.launching.macosx"
+-         os="macosx"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.jdt.launching.ui.macosx"
+-         os="macosx"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.eclipse.ant.launching"
+          download-size="0"
+          install-size="0"
+--- rt.equinox.p2/features/org.eclipse.equinox.p2.core.feature/feature.xml.sav	2015-06-10 12:56:37.342595242 +0300
++++ rt.equinox.p2/features/org.eclipse.equinox.p2.core.feature/feature.xml	2015-06-10 12:57:16.684444749 +0300
+@@ -176,35 +176,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.equinox.security.macosx"
+-         os="macosx"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.equinox.security.win32.x86"
+-         os="win32"
+-         arch="x86"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.equinox.security.win32.x86_64"
+-         os="win32"
+-         arch="x86_64"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.tukaani.xz"
+          download-size="0"
+          install-size="0"
+--- eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml.sav	2015-06-10 14:12:33.862436725 +0300
++++ eclipse.platform.ui/features/org.eclipse.e4.rcp/feature.xml	2015-06-10 14:14:04.642140750 +0300
+@@ -137,16 +137,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.e4.ui.workbench.renderers.swt.cocoa"
+-         os="macosx"
+-         ws="cocoa"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.eclipse.equinox.common"
+          download-size="0"
+          install-size="0"
+--- eclipse.platform.releng/features/org.eclipse.rcp/feature.xml.orig	2015-06-10 15:06:20.097805994 +0100
++++ eclipse.platform.releng/features/org.eclipse.rcp/feature.xml	2015-06-10 15:06:25.923729658 +0100
+@@ -59,14 +59,4 @@
+          version="0.0.0"
+          unpack="false"/>
+ 
+-   <plugin
+-         id="org.eclipse.ui.cocoa"
+-         os="macosx"
+-         ws="cocoa"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+ </feature>
+--- eclipse.platform.releng/features/org.eclipse.platform-feature/feature.xml.orig	2015-06-02 10:18:54.000000000 +0100
++++ eclipse.platform.releng/features/org.eclipse.platform-feature/feature.xml	2015-06-10 16:36:59.459534609 +0100
+@@ -67,14 +67,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.compare.win32"
+-         os="win32"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.eclipse.core.filebuffers"
+          download-size="0"
+          install-size="0"
+@@ -365,35 +357,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.ui.win32"
+-         ws="win32"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.core.filesystem.aix.ppc"
+-         os="aix"
+-         arch="ppc"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.core.filesystem.aix.ppc64"
+-         os="aix"
+-         arch="ppc64"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.eclipse.core.filesystem.hpux.ia64"
+          os="hpux"
+          arch="ia64"
+@@ -453,26 +416,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.core.resources.win32.x86"
+-         os="win32"
+-         arch="x86"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.core.resources.win32.x86_64"
+-         os="win32"
+-         arch="x86_64"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.eclipse.core.filesystem.win32.x86_64"
+          os="win32"
+          arch="x86_64"
+@@ -548,35 +491,6 @@
+          unpack="false"/>
+ 
+    <plugin
+-         id="org.eclipse.equinox.security.win32.x86"
+-         os="win32"
+-         arch="x86"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.equinox.security.win32.x86_64"
+-         os="win32"
+-         arch="x86_64"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+-         id="org.eclipse.equinox.security.macosx"
+-         os="macosx"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"
+-         fragment="true"
+-         unpack="false"/>
+-
+-   <plugin
+          id="org.eclipse.core.externaltools"
+          download-size="0"
+          install-size="0"
+--- eclipse.platform.releng/features/org.eclipse.sdk.examples-feature/feature.xml.orig	2015-06-10 17:41:42.262002217 +0100
++++ eclipse.platform.releng/features/org.eclipse.sdk.examples-feature/feature.xml	2015-06-10 17:41:55.679822949 +0100
+@@ -132,13 +132,6 @@
+          version="0.0.0"/>
+ 
+    <plugin
+-         id="org.eclipse.swt.examples.ole.win32"
+-         ws="win32"
+-         download-size="0"
+-         install-size="0"
+-         version="0.0.0"/>
+-
+-   <plugin
+          id="org.eclipse.sdk.examples"
+          download-size="0"
+          install-size="0"

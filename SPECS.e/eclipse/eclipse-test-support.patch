@@ -1,6 +1,20 @@
---- eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/test.xml.orig	2014-04-01 15:02:34.500445944 +0100
-+++ eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/test.xml	2014-04-01 15:16:01.556714647 +0100
-@@ -200,99 +200,14 @@
+--- eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/test.xml.orig	2014-11-28 14:54:50.000000000 +0000
++++ eclipse.platform.releng.tychoeclipsebuilder/eclipse-junit-tests/src/main/scripts/test.xml	2014-11-28 15:44:49.542304044 +0000
+@@ -24,13 +24,6 @@
+     has to move to "top of file" ... outer scope?
+    <property file="${eclipseBuilderDir}/eclipse/buildConfigs/sdk.tests/testConfigs/${testPlatform}/testing.properties" />
+ -->
+-  <property
+-    name="testingPropertiesfile"
+-    value="testing.properties" />
+-  <loadproperties>
+-    <file file="${testingPropertiesfile}" />
+-  </loadproperties>
+-
+
+   <!--default directory where test-eclipse will be installed-->
+   <property
+@@ -207,79 +207,8 @@
  
    <!--use an stable version of the director so that instability in the current build doesn't cause all the tests to fail -->
    <target name="setupPlatform">
@@ -34,17 +48,19 @@
 -        </or>
 -      </and>
 -    </condition>
+-  <!--
 -    <condition
 -      property="platformArchive"
 -      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.macosx}">
 -      <and>
 -        <os family="mac" />
 -        <os family="unix" />
--        <!-- should not need, as long as x86_64 rules (above) comes first
+-        <!- - should not need, as long as x86_64 rules (above) comes first
 -             <os arch="i386" />
--        -->
+-        - ->
 -      </and>
 -    </condition>
+-          -->
 -    <condition
 -      property="platformArchive"
 -      value="${org.eclipse.equinox.p2.reconciler.tests.lastrelease.platform.archive.win32}">
@@ -74,38 +90,12 @@
 -          <os arch="amd64" />
 -        </or>
 -      </and>
-+    <property name="platformArchive" value="${runtimeArchive}" />
-+    <condition property="platformTarget" value="platform-zip">
-+      <contains string="${platformArchive}" substring=".zip" />
-     </condition>
--
--    <fail
--      unless="platformArchive"
--      message="platformArchive is not defined. Check that conditions cover os arch ${os.arch}. May be VM dependent.)" />
--
--    <condition
--      property="platformTarget"
--      value="platform-zip">
--      <contains
--        string="${platformArchive}"
--        substring=".zip" />
 -    </condition>
--    <condition
--      property="platformTarget"
--      value="platform-tar.gz">
--      <contains
--        string="${platformArchive}"
--        substring=".tar.gz" />
-+    <condition property="platformTarget" value="platform-tar.gz">
-+      <contains string="${platformArchive}" substring=".tar.gz" />
-     </condition>
--    <fail
--      unless="platformTarget"
--      message="platformTarget is not defined. Check that platformArchive variable and value is defined correctly, such as in equinoxp2tests.properties in the appropriate testConfig" />
-     <echo message="platformTarget ${platformTarget} platformArchive ${platformArchive}" />
-     <antcall target="${platformTarget}" />
-   </target>
-@@ -320,7 +235,7 @@
++    <property name="platformArchive" value="${runtimeArchive}" />
+ 
+     <fail
+       unless="platformArchive"
+@@ -329,7 +258,7 @@
      <exec
        dir="${platformLocation}"
        executable="tar">
@@ -114,7 +104,7 @@
      </exec>
    </target>
  
-@@ -867,6 +782,17 @@
+@@ -886,6 +815,17 @@
            arg2="" />
        </not>
      </condition>
@@ -132,7 +122,7 @@
      <antcall target="runSuite" />
      <antcall target="genResults" />
    </target>
-@@ -1411,6 +1337,15 @@
+@@ -1431,6 +1371,15 @@
          value="end longRunningTests" />
      </antcall>
  
@@ -148,7 +138,7 @@
    </target>
  
    <!--
-@@ -1453,7 +1388,6 @@
+@@ -1472,7 +1421,6 @@
      <antcall target="e4CssSwt" />
      <antcall target="e4UI" />
      <antcall target="equinoxds" />
@@ -156,7 +146,7 @@
      <antcall target="bidi" />
      <antcall target="ltkuirefactoringtests" />
      <antcall target="ltkcorerefactoringtests" />
-@@ -1467,7 +1401,6 @@
+@@ -1486,7 +1434,6 @@
      <antcall target="osgi" />
      <antcall target="coreresources" />
      <antcall target="equinoxp2" />
@@ -164,7 +154,7 @@
      <antcall target="jface" />
      <antcall target="ui" />
      <antcall target="uiperformance" />
-@@ -1550,7 +1483,7 @@
+@@ -1569,7 +1516,7 @@
      <property
        name="message"
        value="no message given by caller" />
@@ -292,8 +282,8 @@
 -# assuming metacity attaches to "current" display by default (which should have
 -# already been set by Hudson). We echo its value here just for extra reference/cross-checks.
 -
--echo "Check if any window managers are running (xfwm|twm|metacity|beryl|fluxbox|compiz|kwin):"
--wmpss=$(ps -ef | egrep -i "xfwm|twm|metacity|beryl|fluxbox|compiz|kwin" | grep -v egrep)
+-echo "Check if any window managers are running (xfwm|twm|metacity|beryl|fluxbox|compiz|kwin|openbox|icewm):"
+-wmpss=$(ps -ef | egrep -i "xfwm|twm|metacity|beryl|fluxbox|compiz|kwin|openbox|icewm" | grep -v egrep)
 -echo "Window Manager processes: $wmpss"
 -echo
 -
@@ -316,7 +306,7 @@
 -echo
 -
 -echo "Triple check if any window managers are running (at least metacity should be!):"
--wmpss=$(ps -ef | egrep -i "xfwm|twm|metacity|beryl|fluxbox|compiz" | grep -v egrep)
+-wmpss=$(ps -ef | egrep -i "xfwm|twm|metacity|beryl|fluxbox|compiz|kwin|openbox|icewm" | grep -v egrep)
 -echo "Window Manager processes: $wmpss"
 -echo
 -echo "extdirprop in runtest: ${extdirprop}"

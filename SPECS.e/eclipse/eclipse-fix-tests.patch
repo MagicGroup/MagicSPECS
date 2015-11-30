@@ -1,0 +1,115 @@
+diff --git eclipse.pde.ui/ui/org.eclipse.pde.ui.tests/src/org/eclipse/pde/ui/tests/target/TargetDefinitionPersistenceTests.java eclipse.pde.ui/ui/org.eclipse.pde.ui.tests/src/org/eclipse/pde/ui/tests/target/TargetDefinitionPersistenceTests.java
+index 945bafa..21dbc62 100644
+--- eclipse.pde.ui/ui/org.eclipse.pde.ui.tests/src/org/eclipse/pde/ui/tests/target/TargetDefinitionPersistenceTests.java
++++ eclipse.pde.ui/ui/org.eclipse.pde.ui.tests/src/org/eclipse/pde/ui/tests/target/TargetDefinitionPersistenceTests.java
+@@ -73,7 +73,7 @@ public class TargetDefinitionPersistenceTests extends TestCase {
+ 	 */
+ 	protected IPath getJdtFeatureLocation() {
+ 		IPath path = new Path(TargetPlatform.getDefaultLocation());
+-		path = path.append("features");
++		path = path.append("dropins").append("jdt").append("features");
+ 		File dir = path.toFile();
+ 		assertTrue("Missing features directory", dir.exists() && !dir.isFile());
+ 		String[] files = dir.list();
+@@ -668,4 +668,4 @@ public class TargetDefinitionPersistenceTests extends TestCase {
+ 		assertTrue(iubc.getIncludeSource());
+ 	}
+ 
+-}
+\ No newline at end of file
++}
+diff --git rt.equinox.p2/bundles/org.eclipse.equinox.p2.tests/src/org/eclipse/equinox/p2/tests/reconciler/dropins/AbstractReconcilerTest.java rt.equinox.p2/bundles/org.eclipse.equinox.p2.tests/src/org/eclipse/equinox/p2/tests/reconciler/dropins/AbstractReconcilerTest.java
+index f1f38f0..f9111e6 100644
+--- rt.equinox.p2/bundles/org.eclipse.equinox.p2.tests/src/org/eclipse/equinox/p2/tests/reconciler/dropins/AbstractReconcilerTest.java
++++ rt.equinox.p2/bundles/org.eclipse.equinox.p2.tests/src/org/eclipse/equinox/p2/tests/reconciler/dropins/AbstractReconcilerTest.java
+@@ -217,7 +217,7 @@ public class AbstractReconcilerTest extends AbstractProvisioningTest {
+ 						File[] children = parent.listFiles(new FileFilter() {
+ 							public boolean accept(File pathname) {
+ 								String name = pathname.getName();
+-								return name.startsWith("eclipse-platform-");
++								return name.startsWith("eclipse-SDK-");
+ 							}
+ 						});
+ 						if (children != null && children.length == 1)
+diff --git eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/LambdaExpressionsTest.java eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/LambdaExpressionsTest.java
+index 0245d89..e95ff8f 100644
+--- eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/LambdaExpressionsTest.java
++++ eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/LambdaExpressionsTest.java
+@@ -4416,6 +4416,10 @@ public void test434297() {
+ public void test436542() throws Exception {
+ 	String jreDirectory = Util.getJREDirectory();
+ 	String jfxJar = Util.toNativePath(jreDirectory + "/lib/ext/jfxrt.jar");
++	File file = new File(jfxJar);
++	if (!file.exists()) {
++		return;
++	}
+ 	this.runConformTest(
+ 		new String[] {
+ 			"Utility.java",
+diff --git eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NullTypeAnnotationTest.java eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NullTypeAnnotationTest.java
+index 1a0cbcc..ddad62f 100644
+--- eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NullTypeAnnotationTest.java
++++ eclipse.jdt.core/org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/NullTypeAnnotationTest.java
+@@ -6781,6 +6781,10 @@ public void testBug434582a() {
+ public void test443467() throws Exception {
+ 	String jreDirectory = Util.getJREDirectory();
+ 	String jfxJar = Util.toNativePath(jreDirectory + "/lib/ext/jfxrt.jar");
++	File file = new File(jfxJar);
++	if (!file.exists()) {
++		return;
++	}
+ 	this.runNegativeTestWithExtraLibs(
+ 		new String[] {
+ 			"BuildIdeMain.java",
+diff --git eclipse.jdt.core/org.eclipse.jdt.apt.pluggable.tests/build.properties eclipse.jdt.core/org.eclipse.jdt.apt.pluggable.tests/build.properties
+index 376daa6..1742a8d 100644
+--- eclipse.jdt.core/org.eclipse.jdt.apt.pluggable.tests/build.properties
++++ eclipse.jdt.core/org.eclipse.jdt.apt.pluggable.tests/build.properties
+@@ -14,6 +14,7 @@ bin.includes = .,\
+                resources/,\
+                lib/
+ src.includes = about.html
+-jars.compile.order = .
++jars.compile.order = .,\
++                     lib/annotations.jar
+ source.. = src/
+-output.. = bin/
++source.lib/annotations.jar = src/
+diff --git eclipse.jdt.core/org.eclipse.jdt.apt.tests/build.properties eclipse.jdt.core/org.eclipse.jdt.apt.tests/build.properties
+index f34ae40..0f9877d 100644
+--- eclipse.jdt.core/org.eclipse.jdt.apt.tests/build.properties
++++ eclipse.jdt.core/org.eclipse.jdt.apt.tests/build.properties
+@@ -21,4 +21,6 @@ bin.includes = plugin.xml,\
+                plugin.properties
+ src.includes = about.html
+ src.excludes = src-resources/
+-jars.compile.order = aptext.jar,apt.jar,.
++jars.compile.order = aptext.jar,apt.jar,.,\
++                     resources/question.jar
++source.resources/question.jar = src-resources/
+diff --git eclipse.jdt.core/org.eclipse.jdt.compiler.apt.tests/build.properties eclipse.jdt.core/org.eclipse.jdt.compiler.apt.tests/build.properties
+index bc8963d..fbe4da3 100644
+--- eclipse.jdt.core/org.eclipse.jdt.compiler.apt.tests/build.properties
++++ eclipse.jdt.core/org.eclipse.jdt.compiler.apt.tests/build.properties
+@@ -10,11 +10,6 @@
+ #     Red Hat Inc. (mistria) - Avoid nested jars
+ ###############################################################################
+ source.. = src/
+-output.. = bin/
+-# Don't rebuild apttestprocessors everytime to avoid dirty working tree
+-# lib/apttestprocessors.jar considered as a resource set a dev-timeY
+-#source.lib/apttestprocessors.jar = processors/
+-#jars.compile.order = lib/apttestprocessors.jar,.
+ bin.includes = about.html,\
+                plugin.properties,\
+                test.xml,\
+@@ -24,3 +19,9 @@ bin.includes = about.html,\
+                .
+ src.includes = about.html
+ compilerArg=-proc:none
++source.lib/apttestprocessors.jar = processors/
++source.lib/apttestprocessors8.jar = processors/,\
++                                    processors8/
++jars.compile.order = lib/apttestprocessors.jar,\
++                     lib/apttestprocessors8.jar,\
++                     .

@@ -1,0 +1,47 @@
+From ddcfd1f3efd70591480e6c053946618ef6696104 Mon Sep 17 00:00:00 2001
+From: Eric Williams
+Date: Wed, 14 Oct 2015 13:41:06 -0400
+Subject: Bug 466500: [GTK3] Trying to resize quick outline or quick type
+ hierarchy closes the popup
+
+In PopupDialog, Shells with no children are closed on deactivation. On
+Linux-Gtk, this causes popups like the "Quick Outline" or "Quick
+Type Hierarchy" to close prematurely when opening the system menu,
+re-sizing, or moving the window with the mouse.
+
+It is for this reason that we need to exclude the call to asyncClose()
+from running on Gtk. This also fixes bug 113577.
+
+Tested on Gtk3.16.6, and Gtk2.24.
+
+Change-Id: I4111ad961e2b4e57c90939e7cb0e982b7bf3b894
+Signed-off-by: Eric Williams <ericwill@redhat.com>---
+ .../src/org/eclipse/jface/dialogs/PopupDialog.java          | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/eclipse.platform.ui/bundles/org.eclipse.jface/src/org/eclipse/jface/dialogs/PopupDialog.java b/eclipse.platform.ui/bundles/org.eclipse.jface/src/org/eclipse/jface/dialogs/PopupDialog.java
+index 2068cc4..0d361af 100644
+--- a/eclipse.platform.ui/bundles/org.eclipse.jface/src/org/eclipse/jface/dialogs/PopupDialog.java
++++ b/eclipse.platform.ui/bundles/org.eclipse.jface/src/org/eclipse/jface/dialogs/PopupDialog.java
+@@ -588,13 +588,17 @@
+ 				/*
+ 				 * Close if we are deactivating and have no child shells. If we
+ 				 * have child shells, we are deactivating due to their opening.
+-				 * On X, we receive this when a menu child (such as the system
+-				 * menu) of the shell opens, but I have not found a way to
+-				 * distinguish that case here. Hence bug #113577 still exists.
++				 * 
++				 * Feature in GTK: this causes the Quick Outline/Type Hierarchy
++				 * Shell to close on re-size/movement on Gtk3. For this reason,
++				 * the asyncClose() call is disabled in GTK. See Eclipse Bugs
++				 * 466500 and 113577 for more information.
+ 				 */
+ 				if (listenToDeactivate && event.widget == getShell()
+ 						&& getShell().getShells().length == 0) {
+-					asyncClose();
++					if (!Util.isGtk()) {
++						asyncClose();
++					}
+ 				} else {
+ 					/*
+ 					 * We typically ignore deactivates to work around
