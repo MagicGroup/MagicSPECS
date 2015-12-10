@@ -4,7 +4,7 @@ Summary: The NTP daemon and utilities
 Summary(zh_CN.UTF-8): NTF 服务和工具
 Name: ntp
 Version: 4.2.6p5
-Release: 30%{?dist}
+Release: 31%{?dist}
 # primary license (COPYRIGHT) : MIT
 # ElectricFence/ (not used) : GPLv2
 # kernel/sys/ppsclock.h (not used) : BSD with advertising
@@ -481,6 +481,9 @@ magic_rpm_clean.sh
 %{ntpdocdir}/html
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 4.2.6p5-31
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.2.6p5-30
 - 为 Magic 3.0 重建
 

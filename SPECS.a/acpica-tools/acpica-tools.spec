@@ -1,9 +1,11 @@
 Name:           acpica-tools
 Version:        20150930
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        ACPICA tools for the development and debug of ACPI tables
+Summary(zh_CN.UTF-8): 开发和调试 ACPI 表的 ACPICA 工具
 
 Group:          Development/Languages
+Group(zh_CN.UTF-8): 开发/语言
 License:        GPLv2
 URL:            https://www.acpica.org/
 
@@ -77,6 +79,9 @@ are installed:
       also the pmtools package)
 
 This version of the tools is being released under GPLv2 license.
+
+%description -l zh_CN.UTF-8
+开发和调试 ACPI 表的 ACPICA 工具。
 
 %prep
 %setup -q -n acpica-unix2-%{version}
@@ -186,6 +191,9 @@ fi
 
 
 %changelog
+* Sun Nov 29 2015 Liu Di <liudidi@gmail.com> - 20150930-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 14 2015 Al Stone <ahs3@redhat.com> - 20150930-1
 - Update to latest upstream.  Closes BZ#1267772.
 - Refresh patches, and remove one no longer needed.

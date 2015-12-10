@@ -3,7 +3,7 @@
 
 Name:           ocaml-json-static
 Version:        0.9.8
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        OCaml JSON validator and converter (syntax extension)
 Summary(zh_CN.UTF-8): OCaml 的 JSON 验证和转换程序 (语法扩展)
 License:        BSD
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.9.8-16
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.8-15
 - 为 Magic 3.0 重建
 

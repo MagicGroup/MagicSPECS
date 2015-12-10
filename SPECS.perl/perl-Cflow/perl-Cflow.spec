@@ -1,6 +1,6 @@
 Name:           perl-Cflow
 Version:        1.053
-Release:        34%{?dist}
+Release:        35%{?dist}
 Summary:        Find flows in raw IP flow files
 Group:          Development/Libraries
 License:        GPLv2+
@@ -51,6 +51,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.053-35
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.053-34
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        1.9.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        FFI Extensions for Ruby
 Group:          Development/Languages
 
@@ -100,6 +100,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.9.3-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.9.3-8
 - 为 Magic 3.0 重建
 

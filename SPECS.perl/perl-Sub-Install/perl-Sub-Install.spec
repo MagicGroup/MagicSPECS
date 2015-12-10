@@ -1,6 +1,6 @@
 Name:           perl-Sub-Install
 Version:	0.928
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Install subroutines into packages easily
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Install.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.928-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.928-2
 - 为 Magic 3.0 重建
 

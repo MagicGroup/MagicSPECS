@@ -58,7 +58,7 @@ Summary(zh_CN.UTF-8): Linux 内核
 # 对非稳定版的 rc 内核这个要添加到 rcX 或 gitX 标签后面，
 # 比如这是 3 的话 release 就是 "0.rcX.gitX.3"
 #
-%global baserelease 6
+%global baserelease 7
 %global fedora_build %{baserelease}
 
 # base_sublevel 是开始打补丁的内核基础版本，对稳定版本内核基本就是内核
@@ -2453,6 +2453,9 @@ fi
 # and build.
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 3.18.21-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.21-2
 - 更新到 3.18.23
 

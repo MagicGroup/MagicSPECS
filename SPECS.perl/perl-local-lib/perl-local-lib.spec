@@ -1,6 +1,6 @@
 Name:           perl-local-lib
 Version:	2.000018
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Summary:        Create and use a local lib/ for perl modules
@@ -99,6 +99,9 @@ make test
 %{_sysconfdir}/profile.d/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.000018-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.000018-2
 - 更新到 2.000018
 

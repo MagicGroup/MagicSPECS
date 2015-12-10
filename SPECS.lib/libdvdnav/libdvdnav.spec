@@ -1,6 +1,6 @@
 Name:           libdvdnav
 Version: 4.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library for reading DVD video discs based on Ogle code
 Summary(zh_CN.UTF-8): 基于 Ogg 代码读取 DVD 视频光盘的库
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/dvdnavmini.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.2.1-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 4.2.1-1
 - 更新到 4.2.1
 

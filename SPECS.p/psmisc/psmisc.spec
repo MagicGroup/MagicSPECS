@@ -2,7 +2,7 @@ Summary: Utilities for managing processes on your system
 Summary(zh_CN.UTF-8): 在你的系统上管理进程的工具
 Name: psmisc
 Version:	22.21
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -64,6 +64,9 @@ magic_rpm_clean.sh
 %doc AUTHORS ChangeLog COPYING README
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 22.21-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 22.21-3
 - 为 Magic 3.0 重建
 

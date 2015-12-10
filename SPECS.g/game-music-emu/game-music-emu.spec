@@ -1,6 +1,6 @@
 Name:           game-music-emu
 Version:        0.6.0
-Release:        4%{?dist}
+Release:        6%{?dist}
 Provides:       libgme%{?_isa} = %{version}-%{release}
 Summary:        Video game music file emulation/playback library
 Summary(zh_CN.UTF-8): 视频游戏音乐文件模拟/回放库
@@ -110,6 +110,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6.0-6
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6.0-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.6.0-4
 - 为 Magic 3.0 重建
 

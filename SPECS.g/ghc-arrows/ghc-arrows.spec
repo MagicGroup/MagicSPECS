@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.4.4.1
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Arrow classes and transformers
 
 License:        BSD
@@ -62,6 +62,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.4.1-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.4.4.1-10
 - 为 Magic 3.0 重建
 

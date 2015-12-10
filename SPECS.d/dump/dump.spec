@@ -8,7 +8,7 @@ Summary(zh_CN.UTF-8): 备份和恢复 ext2/ext3 文件系统的程序
 Name: dump
 Epoch: 1
 Version: 0.4
-Release: 0.15.%{PREVER}%{?dist}
+Release: 0.16.%{PREVER}%{?dist}
 License: BSD
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -144,6 +144,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/rmt.8*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.4-0.16.b44
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:0.4-0.15.b44
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: 	Library and utilities to access GSM mobile phones
 Summary(zh_CN.UTF-8): 访问 GSM 手机的库和工具
 Name: 	 	gsmlib
 Version: 	1.11
-Release: 	0.4%{?dist}
+Release: 	0.5%{?dist}
 License:	GPL
 Group:		Application/Communications
 Group(zh_CN.UTF-8): 应用程序/通信
@@ -62,7 +62,7 @@ rm -rf %{buildroot}
 
 %makeinstall
 magic_rpm_clean.sh
-%find_lang %name
+%find_lang %name || :
 
 %post -p /sbin/ldconfig
 
@@ -71,7 +71,7 @@ magic_rpm_clean.sh
 %clean
 rm -rf %{buildroot}
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root)
 %doc README ABOUT-NLS COPYING ChangeLog NEWS TODO
 %{_bindir}/gsm*
@@ -89,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.11-0.5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.11-0.4
 - 为 Magic 3.0 重建
 

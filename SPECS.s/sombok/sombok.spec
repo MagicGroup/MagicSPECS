@@ -1,6 +1,6 @@
 Name:           sombok
 Version:        2.3.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Unicode Text Segmentation Package
 
 Group:          System Environment/Libraries
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.3.1-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.3.1-2
 - 为 Magic 3.0 重建
 

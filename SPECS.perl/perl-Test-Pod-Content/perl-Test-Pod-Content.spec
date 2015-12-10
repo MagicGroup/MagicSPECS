@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-Content
 Version:	0.0.6
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:        Test a Pod's content
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ RELEASE_TESTING=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.0.6-14
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.6-13
 - 为 Magic 3.0 重建
 

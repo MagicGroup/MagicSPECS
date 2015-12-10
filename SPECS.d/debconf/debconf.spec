@@ -1,6 +1,6 @@
 Name:           debconf
 Version:	1.5.57
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Debian configuration management system
 Summary(zh_CN.UTF-8): Debina 的配置管理系统
 
@@ -248,6 +248,9 @@ done
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.5.57-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.5.57-2
 - 为 Magic 3.0 重建
 

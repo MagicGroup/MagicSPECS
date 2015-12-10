@@ -4,8 +4,8 @@
 
 Name:			fcitx
 Summary:		An input method framework
-Version:		4.2.8.3
-Release:		4%{?dist}
+Version:		4.2.9
+Release:		3%{?dist}
 License:		GPLv2+
 Group:			User Interface/Desktops
 URL:			https://fcitx-im.org/wiki/Fcitx
@@ -264,17 +264,12 @@ fi
 %files data
 %defattr(-,root,root,-)
 %doc 
-%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
-%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
-%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
-%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
-%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
-%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
-%{_datadir}/icons/hicolor/16x16/status/*.png
-%{_datadir}/icons/hicolor/22x22/status/*.png
-%{_datadir}/icons/hicolor/24x24/status/*.png
-%{_datadir}/icons/hicolor/48x48/status/*.png
-%{_datadir}/icons/hicolor/scalable/status/*.svg
+%{_datadir}/icons/hicolor/16x16/apps/%{name}*.png
+%{_datadir}/icons/hicolor/22x22/apps/%{name}*.png
+%{_datadir}/icons/hicolor/24x24/apps/%{name}*.png
+%{_datadir}/icons/hicolor/32x32/apps/%{name}*.png
+%{_datadir}/icons/hicolor/48x48/apps/%{name}*.png
+%{_datadir}/icons/hicolor/128x128/apps/%{name}*.png
 %{_datadir}/icons/hicolor/scalable/apps/*.svg
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/skin/
@@ -353,6 +348,15 @@ fi
 
 
 %changelog
+* Wed Dec 02 2015 Liu Di <liudidi@gmail.com> - 4.2.9-3
+- 为 Magic 3.0 重建
+
+* Wed Dec 02 2015 Liu Di <liudidi@gmail.com> - 4.2.9-2
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.2.8.3-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.2.8.3-4
 - 为 Magic 3.0 重建
 

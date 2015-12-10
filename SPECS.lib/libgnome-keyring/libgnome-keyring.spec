@@ -6,7 +6,7 @@ Summary: Framework for managing passwords and other secrets
 Summary(zh_CN.UTF-8): 管理密码和其它机密的框架
 Name: libgnome-keyring
 Version:	3.12.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 3.12.0-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.12.0-3
 - 为 Magic 3.0 重建
 

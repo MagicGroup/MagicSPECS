@@ -2,7 +2,7 @@ Summary: Modify rpath of compiled programs
 Summary(zh_CN.UTF-8): 修改 rpath 以编译程序
 Name: chrpath
 Version: 0.13
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: GPL+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/chrpath.1*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.13-12
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.13-11
 - 为 Magic 3.0 重建
 

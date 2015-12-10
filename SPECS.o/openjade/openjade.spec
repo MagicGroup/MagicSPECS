@@ -2,7 +2,7 @@ Summary: A DSSSL implementation
 Summary(zh_CN.UTF-8): DSSSL 实现
 Name: openjade
 Version: 1.3.2
-Release: 43%{?dist}
+Release: 44%{?dist}
 Requires: sgml-common
 URL: http://openjade.sourceforge.net/
 Source: http://download.sourceforge.net/openjade/openjade-%{version}.tar.gz
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sgml/%{name}-%{version}
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.2-44
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.2-43
 - 为 Magic 3.0 重建
 

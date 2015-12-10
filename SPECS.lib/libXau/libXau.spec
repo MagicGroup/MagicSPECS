@@ -2,7 +2,7 @@ Summary: Sample Authorization Protocol for X
 Summary(zh_CN.UTF-8): X 的样例认证协议
 Name: libXau
 Version: 1.0.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.8-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.8-2
 - 为 Magic 3.0 重建
 

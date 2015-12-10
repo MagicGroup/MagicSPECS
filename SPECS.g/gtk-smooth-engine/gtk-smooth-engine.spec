@@ -2,7 +2,7 @@ Summary: 	The Smooth engine for GTK+-2.0
 Summary(zh_CN.UTF-8): GTK+-2.0 的 Smooth 引擎
 Name: 		gtk-smooth-engine
 Version: 	2.14.3
-Release: 	6%{?dist}
+Release: 	7%{?dist}
 License:	LGPLv2+ and GPLv2+
 URL: 		http://ftp.de.debian.org/debian/pool/main/g/gtk-smooth-engine
 Source0: 	http://ftp.de.debian.org/debian/pool/main/g/gtk-smooth-engine/%{name}_%{version}+deb5.tar.gz
@@ -51,6 +51,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.14.3-7
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.14.3-6
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.1.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Fast hex encoding and decoding for ByteStrings
 
 License:        BSD
@@ -64,6 +64,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.1.6-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.1.6-4
 - 为 Magic 3.0 重建
 

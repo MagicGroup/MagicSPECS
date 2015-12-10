@@ -18,7 +18,7 @@
 Summary:  Dynamic host configuration protocol software
 Name:     dhcp
 Version:  4.3.0
-Release:  7%{?dist}
+Release:  8%{?dist}
 # NEVER CHANGE THE EPOCH on this package.  The previous maintainer (prior to
 # dcantrell maintaining the package) made incorrect use of the epoch and
 # that's why it is at 12 now.  It should have never been used, but it was.
@@ -603,6 +603,9 @@ done
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 12:4.3.0-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 12:4.3.0-7
 - 为 Magic 3.0 重建
 

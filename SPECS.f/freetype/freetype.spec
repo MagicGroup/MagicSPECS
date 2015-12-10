@@ -8,7 +8,7 @@ Summary: A free and portable font rendering engine
 Summary(zh_CN.UTF-8): 自由的可移植的 TrueType 字体绘制引擎。
 Name: freetype
 Version:	2.6.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: FTL or GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -18,7 +18,7 @@ Source1: http://download.savannah.gnu.org/releases/freetype/freetype-doc-%{versi
 Source2: http://download.savannah.gnu.org/releases/freetype/ft2demos-%{version}.tar.bz2
 Source3: ftconfig.h
 
-Patch21:  freetype-2.5.3-enable-spr.patch
+Patch21:  freetype-2.3.0-enable-spr.patch
 
 # Enable otvalid and gxvalid modules
 Patch46:  freetype-2.2.1-enable-valid.patch
@@ -28,11 +28,8 @@ Patch47:  freetype-2.5.2-more-demos.patch
 # Fix multilib conflicts
 Patch88:  freetype-multilib.patch
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=961855
-Patch90:  freetype-2.4.12-pkgconfig.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1079302
-Patch91:  freetype-2.5.3-freetype-config-libs.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1161963
+Patch92:  freetype-2.5.3-freetype-config-prefix.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-root-%(%{__id_u} -n)
 
@@ -136,9 +133,7 @@ popd
 
 %patch88 -p1 -b .multilib
 
-%patch90 -p1 -b .pkgconfig
-
-%patch91 -p1 -b .freetype-config-libs
+%patch92 -p1 -b .pkgconfig
 
 %build
 
@@ -195,9 +190,9 @@ rm -rf $RPM_BUILD_ROOT
 %define wordsize 32
 %endif
 
-mv $RPM_BUILD_ROOT%{_includedir}/freetype2/config/ftconfig.h \
-   $RPM_BUILD_ROOT%{_includedir}/freetype2/config/ftconfig-%{wordsize}.h
-install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_includedir}/freetype2/config/ftconfig.h
+mv $RPM_BUILD_ROOT%{_includedir}/freetype2/freetype/config/ftconfig.h \
+   $RPM_BUILD_ROOT%{_includedir}/freetype2/freetype/config/ftconfig-%{wordsize}.h
+install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_includedir}/freetype2/freetype/config/ftconfig.h
 
 # Don't package static .la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
@@ -266,6 +261,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libfreetype.a
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.6.1-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.6.1-3
 - 更新到 2.6.1
 

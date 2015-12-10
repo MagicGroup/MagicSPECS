@@ -29,7 +29,7 @@
 #
 Name:          janino
 Version:       2.6.1
-Release:       22%{?dist}
+Release:       23%{?dist}
 Summary:       An embedded Java compiler
 License:       BSD
 URL:           http://docs.codehaus.org/display/JANINO/Home
@@ -122,6 +122,9 @@ perl -pi -e 's/\r$//g' new_bsd_license.txt README.txt
 %doc new_bsd_license.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.6.1-23
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.6.1-22
 - 为 Magic 3.0 重建
 

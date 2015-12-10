@@ -1,6 +1,6 @@
 Name:           perl-File-Fetch
 Version:        0.48
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Generic file fetching mechanism
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.48-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.48-5
 - 为 Magic 3.0 重建
 

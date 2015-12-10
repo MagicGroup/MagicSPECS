@@ -1,6 +1,6 @@
 Name:           perl-MooseX-SimpleConfig
 Version:	0.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Moose role for setting attributes from a simple configfile
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.11-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.11-3
 - 为 Magic 3.0 重建
 

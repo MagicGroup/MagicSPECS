@@ -1,6 +1,6 @@
 Name:           perl-Test-CPAN-Meta
 Version:	0.25
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Validation of the META.yml file in a CPAN distribution
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.25-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.25-2
 - 为 Magic 3.0 重建
 

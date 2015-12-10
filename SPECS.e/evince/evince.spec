@@ -4,8 +4,8 @@
 %global gxps_version 0.2.1
 
 Name:           evince
-Version:	3.18.1
-Release:        2%{?dist}
+Version:	3.18.2
+Release:        1%{?dist}
 Summary:        Document viewer
 Summary(zh_CN.UTF-8): 文档查看器
 
@@ -162,9 +162,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/evince/4/backends/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/evince/4/backends/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/*.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
-
 
 %post
 update-desktop-database &> /dev/null ||:
@@ -224,6 +225,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_datadir}/appdata/evince-tiffdocument.metainfo.xml
 %{_datadir}/appdata/evince-xpsdocument.metainfo.xml
 %{_datadir}/appdata/evince.appdata.xml
+%{_libdir}/mozilla/plugins/libevbrowserplugin.so
 
 %files devel
 %{_datadir}/gtk-doc/html/evince/
@@ -252,6 +254,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null ||:
 %{_libdir}/nautilus/extensions-3.0/libevince-properties-page.so
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 更新到 3.18.1
 

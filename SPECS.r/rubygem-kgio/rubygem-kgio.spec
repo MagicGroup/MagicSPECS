@@ -7,7 +7,7 @@
 Summary:       Kinder, gentler I/O for Ruby
 Name:          rubygem-%{gem_name}
 Version:       2.9.3
-Release:       4%{?dist}
+Release:       5%{?dist}
 Group:         Development/Tools
 License:       LGPLv2 or LGPLv3
 # LICENSE file defines the licencing aspects of kgiox.
@@ -108,6 +108,9 @@ popd
 %{gem_instdir}/lib/kgio.rb
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.9.3-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.9.3-4
 - 为 Magic 3.0 重建
 

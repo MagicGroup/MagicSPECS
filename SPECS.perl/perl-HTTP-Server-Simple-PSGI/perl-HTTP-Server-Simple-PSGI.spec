@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Server-Simple-PSGI
 Version:	0.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        PSGI handler for HTTP::Server::Simple
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.16-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.16-2
 - 为 Magic 3.0 重建
 

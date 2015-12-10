@@ -13,7 +13,7 @@
 Summary:	NTLM implementation for Ruby
 Name:		rubygem-%{gem_name}
 Version:	0.0.1
-Release:	9%{?dist}
+Release:	10%{?dist}
 
 Group: Development/Languages
 # README.markdown
@@ -111,6 +111,9 @@ popd
 %exclude	%{gem_instdir}/unused/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.0.1-10
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.1-9
 - 为 Magic 3.0 重建
 

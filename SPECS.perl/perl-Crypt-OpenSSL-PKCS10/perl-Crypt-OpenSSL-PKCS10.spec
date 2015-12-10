@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-PKCS10
 Version:	0.15
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to OpenSSL for PKCS10
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.15-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.15-2
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Name: xorg-x11-%{pkgname}
 # NOTE: The package version should be set to the X11 major release from which
 # the OS release is based upon.
 Version: 7.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT
 Group: User Interface/X
 URL: http://www.x.org
@@ -181,6 +181,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwud.1*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 7.7-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.7-3
 - 为 Magic 3.0 重建
 

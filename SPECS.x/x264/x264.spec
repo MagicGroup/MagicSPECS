@@ -9,9 +9,9 @@ Summary(zh_CN.UTF-8): 编码和解码H264/AVC视频流的库
 Name: x264
 Version: 0.%{sover}.2015
 %if %{usegit}
-Release: 0.svn%{gitdate}.%{?dist}.6
+Release: 0.svn%{gitdate}.%{?dist}.7
 %else
-Release: 6%{?dist}
+Release: 7%{?dist}
 %endif
 License: GPL
 Group: System Environment/Libraries
@@ -112,6 +112,9 @@ magic_rpm_clean.sh
 %{_libdir}/libx264.so
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com>
 - 更新到
 

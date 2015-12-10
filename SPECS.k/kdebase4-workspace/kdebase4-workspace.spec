@@ -12,7 +12,7 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
 Version: 4.14.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 Source0: http://download.kde.org/stable/4.14.2/src/%{real_name}-4.11.13.tar.xz
 Source1: extras.tar.gz
 # magic logo for kwin decoration
@@ -1232,6 +1232,9 @@ fi
 #重打包时要重新处理
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.14.3-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 4.14.3-5
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.6.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Mail provides a nice Ruby DSL for making, sending and reading emails
 Group: Development/Languages
 License: MIT
@@ -72,6 +72,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.6.3-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.6.3-4
 - 为 Magic 3.0 重建
 

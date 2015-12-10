@@ -2,7 +2,7 @@ Summary:   GTK support library for colord
 Summary(zh_CN.UTF-8): colord 的 GTK 支持库
 Name:      colord-gtk
 Version:	0.1.26
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   LGPLv2+
 URL:       http://www.freedesktop.org/software/colord/
 Source0:   http://www.freedesktop.org/software/colord/releases/%{name}-%{version}.tar.xz
@@ -65,6 +65,8 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 %doc README AUTHORS NEWS COPYING
 %{_libdir}/libcolord-gtk.so.*
 %{_libdir}/girepository-1.0/ColordGtk-1.0.typelib
+%{_bindir}/cd-convert
+%{_mandir}/man1/cd-convert.1*
 
 %files devel
 %{_libdir}/libcolord-gtk.so
@@ -81,6 +83,9 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 #%dir %{_datadir}/gtk-doc/html
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.1.26-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.1.26-2
 - 更新到 0.1.26
 

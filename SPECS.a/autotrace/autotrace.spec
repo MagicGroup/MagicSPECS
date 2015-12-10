@@ -1,6 +1,6 @@
 Name:           autotrace
 Version:        0.31.1
-Release:        38%{?dist}
+Release:        39%{?dist}
 Summary:        Utility for converting bitmaps to vector graphics
 Summary(zh_CN.UTF-8): 转换位图文件到向量图形的工具
 Group:          Applications/Multimedia
@@ -105,6 +105,9 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.31.1-39
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.31.1-38
 - 为 Magic 3.0 重建
 

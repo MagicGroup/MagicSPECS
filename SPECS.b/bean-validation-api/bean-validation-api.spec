@@ -3,7 +3,7 @@
 
 Name:             bean-validation-api
 Version:          1.1.0
-Release:          5%{dist}
+Release:          6%{dist}
 Summary:          Bean Validation API (JSR 349)
 License:          ASL 2.0
 URL:              http://beanvalidation.org/
@@ -52,6 +52,9 @@ This package contains the API documentation for %{name}.
 %doc license.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.1.0-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.1.0-5
 - 为 Magic 3.0 重建
 

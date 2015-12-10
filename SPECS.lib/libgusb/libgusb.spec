@@ -1,8 +1,8 @@
 Summary:   GLib wrapper around libusb1
 Summary(zh_CN.UTF-8): libusb1 的 GLib 接口
 Name:      libgusb
-Version:   0.1.6
-Release:   3%{?dist}
+Version:   0.2.7
+Release:   5%{?dist}
 License:   LGPLv2+
 URL:       https://gitorious.org/gusb/
 Source0:   http://people.freedesktop.org/~hughsient/releases/%{name}-%{version}.tar.xz
@@ -74,6 +74,12 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/gusb.vapi
 
 %changelog
+* Sat Nov 28 2015 Liu Di <liudidi@gmail.com> - 0.2.7-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.1.6-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.6-3
 - 更新到 0.2.7
 

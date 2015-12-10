@@ -2,7 +2,7 @@ Summary:	Advanced Linux Sound Architecture (ALSA) wrapper for OSS
 Summary(zh_CN.UTF-8): 高级 Linux 声音架构 (ALSA) 的 OSS 封装
 Name:		alsa-oss
 Version:	1.0.28
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPLv2+
 Group:		Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -96,6 +96,9 @@ autoreconf -f -i
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0.28-10
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.28-9
 - 为 Magic 3.0 重建
 

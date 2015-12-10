@@ -5,7 +5,7 @@ Version:        3.10.2
 %if "%{?enable_native_atlas}" != "0"
 %define dist .native
 %endif
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Automatically Tuned Linear Algebra Software
 
 Group:          System Environment/Libraries
@@ -42,6 +42,7 @@ Patch6:		atlas-affinity.patch
 Patch7:		atlas-aarch64port.patch
 Patch8:		atlas-genparse.patch
 
+# Unbundle LAPACK (BZ #1181369)
 Patch9:		atlas.3.10.1-unbundle.patch
 
 # ppc64le patches
@@ -53,8 +54,6 @@ Patch100:	ppc64le-abiv2.patch
 Patch110:	p8-mem-barrier.patch
 
 BuildRequires:  gcc-gfortran, lapack-static
-
-Provides: bundled(lapack)
 
 %ifarch x86_64
 Obsoletes:      atlas-sse3 < 3.10
@@ -311,6 +310,13 @@ ix86 architecture.
 %define arch_option -Si archdef 0
 %endif
 
+%ifarch ppc64
+%global arch_option -A 7
+%global assembler_option -Wa,--noexecstack,-mpower7
+%else
+%global assembler_option -Wa,--noexecstack
+%endif
+
 %prep
 #uname -a
 #cat /proc/cpuinfo
@@ -386,7 +392,7 @@ for type in %{types}; do
 
 	mkdir -p %{_arch}_${type}
 	pushd %{_arch}_${type}
-	../configure  %{mode} %{?threads_option} %{?arch_option} -D c -DWALL -Fa alg '%{armflags} -g -Wa,--noexecstack -fPIC'\
+	../configure  %{mode} %{?threads_option} %{?arch_option} -D c -DWALL -Fa alg '%{armflags} -g %{assembler_option} -fPIC'\
 	--prefix=%{buildroot}%{_prefix}			\
 	--incdir=%{buildroot}%{_includedir}		\
 	--libdir=%{buildroot}%{_libdir}/${libname}	
@@ -827,6 +833,9 @@ fi
 %endif
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.10.2-9
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.10.2-8
 - 为 Magic 3.0 重建
 

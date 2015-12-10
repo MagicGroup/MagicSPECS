@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.5.13
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Parser for JavaScript
 
 License:        BSD
@@ -85,6 +85,12 @@ files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.5.13-8
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.5.13-7
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5.13-6
 - 为 Magic 3.0 重建
 

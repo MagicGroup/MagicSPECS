@@ -16,7 +16,7 @@ Summary: SIP - Python/C++ Bindings Generator
 Summary(zh_CN.UTF-8): SIP - Python/C++ 绑定生成器
 Name: sip
 Version:	4.17
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 # sipgen/parser.{c.h} is GPLv3+ with exceptions (bison)
 License: GPLv2 or GPLv3 and (GPLv3+ with exceptions)
@@ -186,6 +186,9 @@ install -D -p -m644 %{SOURCE1} %{buildroot}%{rpm_macros_dir}/macros.sip
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.17-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.17-2
 - 更新到 4.17
 

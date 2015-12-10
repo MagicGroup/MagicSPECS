@@ -8,7 +8,7 @@ Summary: Linux kernel and C library user-space interface documentation
 Summary(zh_CN.UTF-8): Linux 内核和 C 库的用户空间接口文档
 Name: man-pages
 Version: 4.02
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL+ and GPLv2+ and BSD and MIT and Copyright only and IEEE
 Group: Documentation
 Group(zh_CN.UTF-8): 文档
@@ -83,6 +83,9 @@ magic_rpm_clean.sh
 %{_mandir}/man*/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 4.02-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.02-2
 - 更新到 4.02
 

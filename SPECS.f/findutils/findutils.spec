@@ -2,7 +2,7 @@ Summary: The GNU versions of find utilities (find and xargs)
 Summary(zh_CN.UTF-8): GNU 版本的查询工具
 Name: findutils
 Version:	4.5.14
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv3+
 Group: Applications/File
@@ -16,9 +16,6 @@ Patch1: findutils-4.4.0-no-locate.patch
 # a%description -l zh_CN.UTF-8 a new option -xautofs to find to not descend into directories on autofs
 # file systems
 Patch3: findutils-4.4.2-xautofs.patch
-
-# eliminate compile-time warnings
-Patch4: findutils-4.5.12-warnings.patch
 
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
@@ -51,7 +48,6 @@ useful for finding things on your system.
 rm -rf locate
 %patch1 -p1
 %patch3 -p1
-%patch4 -p1
 
 # needed because of findutils-4.4.0-no-locate.patch
 autoreconf -iv
@@ -98,6 +94,9 @@ fi
 %{_infodir}/find-maint.info.gz
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:4.5.14-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:4.5.14-2
 - 更新到 4.5.14
 

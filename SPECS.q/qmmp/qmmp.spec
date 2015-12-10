@@ -1,6 +1,6 @@
 Name:          qmmp
 Version:	0.9.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A qt4 based media player similar to xmms
 Summary(zh_CN): 基于 qt4 的类似 xmms 的媒体播放器
 
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/qmmp/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.9.3-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.9.3-2
 - 更新到 0.9.3
 

@@ -2,7 +2,7 @@
 
 Name:           python-service-identity
 Version:        14.0.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Service identity verification for pyOpenSSL
 Summary(zh_CN.UTF-8): pyOpenSSL 的服务名称校验
 
@@ -144,6 +144,9 @@ magic_rpm_clean.sh
 %endif # with_python3
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 14.0.0-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 14.0.0-4
 - 为 Magic 3.0 重建
 

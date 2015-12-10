@@ -12,7 +12,7 @@
 Name: network-manager-applet
 Summary: A network control and status applet for NetworkManager
 Version: 1.0.0
-Release: 3%{snapshot}%{git_sha}%{?dist}
+Release: 4%{snapshot}%{git_sha}%{?dist}
 Group: Applications/System
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -213,6 +213,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gir-1.0/NMGtk-1.0.gir
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.0.0-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.0-3
 - 为 Magic 3.0 重建
 

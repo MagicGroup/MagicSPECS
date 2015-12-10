@@ -3,7 +3,7 @@
 Summary:	Persistent connections using Net::HTTP plus a speed fix
 Name:		rubygem-%{gem_name}
 Version:	2.9.4
-Release:	7%{?dist}
+Release:	8%{?dist}
 Group:		Development/Languages
 License:	MIT
 
@@ -94,6 +94,9 @@ popd
 %{gem_docdir}/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.9.4-8
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.9.4-7
 - 为 Magic 3.0 重建
 

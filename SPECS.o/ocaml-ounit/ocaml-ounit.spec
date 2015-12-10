@@ -2,7 +2,7 @@
 
 Name:           ocaml-ounit
 Version:        1.1.2
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Unit test framework for OCaml
 Summary(zh_CN.UTF-8): OCaml 的单元测试框架
 
@@ -83,6 +83,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.1.2-14
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.1.2-13
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.2-12
 - 为 Magic 3.0 重建
 

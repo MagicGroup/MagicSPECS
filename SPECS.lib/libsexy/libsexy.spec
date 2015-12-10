@@ -1,6 +1,6 @@
 Name:           libsexy
 Version:        0.1.11
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Funky fresh graphical widgets for GTK+ 2
 Summary(zh_CN.UTF-8):	一些 GTK+2 的有意思的新图形部件
 
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.1.11-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.11-7
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary:	A Module::Build class for building XS modules
 Name:		perl-Module-Build-XSUtil
 Version:	0.16
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 URL:		https://github.com/hideo55/Module-Build-XSUtil
 Source0:	https://cpan.metacpan.org/authors/id/H/HI/HIDEAKIO/Module-Build-XSUtil-%{version}.tar.gz
@@ -61,6 +61,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/Module::Build::XSUtil.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.16-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.16-3
 - 为 Magic 3.0 重建
 

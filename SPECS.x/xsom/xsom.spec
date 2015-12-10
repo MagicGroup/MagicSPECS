@@ -2,7 +2,7 @@
 
 Name: xsom
 Version: 0
-Release: 15.%{checkout}svn%{?dist}
+Release: 16.%{checkout}svn%{?dist}
 Summary: XML Schema Object Model (XSOM)
 Group: Development/Libraries
 License: CDDL or GPLv2 with exceptions
@@ -114,6 +114,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0-16.20110809svn
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0-15.20110809svn
 - 为 Magic 3.0 重建
 

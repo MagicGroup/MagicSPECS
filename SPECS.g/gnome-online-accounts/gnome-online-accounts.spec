@@ -1,6 +1,6 @@
 Name:		gnome-online-accounts
 Version:	3.19.1
-Release:	2%{?dist}
+Release:	4%{?dist}
 Summary:	Single sign-on framework for GNOME
 Summary(zh_CN.UTF-8): GNOME 的单点登录框架
 
@@ -73,7 +73,8 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la $RPM_BUILD_ROOT/%{_libdir}/control-center-1/panels/*.la
+rm -f $RPM_BUILD_ROOT/%{_libdir}/*.la $RPM_BUILD_ROOT/%{_libdir}/control-center-1/panels/*.la   $RPM_BUILD_ROOT%{_libdir}/goa-1.0/web-extensions/*.la
+
 magic_rpm_clean.sh
 %find_lang %{name}
 %find_lang %{name}-tpaw
@@ -102,15 +103,20 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/libgoa-backend-1.0.so.1
 %{_libdir}/libgoa-backend-1.0.so.1.0.0
 %{_prefix}/libexec/goa-daemon
-%{_datadir}/dbus-1/services/org.gnome.OnlineAccounts.service
+%{_datadir}/dbus-1/services/org.gnome.*.service
 %{_datadir}/icons/hicolor/*/apps/goa-*.png
 %{_datadir}/icons/hicolor/*/apps/im-*.png
 %{_datadir}/icons/hicolor/*/apps/im-*.svg
 %{_datadir}/man/man8/goa-daemon.8.gz
 
 %dir %{_datadir}/%{name}
-%{_datadir}/%{name}/goawebview.css
+#{_datadir}/%{name}/goawebview.css
 %{_datadir}/%{name}/irc-networks.xml
+%{_libdir}/goa-1.0/web-extensions/libgoawebextension.so
+%{_libexecdir}/goa-identity-service
+%{_datadir}/glib-2.0/schemas/org.gnome.online-accounts.gschema.xml
+
+
 
 %files devel
 %{_includedir}/goa-1.0/
@@ -125,6 +131,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/goa-1.0/include
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 3.19.1-4
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
 - 更新到 3.19.1
 

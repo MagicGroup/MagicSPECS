@@ -1,6 +1,6 @@
 Name:           perl-Test-Class
 Version:	0.50
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Easily create test classes in an xUnit/JUnit style
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -76,6 +76,9 @@ make test
 %{_mandir}/man3/Test::Class::MethodInfo.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.50-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.50-2
 - 为 Magic 3.0 重建
 

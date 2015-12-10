@@ -1,7 +1,7 @@
 Name:           perl-HTTP-BrowserDetect
 Summary:        Determine the Web browser, version, and platform from an HTTP user agent string
 Version:	2.05
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-BrowserDetect/
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.05-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.05-2
 - 为 Magic 3.0 重建
 

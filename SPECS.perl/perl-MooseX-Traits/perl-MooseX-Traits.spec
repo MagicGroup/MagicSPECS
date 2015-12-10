@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Traits
 Summary:        Automatically apply roles at object creation time
 Version:	0.13
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Traits-%{version}.tar.gz
@@ -66,6 +66,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.13-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.13-2
 - 为 Magic 3.0 重建
 

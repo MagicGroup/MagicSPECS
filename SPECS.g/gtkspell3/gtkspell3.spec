@@ -1,6 +1,6 @@
 Name:           gtkspell3
 Version:	3.0.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        On-the-fly spell checking for GtkTextView widgets
 Summary(zh_CN.UTF-8): GtkTextView 部件上的即时拼写检查
 
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/gtkspell3-3.0.deps
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.0.7-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.0.7-2
 - 更新到 3.0.7
 

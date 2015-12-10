@@ -1,6 +1,6 @@
 Name:           perl-PerlIO-Layers
 Version:        0.011
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Querying your file handle capabilities
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.011-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.011-8
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Name:           python-dtopt
 Summary:        Add options to doctest examples while they are running
 Summary(zh_CN.UTF-8): 给 doctest 样例运行的时候添加选项
 Version:        0.1
-Release:        16%{?dist}
+Release:        17%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -105,6 +105,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.1-17
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.1-16
 - 为 Magic 3.0 重建
 

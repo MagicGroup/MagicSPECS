@@ -1,14 +1,14 @@
-From 607ae33eed09f9eafccda1276626e9c509dcbed1 Mon Sep 17 00:00:00 2001
+From 988c1068100b7f30bd8b0d2c1195ac383705dc1c Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 24 Jun 2014 22:29:38 +0100
-Subject: [PATCH 01/15] Don't ignore ./configure, it's a real git file.
+Subject: [PATCH 01/19] Don't ignore ./configure, it's a real git file.
 
 ---
  .gitignore | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/.gitignore b/.gitignore
-index 6c66ecc..5d4b626 100644
+index 87f7cda..8aad7c2 100644
 --- a/.gitignore
 +++ b/.gitignore
 @@ -19,7 +19,6 @@
@@ -20,5 +20,5 @@ index 6c66ecc..5d4b626 100644
  /ocamlc.opt
  /expunge
 -- 
-2.1.0
+2.4.3
 

@@ -1,6 +1,6 @@
 Name:           perl-CSS-Squish
 Version:        0.10
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Compact many CSS files into one big file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.10-12
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.10-11
 - 为 Magic 3.0 重建
 

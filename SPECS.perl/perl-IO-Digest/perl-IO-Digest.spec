@@ -1,6 +1,6 @@
 Name:           perl-IO-Digest
 Version:        0.11
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Calculate digests while reading or writing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.11-9
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-8
 - 为 Magic 3.0 重建
 

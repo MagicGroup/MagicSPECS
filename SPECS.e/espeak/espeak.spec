@@ -1,5 +1,5 @@
 Name:           espeak
-Version: 1.48.04-source
+Version: 1.48.04
 Release:        5%{?dist}
 Summary:        Software speech synthesizer (text-to-speech)
 Summary(zh_CN.UTF-8): 软件语音合成器（文本转语音）
@@ -11,7 +11,6 @@ URL:            http://espeak.sourceforge.net
 Source0:        http://kent.dl.sourceforge.net/sourceforge/espeak/espeak-%{version}-source.zip
 Source1:        espeak.1
 Patch0:         espeak-1.23-makefile_nostaticlibs.patch
-Patch2:         espeak-1.45.05-runtime-detection.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  portaudio-devel pulseaudio-libs-devel gcc-c++
@@ -48,9 +47,7 @@ Development files for eSpeak, a software speech synthesizer.
 %prep
 %setup -q -n espeak-%{version}-source
 %patch0 -p1 -b .nostaticlibs
-%patch2 -p1 -b .runtime-detection
 
-#%patch2 -p1 -b .pulseaudio
 # Fix file permissions
 find . -type f -exec chmod 0644 {} ";"
 # Prepare documentation

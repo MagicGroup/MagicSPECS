@@ -3,7 +3,7 @@
 
 Name: pdns
 Version:	3.4.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: A modern, advanced and high performance authoritative-only nameserver
 Summary(zh_CN.UTF-8): 一个现代化，先进的高性能的域名服务
 Group: System Environment/Daemons
@@ -336,6 +336,9 @@ exit 0
 %{_libdir}/%{name}/liblmdbbackend.so
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.4.6-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.4.6-2
 - 更新到 3.4.6
 

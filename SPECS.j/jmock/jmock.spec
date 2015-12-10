@@ -3,7 +3,7 @@
 
 Name:          jmock
 Version:       2.5.1
-Release:       9%{?dist}
+Release:       10%{?dist}
 Summary:       Java library for testing code with mock objects
 License:       BSD
 Url:           http://www.jmock.org/
@@ -142,6 +142,9 @@ cp -pr build/%{name}-%{namedversion}/doc/* %{buildroot}%{_javadocdir}/%{name}
 %doc LICENSE.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.5.1-10
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.5.1-9
 - 为 Magic 3.0 重建
 

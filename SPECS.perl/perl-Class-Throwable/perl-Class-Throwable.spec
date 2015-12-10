@@ -1,6 +1,6 @@
 Name:           perl-Class-Throwable
 Version:	0.13
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A minimal lightweight exception class
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.13-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.13-2
 - 为 Magic 3.0 重建
 

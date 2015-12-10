@@ -5,7 +5,7 @@
 
 Name:           spice
 Version:	0.12.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Implements the SPICE protocol
 Summary(zh_CN.UTF-8): SPICE 协议的实现
 Group:          User Interface/Desktops
@@ -155,6 +155,9 @@ fi
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.12.6-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.12.6-2
 - 更新到 0.12.6
 

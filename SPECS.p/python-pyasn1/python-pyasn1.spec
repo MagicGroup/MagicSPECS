@@ -5,7 +5,7 @@
 
 Name:           python-pyasn1
 Version:	0.1.9
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        ASN.1 tools for Python
 Summary(zh_CN.UTF-8): Python 下的 ASN.1 工具
 License:        BSD
@@ -146,6 +146,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.1.9-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.1.9-2
 - 更新到 0.1.9
 

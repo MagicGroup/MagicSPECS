@@ -1,17 +1,53 @@
-From 074d0a2b85a7d4f505846ac629b28a3a8894ebbc Mon Sep 17 00:00:00 2001
+From e6b37c1b0c9ee724ae81b74a84e133a75ed9e3a3 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Thu, 11 Sep 2014 14:49:54 +0100
-Subject: [PATCH 14/15] ppc, ppc64, ppc64le: Mark stack as non-executable.
+Subject: [PATCH 14/19] ppc, ppc64, ppc64le: Mark stack as non-executable.
 
 The same fix as this one, which was only fully applied to
 i686 & x86-64:
 
 http://caml.inria.fr/mantis/view.php?id=4564
 ---
- asmrun/power-elf.S   | 3 +++
- asmrun/power64-elf.S | 2 ++
- 2 files changed, 5 insertions(+)
+ asmcomp/power/emit.mlp     | 3 ++-
+ asmcomp/power64/emit.mlp   | 3 ++-
+ asmcomp/power64le/emit.mlp | 3 ++-
+ asmrun/power-elf.S         | 3 +++
+ asmrun/power64-elf.S       | 2 ++
+ 5 files changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/asmcomp/power/emit.mlp b/asmcomp/power/emit.mlp
+index 4344085..717ab12 100644
+--- a/asmcomp/power/emit.mlp
++++ b/asmcomp/power/emit.mlp
+@@ -927,4 +927,5 @@ let end_assembly() =
+                            `	.long	({emit_label lbl} - .) + {emit_int32 ofs}\n`);
+       efa_def_label = (fun l -> `{emit_label l}:\n`);
+       efa_string = (fun s -> emit_bytes_directive "	.byte	" (s ^ "\000"))
+-     }
++     };
++  `.section .note.GNU-stack,\"\",%progbits; .previous\n`
+diff --git a/asmcomp/power64/emit.mlp b/asmcomp/power64/emit.mlp
+index 9fd59b2..4e0317a 100644
+--- a/asmcomp/power64/emit.mlp
++++ b/asmcomp/power64/emit.mlp
+@@ -990,4 +990,5 @@ let end_assembly() =
+   `{emit_symbol lbl}:\n`;
+   `    .quad   {emit_int (List.length !frame_descriptors)}\n`;
+   List.iter emit_frame !frame_descriptors;
+-  frame_descriptors := []
++  frame_descriptors := [];
++  `.section .note.GNU-stack,\"\",%progbits; .previous\n`
+diff --git a/asmcomp/power64le/emit.mlp b/asmcomp/power64le/emit.mlp
+index 3f34102..60df72c 100644
+--- a/asmcomp/power64le/emit.mlp
++++ b/asmcomp/power64le/emit.mlp
+@@ -983,4 +983,5 @@ let end_assembly() =
+   `{emit_symbol lbl}:\n`;
+   `    .quad   {emit_int (List.length !frame_descriptors)}\n`;
+   List.iter emit_frame !frame_descriptors;
+-  frame_descriptors := []
++  frame_descriptors := [];
++  `.section .note.GNU-stack,\"\",%progbits; .previous\n`
 diff --git a/asmrun/power-elf.S b/asmrun/power-elf.S
 index facbfbf..14d28a0 100644
 --- a/asmrun/power-elf.S
@@ -34,5 +70,5 @@ index 98c42e2..b7bfce4 100644
 +/* Mark stack as non-executable, PR#4564 */
 +        .section .note.GNU-stack,"",%progbits
 -- 
-2.1.0
+2.4.3
 

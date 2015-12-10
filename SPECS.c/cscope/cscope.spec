@@ -2,7 +2,7 @@ Summary: C source code tree search and browse tool
 Summary(zh_CN.UTF-8): C 源代码树搜索和浏览工具
 Name: cscope
 Version: 15.8b
-Release: 3%{?dist}
+Release: 4%{?dist}
 Source0: https://downloads.sourceforge.net/project/%{name}/%{name}/%{version}/%{name}-%{version}.tar.gz
 URL: http://cscope.sourceforge.net
 License: BSD and GPLv2+
@@ -89,6 +89,9 @@ rm -f %{emacs_lisp_path}/xcscope.el
 rm -f %{vim_plugin_path}/cctree.vim
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 15.8b-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 15.8b-3
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 
 Name:           perl-Cairo
 Version:	1.106
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to the cairo library
 Summary(zh_CN.UTF-8): cairo 库的 Perl 接口
 
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.106-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.106-2
 - 更新到 1.106
 

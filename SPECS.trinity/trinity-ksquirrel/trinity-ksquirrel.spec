@@ -38,7 +38,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.8.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	Powerful Trinity image viewer
 Summary(zh_CN.UTF-8): TDE 下的图像查看器
 Group:		Amusements/Games
@@ -173,6 +173,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 %{tde_mandir}/man1/ksquirrel.1
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.8.0-1.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.8.0-1.1
 - 为 Magic 3.0 重建
 

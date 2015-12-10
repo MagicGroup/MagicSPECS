@@ -1,6 +1,6 @@
 Name: bitmap
 Version: 1.0.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Bitmap editor and converter utilities for the X Window System
 Summary(zh_CN.UTF-8): X 窗口系统下的位图编辑和转换工具
 Group: User Interface/X
@@ -78,6 +78,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man1/*.1*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0.8-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.8-3
 - 更新到 1.0.8
 

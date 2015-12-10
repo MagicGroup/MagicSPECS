@@ -10,7 +10,7 @@
 
 Name:           pygobject3
 Version:	3.19.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Python bindings for GObject Introspection
 
 License:        LGPLv2+ and MIT
@@ -210,6 +210,9 @@ xvfb-run make DESTDIR=$RPM_BUILD_ROOT check V=1
 %{_libdir}/pkgconfig/pygobject-3.0.pc
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.19.2-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.19.2-2
 - 更新到 3.19.2
 

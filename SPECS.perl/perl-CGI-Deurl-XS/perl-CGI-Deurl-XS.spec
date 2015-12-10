@@ -1,6 +1,6 @@
 Name:           perl-CGI-Deurl-XS
 Version:        0.08
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Fast decoder for URL parameter strings
 License:        (GPL+ or Artistic) and ASL 2.0
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.08-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-5
 - 为 Magic 3.0 重建
 

@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): qtruby
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: 4.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 Source0: http://mirrors.ustc.edu.cn/kde/stable/%{version}/src/%{real_name}-%{version}.tar.xz
@@ -76,6 +76,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/*.so
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.3-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.3-5
 - 更新到 4.3
 

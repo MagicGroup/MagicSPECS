@@ -2,7 +2,7 @@ Summary: A utility which provides statistics based on the output of diff
 Summary(zh_CN.UTF-8): 提供基于 diff 输出统计的工具
 Name: diffstat
 Version: 1.60
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 License: MIT
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.60-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.60-5
 - 更新到 1.60
 

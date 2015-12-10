@@ -3,7 +3,7 @@
 
 Name:		%{fontname}-fonts
 Version:	4.4.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Iconic font set
 Summary(zh_CN.UTF-8): Iconic 字体集
 License:	OFL
@@ -73,6 +73,9 @@ magic_rpm_clean.sh
 %{_datadir}/fonts/fontawesome/fontawesome-webfont.woff
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.4.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.4.0-2
 - 为 Magic 3.0 重建
 

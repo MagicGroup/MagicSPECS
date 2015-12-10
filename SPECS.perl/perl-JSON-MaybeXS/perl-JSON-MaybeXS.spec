@@ -10,7 +10,7 @@ Name:		perl-JSON-MaybeXS
 Summary:	Use Cpanel::JSON::XS with a fallback to JSON::XS and JSON::PP
 Summary(zh_CN.UTF-8): 带有回调 JSON::XS 和 JSON::PP 的使用 Cpanel::JSON::XS
 Version:	1.003005
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/JSON-MaybeXS/
 Source0:	http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/JSON-MaybeXS-%{version}.tar.gz
@@ -78,6 +78,9 @@ make test
 %{_mandir}/man3/JSON::MaybeXS.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.003005-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.003005-4
 - 为 Magic 3.0 重建
 

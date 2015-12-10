@@ -2,7 +2,7 @@ Summary:	Framework providing Desktop activity awareness
 Summary(zh_CN.UTF-8): 提供桌面活动通知的框架
 Name:		zeitgeist
 Version:	0.9.16
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 # most of the source code is LGPLv2+, except:
 # datahub/ is LGPLv3+
@@ -124,6 +124,9 @@ magic_rpm_clean.sh
 %{_datadir}/vala/vapi/zeitgeist-datamodel-2.0.vapi
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.9.16-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.9.16-3
 - 为 Magic 3.0 重建
 

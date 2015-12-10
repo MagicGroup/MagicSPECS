@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.6.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: PDF::Core is used by Prawn to render PDF documents
 Group: Development/Languages
 License: GPLv2 or GPLv3 or Ruby 
@@ -76,6 +76,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.6.0-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.6.0-3
 - 为 Magic 3.0 重建
 

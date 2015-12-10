@@ -4,7 +4,7 @@ Summary:	Job spooling tools
 Summary(zh_CN.UTF-8): 后台调度工具
 Name:		at
 Version:	3.1.14
-Release:	3%{?dist}
+Release:	4%{?dist}
 # http://packages.debian.org/changelogs/pool/main/a/at/current/copyright
 # + install-sh is MIT license with changes under Public Domain
 License:	GPLv3+ and GPLv2+ and ISC and MIT and Public Domain
@@ -181,6 +181,9 @@ chown daemon:daemon %{_localstatedir}/spool/at/.SEQ
 %attr(0644,root,root)		/%{_unitdir}/atd.service
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.1.14-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.1.14-3
 - 为 Magic 3.0 重建
 

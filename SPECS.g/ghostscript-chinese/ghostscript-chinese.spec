@@ -11,7 +11,7 @@ ghostscript font configuration files for Chinese fonts.
 
 Name:           ghostscript-chinese
 Version:	0.3.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Ghostscript Chinese fonts configuration files
 Summary(zh_CN.UTF-8): Ghostscript 中文字体配置文件 
 Group:          User Interface/X
@@ -117,6 +117,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.3.1-2
 - 更新到 0.3.1
 

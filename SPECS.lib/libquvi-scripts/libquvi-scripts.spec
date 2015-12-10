@@ -2,7 +2,7 @@
 
 Name:           libquvi-scripts
 Version: 0.9.20131130
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Embedded lua scripts that libquvi uses for parsing the media details
 Summary(zh_CN.UTF-8): libquvi 使用的解析媒体详细信息的嵌入 lua 脚本
 
@@ -39,6 +39,9 @@ magic_rpm_clean.sh
 %{_datadir}/pkgconfig/%{name}-0.9.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.20131130-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.20131130-2
 - 为 Magic 3.0 重建
 

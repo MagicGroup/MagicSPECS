@@ -3,7 +3,7 @@
 
 Name: rekonq
 Version:	2.4.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group: Applications/Internet
 Group(zh_CN.UTF-8):  应用程序/互联网
 License: GPLv2+
@@ -116,6 +116,9 @@ gtk-update-icon-cache %{_kde4_iconsdir}/hicolor &>/dev/null || :
 %{kde4_localedir}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.4.2-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.4.2-2
 - 为 Magic 3.0 重建
 

@@ -13,7 +13,7 @@ Summary:        Protocol Buffers - Google's data interchange format
 Summary(zh_CN.UTF-8): Protocol Buffers - 谷歌的数据交换格式
 Name:           protobuf
 Version:        2.6.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -335,6 +335,9 @@ install -p -m 0644 %{SOURCE2} $RPM_BUILD_ROOT%{emacs_startdir}
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.6.1-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.6.1-4
 - 为 Magic 3.0 重建
 

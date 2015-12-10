@@ -1,6 +1,6 @@
 Name:           maven-site-plugin
 Version:        3.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Maven Site Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-site-plugin/
@@ -81,6 +81,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Mon Nov 23 2015 Liu Di <liudidi@gmail.com> - 3.4-5
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

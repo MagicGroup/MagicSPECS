@@ -2,7 +2,7 @@ Name:		xbase
 Summary: 	XBase compatible database library
 Summary(zh_CN.UTF-8): XBase 兼容数据库库
 Version: 	3.1.2
-Release: 	13%{?dist}
+Release: 	14%{?dist}
 License: 	LGPLv2+
 Group: 		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -133,6 +133,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/dbfutil1
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.1.2-14
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.1.2-13
 - 为 Magic 3.0 重建
 

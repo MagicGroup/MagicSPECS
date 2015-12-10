@@ -3,7 +3,7 @@
 Summary: XS Blowfish implementation for Perl
 Name: perl-Crypt-Blowfish
 Version:	2.14
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: Copyright only
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Crypt-Blowfish/
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.14-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.14-2
 - 为 Magic 3.0 重建
 

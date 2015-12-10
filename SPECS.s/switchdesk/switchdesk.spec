@@ -2,7 +2,7 @@ Name: switchdesk
 Summary: A desktop environment switcher
 Summary(zh_CN.UTF-8): 桌面环境切换工具
 Version: 4.0.10
-Release: 5%{?dist}
+Release: 6%{?dist}
 Url: http://than.fedorapeople.org/
 Source: http://than.fedorapeople.org/%{name}-%{version}.tar.bz2
 License: GPLv2+
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 %{_datadir}/applications/*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.0.10-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.0.10-5
 - 为 Magic 3.0 重建
 

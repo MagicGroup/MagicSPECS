@@ -1,6 +1,6 @@
 Name:	 	cce
 Version:	0.51
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	A CJK console with many input method.
 Summary(zh_CN.UTF-8): 带有多种输入法的CJK控制台
 Group:		System Environment/Shells
@@ -40,7 +40,7 @@ CCE 使您能在多种操作系统里显示和输入中文/日文/韩文/UTF-8�
 %configure --disable-lrmi
 #临时的处理措施
 make || cp %{SOURCE1} inputs/utils -f
-make
+make DESTDIR=%{buildroot}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.51-9
+- 为 Magic 3.0 重建
+
 * Thu Jan 10 2013 Liu Di <liudidi@gmail.com> - 0.51-8
 - 为 Magic 3.0 重建
 

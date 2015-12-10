@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2.2.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Unicode alternatives for common functions and operators
 
 License:        BSD
@@ -68,6 +68,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.2.4-10
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.2.4-9
 - 为 Magic 3.0 重建
 

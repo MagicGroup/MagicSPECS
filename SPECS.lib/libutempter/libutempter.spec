@@ -4,7 +4,7 @@ Summary: A privileged helper for utmp/wtmp updates
 Summary(zh_CN.UTF-8): utmp/wtmp 更新的私有帮助器
 Name: libutempter
 Version: 1.1.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -93,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1.6-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.6-2
 - 为 Magic 3.0 重建
 

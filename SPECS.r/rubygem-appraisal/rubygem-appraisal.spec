@@ -3,7 +3,7 @@
 Summary:       Find out what your Ruby gems are worth
 Name:          rubygem-%{gem_name}
 Version:       0.5.2
-Release:       5%{?dist}
+Release:       6%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://github.com/thoughtbot/appraisal
@@ -73,6 +73,9 @@ rm -f %{buildroot}%{gem_instdir}/appraisal.gemspec
 %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.5.2-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.2-5
 - 为 Magic 3.0 重建
 

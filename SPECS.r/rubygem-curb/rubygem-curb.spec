@@ -8,7 +8,7 @@
 Summary: Ruby libcurl bindings
 Name: rubygem-%{gem_name}
 Version: 0.8.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: Ruby
 URL: https://github.com/taf2/curb
@@ -121,6 +121,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.8.8-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.8.8-4
 - 为 Magic 3.0 重建
 

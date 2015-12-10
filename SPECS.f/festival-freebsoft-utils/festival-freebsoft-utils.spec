@@ -1,6 +1,6 @@
 Name:          festival-freebsoft-utils
 Version:       0.10
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       A collection of utilities that enhance Festival with some useful features
 
 Group:         System Environment/Libraries
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_datadir}/festival/lib/*.scm
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.10-5
 - 为 Magic 3.0 重建
 

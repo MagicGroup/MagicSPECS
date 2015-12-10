@@ -1,6 +1,6 @@
 Name:           perl-Dist-Zilla
 Version:	5.041
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Distribution builder; installer not included!
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -185,6 +185,9 @@ make test
 %{_sysconfdir}/bash_completion.d
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.041-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 5.041-2
 - 更新到 5.041
 

@@ -1,6 +1,6 @@
 Name:           perl-Hardware-Vhdl-Parser
 Version:        0.12
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Complete grammar for parsing VHDL code using perl
 
 License:        GPL+ or Artistic
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.12-16
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           shtool
 Version:        2.0.8
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        A portable shell tool
 Summary(zh_CN.UTF-8): 可移植的 Shell 工具
 
@@ -46,6 +46,9 @@ make check
 %{_datadir}/aclocal/%{name}.m4
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.8-20
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.8-19
 - 为 Magic 3.0 重建
 

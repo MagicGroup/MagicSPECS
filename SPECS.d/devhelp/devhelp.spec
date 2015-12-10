@@ -6,7 +6,7 @@
 
 Name: devhelp
 Version:	3.18.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: Development/Tools
@@ -78,8 +78,6 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/devhelp/books
 magic_rpm_clean.sh
 %find_lang devhelp
 
-desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/devhelp.desktop
-
 %post
 /sbin/ldconfig
 touch --no-create %{_datadir}/icons/hicolor >&/dev/null || :
@@ -102,11 +100,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_bindir}/devhelp
 %{_libdir}/libdevhelp*.so.*
 
-%{_datadir}/applications/devhelp.desktop
 %{_datadir}/devhelp
-%{_datadir}/appdata/devhelp.appdata.xml
 %{_datadir}/GConf/gsettings/devhelp.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.devhelp.gschema.xml
+%{_datadir}/appdata/org.gnome.Devhelp.appdata.xml
+%{_datadir}/applications/org.gnome.Devhelp.desktop
+%{_datadir}/dbus-1/services/org.gnome.Devhelp.service
+%{_datadir}/icons/hicolor/symbolic/apps/devhelp-symbolic.svg
+%{_mandir}/man1/devhelp.1*
 %{_datadir}/icons/hicolor/16x16/apps/devhelp.png
 %{_datadir}/icons/hicolor/22x22/apps/devhelp.png
 %{_datadir}/icons/hicolor/24x24/apps/devhelp.png
@@ -125,6 +126,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-2
 - 更新到 3.18.1
 

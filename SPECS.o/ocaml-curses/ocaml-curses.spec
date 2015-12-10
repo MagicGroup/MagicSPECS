@@ -2,7 +2,7 @@
 
 Name:           ocaml-curses
 Version:        1.0.3
-Release:        24%{?dist}
+Release:        27%{?dist}
 Summary:        OCaml bindings for ncurses
 Summary(zh_CN.UTF-8): ncurses 的 OCaml 绑定
 License:        LGPLv2+
@@ -88,6 +88,15 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.0.3-27
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.0.3-26
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.0.3-25
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.3-24
 - 为 Magic 3.0 重建
 

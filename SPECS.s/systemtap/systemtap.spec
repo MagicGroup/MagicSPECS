@@ -13,46 +13,34 @@
 %{!?pie_supported: %global pie_supported 1}
 %{!?with_boost: %global with_boost 0}
 %ifarch %{ix86} x86_64 ppc ppc64
-%{!?with_dyninst: %global with_dyninst 0%{?fedora} >= 18 || 0%{?rhel} >= 7}
+%{!?with_dyninst: %global with_dyninst 1}
 %else
 %{!?with_dyninst: %global with_dyninst 0}
 %endif
-%{!?with_systemd: %global with_systemd 0%{?fedora} >= 19 || 0%{?rhel} >= 7}
-%{!?with_emacsvim: %global with_emacsvim 0%{?fedora} >= 19 || 0%{?rhel} >= 7}
-%{!?with_java: %global with_java 0%{?fedora} >= 19 || 0%{?rhel} >= 7}
-%{!?with_virthost: %global with_virthost 0%{?fedora} >= 19 || 0%{?rhel} >= 7}
+%{!?with_systemd: %global with_systemd 1}
+%{!?with_emacsvim: %global with_emacsvim 1}
+%{!?with_java: %global with_java 1}
+%{!?with_virthost: %global with_virthost 1}
 %{!?with_virtguest: %global with_virtguest 1}
-%{!?with_dracut: %global with_dracut 0%{?fedora} >= 19 || 0%{?rhel} >= 7}
+%{!?with_dracut: %global with_dracut 1}
 %ifarch x86_64
-%{!?with_mokutil: %global with_mokutil 0%{?fedora} >= 18 || 0%{?rhel} >= 7}
-%{!?with_openssl: %global with_openssl 0%{?fedora} >= 18 || 0%{?rhel} >= 7}
+%{!?with_mokutil: %global with_mokutil 1}
+%{!?with_openssl: %global with_openssl 1}
 %else
 %{!?with_mokutil: %global with_mokutil 0}
 %{!?with_openssl: %global with_openssl 0}
 %endif
-%{!?with_pyparsing: %global with_pyparsing 0%{?fedora} >= 18 || 0%{?rhel} >= 7}
-%{!?with_python3: %global with_python3 0%{?fedora} >= 23}
+%{!?with_pyparsing: %global with_pyparsing 1}
+%{!?with_python3: %global with_python3 1}
 
 %ifarch ppc64le aarch64
 %global with_virthost 0
 %endif
 
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 6
-   %define initdir %{_initddir}
-%else # RHEL5 doesn't know _initddir
-   %define initdir %{_initrddir}
-%endif
+%define initdir %{_initddir}
 
 %if %{with_virtguest}
-   %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
       %define udevrulesdir /usr/lib/udev/rules.d
-   %else
-      %if 0%{?rhel} >= 6
-         %define udevrulesdir /lib/udev/rules.d
-      %else # RHEL5
-         %define udevrulesdir /etc/udev/rules.d
-      %endif
-   %endif
 %endif
 
 %define dracutstap %{_prefix}/lib/dracut/modules.d/99stap
@@ -101,7 +89,6 @@ BuildRequires: gettext-devel
 BuildRequires: nss-devel avahi-devel pkgconfig
 %if %{with_dyninst}
 BuildRequires: dyninst-devel >= 8.0
-BuildRequires: libselinux-devel
 %endif
 %if %{with_sqlite}
 BuildRequires: sqlite-devel
@@ -299,13 +286,6 @@ Requires: strace
 # that provides nc has changed over time (from 'nc' to
 # 'nmap-ncat'). So, we'll do a file-based require.
 Requires: /usr/bin/nc
-%ifnarch ia64 ppc64le aarch64
-%if 0%{?fedora} >= 21 || 0%{?rhel} >= 8
-# no prelink
-%else
-Requires: prelink
-%endif
-%endif
 # testsuite/systemtap.server/client.exp needs avahi
 Requires: avahi
 %if %{with_crash}
@@ -320,9 +300,7 @@ Requires: /usr/lib/libc.so
 # ... and /usr/lib/libgcc_s.so.*
 # ... and /usr/lib/libstdc++.so.*
 %endif
-%if 0%{?fedora} >= 18
 Requires: stress
-%endif
 # The following "meta" files for the systemtap examples run "perf":
 #   testsuite/systemtap.examples/hw_watch_addr.meta
 #   testsuite/systemtap.examples/memory/hw_watch_sym.meta

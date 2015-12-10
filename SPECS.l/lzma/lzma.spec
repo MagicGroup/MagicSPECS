@@ -2,7 +2,7 @@ Summary: 	LZMA utils
 Summary(zh_CN.UTF-8): LZMA 工具
 Name: 		lzma
 Version: 	4.32.7
-Release: 	13%{?dist}
+Release: 	14%{?dist}
 License: 	GPLv2+
 Group:		Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
@@ -93,6 +93,9 @@ rm -rf %{buildroot}
 %{_libdir}/*.so
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 4.32.7-14
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.32.7-13
 - 为 Magic 3.0 重建
 

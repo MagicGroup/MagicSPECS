@@ -20,7 +20,7 @@
 Summary:	A handy web browsing ruby object
 Name:		rubygem-%{gem_name}
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.3
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.4
 Group:		Development/Languages
 License:	MIT
 URL:		http://mechanize.rubyforge.org/
@@ -160,6 +160,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.7.3-3.4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.7.3-3.3
 - 为 Magic 3.0 重建
 

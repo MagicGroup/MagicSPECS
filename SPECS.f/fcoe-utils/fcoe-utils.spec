@@ -5,7 +5,7 @@
 
 Name:               fcoe-utils
 Version:            1.0.30
-Release:            5.git%{checkout}%{?dist}
+Release:            6.git%{checkout}%{?dist}
 Summary:            Fibre Channel over Ethernet utilities
 Summary(zh_CN.UTF-8): FCOE（以太网上的光纤通道）工具
 Group:              Applications/System
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 %{_libexecdir}/fcoe/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.30-6.git91c0c8c
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0.30-5.git91c0c8c
 - 为 Magic 3.0 重建
 

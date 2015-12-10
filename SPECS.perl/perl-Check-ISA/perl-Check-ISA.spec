@@ -1,7 +1,7 @@
 
 Name:       perl-Check-ISA 
 Version:    0.04 
-Release:        17%{?dist}
+Release:        18%{?dist}
 # see lib/Check/ISA.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-18
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04-17
 - 为 Magic 3.0 重建
 

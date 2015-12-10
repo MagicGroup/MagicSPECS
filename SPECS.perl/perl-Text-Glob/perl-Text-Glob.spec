@@ -1,6 +1,6 @@
 Name: 		perl-Text-Glob
 Version: 	0.09
-Release: 	10%{?dist}
+Release: 	11%{?dist}
 Summary: 	Perl module to match globbing patterns against text
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -41,6 +41,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.09-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.09-10
 - 为 Magic 3.0 重建
 

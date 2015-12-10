@@ -14,7 +14,7 @@
 
 Name:           wine
 Version:	1.7.54
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A compatibility layer for windows applications
 Summary(zh_CN.UTF-8): windows 程序的兼容层
 
@@ -1857,6 +1857,9 @@ fi
 %{_libdir}/wine/opencl.dll.so
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.7.54-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.7.54-2
 - 更新到 1.7.54
 

@@ -1,6 +1,6 @@
 Name: docbook5-style-xsl
 Version: 1.79.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -90,6 +90,9 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.79.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.79.0-2
 - 更新到 1.79.0
 

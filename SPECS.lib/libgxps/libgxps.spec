@@ -1,6 +1,6 @@
 Name:           libgxps
 Version:        0.2.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        GObject based library for handling and rendering XPS documents
 Summary(zh_CN.UTF-8): 基于 GObject 的处理和渲染 XPS 文档的库
 Group:          System Environment/Libraries
@@ -96,6 +96,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.2.2-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.2-6
 - 为 Magic 3.0 重建
 

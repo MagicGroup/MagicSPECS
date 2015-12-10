@@ -1,7 +1,8 @@
 Name:           libfabric
-Version:        1.1.0
-Release:        1%{?dist}
+Version:        1.1.1
+Release:        2%{?dist}
 Summary:        Open Fabric Interfaces
+Summary(zh_CN.UTF-8): 开放的 Fabric 接口
 
 License:        BSD or GPLv2
 URL:            http://ofiwg.github.io/libfabric/
@@ -23,15 +24,21 @@ exports the user-space API of OFI, and is typically the only software that
 applications deal with directly.  It works in conjunction with provider
 libraries, which are often integrated directly into libfabric.
 
+%description -l zh_CN.UTF-8
+开放的 Fabric 接口。
 
 %package        devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
+
 
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
 
 %prep
 %setup -q
@@ -45,7 +52,7 @@ make %{?_smp_mflags}
 %install
 %make_install
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -70,6 +77,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.1.1-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 26 2015 Orion Poplawski <orion@cora.nwra.com> - 1.1.0-1
 - Update to 1.1.0
 

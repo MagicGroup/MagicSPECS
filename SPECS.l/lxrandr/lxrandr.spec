@@ -1,6 +1,6 @@
 Name:           lxrandr
 Version:        0.1.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Simple monitor configuration tool
 Summary(zh_CN.UTF-8): 简单的监视器配置工具
 
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.1.2-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.2-6
 - 为 Magic 3.0 重建
 

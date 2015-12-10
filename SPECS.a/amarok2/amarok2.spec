@@ -16,16 +16,16 @@ Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://amarok.kde.org/
 Version:	2.8.90
 %if %{svn}
-Release: 0.svn%rversion.1%{?dist}.7
+Release: 0.svn%rversion.1%{?dist}.10
 %else
-Release: 6%{?dist}
+Release: 9%{?dist}
 %endif
 
 %if %{svn}
 Source0: %{real_name}.tar.bz2
 Source1: amarok.po
 %else
-Source0: http://download.kde.org/stable/amarok/%{version}/src/amarok-%{version}.tar.bz2
+Source0: http://download.kde.org/stable/amarok/%{version}/src/amarok-%{version}.tar.xz
 
 Source1: amarok.po
 %endif
@@ -210,6 +210,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_plugindir}/*.so
 #%{kde4_libdir}/strigi/*
 %{kde4_localedir}/*
+%{kde4_datadir}/appdata/amarok.appdata.xml
 
 # move to -extra package
 %exclude %{kde4_bindir}/amarokmp3tunesharmonydaemon
@@ -275,6 +276,15 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/mime/packages/amzdownloader.xml
 
 %changelog
+* Wed Nov 18 2015 Liu Di <liudidi@gmail.com> - 2.8.90-9
+- 为 Magic 3.0 重建
+
+* Wed Nov 18 2015 Liu Di <liudidi@gmail.com> - 2.8.90-8
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.8.90-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.8.90-6
 - 更新到 2.8.90
 

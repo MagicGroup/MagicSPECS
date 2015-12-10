@@ -2,7 +2,7 @@ Summary:        Streaming library for IEEE1394
 Summary(zh_CN.UTF-8): IEEE 1394 的流媒体库
 Name:           libiec61883
 Version:        1.2.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -96,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*.1*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2.0-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.0-6
 - 为 Magic 3.0 重建
 

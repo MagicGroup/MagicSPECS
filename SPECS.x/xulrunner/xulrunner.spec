@@ -78,7 +78,7 @@
 Summary:        XUL Runtime for Gecko Applications
 Name:           xulrunner
 Version:        40.0
-Release:        4%{?pre_tag}%{?dist}
+Release:        5%{?pre_tag}%{?dist}
 URL:            http://developer.mozilla.org/En/XULRunner
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -552,6 +552,9 @@ fi
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 40.0-5
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 40.0-4
 - 为 Magic 3.0 重建
 

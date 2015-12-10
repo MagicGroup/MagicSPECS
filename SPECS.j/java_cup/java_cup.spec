@@ -34,7 +34,7 @@
 
 Name:           java_cup
 Version:        0.11a
-Release:        16%{?dist}
+Release:        17%{?dist}
 Epoch:          1
 Summary:        Java source interpreter
 License:        MIT
@@ -152,6 +152,9 @@ cp -pr dist/javadoc/* %{buildroot}%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:0.11a-17
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1:0.11a-16
 - Use Requires: java-headless rebuild (#1067528)
 

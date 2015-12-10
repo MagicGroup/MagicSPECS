@@ -16,7 +16,7 @@ Name:        caja
 Summary:     File manager for MATE
 Summary(zh_CN.UTF-8): MATE 的文件管理器
 Version: 1.11.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 #Release: 1%{?dist}
 License:     GPLv2+ and LGPLv2+
 Group:       User Interface/Desktops
@@ -204,6 +204,7 @@ fi
 %{_libexecdir}/caja-convert-metadata
 %{_datadir}/mime/packages/caja.xml
 %{_datadir}/dbus-1/services/org.mate.freedesktop.FileManager1.service
+%{_datadir}/appdata/caja.appdata.xml
 
 %files extensions
 %{_libdir}/libcaja-extension.so.*
@@ -221,6 +222,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

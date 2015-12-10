@@ -1,6 +1,6 @@
 Name:           libsodium
 Version:        1.0.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The Sodium crypto library
 Summary(zh_CN.UTF-8): Sodium 加密库
 License:        ISC
@@ -68,6 +68,9 @@ make check
 %{_libdir}/pkgconfig/libsodium.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.5-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
 - 为 Magic 3.0 重建
 

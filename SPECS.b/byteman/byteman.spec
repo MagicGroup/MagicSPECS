@@ -4,7 +4,7 @@
 
 Name:             byteman
 Version:          2.1.4.1
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          Java agent-based bytecode injection tool
 License:          LGPLv2+
 URL:              http://www.jboss.org/byteman
@@ -114,6 +114,9 @@ ln -s %{_javadir}/byteman/byteman.jar $RPM_BUILD_ROOT%{homedir}/lib/byteman.jar
 %doc docs/copyright.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.1.4.1-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 18 2014 Marek Goldmann <mgoldman@redhat.com> - 2.1.4.1-3
 - Rebuilding for objectweb-asm update, RHBZ#1083570
 

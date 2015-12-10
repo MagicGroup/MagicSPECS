@@ -1,6 +1,6 @@
 Name:		perl-Test-Kwalitee
 Version:	1.22
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Test the Kwalitee of a distribution before you release it
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -66,6 +66,9 @@ chmod -c 755 %{buildroot}%{_bindir}/kwalitee-metrics
 %{_mandir}/man3/Test::Kwalitee.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.22-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.22-6
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:       dblatex
 Version:    0.3.4
-Release:    9%{?dist}
+Release:    10%{?dist}
 Summary:    DocBook to LaTeX/ConTeXt Publishing
 Summary(zh_CN.UTF-8): DocBook 转换到 LaTeX/ConTeXt
 BuildArch:  noarch
@@ -134,6 +134,9 @@ cp -p %{SOURCE1} COPYING-docbook-xsl
 %postun -p /usr/bin/texhash
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.3.4-10
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.3.4-9
 - 为 Magic 3.0 重建
 

@@ -10,7 +10,7 @@
 
 Name:           python-py
 Version:	1.4.30
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Library with cross-python path, ini-parsing, io, code, log facilities
 Summary(zh_CN.UTF-8): 交叉 python 路径，INI 解析，代码，日志等的库
 Group:          Development/Languages
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.4.30-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.4.30-2
 - 为 Magic 3.0 重建
 

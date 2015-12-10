@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: A Ruby wrapper for the MRI 2.0 debug_inspector API
 Group: Development/Languages
 License: MIT
@@ -86,6 +86,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.0.2-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.2-5
 - 为 Magic 3.0 重建
 

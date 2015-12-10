@@ -1,6 +1,6 @@
 Name:          mutter
 Version:	3.19.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Window and compositing manager based on Clutter
 Summary(zh_CN.UTF-8): 基于 Clutter 的窗口管理器
 
@@ -117,14 +117,10 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
-%doc COPYING NEWS doc/theme-format.txt
+%doc COPYING NEWS 
 %doc %{_mandir}/man1/mutter.1.gz
-#%doc %{_mandir}/man1/mutter-message.1.gz
 %{_bindir}/mutter
-#%{_bindir}/mutter-message
 %{_datadir}/applications/*.desktop
-#%{_datadir}/gnome/wm-properties/mutter-wm.desktop
-#%{_datadir}/mutter
 %{_libdir}/lib*.so.*
 %{_libdir}/mutter/
 %{_libexecdir}/mutter-restart-helper
@@ -135,17 +131,15 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %files devel
-#%{_bindir}/mutter-theme-viewer
-#%{_bindir}/mutter-window-demo
 %{_includedir}/*
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*
-#%doc %{_mandir}/man1/mutter-theme-viewer.1.gz
-#%doc %{_mandir}/man1/mutter-window-demo.1.gz
-# exclude as these should be in a devel package (if packaged at all)
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 3.19.1-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
 - 更新到 3.19.1
 

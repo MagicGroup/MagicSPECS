@@ -27,7 +27,7 @@
 Name:		trinity-avahi-tqt
 Epoch:		%{tde_epoch}
 Version:	0.6.30
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	Avahi TQt integration library
 Summary(zh_CN.UTF-8): Avahi TQt 集成库
 Group: System Environment/Libraries
@@ -213,6 +213,9 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.6.30-1.2
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.6.30-1.1
 - 为 Magic 3.0 重建
 

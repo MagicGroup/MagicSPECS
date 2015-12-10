@@ -1,6 +1,6 @@
 Name:		AcetoneISO2
 Version:	2.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	CD/DVD Image Manipulator
 Summary(zh_CN): CD/DVD 镜像管理
 Group:		Applications/Archiving
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/Acetino2.png
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.3-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.3-3
 - 为 Magic 3.0 重建
 

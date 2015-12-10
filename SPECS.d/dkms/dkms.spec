@@ -2,7 +2,7 @@ Summary: Dynamic Kernel Module Support Framework
 Summary(zh_CN.UTF-8): 动态内核模块支持框架
 Name: dkms
 Version: 2.2.0.3
-Release: 5%{dist}
+Release: 6%{dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -131,6 +131,9 @@ rm -rf $RPM_BUILD_ROOT
 [ $1 -lt 1 ] && /sbin/chkconfig dkms_autoinstaller off ||:
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.2.0.3-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.2.0.3-5
 - 为 Magic 3.0 重建
 

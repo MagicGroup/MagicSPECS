@@ -13,7 +13,7 @@ the CJK Unifonts project.
 
 Name:           %{fontname}-fonts
 Version:        0.2.20080216.1
-Release:        53%{?dist}
+Release:        54%{?dist}
 Summary:        Chinese Unicode TrueType font in Ming face
 Summary(zh_CN.UTF-8): 明体字体
 
@@ -81,6 +81,9 @@ ln -s %{_fontdir}/ %{buildroot}%{catalogue}/%{name}
 %{catalogue}/%{name}
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.2.20080216.1-54
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.20080216.1-53
 - 为 Magic 3.0 重建
 

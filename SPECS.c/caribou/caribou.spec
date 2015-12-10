@@ -1,13 +1,12 @@
 Name:           caribou
 Version:	0.4.19
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A simplified in-place on-screen keyboard
 License:        LGPLv2+
 URL:            http://live.gnome.org/Caribou
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://download.gnome.org/sources/caribou/%{majorver}/caribou-%{version}.tar.xz
 Patch0:         caribou-0.4.8-multilib.patch
-Patch1:         caribou-0.4.8-fix-python-exec.patch
 
 BuildRequires:  python2-devel
 BuildRequires:  gtk2-devel
@@ -88,7 +87,6 @@ non-gnome-shell sessions.
 %prep
 %setup -q
 %patch0 -p1 -b .multilib
-%patch1 -p1 -b .fix-python-exec
 
 %build
 %configure --disable-static
@@ -124,10 +122,12 @@ fi
 
 %files -f caribou.lang
 %doc NEWS COPYING README
-%{_bindir}/caribou
+#%{_bindir}/caribou
 %{_bindir}/caribou-preferences
 %{_datadir}/caribou
 %{_libdir}/girepository-1.0/Caribou-1.0.typelib
+%{_libexecdir}/caribou
+%{_datadir}/dbus-1/services/org.gnome.Caribou.Daemon.service
 %{_sysconfdir}/xdg/autostart/caribou-autostart.desktop
 %{_datadir}/glib-2.0/schemas/org.gnome.caribou.gschema.xml
 %{_libdir}/libcaribou.so.0*
@@ -157,6 +157,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.4.19-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.4.19-3
 - 更新到 0.4.19
 

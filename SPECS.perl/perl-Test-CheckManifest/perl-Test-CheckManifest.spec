@@ -1,6 +1,6 @@
 Name:           perl-Test-CheckManifest
 Version:	1.29
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Check if your Manifest matches your distro
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ cd ..
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.29-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.29-2
 - 为 Magic 3.0 重建
 

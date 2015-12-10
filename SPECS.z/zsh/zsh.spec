@@ -4,7 +4,7 @@ Summary: Powerful interactive shell
 Summary(zh_CN.UTF-8): 强大的交互式 shell
 Name: zsh
 Version:	5.1.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: MIT
 URL: http://zsh.sourceforge.net/
 Group: System Environment/Shells
@@ -186,6 +186,9 @@ fi
 %doc Doc/*.html
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 5.1.1-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 5.1.1-3
 - 为 Magic 3.0 重建
 

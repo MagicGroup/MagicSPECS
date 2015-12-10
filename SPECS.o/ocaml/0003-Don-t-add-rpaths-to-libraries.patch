@@ -1,17 +1,17 @@
-From 10209519de242952ebdef608ab5f2f51a6c9e2b3 Mon Sep 17 00:00:00 2001
+From 73db2ab33221880d2399b2e98038219d798861ff Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Tue, 24 Jun 2014 10:00:15 +0100
-Subject: [PATCH 03/15] Don't add rpaths to libraries.
+Subject: [PATCH 03/19] Don't add rpaths to libraries.
 
 ---
  tools/Makefile.shared | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/Makefile.shared b/tools/Makefile.shared
-index 2517434..75a75b4 100644
+index 0b90cd3..dc48712 100644
 --- a/tools/Makefile.shared
 +++ b/tools/Makefile.shared
-@@ -112,9 +112,9 @@ ocamlmklibconfig.ml: ../config/Makefile
+@@ -113,9 +113,9 @@ ocamlmklibconfig.ml: ../config/Makefile
           echo 'let ext_dll = "$(EXT_DLL)"'; \
           echo 'let supports_shared_libraries = $(SUPPORTS_SHARED_LIBRARIES)';\
           echo 'let mkdll = "$(MKDLL)"'; \
@@ -25,5 +25,5 @@ index 2517434..75a75b4 100644
           sed -n -e 's/^#ml //p' ../config/Makefile) \
          > ocamlmklibconfig.ml
 -- 
-2.1.0
+2.4.3
 

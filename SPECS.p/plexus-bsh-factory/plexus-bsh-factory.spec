@@ -3,7 +3,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.0
-Release:        0.15.a7%{?dist}
+Release:        0.16.a7%{?dist}
 Epoch:          0
 Summary:        Plexus Bsh component factory
 License:        MIT
@@ -54,6 +54,9 @@ cp -p %{SOURCE3} .
 %doc plexus-bsh-factory-license.txt
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 0:1.0-0.16.a7
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0-0.15.a7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

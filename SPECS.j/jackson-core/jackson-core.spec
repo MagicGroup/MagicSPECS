@@ -1,6 +1,6 @@
 Name:          jackson-core
 Version:       2.4.1.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Core part of Jackson
 License:       ASL 2.0
 URL:           http://wiki.fasterxml.com/JacksonHome
@@ -65,6 +65,9 @@ sed -i 's/\r//' LICENSE NOTICE
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.4.1.1-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.4.1.1-3
 - 为 Magic 3.0 重建
 

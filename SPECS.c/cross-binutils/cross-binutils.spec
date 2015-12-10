@@ -51,7 +51,7 @@
 Summary: A GNU collection of cross-compilation binary utilities
 Name: %{cross}-binutils
 Version: 2.25.1
-Release: 3%{?dist}
+Release: 6%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -169,7 +169,7 @@ Cross-build binary image generation, manipulation and query tools. \
 %do_package metag-linux-gnu	%{build_metag}
 %do_package microblaze-linux-gnu %{build_microblaze}
 %do_package mipsel-linux-gnu	%{build_mipsel}
-%do_package mipsel64-linux-gnu	%{build_mips64el}
+%do_package mips64el-linux-gnu	%{build_mips64el}
 %do_package mn10300-linux-gnu	%{build_mn10300}
 %do_package nios2-linux-gnu	%{build_nios2}
 %do_package openrisc-linux-gnu	%{build_openrisc}	or1k-linux-gnu
@@ -676,6 +676,15 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.25.1-6
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.25.1-5
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.25.1-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.25.1-3
 - 为 Magic 3.0 重建
 

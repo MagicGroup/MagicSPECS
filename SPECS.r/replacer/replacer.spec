@@ -1,6 +1,6 @@
 Name:          replacer
 Version:       1.5.3
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Replacer Maven Mojo
 License:       MIT
 URL:           http://code.google.com/p/maven-replacer-plugin/
@@ -68,6 +68,9 @@ sed -i 's/\r//' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.5.3-4
+- 为 Magic 3.0 重建
+
 * Sat Sep 12 2015 Liu Di <liudidi@gmail.com> - 1.5.3-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:           perl-Params-Check
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.38
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Generic input parsing/checking mechanism
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:0.38-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:0.38-7
 - 为 Magic 3.0 重建
 

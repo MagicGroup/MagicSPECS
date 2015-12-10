@@ -2,7 +2,7 @@
 
 Name:          python-urwid
 Version:	1.3.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:       Console user interface library
 Summary(zh_CN.UTF-8): 控制台用户界面库
 
@@ -114,6 +114,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.1-2
 - 更新到 1.3.1
 

@@ -8,7 +8,7 @@
 Name:           cabal-install
 # part of haskell-platform
 Version:        1.18.1.0
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Command-line interface for Cabal and Hackage
 
 License:        BSD
@@ -189,6 +189,12 @@ fi
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 1.18.1.0-6
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.18.1.0-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.18.1.0-4
 - 为 Magic 3.0 重建
 

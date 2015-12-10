@@ -2,7 +2,7 @@ Summary:	Macros to process XSL formatting objects
 Summary(zh_CN.UTF-8): 处理 XSL 格式对象的宏
 Name:		passivetex
 Version:	1.25
-Release:  17%{?dist}
+Release:  18%{?dist}
 License:	Copyright only
 Group:		Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -65,6 +65,9 @@ exit 0
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.25-18
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.25-17
 - 为 Magic 3.0 重建
 

@@ -47,7 +47,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		Nuvola icons for TDE Desktop
 Summary(zh_CN.UTF-8): TDE 桌面的 Nuvola 图标
 Version:		1.0
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 
 License:		GPLv2+
 Group:			Applications/Utilities
@@ -117,6 +117,9 @@ cp -fr * %{buildroot}%{tde_datadir}/icons/nuvola/
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.0-1.opt.3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0-1.opt.2
 - 为 Magic 3.0 重建
 

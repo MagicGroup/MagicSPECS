@@ -1,7 +1,7 @@
 %define realname smb4k
 Name:		kde4-smb4k
 Version:	1.2.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	The SMB/CIFS Share Browser for KDE
 Summary(zh_CN.UTF-8): KDE下的SMB/CIFS共享浏览器
 
@@ -88,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %{kde4_includedir}/*
 %{kde4_htmldir}/en/smb4k/*
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.2.1-2
 - 更新到 1.2.1
 

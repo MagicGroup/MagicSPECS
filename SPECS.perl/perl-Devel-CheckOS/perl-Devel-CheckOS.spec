@@ -1,6 +1,6 @@
 Name:           perl-Devel-CheckOS
 Version:	1.76
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Check what OS we're running on
 License:        GPLv2 or Artistic
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf t/XX-autodetected-linux-as-Y.t
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.76-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.76-2
 - 为 Magic 3.0 重建
 

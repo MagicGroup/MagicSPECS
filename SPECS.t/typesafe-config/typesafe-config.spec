@@ -6,7 +6,7 @@
 
 Name:          typesafe-config
 Version:       1.2.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Configuration library for JVM languages
 License:       ASL 2.0
 URL:           https://github.com/typesafehub/config/
@@ -96,6 +96,9 @@ cp -rp config/target/api/* %{buildroot}%{_javadocdir}/%{name}
 %doc LICENSE-2.0.txt
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.2.0-4
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 1.2.0-3
 - 为 Magic 3.0 重建
 

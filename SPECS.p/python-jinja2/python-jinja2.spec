@@ -6,7 +6,7 @@
 
 Name:		python-jinja2
 Version:	2.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	General purpose template engine
 Summary(zh_CN.UTF-8): 通用模板引擎
 Group:		Development/Languages
@@ -159,6 +159,9 @@ popd
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.8-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.8-2
 - 为 Magic 3.0 重建
 

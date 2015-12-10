@@ -2,7 +2,7 @@
 
 Name:		geronimo-jta
 Version:	1.1.1
-Release:	19%{?dist}
+Release:	20%{?dist}
 Summary:	J2EE JTA v1.1 API
 
 Group:		Development/Libraries
@@ -63,6 +63,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.1.1-20
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.1-19
 - 为 Magic 3.0 重建
 

@@ -15,7 +15,7 @@ Summary:   Xorg X11 Intel video driver
 Summary(zh_CN.UTF-8): Xorg X11 Intel 显卡驱动
 Name:      xorg-x11-drv-intel
 Version:	2.99.917
-Release:	3%{?dist}
+Release:	4%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -162,6 +162,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/intel_*.1*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 2.99.917-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.99.917-3
 - 为 Magic 3.0 重建
 

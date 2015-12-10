@@ -1,12 +1,18 @@
 Summary: A C programming language indexing and/or cross-reference tool
 Name: ctags
 Version: 5.8
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+ or Public Domain
 Group: Development/Tools
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0: ctags-5.7-destdir.patch
 Patch1: ctags-5.7-segment-fault.patch
+Patch2: ctags-5.8-css.patch
+Patch3: ctags-5.8-ocaml-crash.patch
+Patch4: ctags-5.8-cssparse.patch
+Patch5: ctags-5.8-memmove.patch
+Patch6: ctags-5.8-format-security.patch
+Patch7: ctags-CVE-2014-7204.patch
 URL: http://ctags.sourceforge.net/
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -43,6 +49,12 @@ Note: some command line options is not compatible with GNU etags.
 %setup -q
 %patch0 -p1 -b .destdir
 %patch1 -p1 -b .crash
+%patch2 -p1 -b .css-support
+%patch3 -p1 -b .ocaml-crash
+%patch4 -p1 -b .cssparse-crash
+%patch5 -p1 -b .memmove
+%patch6 -p1 -b .fmt-sec
+%patch7 -p1 -b .CVE-2014-7204
 
 %build
 %configure
@@ -85,6 +97,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/etags.%{name}.1*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 5.8-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.8-5
 - 为 Magic 3.0 重建
 

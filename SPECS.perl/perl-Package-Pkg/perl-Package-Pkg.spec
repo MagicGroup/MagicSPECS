@@ -1,6 +1,6 @@
 Name:           perl-Package-Pkg
 Version:        0.0020
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Handy package munging utilities
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.0020-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0020-10
 - 为 Magic 3.0 重建
 

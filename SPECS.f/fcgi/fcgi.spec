@@ -1,6 +1,6 @@
 Name:           fcgi
 Version:        2.4.0
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        FastCGI development kit
 Summary(zh_CN.UTF-8): FastCGI 开发包
 
@@ -93,6 +93,9 @@ rm -f -- doc/*.3
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.4.0-22
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.4.0-21
 - 为 Magic 3.0 重建
 

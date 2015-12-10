@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Tiny
 Version:	0.056
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Small, simple, correct HTTP/1.1 client
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -79,6 +79,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.056-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.056-2
 - 为 Magic 3.0 重建
 

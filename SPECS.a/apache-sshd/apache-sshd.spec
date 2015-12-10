@@ -1,6 +1,6 @@
 Name: apache-sshd
 Version: 0.11.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Apache SSHD
 License: ASL 2.0
 URL: http://mina.apache.org/sshd-project/
@@ -86,6 +86,9 @@ sed -i "s,<groupId>tomcat,<groupId>org.apache.tomcat,;s,<artifactId>tomcat-apr,<
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.11.0-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.11.0-4
 - 为 Magic 3.0 重建
 

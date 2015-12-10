@@ -1,6 +1,6 @@
 Name:           cal10n
 Version:        0.7.7
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Compiler assisted localization library (CAL10N)
 License:        MIT
 URL:            http://cal10n.qos.ch
@@ -64,6 +64,9 @@ find . -name \*.jar -delete
 %doc LICENSE.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.7.7-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.7.7-7
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Default Fonts for Magic Linux
 Summary(zh_CN.UTF-8): Magic Linux的默认字体
 Name:          zhttf-fonts
 Version:       2.5
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       CopyRight
 Group:         User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -51,6 +51,9 @@ if [ -x /usr/bin/fc-cache ]; then
 fi
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 2.5-7
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.5-6
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           tumbler
 Version:        0.1.31
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        D-Bus service for applications to request thumbnails
 Summary(zh_CN.UTF-8): 应用程序请求缩略图的 D-Bus 服务
 
@@ -108,6 +108,9 @@ rm -rf %{buildroot}
 %{_includedir}/%{name}-1/tumbler
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.1.31-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.31-2
 - 为 Magic 3.0 重建
 

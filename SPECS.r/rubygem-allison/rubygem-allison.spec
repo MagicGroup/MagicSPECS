@@ -11,7 +11,7 @@
 Summary:	A modern, pretty RDoc template
 Name:		rubygem-%{gem_name}
 Version:	2.0.3
-Release:	15%{?dist}
+Release:	16%{?dist}
 Group:		Development/Languages
 License:	AFL
 URL:		http://github.com/fauna/allison/tree/master
@@ -86,6 +86,9 @@ rm -rf %{buildroot}
 %{gem_docdir}/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.3-16
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0.3-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		dotconf
 Version:	1.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Libraries to parse configuration files
 Summary(zh_CN.UTF-8): 解析配置文件的库
 
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/dotconf/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3-5
 - 为 Magic 3.0 重建
 

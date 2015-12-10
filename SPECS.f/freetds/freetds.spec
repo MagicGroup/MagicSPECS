@@ -10,7 +10,7 @@ Name: freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Summary(zh_CN.UTF-8): TDS 协议的实现
 Version: 0.91
-Release: 13.git%{git_commit}%{?dist}
+Release: 14.git%{git_commit}%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+ and GPLv2+
@@ -159,6 +159,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/freetds/* 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.91-14.git0a42888
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.91-13.git0a42888
 - 为 Magic 3.0 重建
 

@@ -7,7 +7,7 @@ Summary: Support for using OpenSSL in python scripts
 Summary(zh_CN.UTF-8): 在 python 脚本中使用 OpenSSL 的支持
 Name: m2crypto
 Version: 0.21.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 Source0: http://pypi.python.org/packages/source/M/M2Crypto/M2Crypto-%{version}.tar.gz
 # https://bugzilla.osafoundation.org/show_bug.cgi?id=2341
 Patch0: m2crypto-0.21.1-timeouts.patch
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/M2Crypto-*.egg-info
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.21.1-10
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.21.1-9
 - 为 Magic 3.0 重建
 

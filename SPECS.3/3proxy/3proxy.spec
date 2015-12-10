@@ -3,7 +3,7 @@
 
 Name:		3proxy
 Version:		0.6.1
-Release:		17%{?dist}
+Release:		18%{?dist}
 
 Summary:		Tiny but very powerful proxy
 Summary(zh_CN.UTF-8):	一个小而功能强大的代理服务软件
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 %{_unitdir}/%{name}.service
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.6.1-18
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.1-17
 - 为 Magic 3.0 重建
 

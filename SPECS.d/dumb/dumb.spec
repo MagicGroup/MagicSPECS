@@ -1,6 +1,6 @@
 Name:           dumb
 Version:        0.9.3
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        IT, XM, S3M and MOD player library
 Summary(zh_CN.UTF-8): IT, XM, S3M 和 MOD 播放器库
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9.3-20
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9.3-19
 - 为 Magic 3.0 重建
 

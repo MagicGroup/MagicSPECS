@@ -1,6 +1,6 @@
 Name:           gtk-sharp2
 Version:        2.12.11
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        GTK+ and GNOME bindings for Mono
 
 Group:          System Environment/Libraries
@@ -106,6 +106,9 @@ magic_rpm_clean.sh
 %{_prefix}/lib/monodoc/sources/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.12.11-10
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.12.11-9
 - 为 Magic 3.0 重建
 

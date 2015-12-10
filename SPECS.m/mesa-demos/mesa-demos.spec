@@ -8,7 +8,7 @@
 Summary: Mesa demos
 Name: mesa-demos
 Version: 8.1.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -85,6 +85,9 @@ install -m 0755 src/xdemos/glxinfo %{buildroot}%{_bindir}/glxinfo%{?__isa_bits}
 %{_datadir}/man/man1/xdriinfo.1*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 8.1.0-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 8.1.0-5
 - 为 Magic 3.0 重建
 

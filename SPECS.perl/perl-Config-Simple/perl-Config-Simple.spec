@@ -1,6 +1,6 @@
 Name:           perl-Config-Simple
 Version:        4.59
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Simple configuration file class 
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.59-18
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.59-17
 - 为 Magic 3.0 重建
 

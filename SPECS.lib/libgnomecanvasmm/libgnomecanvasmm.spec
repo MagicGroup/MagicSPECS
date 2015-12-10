@@ -1,6 +1,6 @@
 Name:           libgnomecanvasmm26
 Version:        2.26.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 
 Summary:        C++ interface for Gnome libs (a GUI library for X)
 Summary(zh_CN.UTF-8): Gnome 库的 C++ 接口
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.26.0-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.26.0-7
 - 为 Magic 3.0 重建
 

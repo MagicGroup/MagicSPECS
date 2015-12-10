@@ -2,7 +2,7 @@ Summary:	Archiver for .arj files
 Summary(zh_CN):	.arj 文件的归档
 Name:		arj
 Version:	3.10.22
-Release:	12%{?dist}
+Release:	13%{?dist}
 License:	GPL+
 Group:		Applications/Archiving
 Group(zh_CN):	应用程序/归档
@@ -11,9 +11,20 @@ Source0:	http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 # unarj.* from Debian
 Source1:	unarj.sh
 Source2:	unarj.1
-Patch0:		http://ftp.debian.org/debian/pool/main/a/%{name}/%{name}_%{version}-6.diff.gz
-Patch1:		arj-3.10.22-missing-protos.patch
-Patch2:		arj-3.10.22-custom-printf.patch
+Patch0:		arj-3.10.22-arches_align.patch
+Patch1:		arj-3.10.22-no_remove_static_const.patch
+Patch2:		arj-3.10.22-64_bit_clean.patch
+Patch3:		arj-3.10.22-parallel_build.patch
+Patch4:		arj-3.10.22-use_safe_strcpy.patch
+Patch5:		arj-3.10.22-doc_refer_robert_k_jung.patch
+Patch6:		arj-3.10.22-security_format.patch
+Patch7:		arj-3.10.22-missing-protos.patch
+Patch8:		arj-3.10.22-custom-printf.patch
+# Filed into upstream bugtracker as https://sourceforge.net/tracker/?func=detail&aid=2853421&group_id=49820&atid=457566
+Patch9:		arj-3.10.22-quotes.patch
+Patch10:        arj-3.10.22-security-afl.patch
+Patch11:        arj-3.10.22-security-traversal-dir.patch
+Patch12:        arj-3.10.22-security-traversal-symlink.patch
 BuildRequires:	autoconf
 Provides:	unarj = %{version}-%{release}
 Obsoletes:	unarj < 3
@@ -33,10 +44,16 @@ Software, Inc.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-
-for i in debian/patches/00*.patch; do
-  patch -p1 < $i
-done
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 pushd gnu
   autoconf
@@ -76,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*arj*1.*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.10.22-13
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.10.22-12
 - 为 Magic 3.0 重建
 

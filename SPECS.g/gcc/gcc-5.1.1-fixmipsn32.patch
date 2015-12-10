@@ -1,0 +1,52 @@
+diff -ur gcc-5.1.1-20150618.orig/gcc/config/mips/mips.h gcc-5.1.1-20150618/gcc/config/mips/mips.h
+--- gcc-5.1.1-20150618.orig/gcc/config/mips/mips.h	2015-11-08 21:25:23.568780725 +0800
++++ gcc-5.1.1-20150618/gcc/config/mips/mips.h	2015-11-09 11:08:26.167403771 +0800
+@@ -674,8 +674,6 @@
+ #define MULTILIB_ABI_DEFAULT "mabi=32"
+ #elif MIPS_ABI_DEFAULT == ABI_O64
+ #define MULTILIB_ABI_DEFAULT "mabi=o64"
+-#elif MIPS_ABI_DEFAULT == ABI_N32
+-#define MULTILIB_ABI_DEFAULT "mabi=n32"
+ #elif MIPS_ABI_DEFAULT == ABI_64
+ #define MULTILIB_ABI_DEFAULT "mabi=64"
+ #elif MIPS_ABI_DEFAULT == ABI_EABI
+@@ -778,8 +776,8 @@
+ #define OPT_ARCH64 "mabi=32|mgp32:;"
+ #define OPT_ARCH32 "mabi=32|mgp32"
+ #else
+-#define OPT_ARCH64 "mabi=o64|mabi=n32|mabi=64|mgp64"
+-#define OPT_ARCH32 "mabi=o64|mabi=n32|mabi=64|mgp64:;"
++#define OPT_ARCH64 "mabi=o64|mabi=64|mgp64"
++#define OPT_ARCH32 "mabi=o64|mabi=64|mgp64:;"
+ #endif
+ 
+ /* Support for a compile-time default CPU, et cetera.  The rules are:
+diff -ur gcc-5.1.1-20150618.orig/gcc/config/mips/t-linux64 gcc-5.1.1-20150618/gcc/config/mips/t-linux64
+--- gcc-5.1.1-20150618.orig/gcc/config/mips/t-linux64	2015-11-08 21:25:23.549249472 +0800
++++ gcc-5.1.1-20150618/gcc/config/mips/t-linux64	2015-11-09 12:26:50.722927653 +0800
+@@ -16,11 +16,10 @@
+ # along with GCC; see the file COPYING3.  If not see
+ # <http://www.gnu.org/licenses/>.
+ 
+-MULTILIB_OPTIONS = mabi=n32/mabi=32/mabi=64
+-MULTILIB_DIRNAMES = n32 32 64
++MULTILIB_OPTIONS = mabi=32/mabi=64
++MULTILIB_DIRNAMES = 32 64
+ MIPS_EL = $(if $(filter %el, $(firstword $(subst -, ,$(target)))),el)
+ MIPS_SOFT = $(if $(strip $(filter MASK_SOFT_FLOAT_ABI, $(target_cpu_default)) $(filter soft, $(with_float))),soft)
+ MULTILIB_OSDIRNAMES = \
+-	../lib32$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
+ 	../lib$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
+ 	../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
+diff -ur gcc-5.1.1-20150618.orig/gcc/config.gcc gcc-5.1.1-20150618/gcc/config.gcc
+--- gcc-5.1.1-20150618.orig/gcc/config.gcc	2015-11-08 21:23:21.162508964 +0800
++++ gcc-5.1.1-20150618/gcc/config.gcc	2015-11-09 11:04:21.647829050 +0800
+@@ -2033,7 +2033,7 @@
+ 			enable_mips_multilibs="yes"
+ 			;;
+ 		mips64*-*-linux* | mipsisa64*-*-linux*)
+-			default_mips_abi=n32
++			default_mips_abi=64
+ 			enable_mips_multilibs="yes"
+ 			;;
+ 	esac

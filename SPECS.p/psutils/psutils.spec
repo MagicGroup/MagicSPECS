@@ -2,7 +2,7 @@ Summary: PostScript Utilities
 Summary(zh_CN.UTF-8): PostScript 工具
 Name:    psutils
 Version: 1.23
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: psutils
 
 # We can't follow https://fedoraproject.org/wiki/Packaging:SourceURL#Github
@@ -82,6 +82,9 @@ Various scripts from the psutils distribution that require perl.
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.23-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.23-3
 - 为 Magic 3.0 重建
 

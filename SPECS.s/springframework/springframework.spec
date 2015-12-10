@@ -3,7 +3,7 @@
 
 Name:          springframework
 Version:       3.2.6
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Spring Java Application Framework
 Epoch:         0
 License:       ASL 2.0
@@ -462,6 +462,9 @@ cp -p src/dist/* .
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0:3.2.6-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 0:3.2.6-4
 - 为 Magic 3.0 重建
 

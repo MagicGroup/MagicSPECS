@@ -1,6 +1,6 @@
 Name:           lazarus
 Version:	1.2.2
-Release:        0
+Release:        1
 Summary:        Lazarus Component Library and IDE
 Summary(zh_CN.UTF-8): Lazarus 组件库和 IDE
 
@@ -102,6 +102,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_mandir}/*/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.2.2-1
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Liu Di <liudidi@gmail.com> - 1.2.2-0
 - 更新到 1.2.2
 

@@ -1,6 +1,6 @@
 Name:    ilmbase
 Version:	2.2.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Abstraction/convenience libraries
 
 License: BSD
@@ -91,6 +91,9 @@ make check
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.2.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.2.0-2
 - 为 Magic 3.0 重建
 

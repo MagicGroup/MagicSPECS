@@ -8,7 +8,7 @@ Summary: A printer administration tool
 Summary(zh_CN.UTF-8): 打印机管理工具
 Name: system-config-printer
 Version: 1.5.7
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv2+
 URL: http://cyberelk.net/tim/software/system-config-printer/
 Group: System Environment/Base
@@ -212,6 +212,9 @@ magic_rpm_clean.sh
 exit 0
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.5.7-8
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.5.7-7
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Summary: A password-checking library
 Summary(zh_CN.UTF-8): 一个密码检查库
 Name: cracklib
 Version: 2.9.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Source0: http://prdownloads.sourceforge.net/cracklib/cracklib-%{version}.tar.gz
@@ -258,6 +258,9 @@ EOF
 %{_libdir}/python*/site-packages/*.py*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.9.1-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.9.1-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name:           apache-%{short_name}
 Version:        3.2.1
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Provides new interfaces, implementations and utilities for Java Collections
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -153,6 +153,9 @@ ln -s %{name}-testframework-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}-tes
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.2.1-21
+- 为 Magic 3.0 重建
+
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 3.2.1-20
 - Use Requires: java-headless rebuild (#1067528)
 

@@ -1,6 +1,6 @@
 Name:           bibutils
 Version:        5.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Bibliography conversion tools
 License:        GPLv2
 URL:            http://sourceforge.net/p/bibutils/home/Bibutils/
@@ -83,6 +83,9 @@ done
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 5.0-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.0-5
 - 为 Magic 3.0 重建
 

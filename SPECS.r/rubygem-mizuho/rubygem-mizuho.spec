@@ -6,7 +6,7 @@
 Summary:       Mizuho documentation formatting tool
 Name:          rubygem-%{gem_name}
 Version:       0.9.20
-Release:       7%{?dist}
+Release:       8%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           https://github.com/FooBarWidget/mizuho
@@ -101,6 +101,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.9.20-8
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.9.20-7
 - 为 Magic 3.0 重建
 

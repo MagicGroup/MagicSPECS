@@ -1,6 +1,6 @@
 Name:           perl-HTML-StripScripts
 Version:        1.05
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Strip scripting constructs out of HTML
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.05-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.05-10
 - 为 Magic 3.0 重建
 

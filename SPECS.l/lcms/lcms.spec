@@ -2,7 +2,7 @@
 
 Name:           lcms
 Version:        1.19
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Color Management System
 Summary(zh_CN.UTF-8): 颜色管理系统
 
@@ -168,6 +168,9 @@ rm -rf ${RPM_BUILD_ROOT}
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.19-10
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.19-9
 - 为 Magic 3.0 重建
 

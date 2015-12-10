@@ -1,6 +1,6 @@
 Name:           fluid-soundfont
 Version:        3.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Pro-quality GM/GS soundfont
 Group:          Applications/Multimedia
 License:        MIT
@@ -145,6 +145,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.1-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.1-8
 - 为 Magic 3.0 重建
 

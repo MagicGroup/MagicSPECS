@@ -2,7 +2,7 @@ Summary: An XML parser library
 Summary(zh_CN.UTF-8): XML 解析库
 Name: expat
 Version: 2.1.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Source: http://downloads.sourceforge.net/expat/expat-%{version}.tar.gz
@@ -102,6 +102,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/lib*.a
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1.0-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1.0-5
 - 为 Magic 3.0 重建
 

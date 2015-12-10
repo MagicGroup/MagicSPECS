@@ -4,7 +4,7 @@ Summary:	The Vorbis General Audio Compression Codec
 Summary(zh_CN.UTF-8): Vorbis 通用音频压缩编码库
 Name:		libvorbis
 Version: 1.3.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch:		1
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -102,6 +102,9 @@ make check
 %postun -p /sbin/ldconfig
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1:1.3.5-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.3.5-2
 - 更新到 1.3.5
 

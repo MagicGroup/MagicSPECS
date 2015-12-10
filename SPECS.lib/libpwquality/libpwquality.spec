@@ -2,7 +2,7 @@ Summary: A library for password generation and password quality checking
 Summary(zh_CN.UTF-8): 密码生成和密码质量校验库
 Name: libpwquality
 Version: 1.2.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 # The package is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 License: BSD or GPLv2+
@@ -126,6 +126,9 @@ magic_rpm_clean.sh
 %{python_sitearch}/pwquality.so
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2.3-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.3-4
 - 为 Magic 3.0 重建
 

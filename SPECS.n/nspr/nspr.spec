@@ -2,7 +2,7 @@ Summary:        Netscape Portable Runtime
 Summary(zh_CN.UTF-8): Netscape 可移植运行库
 Name:           nspr
 Version:        4.10.8
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        MPLv2.0
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
@@ -155,6 +155,9 @@ magic_rpm_clean.sh
 %{_mandir}/man*/*
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 4.10.8-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 26 2015 Liu Di <liudidi@gmail.com> - 4.10.8-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:           python-iniparse
 Version:        0.4
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Python Module for Accessing and Modifying Configuration Data in INI files
 Summary(zh_CN.UTF-8): 访问和修改 INI 文件中的配置数据的 Python 模块
 Group:          Development/Libraries
@@ -132,6 +132,9 @@ popd
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.4-19
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.4-18
 - 为 Magic 3.0 重建
 

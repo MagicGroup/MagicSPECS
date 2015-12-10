@@ -2,7 +2,7 @@ Summary: Bluetooth HCI protocol analyser
 Summary(zh_CN.UTF-8): 蓝牙 HCI 协议分析器
 Name: bluez-hcidump
 Version: 2.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/hcidump.8.gz
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.5-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.5-4
 - 为 Magic 3.0 重建
 

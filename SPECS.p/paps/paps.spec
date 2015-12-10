@@ -1,6 +1,6 @@
 Name:           paps
 Version:        0.6.8
-Release:        34%{?dist}
+Release:        35%{?dist}
 
 License:        LGPLv2+
 URL:            http://paps.sourceforge.net/
@@ -145,6 +145,9 @@ magic_rpm_clean.sh
 %{_libdir}/libpaps.so
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.6.8-35
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.6.8-34
 - 为 Magic 3.0 重建
 

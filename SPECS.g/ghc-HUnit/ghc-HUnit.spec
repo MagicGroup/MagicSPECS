@@ -7,7 +7,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        1.2.5.2
-Release:        36%{?dist}
+Release:        37%{?dist}
 Summary:        Unit testing framework for Haskell
 
 License:        BSD
@@ -84,6 +84,9 @@ mv HUnit.cabal.orig HUnit.cabal
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.2.5.2-37
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.5.2-36
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary: Ruby OLE library
 Name: rubygem-%{gem_name}
 Version: 1.2.11.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://code.google.com/p/ruby-ole
@@ -84,6 +84,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.11.7-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.11.7-4
 - 为 Magic 3.0 重建
 

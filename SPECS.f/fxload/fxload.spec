@@ -1,6 +1,6 @@
 Name: fxload
 Version: 2002_04_11
-Release: 13%{?dist}
+Release: 14%{?dist}
 Summary: A helper program to download firmware into FX and FX2 EZ-USB devices
 Summary(zh_CN.UTF-8): 下载固件到 FX 和 FX2 EZ-USB 设备的帮助程序
 
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2002_04_11-14
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2002_04_11-13
 - 为 Magic 3.0 重建
 

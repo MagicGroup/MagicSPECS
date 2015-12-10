@@ -48,7 +48,7 @@ done
 
 
 Version: %{real_version}
-Release:	2%{?dist}
+Release:	4%{?dist}
 %define ver %version
 
 Source0: http://download.qt.io/official_releases/qt/4.8/%{version}/qt-everywhere-opensource-src-%{version}.tar.gz
@@ -110,7 +110,7 @@ Patch102: qt-everywhere-opensource-src-4.8.5-qgtkstyle_disable_gtk_theme_check.p
 Patch103: QTBUG-15319-fix-shortcuts-with-secondary-Xkb-layout.patch
 # workaround for MOC issues with Boost headers (#756395)
 # https://bugreports.qt-project.org/browse/QTBUG-22829
-Patch113: qt-everywhere-opensource-src-4.8.5-QTBUG-22829.patch
+Patch113: qt-everywhere-opensource-src-4.8.6-QTBUG-22829.patch
 # https://codereview.qt-project.org/#change,55874
 # REVERT, causes regressions http://bugzilla.redhat.com/968794
 #Patch155: qt-everywhere-opensource-src-4.8-QTBUG-27809.patch
@@ -2079,6 +2079,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 4.8.7-4
+- 为 Magic 3.0 重建
+
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.8.7-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.8.7-2
 - 为 Magic 3.0 重建
 

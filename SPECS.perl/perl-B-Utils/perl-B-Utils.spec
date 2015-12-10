@@ -1,6 +1,6 @@
 Name:           perl-B-Utils
 Version:	0.27
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Helper functions for op tree manipulation
 Summary(zh_CN.UTF-8): op 树操作的辅助函数
 License:        GPL+ or Artistic
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.27-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.27-2
 - 为 Magic 3.0 重建
 

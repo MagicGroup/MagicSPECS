@@ -6,7 +6,7 @@
 
 Name:           monodevelop
 Version: 5.9.6.23
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        A full-featured IDE for Mono and Gtk#
 Summary(zh_CN.UTF-8): Mono 和 Gtk# 用的完整功能的 IDE
 
@@ -129,6 +129,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/monodevelop*.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 5.9.6.23-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.9.6.23-2
 - 更新到 5.9.6.23
 

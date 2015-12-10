@@ -4,7 +4,7 @@
 
 Name:           ocaml-bin-prot
 Version:        2.0.9
-Release:        11%{?dist}
+Release:        13%{?dist}
 Summary:        Read and write OCaml values in a type-safe binary protocol
 Summary(zh_CN.UTF-8): 使用类型安全的二进制协议读取和写入 OCaml 值
 License:        LGPLv2+ with exceptions
@@ -60,6 +60,15 @@ developing applications that use %{name}.
 %patch1 -p1
 %patch2 -p1
 
+# Use Magic CFLAGS, and define ARCH_INT64_TYPE
+expr='                "-DARCH_INT64_TYPE";'
+for flag in %{optflags}; do
+  expr+="\\$\n"'                '"\"$flag\";"
+done
+sed -i "/-pipe/,/-Wno-long-long/c\\$expr" myocamlbuild.ml
+sed -i 's/;\$$/;/' myocamlbuild.ml
+
+
 %build
 ocaml setup.ml -configure --prefix %{_prefix} \
       --libdir %{_libdir} \
@@ -110,6 +119,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.0.9-13
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.0.9-12
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.0.9-11
 - 为 Magic 3.0 重建
 

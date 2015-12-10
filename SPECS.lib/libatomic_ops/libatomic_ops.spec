@@ -1,7 +1,7 @@
 Name:    libatomic_ops
 Summary: Atomic memory update operations
 Version: 7.4.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # libatomic_ops MIT, libatomic_ops_gpl GPLv2
 License: GPLv2 and MIT
@@ -98,6 +98,9 @@ make check %{?arch_ignore}
 
 
 %changelog
+* Sat Nov 21 2015 Liu Di <liudidi@gmail.com> - 7.4.2-7
+- 为 Magic 3.0 重建
+
 * Tue Jul  7 2015 Peter Robinson <pbrobinson@fedoraproject.org> 7.4.2-6
 - Don't fail check on aarch64
 

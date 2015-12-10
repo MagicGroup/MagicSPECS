@@ -1,6 +1,6 @@
 Name:           perl-Perl-Metrics-Simple
 Version:	0.18
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Count packages, subs, lines, etc. of many files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ sed -i '1 s|^#!.*|#!%{__perl}|' bin/countperl
 %{_mandir}/man1/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.18-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.18-2
 - 为 Magic 3.0 重建
 

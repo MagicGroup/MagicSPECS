@@ -1,6 +1,6 @@
 Name:       perl-CPANPLUS-Shell-Default-Plugins-Changes 
 Version:    0.02 
-Release:    15%{?dist}
+Release:    16%{?dist}
 # lib/CPANPLUS/Shell/Default/Plugins/Changes.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.02-16
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.02-15
 - 为 Magic 3.0 重建
 

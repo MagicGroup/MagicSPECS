@@ -2,7 +2,7 @@
 
 Name:           lxpolkit
 Version:        0.1.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Simple PolicyKit authentication agent
 Summary(zh_CN.UTF-8): 简单的 PolicyKit 认证代理
 
@@ -68,6 +68,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.1.0-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.0-6
 - 为 Magic 3.0 重建
 

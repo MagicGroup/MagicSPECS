@@ -1,6 +1,6 @@
 Name:           gsm
 Version:        1.0.13
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Shared libraries for GSM speech compressor
 Summary(zh_CN.UTF-8): GSM 语音压缩用的共享库
 
@@ -136,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.13-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.13-7
 - 为 Magic 3.0 重建
 

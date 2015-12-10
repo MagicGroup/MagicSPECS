@@ -5,7 +5,7 @@
 
 Name: gtkhtml3
 Version: 4.5.91
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Summary: GtkHTML library
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.5.91-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.5.91-3
 - 更新到 4.10.0
 

@@ -1,6 +1,6 @@
 Name:           connect-proxy
 Version:        1.100
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        SSH Proxy command helper
 Summary(zh_CN.UTF-8): SSH 代理辅助命令
 
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.100-9
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.100-8
 - 为 Magic 3.0 重建
 

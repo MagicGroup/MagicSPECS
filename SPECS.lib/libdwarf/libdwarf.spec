@@ -4,7 +4,7 @@
 
 Name:          libdwarf
 Version: 20150915
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Library to access the DWARF Debugging file format 
 Summary(zh_CN.UTF-8): 访问 DWARF 调试文件格式的库
 Group:         Development/Libraries
@@ -108,6 +108,9 @@ magic_rpm_clean.sh
 %{_bindir}/dwarfdump
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 20150915-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 20150915-2
 - 更新到 20150915
 

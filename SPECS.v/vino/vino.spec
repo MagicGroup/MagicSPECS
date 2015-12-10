@@ -6,7 +6,7 @@ Summary: A remote desktop system for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的远程桌面系统
 Name: vino
 Version:	3.18.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/vino
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -90,6 +90,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 #%{_datadir}/GConf/gsettings/org.gnome.Vino.convert
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
 - 为 Magic 3.0 重建
 

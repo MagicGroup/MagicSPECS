@@ -1,6 +1,6 @@
 Name:           txt2man
 Version:        1.5.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Convert flat ASCII text to man page format
 Summary(zh_CN.UTF-8): 转换 ASCII 文本到手册页格式
 
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.5.6-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.5.6-8
 - 为 Magic 3.0 重建
 

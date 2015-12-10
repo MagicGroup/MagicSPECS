@@ -1,6 +1,6 @@
 Name:           perl-Text-Soundex
 Version:        3.04
-Release:        295%{?dist}
+Release:        296%{?dist}
 Summary:        Implementation of the soundex algorithm
 License:        Copyright only
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.04-296
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.04-295
 - 为 Magic 3.0 重建
 

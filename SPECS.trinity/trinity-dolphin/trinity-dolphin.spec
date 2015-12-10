@@ -37,7 +37,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		0.9.2
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:		File manager for TDE focusing on usability
 Summary(zh_CN.UTF-8): TDE 下的文件管理器
 Group:			Applications/Utilities
@@ -162,6 +162,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.9.2-1.2
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.9.2-1.1
 - 为 Magic 3.0 重建
 

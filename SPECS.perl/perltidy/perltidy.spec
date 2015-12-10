@@ -1,6 +1,6 @@
 Name:		perltidy
 Version:	20150815
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Tool for indenting and re-formatting Perl scripts
 License:	GPLv2+
 URL:		http://perltidy.sourceforge.net/
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man3/Perl::Tidy.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 20150815-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 20150815-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: MagicLinux BugPatch Package
 Summary(zh_CN.UTF-8): MagicLinux Java 配置包
 Name: magic-java-config
 Version: 3.0
-Release: 4%{?dist}
+Release: 8%{?dist}
 Source0: %{name}.tar.gz
 License: GPL
 Group: Development/Libraries
@@ -39,6 +39,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 20 2015 Liu Di <liudidi@gmail.com> - 3.0-8
+- 为 Magic 3.0 重建
+
+* Fri Nov 20 2015 Liu Di <liudidi@gmail.com> - 3.0-7
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.0-6
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.0-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.0-4
 - 为 Magic 3.0 重建
 

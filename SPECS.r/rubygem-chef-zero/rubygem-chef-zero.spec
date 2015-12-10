@@ -4,7 +4,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Self-contained in-memory Chef server for testing and solo setup purposes
 Group: Development/Languages
 License: ASL 2.0
@@ -88,6 +88,9 @@ popd
 %doc %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.2-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Simple
 Version:        0.06
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        Encrypt stuff simply 
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-30
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-29
 - 为 Magic 3.0 重建
 

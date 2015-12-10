@@ -1,6 +1,6 @@
 Name:       perl-HTML-TagCloud 
 Version:	0.38
-Release:	2%{?dist}
+Release:	3%{?dist}
 # lib/HTML/TagCloud.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -53,6 +53,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.38-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.38-2
 - 为 Magic 3.0 重建
 

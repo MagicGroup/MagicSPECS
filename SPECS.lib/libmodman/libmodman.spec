@@ -1,6 +1,6 @@
 Name:           libmodman
 Version:        2.0.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A simple library for managing C++ modules (plug-ins)
 Summary(zh_CN.UTF-8): 管理 C++ 模块的简单库
 
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/cmake/Modules/Findlibmodman.cmake
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.0.1-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.0.1-6
 - 为 Magic 3.0 重建
 

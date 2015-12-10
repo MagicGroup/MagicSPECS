@@ -1,6 +1,6 @@
 Name:           soxr
 Version:	0.1.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        The SoX Resampler library
 Summary(zh_CN.UTF-8): SoX 重采样库
 
@@ -70,6 +70,9 @@ make test
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.2-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.2-2
 - 为 Magic 3.0 重建
 

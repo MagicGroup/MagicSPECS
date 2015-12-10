@@ -1,6 +1,6 @@
 Name:		libgxim
 Version:	0.5.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	LGPLv2+
 URL:		http://tagoh.bitbucket.org/libgxim/
 BuildRequires:	intltool gettext ruby
@@ -80,6 +80,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libgxim
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.5.0-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.5.0-4
 - 为 Magic 3.0 重建
 

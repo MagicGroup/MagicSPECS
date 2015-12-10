@@ -1,6 +1,6 @@
 Name:          sshj
 Version:       0.8.1
-Release:       10%{?dist}
+Release:       11%{?dist}
 Summary:       SSHv2 library for Java
 License:       ASL 2.0
 URL:           http://schmizz.net/sshj/
@@ -71,6 +71,9 @@ sed -i -e 's/org.junit.internal.matchers/org.hamcrest.core/' src/test/java/net/s
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.8.1-11
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.1-10
 - 为 Magic 3.0 重建
 

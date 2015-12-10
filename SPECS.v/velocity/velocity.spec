@@ -30,7 +30,7 @@
 
 Name:           velocity
 Version:        1.7
-Release:        15%{?dist}
+Release:        16%{?dist}
 Epoch:          0
 Summary:        Java-based template engine
 License:        ASL 2.0
@@ -217,6 +217,9 @@ install -pD -T -m 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 %{_datadir}/%{name}
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0:1.7-16
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0:1.7-15
 - 为 Magic 3.0 重建
 

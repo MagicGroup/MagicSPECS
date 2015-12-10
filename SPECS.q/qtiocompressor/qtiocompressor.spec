@@ -5,7 +5,7 @@ Summary:	QIODevice that compresses data streams
 Summary(zh_CN.UTF-8): 可以压缩数据流的 QIODevice
 Name:		qtiocompressor
 Version:	2.3.1
-Release:	7%{?dist}
+Release:	8%{?dist}
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	GPLv3 or LGPLv2 with exceptions
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_qt4_datadir}/mkspecs/features/%{name}.prf
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.3.1-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.1-7
 - 为 Magic 3.0 重建
 

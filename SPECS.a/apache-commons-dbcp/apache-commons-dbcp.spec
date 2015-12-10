@@ -3,7 +3,7 @@
 
 Name:             apache-%{short_name}
 Version:          1.4
-Release:          17%{?dist}
+Release:          18%{?dist}
 Summary:          Apache Commons DataBase Pooling Package
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -73,6 +73,9 @@ iconv -f iso8859-1 -t utf-8 RELEASE-NOTES.txt > RELEASE-NOTES.txt.conv && mv -f 
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.4-18
+- 为 Magic 3.0 重建
+
 * Tue Aug 12 2014 Liu Di <liudidi@gmail.com> - 1.4-17
 - 为 Magic 3.0 重建
 

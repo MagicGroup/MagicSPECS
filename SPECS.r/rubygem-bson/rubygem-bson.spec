@@ -4,7 +4,7 @@
 Summary: Ruby implementation of BSON
 Name: rubygem-%{gem_name}
 Version: 1.10.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: ASL 2.0 
 URL: http://www.mongodb.org
@@ -85,6 +85,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.10.2-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.10.2-4
 - 为 Magic 3.0 重建
 

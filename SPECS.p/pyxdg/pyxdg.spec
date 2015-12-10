@@ -2,7 +2,7 @@
 
 Name:           pyxdg
 Version:        0.25
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Python library to access freedesktop.org standards
 Summary(zh_CN.UTF-8): 访问 freedesktop.org 标准的 Python 库
 Group:          Development/Libraries
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif #with_python3
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.25-9
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.25-8
 - 为 Magic 3.0 重建
 

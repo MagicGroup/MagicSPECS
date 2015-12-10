@@ -7,7 +7,7 @@
 Summary: dmraid (Device-mapper RAID tool and library)
 Name: dmraid
 Version: 1.0.0.rc16
-Release: 20%{?dist}
+Release: 21%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 URL: http://people.redhat.com/heinzm/sw/dmraid
@@ -40,6 +40,7 @@ Patch9: bz635995-data_corruption_during_activation_volume_marked_for_rebuild.pat
 Patch11: bz626417_19-enabling_registration_degraded_volume.patch
 Patch12: bz626417_20-cleanup_some_compilation_warning.patch
 Patch13: bz626417_21-add_option_that_postpones_any_metadata_updates.patch
+Patch14: dmraid-fix-build-to-honour-cflags-var.patch
 
 %description
 DMRAID supports RAID device discovery, RAID set activation, creation,
@@ -94,6 +95,7 @@ Device failure reporting has to be activated manually by activating the
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %build
 %define _libdir /%{_lib}
@@ -182,6 +184,9 @@ rm -rf $RPM_BUILD_ROOT
 %ghost /var/cache/logwatch/dmeventd/syslogpattern.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0.0.rc16-21
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0.0.rc16-20
 - 为 Magic 3.0 重建
 

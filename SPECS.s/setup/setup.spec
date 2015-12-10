@@ -2,7 +2,7 @@ Summary: A set of system configuration and setup files
 Summary(zh_CN.UTF-8): 系统设置文件的集合
 Name: setup
 Version: 2.9.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Public Domain
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -97,6 +97,9 @@ end
 %ghost %verify(not md5 size mtime) %config(noreplace,missingok) /etc/fstab
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.9.8-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.9.8-4
 - 为 Magic 3.0 重建
 

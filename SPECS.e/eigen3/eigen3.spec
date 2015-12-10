@@ -4,11 +4,11 @@
 # debuginfo package for the empty main package.
 %global debug_package %{nil}
 
-%global commit 6b38706d90a9
+%global commit c58038c56923
 
 Name:           eigen3
 Version:	3.2.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A lightweight C++ template library for vector and matrix math
 Summary(zh_CN.UTF-8): 一个处理向量和矩阵数学的轻量级 C++ 模板库
 
@@ -31,7 +31,7 @@ BuildRequires:  sparsehash-devel
 BuildRequires:  suitesparse-devel
 BuildRequires:  gcc-gfortran
 BuildRequires:  SuperLU-devel
-BuildRequires:  qt-devel
+BuildRequires:  qt4-devel
 
 BuildRequires:  cmake
 BuildRequires:  doxygen
@@ -105,6 +105,9 @@ make -C %{_target_platform} %{?_smp_mflags} test ARGS="-V" || exit 0
 %doc %{_target_platform}/doc/html
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.2.6-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.2.6-4
 - 更新到 3.2.6
 

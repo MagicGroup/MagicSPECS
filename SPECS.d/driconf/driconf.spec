@@ -2,7 +2,7 @@
 
 Name:           driconf
 Version:        0.9.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        A configuration applet for the Direct Rendering Infrastructure
 Summary(zh_CN.UTF-8): 直接渲染基础的配置工具
 
@@ -101,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/*.desktop
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9.1-14
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9.1-13
 - 为 Magic 3.0 重建
 

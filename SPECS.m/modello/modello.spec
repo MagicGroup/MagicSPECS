@@ -1,6 +1,6 @@
 Name:           modello
 Version:        1.8.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          0
 Summary:        Modello Data Model toolkit
 Summary(zh_CN.UTF-8): 模型数据模型工具包
@@ -86,6 +86,9 @@ sed -i s/maven-project/maven-core/ modello-maven-plugin/pom.xml
 %doc LICENSE
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0:1.8.1-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0:1.8.1-7
 - 为 Magic 3.0 重建
 

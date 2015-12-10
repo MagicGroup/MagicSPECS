@@ -2,7 +2,7 @@ Summary: A security tool which acts as a wrapper for TCP daemons
 Summary(zh_CN.UTF-8): 工作起来如同 TCP 守护进程的安全工具
 Name: tcp_wrappers
 Version: 7.6
-Release: 64%{?dist}
+Release: 65%{?dist}
 
 %define LIB_MAJOR 0
 %define LIB_MINOR 7
@@ -169,6 +169,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man3/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 7.6-65
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 7.6-64
 - 为 Magic 3.0 重建
 

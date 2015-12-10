@@ -1,7 +1,7 @@
 Summary:	Perl module for DSA signatures and key generation
 Name:		perl-Crypt-DSA
 Version:	1.17
-Release:	19%{?dist}
+Release:	20%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-DSA/
@@ -64,6 +64,9 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_mandir}/man3/Crypt::DSA::Util.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.17-20
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.17-19
 - 为 Magic 3.0 重建
 

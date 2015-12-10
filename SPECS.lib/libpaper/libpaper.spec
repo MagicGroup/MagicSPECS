@@ -1,6 +1,6 @@
 Name:		libpaper
 Version:	1.1.24
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Library and tools for handling papersize
 Summary(zh_CN.UTF-8): 处理页面大小的库和工具
 Group:		System Environment/Libraries
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.1.24-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.24-6
 - 为 Magic 3.0 重建
 

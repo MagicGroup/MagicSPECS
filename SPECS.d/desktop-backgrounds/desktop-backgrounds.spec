@@ -5,7 +5,7 @@
 #此包是fedora特有包，需要改成Magic的。
 Name:           desktop-backgrounds
 Version:        17.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Desktop backgrounds
 
 Group:          User Interface/Desktops
@@ -217,6 +217,9 @@ fi
 %{_datadir}/backgrounds/default.png
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 17.0.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 17.0.0-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           fuse
 Version:	2.9.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        File System in Userspace (FUSE) utilities
 Summary(zh_CN.UTF-8): 用户空间的文件系统 (FUSE) 工具
 Group:          System Environment/Base
@@ -132,6 +132,9 @@ fi
 %{_includedir}/fuse
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.9.4-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.9.4-3
 - 更新到 2.9.4
 

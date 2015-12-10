@@ -1,6 +1,6 @@
 Name: ipcalc
 Version: 0.1.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: IP network address calculator
 Summary(zh_CN.UTF-8): IP 网络地址计算器
 
@@ -52,6 +52,9 @@ make check
 %{_mandir}/man1/ipcalc.1*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.2-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.1.2-5
 - 为 Magic 3.0 重建
 

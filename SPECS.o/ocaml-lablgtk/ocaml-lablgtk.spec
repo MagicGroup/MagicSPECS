@@ -1,6 +1,6 @@
 Name:           ocaml-lablgtk
 Version: 2.18.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 Summary:        Objective Caml interface to gtk+
 Summary(zh_CN.UTF-8): OCaml 的 gtk+ 接口
@@ -157,6 +157,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.18.3-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.18.3-3
 - 为 Magic 3.0 重建
 

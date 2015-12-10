@@ -12,7 +12,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        2.6.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Universal capture of stdout and stderr and handling of child process pid
 Group:		Development/Libraries
 
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{gem_spec}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.6.4-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.6.4-4
 - 为 Magic 3.0 重建
 

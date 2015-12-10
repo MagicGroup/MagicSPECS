@@ -5,7 +5,7 @@ Summary: Firmware for the Hauppauge PVR 250/350/150/500/USB2 model series
 Summary(zh_CN.UTF-8): Hauppauge PVR 250/350/150/500/USB2 系列型号的固件
 Name: ivtv-firmware
 Version: 20080701
-Release: 23
+Release: 24
 Epoch: 2
 License: Redistributable, no modification permitted
 Group: System Environment/Kernel
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_prefix}/lib/firmware/%{name}-license-*.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2:20080701-24
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2:20080701-23
 - 为 Magic 3.0 重建
 

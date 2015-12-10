@@ -1,6 +1,6 @@
 Name:          xmlstreambuffer
 Version:       1.5.1
-Release:       7%{?dist}
+Release:       8%{?dist}
 Summary:       XML Stream Buffer
 License:       CDDL or GPLv2 with exceptions
 Url:           http://java.net/projects/xmlstreambuffer/
@@ -82,6 +82,9 @@ sed -i 's/\r//' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.5.1-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 1.5.1-7
 - 为 Magic 3.0 重建
 

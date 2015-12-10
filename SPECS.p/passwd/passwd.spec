@@ -8,7 +8,7 @@ Summary: An utility for setting or changing passwords using PAM
 Summary(zh_CN.UTF-8): 使用 PAM 设置和更新密码的工具
 Name: passwd
 Version:	0.79
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: BSD or GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/passwd.1*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.79-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.79-3
 - 为 Magic 3.0 重建
 

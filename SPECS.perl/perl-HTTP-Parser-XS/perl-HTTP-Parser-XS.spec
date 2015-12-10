@@ -1,7 +1,7 @@
 Name:           perl-HTTP-Parser-XS
 Summary:        A fast, primitive HTTP request parser
 Version:	0.17
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/K/KA/KAZUHO/HTTP-Parser-XS-%{version}.tar.gz 
@@ -58,6 +58,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.17-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.17-2
 - 为 Magic 3.0 重建
 

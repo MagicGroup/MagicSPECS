@@ -1,7 +1,7 @@
-From 4d08d0e8511e247a96440693b73773c72b04fee2 Mon Sep 17 00:00:00 2001
+From e3a29e8c9e85c5d1a4dc28f2ab746dae57c2636b Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Sat, 10 May 2014 03:20:35 -0400
-Subject: [PATCH 10/15] arm, arm64: Mark stack as non-executable.
+Subject: [PATCH 10/19] arm, arm64: Mark stack as non-executable.
 
 The same fix as this one, which was only fully applied to
 i686 & x86-64:
@@ -35,5 +35,5 @@ index 9b4b9ab..c23168b 100644
 +    /* Mark stack as non-executable, PR#4564 */
 +        .section .note.GNU-stack,"",%progbits
 -- 
-2.1.0
+2.4.3
 

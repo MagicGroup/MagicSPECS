@@ -4,7 +4,7 @@ Name: clit
 Summary: Converts Microsoft Reader format eBooks into open format
 Summary(zh_CN.UTF-8): 转换 Microsoft Reader 格式的 eBook 为开源格式
 Version: 1.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 Source: http://www.convertlit.com/%{name}%{tarver}src.zip
 Source1: ltm-0.33.tar.bz2
 URL: http://www.convertlit.com/
@@ -50,6 +50,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_bindir}/%{name}
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.8-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.8-4
 - 为 Magic 3.0 重建
 

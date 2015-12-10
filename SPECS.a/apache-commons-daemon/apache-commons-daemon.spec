@@ -4,7 +4,7 @@
 
 Name:           apache-%{short_name}
 Version:        1.0.15
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Defines API to support an alternative invocation mechanism
 License:        ASL 2.0
 Group:          Applications/System
@@ -117,6 +117,9 @@ install -Dpm 644 src/native/unix/jsvc.1 $RPM_BUILD_ROOT%{_mandir}/man1/jsvc.1
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0.15-10
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.15-9
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.9.0.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Haskell MPD client library
 
 License:        MIT
@@ -85,6 +85,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.9.0.2-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.9.0.2-2
 - 为 Magic 3.0 重建
 

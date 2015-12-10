@@ -5,7 +5,7 @@
 
 Name:           ocaml-zarith
 Version:	1.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        OCaml interface to GMP
 
 # The license has a static linking exception
@@ -58,8 +58,8 @@ developing applications that use %{name}.
 %setup -q -n zarith-%{version}
 
 # Fix compilation flags
-sed -i "s/^asopt=''/asopt='%{optflags}'/" configure
-sed -i "s/-ccopt/-g &/;s/-shared/-g &/" project.mak
+sed -i "s|^asopt=''|asopt='%{optflags}'|" configure
+sed -i "s|-ccopt|-g &|;s|-shared|-g &|" project.mak
 
 %build
 export CC="gcc -Wa,--noexecstack"
@@ -108,6 +108,9 @@ make tests
 %{_libdir}/ocaml/zarith/*.h
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.3-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           yelp-xsl
 Version:	3.18.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        XSL stylesheets for the yelp help browser
 Summary(zh_CN.UTF-8): yelp 帮助浏览器的 XSL 样式表
 
@@ -61,6 +61,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 3.18.1-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
 - 为 Magic 3.0 重建
 

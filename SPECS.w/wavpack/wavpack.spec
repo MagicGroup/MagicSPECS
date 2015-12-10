@@ -2,7 +2,7 @@ Name:		wavpack
 Summary:	A completely open audiocodec
 Summary(zh_CN.UTF-8): 完全开放的音频编码
 Version:	4.75.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 Group:		Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %doc ChangeLog README doc/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 4.75.2-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 4.75.2-2
 - 为 Magic 3.0 重建
 

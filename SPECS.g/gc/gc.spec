@@ -1,16 +1,14 @@
 Summary: A garbage collector for C and C++
 Summary(zh_CN.UTF-8): C 和 C++ 的垃圾回收器
 Name:    gc
-%global base_ver 7.2
-Version: 7.2e
-Release: 3%{?dist}
+Version: 7.4.2
+Release: 1%{?dist}
 
 Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
 Url:     http://www.hboehm.info/gc/
 Source0: http://www.hboehm.info/gc/gc_source/gc-%{version}%{?pre}.tar.gz
-Patch2:  gc-7.2e-aarch64.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 ## upstreamable patches
@@ -45,28 +43,8 @@ Provides:  libgc-devel = %{version}-%{release}
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
-%package -n libatomic_ops-devel
-Summary:   Atomic memory update operations
-Summary(zh_CN.UTF-8): 原子内存更新操作
-Group:     Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-# libatomic_ops.a is MIT
-# libatomic_ops_gpl.a is GPLv2+
-License:   MIT and GPLv2+
-Provides:  libatomic_ops-static = %{version}-%{release}
-%description -n libatomic_ops-devel
-Provides implementations for atomic memory update operations on a
-number of architectures. This allows direct use of these in reasonably
-portable code. Unlike earlier similar packages, this one explicitly
-considers memory barrier semantics, and allows the construction of code
-that involves minimum overhead across a variety of architectures.
-
-%description -n libatomic_ops-devel -l zh_CN.UTF-8
-原子内存更新操作。
-
 %prep
-%setup -q -n gc-%{base_ver}%{?pre}
-%patch2 -p1 -b .aarch64
+%setup -q -n gc-%{version}%{?pre}
 
 # refresh auto*/libtool to purge rpaths
 rm -f libtool libtool.m4
@@ -85,24 +63,19 @@ CPPFLAGS="-DUSE_GET_STACKBASE_FOR_MAIN"; export CPPFLAGS
 %ifarch %{ix86}
   --enable-parallel-mark \
 %endif
-  --enable-threads=posix \
-  --with-libatomic-ops=no
+  --enable-threads=posix 
 
 make %{?_smp_mflags}
-make %{?_smp_mflags} -C libatomic_ops
-
 
 %install
 rm -rf %{buildroot}
 
 make install DESTDIR=%{buildroot}
-make install DESTDIR=%{buildroot} -C libatomic_ops
 
 install -p -D -m644 doc/gc.man  %{buildroot}%{_mandir}/man3/gc.3
 
 ## Unpackaged files
 rm -rfv %{buildroot}%{_datadir}/gc/
-rm -rfv %{buildroot}%{_datadir}/libatomic_ops/{COPYING,*.txt}
 rm -fv  %{buildroot}%{_libdir}/lib*.la
 magic_rpm_clean.sh
 
@@ -113,7 +86,6 @@ make check
 %ifarch ppc ppc64
 %global arch_ignore ||:
 %endif
-make check -C libatomic_ops %{?arch_ignore}
 
 
 %clean
@@ -125,16 +97,12 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc doc/README
-%doc doc/README.changes doc/README.contributors
-%doc doc/README.environment doc/README.linux
 %{_libdir}/libcord.so.1*
 %{_libdir}/libgc.so.1*
 %{_libdir}/libgccpp.so.1*
 
 %files devel
 %defattr(-,root,root,-)
-%doc doc/*.html
 %{_includedir}/gc.h
 %{_includedir}/gc_cpp.h
 %{_includedir}/gc/
@@ -144,21 +112,13 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/bdw-gc.pc
 %{_mandir}/man3/gc.3*
 
-%files -n libatomic_ops-devel
-%defattr(-,root,root,-)
-%doc libatomic_ops/AUTHORS libatomic_ops/ChangeLog libatomic_ops/COPYING libatomic_ops/NEWS libatomic_ops/README
-%doc libatomic_ops/doc/*.txt
-%{_includedir}/atomic_ops.h
-%{_includedir}/atomic_ops/
-%{_libdir}/libatomic_ops.a
-%{_libdir}/pkgconfig/atomic_ops.pc
-# GPLv2+ bits
-%{_includedir}/atomic_ops_malloc.h
-%{_includedir}/atomic_ops_stack.h
-%{_libdir}/libatomic_ops_gpl.a
-
-
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 7.2e-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 7.2e-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.2e-3
 - 为 Magic 3.0 重建
 

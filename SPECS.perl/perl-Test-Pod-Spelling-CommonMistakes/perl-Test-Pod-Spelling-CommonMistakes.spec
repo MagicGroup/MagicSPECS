@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-Spelling-CommonMistakes
 Version:        1.001
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Checks POD for common spelling mistakes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.001-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001-4
 - 为 Magic 3.0 重建
 

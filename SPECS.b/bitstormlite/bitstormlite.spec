@@ -1,6 +1,6 @@
 %define _name       BitStormLite
 %define version      0.2q
-%define release      3%{?dist}
+%define release      4%{?dist}
 %define testver     %{nil}
 
 %define prefix     /usr
@@ -23,6 +23,7 @@ Patch0:		BitStormLite-0.2a-autoencoding.patch
 Patch1: 	BitStormLite-util.h.patch
 Patch2: 	BitStormLite-Storage.patch
 Patch3:		BitStormLite-gcc44.patch
+Patch4:		bitstormlite-fixformat.patch
 
 #for 5qzone patch
 #Patch:		%{name}-5q.patch
@@ -50,6 +51,7 @@ BitStorm 0.2 Lite 主要特性如下：
 %patch1 -p1 -b .fix
 #%patch2 -p1 -b .cjk
 #%patch3 -p1 -b .gcc44
+%patch4 -p1
 
 %build
 %configure
@@ -74,6 +76,9 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{_datadir}/applications/bitstormlite.d
 %exclude /usr/*/debug*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.2q-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2q-3
 - 为 Magic 3.0 重建
 

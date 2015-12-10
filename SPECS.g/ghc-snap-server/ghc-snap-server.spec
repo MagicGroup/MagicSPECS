@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.9.4.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A fast, iteratee-based, epoll-enabled web server for the Snap Framework
 
 License:        BSD
@@ -78,13 +78,15 @@ This package provides the Haskell %{pkg_name} library development files.
 
 %files -f %{name}.files
 %doc LICENSE
-
+%{_docdir}/%{name}-%{version}/LICENSE
 
 %files devel -f %{name}-devel.files
 %doc CONTRIBUTORS README.md README.SNAP.md
 
-
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.9.4.6-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.9.4.6-3
 - 为 Magic 3.0 重建
 

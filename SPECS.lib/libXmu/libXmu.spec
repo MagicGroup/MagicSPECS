@@ -4,7 +4,7 @@ Summary: X.Org X11 libXmu/libXmuu runtime libraries
 Summary(zh_CN.UTF-8): X.Org X11 libXmu/libXmuu 运行库
 Name: libXmu
 Version: 1.1.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xmuu.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1.2-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.2-2
 - 为 Magic 3.0 重建
 

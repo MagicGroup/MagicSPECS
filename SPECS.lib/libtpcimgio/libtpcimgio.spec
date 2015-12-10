@@ -1,6 +1,6 @@
 Name:           libtpcimgio
 Version: 2.1.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary:        Turku PET Centre for image file input and output procedures
 Summary(zh_CN.UTF-8): 图像文件的输入和输出库 (TPC)
 
@@ -109,6 +109,9 @@ magic_rpm_clean.sh
 %{_libdir}/%{name}.a
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.1.8-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1.8-3
 - 为 Magic 3.0 重建
 

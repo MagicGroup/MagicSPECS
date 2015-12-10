@@ -1,16 +1,16 @@
-%define main_ver 3.01
-%define min_ver a23
+%define main_ver 3.02
+%define min_ver a02
 Summary: A collection of CD/DVD utilities.
 Summary(zh_CN.UTF-8): 一套 CD/DVD 工具集合
 Name: cdrtools
 Version: %{main_ver}.%{min_ver}
-Release: 2%{?dist}
+Release: 3%{?dist}
 %define tarversion %{main_ver}%{min_ver}
 License: CDDL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 URL: http://cdrecord.berlios.de/old/private/cdrecord.html
-Source: ftp://ftp.berlios.de/pub/cdrecord/alpha/cdrtools-%{tarversion}.tar.bz2
+Source: http://downloads.sourceforge.net/project/cdrtools/alpha/cdrtools-%{tarversion}.tar.bz2
 Source1: cdrecord.conf
 
 Patch0:	cdrtools-3.01-lib64.patch
@@ -85,7 +85,7 @@ support for creating bootable El Torito CD-ROMs.
 Install the mkisofs package if you need a program for writing
 CD-ROMs.
 
-%description -n mkisofs
+%description -n mkisofs -l zh_CN.UTF-8
 mkisofs是用来制作ISO镜像文件的工具。
 
 如果需要写 CD-ROM，那么需要安装mkisofs。
@@ -106,7 +106,7 @@ read from the CD can be saved as .wav or .sun format sound files.
 Recording formats include stereo/mono, 8/12/16 bits and different
 rates.  Cdda2wav can also be used as a CD player.
 
-%description -n cdda2wav
+%description -n cdda2wav -l zh_CN.UTF-8
 Cdda2wav是一个抓音轨的工具，可以把CD上的声音数据保存成 .wav或 .sun
 格式的声音文件。格式可以包括 立体声/单声道，8/12/16位和不同的采样率。
 Cdda2wav也可以当做CD播放器使用。
@@ -131,6 +131,12 @@ mkdir -p $RPM_BUILD_ROOT/etc
 
 install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT/etc/cdrecord.conf
 
+find %{buildroot} -name "*.a" -exec chmod 755 "{}" \;
+
+#/修正路径问题
+mv %{buildroot}%{_datadir}/share/man %{buildroot}%{_datadir}/
+rm -rf %{buildroot}%{_datadir}/share
+
 magic_rpm_clean.sh
 
 %clean
@@ -138,9 +144,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n cdrecord
 %defattr(-,root,root)
-%doc AN-*  Changelog README* 
-%doc COPYING cdrecord/LICENSE
-%doc cdrecord/cdrecord.dfl
 %config(noreplace) /etc/cdrecord.conf
 %{_bindir}/cdrecord
 %{_bindir}/readcd
@@ -156,12 +159,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libschily.a
 %{_libdir}/libedc_ecc.a
 %{_libdir}/libparanoia.a
-/usr/include/schily
+%{_includedir}/schily
 
 %files -n mkisofs
 %defattr(-,root,root)
-%doc AN-* mkisofs/COPYING mkisofs/ChangeLog
-%doc mkisofs/README*
 %{_bindir}/mkisofs
 %{_bindir}/mkhybrid
 %{_bindir}/isoinfo
@@ -171,8 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n cdda2wav
 %defattr(-,root,root)
-%doc AN-* cdda2wav/FAQ cdda2wav/OtherProgs
-%doc cdda2wav/README* cdda2wav/Frontends cdda2wav/HOWTOUSE
 %{_bindir}/cdda2wav
 #以下需要分包
 %_bindir/btcflash
@@ -184,68 +183,17 @@ rm -rf $RPM_BUILD_ROOT
 %_libdir/*.a
 %_libdir/profiled/*.a
 %_libdir/siconv/*
-/usr/sbin/rscsi
-   /usr/share/doc/cdda2wav/README
-   /usr/share/doc/cdrecord/README
-   /usr/share/doc/cdrecord/README.ATAPI
-   /usr/share/doc/cdrecord/README.DiskT@2
-   /usr/share/doc/cdrecord/README.WORM
-   /usr/share/doc/cdrecord/README.audio
-   /usr/share/doc/cdrecord/README.cdplus
-   /usr/share/doc/cdrecord/README.cdrw
-   /usr/share/doc/cdrecord/README.cdtext
-   /usr/share/doc/cdrecord/README.clone
-   /usr/share/doc/cdrecord/README.copy
-   /usr/share/doc/cdrecord/README.multi
-   /usr/share/doc/cdrecord/README.parallel
-   /usr/share/doc/cdrecord/README.raw
-   /usr/share/doc/cdrecord/README.rscsi
-   /usr/share/doc/cdrecord/README.solaris-x86-ATAPI-DMA
-   /usr/share/doc/cdrecord/README.solaris-x86-ata-DMA
-   /usr/share/doc/cdrecord/README.sony
-   /usr/share/doc/cdrecord/README.sun-lofi
-   /usr/share/doc/cdrecord/README.verify
-   /usr/share/doc/cdrecord/README.volmgt
-   /usr/share/doc/libparanoia/README.interface
-   /usr/share/doc/libparanoia/README.paranoia
-   /usr/share/doc/mkisofs/README
-   /usr/share/doc/mkisofs/README.compression
-   /usr/share/doc/mkisofs/README.eltorito
-   /usr/share/doc/mkisofs/README.graft_dirs
-   /usr/share/doc/mkisofs/README.hfs_boot
-   /usr/share/doc/mkisofs/README.hfs_magic
-   /usr/share/doc/mkisofs/README.hide
-   /usr/share/doc/mkisofs/README.joliet
-   /usr/share/doc/mkisofs/README.macosx
-   /usr/share/doc/mkisofs/README.mkhybrid
-   /usr/share/doc/mkisofs/README.prep_boot
-   /usr/share/doc/mkisofs/README.rootinfo
-   /usr/share/doc/mkisofs/README.session
-   /usr/share/doc/mkisofs/README.sort
-   /usr/share/doc/mkisofs/README.sparcboot
-   /usr/share/doc/mkisofs/README.sunx86boot
-   /usr/share/doc/rscsi/default-rscsi.sample
-   /usr/share/share/man/man1/btcflash.1
-   /usr/share/share/man/man1/cdda2mp3.1
-   /usr/share/share/man/man1/cdda2ogg.1
-   /usr/share/share/man/man1/cdda2wav.1
-   /usr/share/share/man/man1/cdrecord.1
-   /usr/share/share/man/man1/readcd.1
-   /usr/share/share/man/man1/rscsi.1
-   /usr/share/share/man/man1/scgcheck.1
-   /usr/share/share/man/man1/scgskeleton.1
-   /usr/share/share/man/man5/makefiles.5
-   /usr/share/share/man/man5/makerules.5
-   /usr/share/share/man/man8/devdump.8
-   /usr/share/share/man/man8/isodebug.8
-   /usr/share/share/man/man8/isodump.8
-   /usr/share/share/man/man8/isoinfo.8
-   /usr/share/share/man/man8/isovfy.8
-   /usr/share/share/man/man8/mkhybrid.8
-   /usr/share/share/man/man8/mkisofs.8
+%_sbindir/rscsi
+%{_docdir}/cdda2wav/*
+%{_docdir}/cdrecord/*
+%{_docdir}/libparanoia/*
+%{_docdir}/mkisofs/*
+%{_docdir}/rscsi/*
+%{_mandir}/man*/*
+
 %changelog
-* Sat Mar 08 2014 Liu Di <liudidi@gmail.com> - 10:a23.%{min_ver}-2
-- 更新到 3.01.a23
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 10:3.01.a23-3
+- 为 Magic 3.0 重建
 
 * Wed Dec 05 2012 Liu Di <liudidi@gmail.com> - 9:3.01.a07-2
 - 为 Magic 3.0 重建

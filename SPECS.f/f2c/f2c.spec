@@ -2,7 +2,7 @@ Name:           f2c
 Summary:        A Fortran 77 to C/C++ conversion program
 Summary(zh_CN.UTF-8): Fortran 77 到 C/C++ 的转换程序
 Version:        20110801
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        MIT
 Group:          Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
@@ -11,6 +11,7 @@ Source:         ftp://netlib.org/f2c.tar
 # Patch makefile to build a shared library
 Patch:          f2c-20110801.patch
 Patch10:        f2c-mips-disable-fpe.patch
+Patch1:		libf2c-20110801-format-security.patch
 BuildRequires:  unzip
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 Requires:       %{name}-libs = %{version}-%{release}
@@ -47,6 +48,7 @@ popd
 %ifarch mips64el
 %patch10 -p1
 %endif
+%patch1 -p1
 
 %build
 cp src/makefile.u src/Makefile
@@ -87,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 20110801-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20110801-5
 - 为 Magic 3.0 重建
 

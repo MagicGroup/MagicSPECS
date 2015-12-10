@@ -3,7 +3,7 @@
 
 Name:           vala
 Version:	0.30.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        A modern programming language for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的现代程序语言
 
@@ -233,6 +233,9 @@ done
 %doc %{_datadir}/devhelp/books/vala-%{api_ver}
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.30.0-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.30.0-3
 - 为 Magic 3.0 重建
 

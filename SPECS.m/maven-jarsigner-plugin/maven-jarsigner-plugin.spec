@@ -1,6 +1,6 @@
 Name:             maven-jarsigner-plugin
 Version:          1.3.2
-Release:          5%{?dist}
+Release:          6%{?dist}
 Summary:          Signs or verifies a project artifact and attachments using jarsigner
 License:          ASL 2.0
 URL:              http://maven.apache.org/plugins/%{name}/
@@ -57,6 +57,9 @@ This package contains the API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.3.2-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.2-5
 - 为 Magic 3.0 重建
 

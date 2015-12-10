@@ -33,7 +33,7 @@
 
 Name:           %{parent}-%{subname}
 Version:        1.0
-Release:        0.16.a2.2%{?dist}
+Release:        0.17.a2.2%{?dist}
 Epoch:          0
 Summary:        Plexus Ant component factory
 # Email from copyright holder confirms license.
@@ -94,6 +94,9 @@ rm -rf $(readlink -f %{_javadocdir}/%{name}) %{_javadocdir}/%{name} || :
 
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 0:1.0-0.17.a2.2
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0:1.0-0.16.a2.2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

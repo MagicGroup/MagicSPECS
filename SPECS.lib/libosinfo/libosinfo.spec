@@ -14,7 +14,7 @@ Summary: A library for managing OS information for virtualization
 Summary(zh_CN.UTF-8): 为虚拟化管理系统信息的库
 Name: libosinfo
 Version: 0.2.12
-Release: 2%{?dist}%{?extra_release}
+Release: 3%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -157,6 +157,9 @@ rm -fr %{buildroot}
 %{_datadir}/vala/vapi/libosinfo-1.0.vapi
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.2.12-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.12-2
 - 更新到 0.2.12
 

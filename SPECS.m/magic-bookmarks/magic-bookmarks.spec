@@ -1,6 +1,6 @@
 Name:           magic-bookmarks
 Version:        3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Magic bookmarks
 Summary(zh_CN.UTF-8):	Magic 的默认书签
 Group:          Applications/Internet
@@ -41,6 +41,9 @@ install -p -m 644 %{SOURCE0} $RPM_BUILD_ROOT%{_datadir}/bookmarks
 %{_datadir}/bookmarks/default-bookmarks.html
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3-6
 - 为 Magic 3.0 重建
 

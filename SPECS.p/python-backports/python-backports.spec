@@ -2,7 +2,7 @@
 
 Name:           python-backports
 Version:        1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Namespace for backported Python features
 Summary(zh_CN.UTF-8): 向后移植的命名空间
 
@@ -50,6 +50,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0-8
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0-7
 - 为 Magic 3.0 重建
 

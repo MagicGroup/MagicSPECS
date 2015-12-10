@@ -8,7 +8,7 @@ Summary: D-Bus Python Bindings
 Summary(zh_CN.UTF-8): D-Bus 的 Python 绑定
 Name: dbus-python
 Version: 1.2.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: MIT
 URL: http://www.freedesktop.org/software/dbus/
@@ -105,6 +105,9 @@ make check -k -C python3-build
 %{python3_sitearch}/dbus/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.2.0-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.2.0-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Pod-Usage
 Version:	1.67
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Print a usage message from embedded POD documentation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.67-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.67-2
 - 为 Magic 3.0 重建
 

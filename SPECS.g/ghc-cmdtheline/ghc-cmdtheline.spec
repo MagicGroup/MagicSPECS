@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Declarative command-line option parsing and documentation library
 
 License:        MIT
@@ -100,6 +100,9 @@ mv README.md{.new,}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.3-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.3-4
 - 为 Magic 3.0 重建
 

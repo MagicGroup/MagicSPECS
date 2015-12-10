@@ -3,7 +3,7 @@
 
 Name:      libva
 Version: 1.6.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:   Video Acceleration (VA) API for Linux
 Summary(zh_CN.UTF-8): Linux 下的视频加速 (VA) API
 Group:     System Environment/Libraries
@@ -116,6 +116,9 @@ rm -rf %{buildroot}
 %{_includedir}/va/*.h
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.6.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6.1-2
 - 更新到 1.6.1
 

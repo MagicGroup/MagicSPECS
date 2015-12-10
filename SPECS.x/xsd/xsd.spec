@@ -1,6 +1,6 @@
 Name:           xsd
 Version:        4.0.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        W3C XML schema to C++ data binding compiler
 Summary(zh_CN.UTF-8): W3C XML schema 到 C++ 数据绑定的编译器
 # Exceptions permit otherwise GPLv2 incompatible combination with ASL 2.0
@@ -111,6 +111,9 @@ make -j 1 test EXTERNAL_LIBCUTL=y BOOST_LINK_SYSTEM=y
 %doc apidocdir/*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 4.0.0-12
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.0.0-11
 - 为 Magic 3.0 重建
 

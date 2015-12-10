@@ -1,6 +1,6 @@
 Name:           perl-Sub-WrapPackages
 Version:        2.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Add wrappers around all the subroutines in packages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0-14
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0-13
 - 为 Magic 3.0 重建
 

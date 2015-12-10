@@ -1,6 +1,6 @@
 Name:           perl-Proc-ProcessTable
 Version:	0.53
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl extension to access the unix process table
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.53-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.53-2
 - 为 Magic 3.0 重建
 

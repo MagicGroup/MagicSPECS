@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.7.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Haskell bindings for the libxml2 SAX interface
 
 License:        MIT
@@ -69,6 +69,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.7.5-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.7.5-7
 - 为 Magic 3.0 重建
 

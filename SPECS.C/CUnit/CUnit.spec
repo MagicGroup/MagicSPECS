@@ -1,6 +1,6 @@
 Name:           CUnit
 Version:        2.1.3
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Unit testing framework for C
 Summary(zh_CN.UTF-8): C 语言的单元测试框架
 
@@ -78,6 +78,9 @@ done
 %{_mandir}/man3/CUnit.3*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.1.3-11
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1.3-10
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name: docbook-dtds
 Version: 1.0
-Release: 63%{?dist}
+Release: 67%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -482,6 +482,18 @@ do
 done
 
 %changelog
+* Wed Dec 09 2015 Liu Di <liudidi@gmail.com> - 1.0-67
+- 为 Magic 3.0 重建
+
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.0-66
+- 为 Magic 3.0 重建
+
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.0-65
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0-64
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0-63
 - 为 Magic 3.0 重建
 

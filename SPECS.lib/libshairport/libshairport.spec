@@ -4,7 +4,7 @@ Summary:	Apple RAOP server library
 Summary(zh_CN.UTF-8): 苹果 RAOP 服务库
 Name:		libshairport
 Version:	1.2.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	MIT
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2.1-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.1-4
 - 为 Magic 3.0 重建
 

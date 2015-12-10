@@ -2,7 +2,7 @@
 
 Name:           ocaml-camlp5
 Version: 6.14
-Release: 2%{?dist}
+Release: 5%{?dist}
 Summary:        Classical version of camlp4 OCaml preprocessor
 Summary(zh_CN.UTF-8): camlp4 OCaml 预处理器的经典版本
 
@@ -117,6 +117,15 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 6.14-5
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 6.14-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 6.14-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 6.14-2
 - 更新到 6.14
 

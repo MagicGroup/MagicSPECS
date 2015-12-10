@@ -1,6 +1,6 @@
 Name:           perl-Devel-DProf
 Version:        20110802.00
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Deprecated Perl code profiler
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 20110802.00-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 20110802.00-10
 - 为 Magic 3.0 重建
 

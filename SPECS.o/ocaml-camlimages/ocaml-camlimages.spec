@@ -1,6 +1,6 @@
 Name:           ocaml-camlimages
 Version:        4.1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        OCaml image processing library
 Summary(zh_CN.UTF-8): OCaml 的图像处理库
 
@@ -98,9 +98,12 @@ magic_rpm_clean.sh
 # There aren't any *.cmx files
 #%{_libdir}/ocaml/camlimages/*.cmx
 %{_libdir}/ocaml/camlimages/*.mli
-
+%{_docdir}/ocaml-camlimages/htmlref/
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 4.1.0-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.1.0-7
 - 为 Magic 3.0 重建
 

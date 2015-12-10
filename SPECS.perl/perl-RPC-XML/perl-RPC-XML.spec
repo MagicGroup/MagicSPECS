@@ -2,7 +2,7 @@
 
 Name:    perl-%{cpan_name}
 Version:	0.79
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: Set of classes for core data, message and XML handling
 Group:   Development/Libraries
 License: Artistic 2.0 or LGPLv2
@@ -118,6 +118,9 @@ make test
 %{perl_vendorlib}/Apache
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.79-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.79-2
 - 为 Magic 3.0 重建
 

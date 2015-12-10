@@ -5,7 +5,7 @@ Summary: 	Open Fingerprint Architecture library
 Summary(zh_CN.UTF-8): 音频的开放体系指纹库
 Name:		libofa	
 Version:	0.9.3	
-Release:	24%{?dist}
+Release:	25%{?dist}
 
 License:	GPLv2
 Url:		http://code.google.com/p/musicip-libofa/
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.3-25
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.3-24
 - 为 Magic 3.0 重建
 

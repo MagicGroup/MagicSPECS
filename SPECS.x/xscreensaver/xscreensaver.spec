@@ -30,7 +30,7 @@ Buildroot:       %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Summary:         X screen saver and locker
 Name:            %{name}
 Version:         %{mainversion}
-Release:         %{fedora_rel}%{?dist}%{?extrarel}.2
+Release:         %{fedora_rel}%{?dist}%{?extrarel}.3
 Epoch:           1
 License:         MIT
 Group:           Amusements/Graphics
@@ -946,6 +946,9 @@ exit 0
 %endif
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1:5.34-1.3
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:5.34-1.2
 - 为 Magic 3.0 重建
 

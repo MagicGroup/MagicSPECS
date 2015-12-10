@@ -4,7 +4,7 @@ Summary: Library for using OBEX
 Summary(zh_CN.UTF-8): 使用 OBEX 的库
 Name: openobex
 Version: 1.7.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -116,6 +116,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/obex_push.1*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.7.1-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.7.1-6
 - 为 Magic 3.0 重建
 

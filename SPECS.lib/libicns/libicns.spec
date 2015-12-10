@@ -1,6 +1,6 @@
 Name:           libicns
 Version:        0.8.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Library for manipulating Macintosh icns files
 Summary(zh_CN.UTF-8): 处理 Macintosh icns 文件的库
 
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.8.1-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.8.1-7
 - 为 Magic 3.0 重建
 

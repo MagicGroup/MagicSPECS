@@ -14,9 +14,9 @@ Summary(zh_CN.UTF-8): KDE4 下优秀的 CD/DVD 刻录程序
 Name:           kde4-k3b
 Version:        2.0.2
 %if 0%{?git}
-Release:	13.git%{vcsdate}%{?dist}
+Release:	14.git%{vcsdate}%{?dist}
 %else
-Release:        13%{?dist}
+Release:        14%{?dist}
 %endif
 License:        GPL
 Vendor:         Magic Linux
@@ -148,6 +148,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.0.2-14.git20151030
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.2-13.git20151030
 - 更新到 20151030 日期的仓库源码
 

@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Server-Simple
 Version:	0.51
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Very simple standalone HTTP daemon
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.51-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.51-2
 - 更新到 0.51
 

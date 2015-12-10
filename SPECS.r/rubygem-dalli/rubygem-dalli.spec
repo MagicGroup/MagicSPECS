@@ -5,7 +5,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.7.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: High performance memcached client for Ruby
 Group: Development/Languages
 License: MIT
@@ -82,6 +82,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.7.4-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.7.4-4
 - 为 Magic 3.0 重建
 

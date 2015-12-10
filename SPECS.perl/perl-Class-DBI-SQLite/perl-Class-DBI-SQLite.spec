@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-SQLite
 Version:        0.11
-Release:        29%{?dist}
+Release:        30%{?dist}
 Summary:        Extension to Class::DBI for sqlite
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,6 +39,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.11-30
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-29
 - 为 Magic 3.0 重建
 

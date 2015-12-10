@@ -1,6 +1,6 @@
 Name:		pciutils
 Version:	3.4.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Source:		ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/%{name}-%{version}.tar.gz
 Source1:        multilibconfigh
 
@@ -144,6 +144,9 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.4.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.4.0-2
 - 更新到 3.4.0
 

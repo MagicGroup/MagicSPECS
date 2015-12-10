@@ -40,7 +40,7 @@
 
 Name:    ipxe
 Version: %{vcsdate}
-Release: 8.git%{hash}%{?dist}
+Release: 9.git%{hash}%{?dist}
 Summary: A network boot loader
 
 Group:   System Environment/Base
@@ -217,6 +217,9 @@ done
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 20151030-9.gitc4bce43
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20151030-8.gitc4bce43
 - 更新到 20151030 日期的仓库源码
 

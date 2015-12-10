@@ -2,7 +2,7 @@
 
 Name:           environment-modules
 Version:        3.2.10
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Provides dynamic modification of a user's environment
 
 Group:          System Environment/Base
@@ -133,6 +133,9 @@ fi
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.2.10-13
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.2.10-12
 - 为 Magic 3.0 重建
 

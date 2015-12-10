@@ -4,7 +4,7 @@
 
 Name:           lxpanel
 Version:	0.8.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A lightweight X11 desktop panel
 Summary(zh_CN.UTF-8): 轻量级的 X11 桌面面板
 
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.8.1-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.8.1-2
 - 更新到 0.8.1
 

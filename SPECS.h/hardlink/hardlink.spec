@@ -2,7 +2,7 @@ Summary:	Create a tree of hardlinks
 Summary(zh_CN.UTF-8): 创建硬链接树
 Name:		hardlink
 Version:	1.0
-Release:	16%{?dist}
+Release:	17%{?dist}
 Epoch:		1
 Group:		System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/hardlink.1*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:1.0-17
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:1.0-16
 - 为 Magic 3.0 重建
 

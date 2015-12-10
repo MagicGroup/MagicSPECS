@@ -4,7 +4,7 @@
 Summary: Improved URI/URL Implementation
 Name: rubygem-%{gem_name}
 Version: 2.3.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://addressable.rubyforge.org/
@@ -90,6 +90,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.3.8-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.8-4
 - 为 Magic 3.0 重建
 

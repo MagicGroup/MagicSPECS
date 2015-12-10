@@ -1,8 +1,8 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:       gammu
-Version:	1.36.6
-Release:        4%{?dist}
+Version:	1.36.7
+Release:        1%{?dist}
 Summary:        Command Line utility to work with mobile phones
 Summary(zh_CN.UTF-8): 操作手机的命令行工具
 
@@ -92,12 +92,8 @@ developing applications that use %{name}
 %prep
 %setup -q
 
-#sed -i 's|${INSTALL_LIB_DIR}|%{_libdir}|' CMakeLists.txt libgammu/CMakeLists.txt \
-#                              smsd/CMakeLists.txt gammu/CMakeLists.txt
-
-# These flags make the compilation fail on F-14. We remove them for now to finish
-# python-2.7 rebuilds. Maintainer, please fix.
-#sed -i -e '/-Werror/d' CMakeLists.txt
+sed -i 's|${INSTALL_LIB_DIR}|%{_libdir}|' CMakeLists.txt libgammu/CMakeLists.txt \
+                              smsd/CMakeLists.txt gammu/CMakeLists.txt
 
 %build
 mkdir build
@@ -106,7 +102,15 @@ pushd build
     -DENABLE_BACKUP=ON      \
     -DWITH_NOKIA_SUPPORT=ON     \
     -DWITH_Bluez=ON         \
-    -DWITH_IrDA=On          \
+    -DWITH_IrDA=ON          \
+    -DINSTALL_UDEV_RULES=ON \
+    -DWITH_SYSTEMD=ON       \
+    -DINSTALL_GNAPPLET=ON       \
+    -DINSTALL_MEDIA=ON       \
+    -DINSTALL_PHP_EXAMPLES=ON       \
+    -DINSTALL_BASH_COMPLETION=ON       \
+    -DINSTALL_DOC=ON       \
+    -DINSTALL_LOC=ON       \
     ../
 make
 popd
@@ -122,12 +126,13 @@ popd
 
 %install
 make -C build  install DESTDIR=$RPM_BUILD_ROOT
- 
-#remove library
-rm -f $RPM_BUILD_ROOT%{_libdir}/libGammu.a
+
+# Install config file
+install -pm 0644 docs/config/smsdrc %{buildroot}%{_sysconfdir}/gammu-smsdrc 
+
 magic_rpm_clean.sh
-%find_lang %{name}
-%find_lang lib%{name}
+%find_lang %{name} || :
+%find_lang lib%{name} || :
 cat lib%{name}.lang >> %{name}.lang
 
 
@@ -138,7 +143,7 @@ cat lib%{name}.lang >> %{name}.lang
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc %{_docdir}/%{name}/README 
+%doc %{_docdir}/%{name}/README.rst
 %doc %{_docdir}/%{name}/ChangeLog 
 %doc %{_docdir}/%{name}/COPYING
 %doc %{_docdir}/%{name}/examples
@@ -150,8 +155,11 @@ cat lib%{name}.lang >> %{name}.lang
 #%{_mandir}/cs/man1/*.gz
 #%{_mandir}/cs/man5/*.gz
 #%{_mandir}/cs/man7/*.gz
-%config %{_sysconfdir}/bash_completion.d/%{name}
 %{_datadir}/%{name}
+%{_sysconfdir}/udev/rules.d/69-gammu-acl.rules
+%{_unitdir}/gammu-smsd.service
+%{_datadir}/bash-completion/completions/gammu
+%{_sysconfdir}/gammu-smsdrc
 
 %files      libs
 %defattr(-,root,root,-)
@@ -159,7 +167,7 @@ cat lib%{name}.lang >> %{name}.lang
 
 %files -n       python-%{name}
 %defattr(-,root,root,-)
-%{python_sitearch}/%{name}
+#%{python_sitearch}/%{name}
 
 %files      devel
 %defattr(-,root,root,-)
@@ -170,6 +178,12 @@ cat lib%{name}.lang >> %{name}.lang
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.36.6-6
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.36.6-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.36.6-4
 - 更新到 1.36.6
 

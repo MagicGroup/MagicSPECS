@@ -4,7 +4,7 @@
 
 Name:           python-mock
 Version:	1.3.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A Python Mocking and Patching Library for Testing
 
 Group:          Development/Libraries
@@ -95,6 +95,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 为 Magic 3.0 重建
 

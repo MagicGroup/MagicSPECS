@@ -37,7 +37,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		0.5
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 Summary:		Kerberos ticket manager
 Summary(zh_CN.UTF-8): Kerberos 凭据管理器
 Group:			Applications/Utilities
@@ -143,6 +143,9 @@ update-desktop-database %{tde_tdeappdir} > /dev/null
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.5-1.3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.5-1.2
 - 为 Magic 3.0 重建
 

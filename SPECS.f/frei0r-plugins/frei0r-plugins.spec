@@ -1,6 +1,6 @@
 Name:           frei0r-plugins
 Version:        1.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Frei0r - a minimalistic plugin API for video effects
 Summary(zh_CN.UTF-8): Frei0r - 一个最简单的视频特效插件 API
 
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/frei0r.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3-5
 - 为 Magic 3.0 重建
 

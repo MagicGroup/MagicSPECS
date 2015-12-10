@@ -1,6 +1,6 @@
 Name:           gcr
 Version:	3.18.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A library for bits of crypto UI and parsing
 Summary(zh_CN.UTF-8): 一种位密码界面和解析库
 
@@ -131,6 +131,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/vala/vapi/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
 - 更新到 3.18.0
 

@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.2.13
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        For creating, comparing, parsing and printing Universally Unique Identifiers
 
 License:        BSD
@@ -84,6 +84,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.2.13-7
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.13-6
 - 为 Magic 3.0 重建
 

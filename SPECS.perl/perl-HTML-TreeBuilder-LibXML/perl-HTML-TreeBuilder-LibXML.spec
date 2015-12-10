@@ -1,6 +1,6 @@
 Name:           perl-HTML-TreeBuilder-LibXML
 Version:	0.25
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        HTML::TreeBuilder and XPath compatible interface with libxml
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ HTML::TreeBuilder::LibXML is drop-in-replacement for HTML::TreeBuilder::XPath.
 %{_mandir}/man3/HTML*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.25-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.25-2
 - 为 Magic 3.0 重建
 

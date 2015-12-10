@@ -4,7 +4,7 @@
 
 Name:           apache-%{short_name}
 Version:        2.6
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Provides a host of helper utilities for the java.lang API
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ sed -i 's/\r//' *.txt *.html
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.6-17
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 2.6-16
 - 为 Magic 3.0 重建
 

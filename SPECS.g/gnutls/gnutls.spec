@@ -3,7 +3,7 @@
 Summary: A TLS protocol implementation
 Name: gnutls
 Version: 3.2.10
-Release: 4%{?dist}
+Release: 5%{?dist}
 # The libraries are LGPLv2.1+, utilities are GPLv3+
 License: GPLv3+ and LGPLv2+
 Group: System Environment/Libraries
@@ -272,6 +272,9 @@ fi
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.2.10-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.2.10-4
 - 为 Magic 3.0 重建
 

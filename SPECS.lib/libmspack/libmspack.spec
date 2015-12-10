@@ -1,6 +1,6 @@
 Name:           libmspack
 Version:        0.3
-Release:        0.6.alpha%{?dist}
+Release:        0.7.alpha%{?dist}
 Summary:        Library for CAB and related files compression and decompression
 Summary(zh_CN.UTF-8): 压缩解压 CAB 和相关文件的库
 
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.3-0.7.alpha
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.3-0.6.alpha
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Summary: Wavy IRB: Colorizes irb results
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 2.0.0
-Release: 3%{dist}
+Release: 4%{dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/janlelis/wirb
@@ -88,6 +88,9 @@ pushd ./%{gem_instdir}
 popd
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.0-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.0-3
 - 为 Magic 3.0 重建
 

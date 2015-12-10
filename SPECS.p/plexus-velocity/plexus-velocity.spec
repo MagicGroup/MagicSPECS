@@ -3,7 +3,7 @@
 
 Name:           plexus-velocity
 Version:        1.1.8
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Plexus Velocity Component
 License:        ASL 2.0
 URL:            http://plexus.codehaus.org/
@@ -54,6 +54,9 @@ done
 %doc LICENSE
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.1.8-19
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.1.8-18
 - 为 Magic 3.0 重建
 

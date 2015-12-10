@@ -9,7 +9,7 @@ Summary:        Beep the PC speaker any number of ways
 Summary(zh_CN.UTF-8): 让电脑的喇叭发声
 Name:           beep
 Version:        1.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 
 Group:          Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3-5
 - 为 Magic 3.0 重建
 

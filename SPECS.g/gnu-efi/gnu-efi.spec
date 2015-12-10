@@ -2,13 +2,12 @@ Summary: Development Libraries and headers for EFI
 Summary(zh_CN.UTF-8): EFI 的开发库和头文件 
 Name: gnu-efi
 Version:	3.0.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
 License: BSD 
 URL: ftp://ftp.hpl.hp.com/pub/linux-ia64
 Source: http://superb-dca2.dl.sourceforge.net/project/gnu-efi/gnu-efi-%{version}.tar.bz2
-Patch0001: 0001-Add-setjmp-back-once-again.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 ExclusiveArch: i686 x86_64 ia64
 BuildRequires: git
@@ -107,6 +106,9 @@ rm -rf %{buildroot}
 %attr(0644,root,root) /boot/efi/EFI/%{efidir}/*.efi
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.0.3-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.0.3-2
 - 更新到 3.0.3
 

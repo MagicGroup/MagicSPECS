@@ -1,6 +1,6 @@
 Name:           mono
 Version:        2.10.8
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A .NET runtime environment
 Summary(zh_CN.UTF-8): .NET 运行环境
 
@@ -720,6 +720,9 @@ rm -rf %{buildroot}%{_mandir}/man?/mono-configuration-crypto*
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.10.8-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.10.8-7
 - 为 Magic 3.0 重建
 

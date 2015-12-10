@@ -1,6 +1,6 @@
 Name:		perl-IO-AIO
 Version:	4.32
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Asynchronous Input/Output
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::AIO.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.32-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.32-2
 - 为 Magic 3.0 重建
 

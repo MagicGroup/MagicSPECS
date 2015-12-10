@@ -2,7 +2,7 @@ Name:		perl-common-sense
 Summary:	"Common sense" Perl defaults 
 Summary(zh_CN.UTF-8): Perl 的常识默认
 Version:	3.74
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -65,6 +65,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/common::sense.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.74-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.74-2
 - 为 Magic 3.0 重建
 

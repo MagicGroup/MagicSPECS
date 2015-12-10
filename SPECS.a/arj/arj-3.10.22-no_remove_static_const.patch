@@ -1,0 +1,20 @@
+Patch by Guillem Jover <guillem@debian.org> for arj <= 3.10.22, to not
+build integr.o with optimizations, otherwise GCC 4.0 removes the static
+const variable. For further information, please see also Debian tracker
+at http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=318366
+
+---
+ integr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/integr.c
++++ b/integr.c
+@@ -5,7 +5,7 @@
+  *
+  */
+ 
+-static const char intergrity_identifier[] = {
++static volatile const char intergrity_identifier[] = {
+ 	0xB0, 0x03, 0xB0, 0x02, 0xB0, 0x03,
+ 	0xB0, 0x04, 0xB0, 0x05,
+ 	0x90, 0x90, 0x90, 0x90,

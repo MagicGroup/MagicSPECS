@@ -1,6 +1,6 @@
 Name:           DevIL
 Version:        1.7.8
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        A cross-platform image library
 Summary(zh_CN.UTF-8): 一个跨平台的图像库
 Group:          System Environment/Libraries
@@ -12,6 +12,7 @@ Patch0:         DevIL-1.7.5-allegropicfix.patch
 Patch1:         DevIL-1.7.5-il_endian_h.patch
 Patch2:         DevIL-1.7.8-CVE-2009-3994.patch
 Patch3: 	DevIL-1.7.8-libpng15.patch
+Patch4:         DevIL-1.7.8-gcc5.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  allegro-devel
 BuildRequires:  lcms-devel
@@ -85,6 +86,7 @@ Development files for the libILUT component of DevIL
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 iconv -f iso8859-1 CREDITS -t utf8 > CREDITS.conv
 touch -r CREDITS CREDITS.conv
 mv CREDITS.conv CREDITS
@@ -164,6 +166,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.7.8-15
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.7.8-14
 - 为 Magic 3.0 重建
 

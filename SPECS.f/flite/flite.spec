@@ -1,6 +1,6 @@
 Name:           flite
 Version:        1.3
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Small, fast speech synthesis engine (text-to-speech)
 Summary(zh_CN.UTF-8): 小而快速的语音合成引擎（文本转语音）
 
@@ -17,11 +17,7 @@ Patch3:         flite-1.3-implicit_dso_linking.patch
 Patch4:         0001-auserver.c-Only-write-audio-data-to-a-file-in-debug-.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%if 0%{?el4}
-# there is no texi2html for RHEL 4
-%else
 BuildRequires:  texi2html
-%endif
 BuildRequires:  ed alsa-lib-devel autoconf
 
 
@@ -64,12 +60,8 @@ autoconf
 # This package fails parallel make (thus cannot be built using "_smp_flags")
 make
 # Build documentation
-%if 0%{?el4}
-# there is no texi2html for RHEL 4
-%else
-cd doc
-make flite.html
-%endif
+#cd doc
+#make flite.html
 
 
 %install
@@ -89,12 +81,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%if 0%{?el4}
 # there is no texi2html for RHEL 4
 %doc ACKNOWLEDGEMENTS README COPYING README-ALSA.txt
-%else
-%doc ACKNOWLEDGEMENTS README COPYING doc/html README-ALSA.txt
-%endif
 %{_libdir}/*.so.*
 %{_bindir}/*
 
@@ -106,6 +94,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3-23
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3-22
 - 为 Magic 3.0 重建
 

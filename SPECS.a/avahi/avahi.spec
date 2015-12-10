@@ -21,7 +21,7 @@
 
 Name:             avahi
 Version:          0.6.31
-Release:          25%{?dist}
+Release:          27%{?dist}
 Summary:          Local network service discovery
 License:          LGPLv2+
 URL:              http://avahi.org
@@ -45,7 +45,7 @@ BuildRequires:    gtk2-devel
 BuildRequires:    gtk3-devel >= 2.99.0
 #BuildRequires:    gobject-introspection-devel
 %if %{WITH_QT3}
-BuildRequires:    qt-devel
+BuildRequires:    qt3-devel
 %endif
 BuildRequires:    qt4-devel
 BuildRequires:    libdaemon-devel >= 0.11
@@ -635,6 +635,12 @@ exit 0
 %endif
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.6.31-27
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.6.31-26
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.31-25
 - 为 Magic 3.0 重建
 

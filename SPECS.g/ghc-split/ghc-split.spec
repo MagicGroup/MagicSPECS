@@ -7,7 +7,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform-2012.4+
 Version:        0.2.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Combinator library for splitting lists
 
 License:        BSD
@@ -94,6 +94,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.2-7
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.2-6
 - 为 Magic 3.0 重建
 

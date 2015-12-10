@@ -5,7 +5,7 @@
 
 Name:		libssh2
 Version: 1.6.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:	A library implementing the SSH2 protocol
 Summary(zh_CN.UTF-8): 实现 SSH2 协议的库
 Group:		System Environment/Libraries
@@ -132,6 +132,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libssh2.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.6.0-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
 - 更新到 1.6.0
 

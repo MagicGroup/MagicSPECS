@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 虚拟终端使用的紧凑 getty 程序
 Name: mingetty
 Version: 1.08
 License: GPLv2+
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 BuildRoot: %{_tmppath}/%{name}-root
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/mingetty.*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.08-12
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.08-11
 - 为 Magic 3.0 重建
 

@@ -5,8 +5,8 @@
 Summary: A library for viewing source files
 Summary(zh_CN.UTF-8): 查看源代码的库
 Name: gtksourceview3
-Version:	3.19.1
-Release: 3%{?dist}
+Version:	3.19.2
+Release: 2%{?dist}
 License: LGPLv2+ and GPLv2+
 # the library itself is LGPL, some .lang files are GPL
 Group: System Environment/Libraries
@@ -51,11 +51,26 @@ applications which use GtkSourceView 3.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
+%package tests
+Summary: Tests for the gtksourceview3 package
+Summary(zh_CN.UTF-8): %{name} 的测试包
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description tests
+The gtksourceview3-tests package contains tests that can be used to verify
+the functionality of the installed gtksourceview package.
+
+%description tests -l zh_CN.UTF-8
+%{name} 的测试包。
+
 %prep
 %setup -q -n gtksourceview-%{version}
 
 %build
-%configure --disable-gtk-doc --disable-static
+%configure --disable-gtk-doc --disable-static --enable-glade-catalog \
+ --enable-installed-tests
 
 make %{?_smp_mflags}
 
@@ -86,9 +101,24 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/*
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/*.so
+%{_datadir}/glade/catalogs/gtksourceview.xml
 %{_datadir}/gir-1.0/GtkSource-3.0.gir
+%dir %{_datadir}/vala
+%dir %{_datadir}/vala/vapi
+%{_datadir}/vala/vapi/gtksourceview-3.0.deps
+%{_datadir}/vala/vapi/gtksourceview-3.0.vapi
+
+%files tests
+%{_libexecdir}/installed-tests/gtksourceview
+%{_datadir}/installed-tests
 
 %changelog
+* Mon Dec 07 2015 Liu Di <liudidi@gmail.com> - 3.19.2-2
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
 - 更新到 3.19.1
 

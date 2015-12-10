@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.5.6
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Efficient conversion of values into readable byte strings
 
 License:        BSD
@@ -66,6 +66,12 @@ files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.3.5.6-6
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.5.6-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.5.6-4
 - 为 Magic 3.0 重建
 

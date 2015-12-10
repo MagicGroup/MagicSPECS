@@ -3,7 +3,7 @@ Summary: Performance Application Programming Interface
 Summary(zh_CN.UTF-8): 性能监控程序接口
 Name: papi
 Version: 5.4.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: BSD
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
@@ -175,6 +175,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.a
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.4.1-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.4.1-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name: gtkspell
 Version: 2.0.16
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/gtkspell-2.0.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.0.16-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.16-7
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:  rodent-icon-theme
 Summary:    SVG scalable icon theme by Rodent
 Summary(zh_CN.UTF-8): Rodent 提供的可缩放 SVG 图标
 Version:    5.0
-Release:    8%{?dist}
+Release:    9%{?dist}
 
 ## This package replaces xfce4-icon-theme in Fedora >= 20
 Provides: xfce4-icon-theme = %{version}-%{release}
@@ -56,6 +56,9 @@ gtk-update-icon-cache %{_datadir}/icons/Rodent &>/dev/null || :
 %ghost %{_datadir}/icons/Rodent/icon-theme.cache
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.0-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.0-8
 - 为 Magic 3.0 重建
 

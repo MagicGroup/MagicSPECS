@@ -2,7 +2,7 @@
 
 Name:		mldonkey
 Version: 3.1.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:	Client for several P2P networks
 Summary(zh_CN.UTF-8): P2P 网络的客户端
 License:	GPLv2+
@@ -410,6 +410,9 @@ fi
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.1.5-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.1.5-2
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary:        Collection of tasks for Ant
 Name:           ant-contrib
 Version:        1.0
-Release:        0.26.%{beta_number}%{?dist}
+Release:        0.28.%{beta_number}%{?dist}
 License:        ASL 2.0 and ASL 1.1
 URL:            http://ant-contrib.sourceforge.net/
 Group:          Development/Libraries
@@ -88,6 +88,12 @@ install -pm 644 %{name}-1.0b3.pom $RPM_BUILD_ROOT/%{_mavenpomdir}/JPP.ant-%{name
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 1.0-0.28.b3
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0-0.27.b3
+- 为 Magic 3.0 重建
+
 * Thu Jun 12 2014 Liu Di <liudidi@gmail.com> - 1.0-0.26.b3
 - 为 Magic 3.0 重建
 

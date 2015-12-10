@@ -6,7 +6,7 @@
 Summary:    A GNU tool for automatically creating Makefiles
 Name:       automake
 Version:    %{api_version}
-Release:    2%{?dist}
+Release:    3%{?dist}
 
 # docs ~> GFDL, sources ~> GPLv2+, mkinstalldirs ~> PD and install-sh ~> MIT
 License:    GPLv2+ and GFDL and Public Domain and MIT
@@ -122,9 +122,13 @@ fi
 %{_infodir}/*.info*
 %{_datadir}/automake-%{api_version}
 %{_datadir}/aclocal-%{api_version}
+%{_docdir}/automake-%{api_version}/amhello-1.0.tar.gz
 %{_mandir}/man1/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.15-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.15-2
 - 更新到 1.15
 

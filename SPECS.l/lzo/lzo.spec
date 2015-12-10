@@ -1,6 +1,6 @@
 Name:           lzo
 Version:	2.09
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Data compression library with very fast (de)compression
 Summary(zh_CN.UTF-8): 非常快速的压缩/解压库
 Group:          System Environment/Libraries
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.09-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.09-2
 - 更新到 2.09
 

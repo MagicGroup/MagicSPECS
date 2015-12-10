@@ -2,7 +2,7 @@ Summary:    A Router Advertisement daemon
 Summary(zh_CN.UTF-8): 路由器通告信息服务
 Name:       radvd
 Version:	2.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 # The code includes the advertising clause, so it's GPL-incompatible
 License:    BSD with advertising
 Group:      System Environment/Daemons
@@ -94,6 +94,9 @@ exit 0
 %{_sbindir}/radvdump
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.11-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.11-2
 - 为 Magic 3.0 重建
 

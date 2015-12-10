@@ -1,6 +1,6 @@
 Name: xmlstarlet
 Version:	1.6.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary: Command Line XML Toolkit
 Summary(zh_CN.UTF-8): 命令行的 XML 工具
 Group: Applications/Text
@@ -61,6 +61,9 @@ rm -fr %{buildroot}
 %{_docdir}/%{name}-%{version}/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.6.1-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.6.1-3
 - 为 Magic 3.0 重建
 

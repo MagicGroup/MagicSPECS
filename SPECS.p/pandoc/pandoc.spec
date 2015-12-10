@@ -8,7 +8,7 @@
 
 Name:           %{pkg_name}
 Version:        1.13.2
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Conversion between markup formats
 
 License:        GPLv2+
@@ -283,6 +283,12 @@ fi
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 1.13.2-8
+- 为 Magic 3.0 重建
+
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.13.2-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.13.2-6
 - 为 Magic 3.0 重建
 

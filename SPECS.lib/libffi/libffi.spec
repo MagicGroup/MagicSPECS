@@ -2,7 +2,7 @@
 
 Name:		libffi
 Version: 3.2.1
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	A portable foreign function interface library
 Summary(zh_CN.UTF-8): 可移植的外部函数接口库
 
@@ -136,6 +136,9 @@ fi
 %{_infodir}/libffi.info.gz
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 3.2.1-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.2.1-7
 - 更新到 3.2.1
 

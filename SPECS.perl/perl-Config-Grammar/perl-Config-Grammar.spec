@@ -1,6 +1,6 @@
 Name:           perl-Config-Grammar
 Version:        1.10
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Grammar-based, user-friendly config parser
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ find %{buildroot} -type f -name .packlist -delete
 %{_mandir}/man3//Config::Grammar*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.10-16
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.10-15
 - 为 Magic 3.0 重建
 

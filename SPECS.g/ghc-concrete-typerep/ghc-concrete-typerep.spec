@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.0.2
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Binary and Hashable instances for TypeRep
 
 License:        BSD
@@ -78,6 +78,12 @@ files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.1.0.2-10
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.0.2-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.0.2-8
 - 为 Magic 3.0 重建
 

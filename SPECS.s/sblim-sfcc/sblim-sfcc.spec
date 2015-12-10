@@ -8,7 +8,7 @@ Summary: Small Footprint CIM Client Library
 Summary(zh_CN.UTF-8): 轻量级 CIM 客户端
 Name: sblim-sfcc
 Version: 2.2.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License: EPL
@@ -70,6 +70,9 @@ magic_rpm_clean.sh
 %{_libdir}/libcmpisfcc.so
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.2.8-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.2.8-3
 - 为 Magic 3.0 重建
 

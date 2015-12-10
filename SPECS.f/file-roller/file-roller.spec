@@ -2,7 +2,7 @@ Summary:        Tool for viewing and creating archives
 Summary(zh_CN.UTF-8): 查看和创建压缩包的工具
 Name:           file-roller
 Version:	3.16.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2+
 Group:          Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -112,13 +112,17 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/icons/hicolor/*/apps/file-roller.png
 %{_datadir}/glib-2.0/schemas/org.gnome.FileRoller.gschema.xml
 %{_datadir}/GConf/gsettings/file-roller.convert
-
+%{_datadir}/appdata/org.gnome.FileRoller.appdata.xml
+%{_datadir}/icons/hicolor/scalable/apps/file-roller-symbolic.svg
 
 %files nautilus
 %{_libdir}/nautilus/extensions-3.0/libnautilus-fileroller.so
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.16.4-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.16.4-4
 - 更新到 3.16.4
 

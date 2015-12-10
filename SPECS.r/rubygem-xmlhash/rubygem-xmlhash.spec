@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.3.6
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: A small C module to parse a XML string into a ruby hash
 Group: Development/Languages
 License: MIT
@@ -86,6 +86,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.3.6-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3.6-8
 - 为 Magic 3.0 重建
 

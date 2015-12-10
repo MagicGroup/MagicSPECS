@@ -3,7 +3,7 @@
 Summary:        Allows Ruby scripts to interface with a SQLite3 database
 Name:           rubygem-%{gem_name}
 Version:        1.3.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Group:          Development/Languages
 License:        BSD
 URL:            https://github.com/sparklemotion/sqlite3-ruby
@@ -85,6 +85,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.3.10-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3.10-4
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,11 @@
 # only Fedora 20 has Babel >= 1.0 which is the first version supporting Python 3
-%if 0%{?fedora} >= 20
 %global with_python3 1
-%endif
+
+%global default_python 2
 
 Name:           babel
 Version:        1.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tools for internationalizing Python applications
 Summary(zh_CN.UTF-8): 国际化 Python 程序的工具
 
@@ -14,20 +14,27 @@ Group(zh_CN.UTF-8): 开发/语言
 License:        BSD
 URL:            http://babel.pocoo.org/
 Source0:        https://pypi.python.org/packages/source/B/Babel/Babel-%{version}.tar.gz
+Patch0:         babel-remove-pytz-version.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 
-BuildRequires:  python-devel
-BuildRequires:  python-setuptools-devel
+BuildRequires:  python2-devel
+BuildRequires:  python-setuptools
 BuildRequires:  pytz
 
 # build the documentation
 BuildRequires:  make
 BuildRequires:  python-sphinx
 
+%if 0%{default_python} >= 3
+Requires:       python3-babel
+Requires:       python3-setuptools
+%else
 Requires:       python-babel
 Requires:       python-setuptools
+%endif
+
 Requires:       pytz
 
 %if 0%{?with_python3}
@@ -95,6 +102,8 @@ Documentation for Babel
 
 %prep
 %setup0 -q -n Babel-%{version}
+%patch0 -p1
+
 chmod a-x babel/messages/frontend.py
 
 %if 0%{?with_python3}
@@ -131,10 +140,8 @@ popd
 
 %{__python} setup.py install --skip-build --no-compile --root %{buildroot}
 
-%if 0%{?with_python3}
-pushd %{py3dir}
-%{__python3} setup.py test
-popd
+%if 0%{default_python} >= 3
+mv %{py3dir}/pybabel.py3 %{buildroot}/%{_bindir}/pybabel
 %endif
 
 %clean
@@ -161,6 +168,9 @@ rm -rf %{buildroot}
 %doc docs/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 18 2014 Liu Di <liudidi@gmail.com> - 1.3-3
 - 为 Magic 3.0 重建
 

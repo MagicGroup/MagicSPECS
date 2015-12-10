@@ -8,7 +8,7 @@
 Summary: System daemon for tracking users, sessions and seats
 Name: ConsoleKit
 Version: 0.4.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 URL: http://www.freedesktop.org/wiki/Software/ConsoleKit
@@ -197,6 +197,9 @@ fi
 %doc %{_pkgdocdir}/spec/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.4.5-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.4.5-8
 - 为 Magic 3.0 重建
 

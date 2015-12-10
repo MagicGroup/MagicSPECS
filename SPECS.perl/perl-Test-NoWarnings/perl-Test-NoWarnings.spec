@@ -1,6 +1,6 @@
 Name:           perl-Test-NoWarnings
 Version:        1.04
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Make sure you didn't emit any warnings while testing
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.04-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.04-8
 - 为 Magic 3.0 重建
 

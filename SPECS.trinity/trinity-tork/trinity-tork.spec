@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.33
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.3
 Summary:	Anonymity Manager for TDE
 Summary(zh_CN.UTF-8): TDE 下的 tor 管理器
 Group:		Applications/Internet
@@ -164,6 +164,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.33-1.3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.33-1.2
 - 为 Magic 3.0 重建
 

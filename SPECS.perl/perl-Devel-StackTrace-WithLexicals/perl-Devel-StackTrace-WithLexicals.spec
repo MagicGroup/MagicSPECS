@@ -1,6 +1,6 @@
 Name:           perl-Devel-StackTrace-WithLexicals
 Version:	2.01
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Generate stack traces with lexical variables
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.01-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.01-2
 - 为 Magic 3.0 重建
 

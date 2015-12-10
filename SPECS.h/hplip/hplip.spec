@@ -8,7 +8,7 @@ Summary: HP Linux Imaging and Printing Project
 Summary(zh_CN.UTF-8): HP Linux 图像和打印项目
 Name: hplip
 Version: 3.15.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+ and MIT
 
 Url: http://hplip.sourceforge.net/
@@ -475,6 +475,9 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.15.9-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.15.9-2
 - 更新到 3.15.9
 

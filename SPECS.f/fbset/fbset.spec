@@ -2,7 +2,7 @@ Summary: Tools for managing a frame buffer's video mode properties.
 Summary(zh_CN.UTF-8): 管理帧缓冲的视频模式属性的工具。
 Name: fbset
 Version: 2.1
-Release: 24%{?dist}
+Release: 25%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -49,6 +49,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %config	%{_sysconfdir}/fb.modes
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1-25
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1-24
 - 为 Magic 3.0 重建
 

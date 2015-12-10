@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.1
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Interface to the Online Encyclopedia of Integer Sequences
 
 License:        BSD
@@ -66,6 +66,9 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.1-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.1-11
 - 为 Magic 3.0 重建
 

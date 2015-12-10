@@ -4,7 +4,7 @@ Summary:        XML Pull Parser
 Summary(zh_CN.UTF-8): XML 解析器
 Name:           xpp3
 Version:        1.1.4
-Release:        5.c%{?dist}
+Release:        6.c%{?dist}
 License:        ASL 1.1
 URL:            http://www.extreme.indiana.edu/xgws/xsoap/xpp/mxp1/index.html
 Source0:        http://www.extreme.indiana.edu/dist/java-repository/xpp3/distributions/xpp3-%{oversion}_src.tgz
@@ -98,6 +98,9 @@ cp -pr doc/api/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.1.4-6.c
+- 为 Magic 3.0 重建
+
 * Tue Oct 27 2015 Liu Di <liudidi@gmail.com> - 1.1.4-5.c
 - 为 Magic 3.0 重建
 

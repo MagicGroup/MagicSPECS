@@ -5,7 +5,7 @@ URL:            http://www.compiz.org
 License:        GPLv2
 Group:          User Interface/Desktops
 Version:        0.5.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 Epoch:          1 
 Summary:        Themes for Emerald, a window decorator for Compiz Fusion
 Source0:        http://cgit.compiz.org/fusion/decorators/emerald-themes/snapshot/%{name}-%{version}.tar.bz2
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -type f -name "*.bak" | xargs rm -f
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.5.2-13
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:0.5.2-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:         codemodel
 Version:      2.6
-Release:      17%{?dist}
+Release:      18%{?dist}
 Summary:      Java library for code generators
 License:      CDDL and GPLv2
 URL:          http://codemodel.java.net
@@ -59,6 +59,9 @@ find . -name '*.jar' -print -delete
 %doc LICENSE.html
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.6-18
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.6-17
 - 为 Magic 3.0 重建
 

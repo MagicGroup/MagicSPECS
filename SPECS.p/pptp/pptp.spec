@@ -1,6 +1,6 @@
 Name:		pptp
 Version:	1.8.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Point-to-Point Tunneling Protocol (PPTP) Client
 Summary(zh_CN.UTF-8): 点对点隧道协议 (PPTP) 客户端
 Group:		Applications/Internet
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 %{_mandir}/man8/pptpsetup.8*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.8.0-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.8.0-3
 - 为 Magic 3.0 重建
 

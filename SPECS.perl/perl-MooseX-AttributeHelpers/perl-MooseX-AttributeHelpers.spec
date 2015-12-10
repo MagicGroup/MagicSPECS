@@ -1,6 +1,6 @@
 Name:           perl-MooseX-AttributeHelpers
 Version:	0.24
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Extended Moose attribute interfaces
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.24-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.24-3
 - 为 Magic 3.0 重建
 

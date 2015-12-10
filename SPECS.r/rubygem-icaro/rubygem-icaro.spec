@@ -3,7 +3,7 @@
 Summary: Icaro API for Ruby
 Name: rubygem-%{gem_name}
 Version: 1.0.6
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Languages
 License: GPLv3
 URL: http://github.com/aeperezt/ruby-icaro 
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.6-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.6-7
 - 为 Magic 3.0 重建
 

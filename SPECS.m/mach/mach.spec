@@ -1,6 +1,6 @@
 Name:           mach
 Version: 1.0.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Make a chroot
 Summary(zh_CN.UTF-8): 制作 chroot
 
@@ -114,6 +114,9 @@ fi
 %attr(04750,root,mach) %{_sbindir}/mach-helper
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.4-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.4-2
 - 更新到 1.0.4
 

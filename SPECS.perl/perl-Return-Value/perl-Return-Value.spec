@@ -1,6 +1,6 @@
 Name:           perl-Return-Value
 Version:        1.666004
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Polymorphic Return Values
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.666004-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.666004-5
 - 为 Magic 3.0 重建
 

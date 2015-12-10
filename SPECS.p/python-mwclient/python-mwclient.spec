@@ -3,7 +3,7 @@
 
 Name:           python-mwclient
 Version:	0.7.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Mwclient is a client to the MediaWiki API
 Summary(zh_CN.UTF-8): 这是 MediaWiki 的客户端 API
 
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python2_sitelib}/%{github_name}*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.7.2-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.7.2-2
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,45 @@
+From 351e776744c56bf6c4afb75e8e9f510e89c15233 Mon Sep 17 00:00:00 2001
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Mon, 29 Jun 2015 14:18:38 -0400
+Subject: [PATCH 19/19] =?UTF-8?q?ppc64/ppc64le:=20Fix=20behaviour=20of=20I?=
+ =?UTF-8?q?nt64.max=5Fint=20=C3=B7=20-1=20(RHBZ#1236615).?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+I only tested this on ppc64le, but assume the behaviour is the
+same on ppc64.
+---
+ asmcomp/power64/arch.ml   | 2 +-
+ asmcomp/power64le/arch.ml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/asmcomp/power64/arch.ml b/asmcomp/power64/arch.ml
+index 73c516d..ccd11fc 100644
+--- a/asmcomp/power64/arch.ml
++++ b/asmcomp/power64/arch.ml
+@@ -46,7 +46,7 @@ let allow_unaligned_access = false
+ 
+ (* Behavior of division *)
+ 
+-let division_crashes_on_overflow = false
++let division_crashes_on_overflow = true
+ 
+ (* Operations on addressing modes *)
+ 
+diff --git a/asmcomp/power64le/arch.ml b/asmcomp/power64le/arch.ml
+index 586534b..2155e79 100644
+--- a/asmcomp/power64le/arch.ml
++++ b/asmcomp/power64le/arch.ml
+@@ -46,7 +46,7 @@ let allow_unaligned_access = false
+ 
+ (* Behavior of division *)
+ 
+-let division_crashes_on_overflow = false
++let division_crashes_on_overflow = true
+ 
+ (* Operations on addressing modes *)
+ 
+-- 
+2.4.3
+

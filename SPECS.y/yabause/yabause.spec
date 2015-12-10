@@ -2,7 +2,7 @@
 
 Name:           yabause
 Version:	0.9.14
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        A Sega Saturn emulator
 Summary(zh_CN): Sega 土星模拟器
 Group:          Applications/Emulators
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.9.14-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.9.14-3
 - 为 Magic 3.0 重建
 

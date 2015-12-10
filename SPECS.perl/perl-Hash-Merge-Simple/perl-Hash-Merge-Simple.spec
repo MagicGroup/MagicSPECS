@@ -1,6 +1,6 @@
 Name:       perl-Hash-Merge-Simple 
 Version:	0.051
-Release:	2%{?dist}
+Release:	3%{?dist}
 # lib/Hash/Merge/Simple.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.051-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.051-2
 - 为 Magic 3.0 重建
 

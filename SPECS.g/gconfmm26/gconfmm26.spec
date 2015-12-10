@@ -1,6 +1,6 @@
 Name:           gconfmm26
 Version:        2.28.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 Summary:        C++ wrapper for GConf2
 Summary(zh_CN.UTF-8): GConf2 的 C++ 接口
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/gconfmm-2.6/reference/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.28.3-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.28.3-3
 - 为 Magic 3.0 重建
 

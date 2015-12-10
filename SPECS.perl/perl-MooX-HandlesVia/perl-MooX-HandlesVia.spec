@@ -1,6 +1,6 @@
 Name:           perl-MooX-HandlesVia
 Version:        0.001008
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        NativeTrait-like behavior for Moo
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.001008-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.001008-4
 - 为 Magic 3.0 重建
 

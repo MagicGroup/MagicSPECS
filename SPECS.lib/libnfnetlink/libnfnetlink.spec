@@ -1,6 +1,6 @@
 Name:           libnfnetlink
 Version:        1.0.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Netfilter netlink userspace library
 Summary(zh_CN.UTF-8): Netfilter netlink 用户空间库
 Group:          System Environment/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libnfnetlink/*.h
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.1-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.1-6
 - 为 Magic 3.0 重建
 

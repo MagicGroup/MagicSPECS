@@ -8,7 +8,7 @@ Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
 Version: 4.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 
 Source10: 16-start-here-magic.png
@@ -68,6 +68,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/oxygen
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.3-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.3-2
 - 更新到 4.3
 

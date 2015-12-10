@@ -1,6 +1,6 @@
 Name:           dash
 Version:	0.5.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Small and fast POSIX-compliant shell
 Summary(zh_CN.UTF-8): 小而快速的 POSIX 兼容 shell
 Group:          System Environment/Shells
@@ -8,6 +8,8 @@ Group(zh_CN.UTF-8): 系统环境/外壳
 License:        BSD
 URL:            http://gondor.apana.org.au/~herbert/dash/
 Source0:        http://gondor.apana.org.au/~herbert/dash/files/dash-%{version}.tar.gz
+# http://www.mail-archive.com/dash@vger.kernel.org/msg00879.html
+Patch0:         %{name}-0.5.7-format-security.patch
 
 %description
 DASH is a POSIX-compliant implementation of /bin/sh that aims to be as small as
@@ -19,6 +21,7 @@ significantly faster than bash (the GNU Bourne-Again SHell) for most tasks.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %configure
@@ -37,11 +40,13 @@ if [ $1 -eq 0 ]; then
 fi
 
 %files
-%doc INSTALL COPYING ChangeLog
 %{_bindir}/dash
 %{_datadir}/man/man1/dash.1.gz
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5.8-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.8-4
 - 更新到 0.5.8
 

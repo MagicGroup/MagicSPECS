@@ -5,7 +5,7 @@
 
 Name:               python-%{modname}
 Version:	1.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:            Test vectors for the cryptography package
 Summary(zh_CN.UTF-8): 加密库包的测试向量
 
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1-2
 - 更新到 1.1
 

@@ -1,0 +1,161 @@
+diff -ur cfe-3.7.0.src.orig/lib/Driver/ToolChains.cpp cfe-3.7.0.src/lib/Driver/ToolChains.cpp
+--- cfe-3.7.0.src.orig/lib/Driver/ToolChains.cpp	2015-11-25 14:49:45.842387764 +0800
++++ cfe-3.7.0.src/lib/Driver/ToolChains.cpp	2015-11-25 15:01:01.468370448 +0800
+@@ -1266,7 +1266,7 @@
+   static const char *const AArch64LibDirs[] = {"/lib64", "/lib"};
+   static const char *const AArch64Triples[] = {
+       "aarch64-none-linux-gnu", "aarch64-linux-gnu", "aarch64-linux-android",
+-      "aarch64-redhat-linux"};
++      "aarch64-redhat-linux", "aarch64-magic-linux"};
+   static const char *const AArch64beLibDirs[] = {"/lib"};
+   static const char *const AArch64beTriples[] = {"aarch64_be-none-linux-gnu",
+                                                  "aarch64_be-linux-gnu"};
+@@ -1275,18 +1275,20 @@
+   static const char *const ARMTriples[] = {"arm-linux-gnueabi",
+                                            "arm-linux-androideabi"};
+   static const char *const ARMHFTriples[] = {"arm-linux-gnueabihf",
+-                                             "armv7hl-redhat-linux-gnueabi"};
++                                             "armv7hl-redhat-linux-gnueabi",
++					     "armv7hl-magic-linux-gnueabi"};
+   static const char *const ARMebLibDirs[] = {"/lib"};
+   static const char *const ARMebTriples[] = {"armeb-linux-gnueabi",
+                                              "armeb-linux-androideabi"};
+   static const char *const ARMebHFTriples[] = {
+-      "armeb-linux-gnueabihf", "armebv7hl-redhat-linux-gnueabi"};
++      "armeb-linux-gnueabihf", "armebv7hl-redhat-linux-gnueabi", "armebv7hl-magic-linux-gnueabi"};
+ 
+   static const char *const X86_64LibDirs[] = {"/lib64", "/lib"};
+   static const char *const X86_64Triples[] = {
+       "x86_64-linux-gnu",       "x86_64-unknown-linux-gnu",
+       "x86_64-pc-linux-gnu",    "x86_64-redhat-linux6E",
+-      "x86_64-redhat-linux",    "x86_64-suse-linux",
++      "x86_64-redhat-linux",    "x86_64-magic-linux6E",
++      "x86_64-magic-linux",     "x86_64-suse-linux",
+       "x86_64-manbo-linux-gnu", "x86_64-linux-gnu",
+       "x86_64-slackware-linux", "x86_64-linux-android",
+       "x86_64-unknown-linux"};
+@@ -1295,7 +1297,9 @@
+   static const char *const X86Triples[] = {
+       "i686-linux-gnu",       "i686-pc-linux-gnu",     "i486-linux-gnu",
+       "i386-linux-gnu",       "i386-redhat-linux6E",   "i686-redhat-linux",
+-      "i586-redhat-linux",    "i386-redhat-linux",     "i586-suse-linux",
++      "i586-redhat-linux",    "i386-redhat-linux",     "i386-magic-linux6E",
++      "i686-magic-linux",     "i586-magic-linux",      "i386-magic-linux",
++      "i586-suse-linux",
+       "i486-slackware-linux", "i686-montavista-linux", "i686-linux-android",
+       "i586-linux-gnu"};
+ 
+@@ -1304,7 +1308,8 @@
+       "mips-linux-gnu", "mips-mti-linux-gnu", "mips-img-linux-gnu"};
+   static const char *const MIPSELLibDirs[] = {"/lib"};
+   static const char *const MIPSELTriples[] = {
+-      "mipsel-linux-gnu", "mipsel-linux-android", "mips-img-linux-gnu"};
++      "mipsel-linux-gnu", "mipsel-linux-android", "mips-img-linux-gnu",
++      "mipsel-magic-linux", "mipsel-magic-linux-gnu"};
+ 
+   static const char *const MIPS64LibDirs[] = {"/lib64", "/lib"};
+   static const char *const MIPS64Triples[] = {
+@@ -1313,7 +1318,8 @@
+   static const char *const MIPS64ELLibDirs[] = {"/lib64", "/lib"};
+   static const char *const MIPS64ELTriples[] = {
+       "mips64el-linux-gnu", "mips-mti-linux-gnu", "mips-img-linux-gnu",
+-      "mips64el-linux-android", "mips64el-linux-gnuabi64"};
++      "mips64el-linux-android", "mips64el-linux-gnuabi64", 
++      "mips64el-magic-linux", "mips64el-magic-linux-gnu"};
+ 
+   static const char *const PPCLibDirs[] = {"/lib32", "/lib"};
+   static const char *const PPCTriples[] = {
+@@ -1322,11 +1328,11 @@
+   static const char *const PPC64LibDirs[] = {"/lib64", "/lib"};
+   static const char *const PPC64Triples[] = {
+       "powerpc64-linux-gnu", "powerpc64-unknown-linux-gnu",
+-      "powerpc64-suse-linux", "ppc64-redhat-linux"};
++      "powerpc64-suse-linux", "ppc64-redhat-linux", "ppc64-magic-linux"};
+   static const char *const PPC64LELibDirs[] = {"/lib64", "/lib"};
+   static const char *const PPC64LETriples[] = {
+       "powerpc64le-linux-gnu", "powerpc64le-unknown-linux-gnu",
+-      "powerpc64le-suse-linux", "ppc64le-redhat-linux"};
++      "powerpc64le-suse-linux", "ppc64le-redhat-linux", "ppc64le-magic-linux"};
+ 
+   static const char *const SPARCv8LibDirs[] = {"/lib32", "/lib"};
+   static const char *const SPARCv8Triples[] = {"sparc-linux-gnu",
+@@ -1338,7 +1344,7 @@
+   static const char *const SystemZLibDirs[] = {"/lib64", "/lib"};
+   static const char *const SystemZTriples[] = {
+       "s390x-linux-gnu", "s390x-unknown-linux-gnu", "s390x-ibm-linux-gnu",
+-      "s390x-suse-linux", "s390x-redhat-linux"};
++      "s390x-suse-linux", "s390x-redhat-linux", "s390x-magic-linux"};
+ 
+   using std::begin;
+   using std::end;
+@@ -2867,6 +2873,7 @@
+   RHEL6,
+   RHEL7,
+   Fedora,
++  Magic,
+   OpenSUSE,
+   UbuntuHardy,
+   UbuntuIntrepid,
+@@ -2893,6 +2900,10 @@
+ 
+ static bool IsOpenSUSE(enum Distro Distro) { return Distro == OpenSUSE; }
+ 
++static bool IsMagic(enum Distro Distro) {
++  return Distro == Magic;
++}
++
+ static bool IsDebian(enum Distro Distro) {
+   return Distro >= DebianLenny && Distro <= DebianStretch;
+ }
+@@ -2951,6 +2962,18 @@
+     return UnknownDistro;
+   }
+ 
++  /*File = llvm::MemoryBuffer::getFile("/etc/magic-release");
++  if (File) {
++    StringRef Data = File.get()->getBuffer();
++    if ( Data.startswith("Magic") {
++      if (Data.find("release 4") != StringRef::npos)
++        return Magic;
++      else if (Data.find("release 3") != StringRef::npos)
++        return Magic;
++    }
++    return UnknownDistro;
++  }*/
++
+   File = llvm::MemoryBuffer::getFile("/etc/debian_version");
+   if (File) {
+     StringRef Data = File.get()->getBuffer();
+@@ -2970,6 +2993,9 @@
+   if (llvm::sys::fs::exists("/etc/SuSE-release"))
+     return OpenSUSE;
+ 
++  if (llvm::sys::fs::exists("/etc/magic-release"))
++    return Magic;
++
+   if (llvm::sys::fs::exists("/etc/exherbo-release"))
+     return Exherbo;
+ 
+@@ -3162,7 +3188,7 @@
+   // ABI requires a mapping between the GOT and the symbol table.
+   // Android loader does not support .gnu.hash.
+   if (!IsMips && !IsAndroid) {
+-    if (IsRedhat(Distro) || IsOpenSUSE(Distro) ||
++    if (IsRedhat(Distro) || IsOpenSUSE(Distro) || IsMagic(Distro) ||
+         (IsUbuntu(Distro) && Distro >= UbuntuMaverick))
+       ExtraOpts.push_back("--hash-style=gnu");
+ 
+@@ -3171,11 +3197,11 @@
+       ExtraOpts.push_back("--hash-style=both");
+   }
+ 
+-  if (IsRedhat(Distro))
++  if (IsRedhat(Distro) || IsMagic(Distro))
+     ExtraOpts.push_back("--no-add-needed");
+ 
+   if ((IsDebian(Distro) && Distro >= DebianSqueeze) || IsOpenSUSE(Distro) ||
+-      (IsRedhat(Distro) && Distro != RHEL4 && Distro != RHEL5) ||
++      (IsRedhat(Distro) && Distro != RHEL4 && Distro != RHEL5) || IsMagic(Distro) ||
+       (IsUbuntu(Distro) && Distro >= UbuntuKarmic))
+     ExtraOpts.push_back("--build-id");
+ 

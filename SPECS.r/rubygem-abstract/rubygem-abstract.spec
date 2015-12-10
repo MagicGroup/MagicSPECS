@@ -5,7 +5,7 @@
 Summary: Allows you to define an abstract method in Ruby
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 14%{?dist}
+Release: 15%{?dist}
 Group: Development/Languages
 License: GPLv2 or Ruby
 URL: http://rubyforge.org/projects/abstract
@@ -78,6 +78,9 @@ rm -f %{buildroot}%{gem_instdir}/setup.rb
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.0-15
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.0-14
 - 为 Magic 3.0 重建
 

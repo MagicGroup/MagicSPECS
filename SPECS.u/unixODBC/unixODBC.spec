@@ -2,7 +2,7 @@ Summary: A complete ODBC driver manager for Linux
 Summary(zh_CN.UTF-8): Linux 下的 ODBC 驱动管理器
 Name: unixODBC
 Version:	2.3.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.unixODBC.org/
@@ -162,6 +162,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2.3.4-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.3.4-2
 - 为 Magic 3.0 重建
 

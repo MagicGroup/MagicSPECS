@@ -45,7 +45,7 @@ Version:        %{upstream_version}.2
 # - release can only be reset if all library versions get bumped simultaneously
 #   (eg for a major release)
 # - minor release numbers should be incremented monotonically
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Standard Haskell distribution
 
 Group:          Development/Tools
@@ -264,6 +264,9 @@ rm %{buildroot}/%{_docdir}/ghc-%{name}*/LICENSE
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 2014.2.0.0.2-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2014.2.0.0.2-7
 - 为 Magic 3.0 重建
 

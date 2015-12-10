@@ -5,7 +5,7 @@
 Name:		nacl-arm-gcc
 Summary:	Various compilers (C, C++) for nacl (ARM)
 Version:	4.9.2
-Release:	5.git%{gitver}%{?dist}
+Release:	7.git%{gitver}%{?dist}
 # Generated from git
 # git clone https://chromium.googlesource.com/native_client/nacl-gcc
 # (Checkout ID taken from native_client/toolchain_build/toolchain_build.py
@@ -149,6 +149,12 @@ rm -rf %{buildroot}%{_datadir}/gcc-%{version}
 %endif
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 4.9.2-7.git336bd0b
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 4.9.2-6.git336bd0b
+- 为 Magic 3.0 重建
+
 * Thu Oct  1 2015 Tom Callaway <spot@fedoraproject.org> 4.9.2-5.git336bd0b
 - bootstrap off
 

@@ -1,6 +1,6 @@
 Name:		libgcroots
 Version:	0.2.3
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	MIT
 URL:		http://code.google.com/p/sigscheme/wiki/libgcroots
 
@@ -74,6 +74,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/gcroots.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.2.3-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.3-8
 - 为 Magic 3.0 重建
 

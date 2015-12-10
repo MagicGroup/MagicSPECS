@@ -7,7 +7,7 @@ Name:       taglib
 Summary:    Audio Meta-Data Library
 Summary(zh_CN.UTF-8): 音频元数据库
 Version:    1.9.1
-Release:    4%{?dist}
+Release:    5%{?dist}
 
 License:    LGPLv2 and MPL
 #URL:       http://launchpad.net/taglib
@@ -145,6 +145,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.9.1-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.9.1-4
 - 为 Magic 3.0 重建
 

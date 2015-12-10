@@ -2,7 +2,7 @@
 
 Name:           mtpfs
 Version:        1.1
-Release:        0.6.svn%{svndate}%{?dist}
+Release:        0.7.svn%{svndate}%{?dist}
 Summary:        FUSE file system allowing MTP device to be mounted and browsed
 Summary(zh_CN.UTF-8): 可以挂载 MTP 设备进行浏览的 FUSE 文件系统
 
@@ -61,6 +61,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1-0.7.svn20120510
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-0.6.svn20120510
 - 为 Magic 3.0 重建
 

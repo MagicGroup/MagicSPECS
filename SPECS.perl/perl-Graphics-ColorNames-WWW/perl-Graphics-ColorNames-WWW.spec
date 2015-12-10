@@ -1,6 +1,6 @@
 Name:           perl-Graphics-ColorNames-WWW
 Version:        1.13
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        WWW color names and equivalent RGB values
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.13-17
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.13-16
 - 为 Magic 3.0 重建
 

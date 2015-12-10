@@ -2,7 +2,7 @@ Summary:	Library for easy parsing of XMP metadata
 Summary(zh_CN.UTF-8): 易用的解析 XMP 元数据的库
 Name:		exempi
 Version:	2.2.2
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	BSD
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -68,6 +68,7 @@ rm -rf %{buildroot}
 %doc AUTHORS ChangeLog COPYING README
 %{_bindir}/exempi
 %{_libdir}/*.so.*
+%{_mandir}/man1/exempi.1*
 
 %files devel
 %defattr(-, root, root, -)
@@ -76,6 +77,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.2.2-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.2.2-3
 - 更新到 2.2.2
 

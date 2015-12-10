@@ -2,7 +2,7 @@ Summary: Monitor the progress of data through a pipe
 Summary(zh_CN.UTF-8): 监视管理中的数据传输进度
 Name: pv
 Version:	1.6.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: Artistic 2.0
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -53,6 +53,9 @@ make test
 %doc README doc/NEWS doc/TODO doc/COPYING
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.6.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name: libmowgli
 Version: 1.0.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 Summary: Library of many utility functions and classes
 Summary(zh_CN.UTF-8): 许多函数和类的库
@@ -87,6 +87,9 @@ exit 0
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.0-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.0-5
 - 为 Magic 3.0 重建
 

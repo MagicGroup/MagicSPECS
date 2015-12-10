@@ -2,7 +2,7 @@ Summary:    Non-interactive SSH authentication utility
 Summary(zh_CN.UTF-8): 非交互式的 SSH 认证工具
 Name:       sshpass
 Version:    1.05
-Release:    6%{?dist}
+Release:    7%{?dist}
 License:    GPLv2
 Group:      Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -34,6 +34,9 @@ magic_rpm_clean.sh
 %doc AUTHORS COPYING ChangeLog NEWS
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.05-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.05-6
 - 为 Magic 3.0 重建
 

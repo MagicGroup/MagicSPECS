@@ -3,7 +3,7 @@
 Summary: Library and frontend for decoding MPEG2/4 AAC
 Name: faad2
 Version: 2.7
-Release: 19%{?dist}
+Release: 20%{?dist}
 License: GPLv2
 Group: Applications/Multimedia
 Source0: http://download.sourceforge.net/faac/%{name}-%{version}.tar.bz2
@@ -134,6 +134,9 @@ rm -rf %{buildroot}
 %{_includedir}/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.7-20
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.7-19
 - 为 Magic 3.0 重建
 

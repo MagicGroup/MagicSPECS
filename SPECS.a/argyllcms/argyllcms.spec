@@ -1,6 +1,6 @@
 Name:    argyllcms
 Version: 1.8.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: ICC compatible color management system
 Summary(zh_CN.UTF-8): 兼容 ICC 的颜色管理系统
 Group:   User Interface/X
@@ -101,6 +101,9 @@ magic_rpm_clean.sh
 %doc doc/*.html doc/*.jpg doc/*.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.8.2-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.8.2-3
 - 为 Magic 3.0 重建
 

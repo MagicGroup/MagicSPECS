@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 #
 # Copyright (C) 2011-2012 Red Hat, Inc
 #
@@ -5,7 +6,7 @@ Summary: Device-mapper thin provisioning tools
 Summary(zh_CN.UTF-8):  设备映射器自动精简配置工具
 Name: device-mapper-persistent-data
 Version: 0.5.6
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv3+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -60,8 +61,22 @@ magic_rpm_clean.sh
 %{_datadir}/man/man8/thin_metadata_size.8.gz
 %{_datadir}/man/man8/thin_repair.8.gz
 %{_datadir}/man/man8/thin_rmap.8.gz
+%{_sbindir}/cache_metadata_size
+%{_sbindir}/era_restore
+%{_sbindir}/pdata_tools
+%{_sbindir}/thin_delta
+%{_sbindir}/thin_trim
+%{_mandir}/man8/era_check.8.gz
+%{_mandir}/man8/era_dump.8.gz
+%{_mandir}/man8/era_invalidate.8.gz
+%{_mandir}/man8/thin_delta.8.gz
+%{_mandir}/man8/thin_trim.8.gz
+
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5.6-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.6-4
 - 更新到 0.5.6
 

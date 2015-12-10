@@ -1,7 +1,7 @@
 Summary: Stub to allow choosing Ruby runtime
 Name: rubypick
 Version: 1.1.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: MIT
 URL: https://github.com/bkabrda/rubypick
 Source0: https://github.com/bkabrda/%{name}/archive/v%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -33,6 +33,9 @@ cp -a ruby %{buildroot}%{_bindir}
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.1.1-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.1-6
 - 为 Magic 3.0 重建
 

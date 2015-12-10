@@ -1,6 +1,8 @@
 # https://fedoraproject.org/wiki/Packaging:Haskell
 
-%bcond_without tests
+# should get fixed in 3.1.5
+# https://github.com/simonmar/alex/issues/62
+%bcond_with tests
 %bcond_without static
 
 # no useful debuginfo for Haskell packages without C sources
@@ -9,7 +11,7 @@
 Name:           alex
 # part of haskell-platform
 Version:        3.1.4
-Release:        4%{?dist}
+Release:        7%{?dist}
 Summary:        Tool for generating lexical analysers in Haskell
 
 License:        BSD
@@ -164,6 +166,15 @@ fi
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 3.1.4-7
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 3.1.4-6
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.1.4-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.1.4-4
 - 为 Magic 3.0 重建
 

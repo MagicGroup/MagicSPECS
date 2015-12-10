@@ -3,7 +3,7 @@
 Summary:    	Hoe is a simple rake/rubygems helper for project Rakefiles
 Name:       	rubygem-%{gem_name}
 Version:    	3.14.0
-Release:    	3%{?dist}
+Release:    	4%{?dist}
 Group:      	Development/Languages
 License:    	MIT
 URL:        	http://rubyforge.org/projects/seattlerb/
@@ -167,6 +167,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.14.0-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.14.0-3
 - 为 Magic 3.0 重建
 

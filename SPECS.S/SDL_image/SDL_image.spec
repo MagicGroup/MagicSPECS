@@ -1,6 +1,6 @@
 Name:		SDL_image
 Version:	1.2.12
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Image loading library for SDL
 Summary(zh_CN.UTF-8): SDL 的图像载入库
 
@@ -93,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.12-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.12-6
 - 为 Magic 3.0 重建
 

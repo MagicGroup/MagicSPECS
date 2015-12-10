@@ -1,7 +1,7 @@
 #!/bin/bash
 url="https://sourceforge.net/projects/espeak"
 new1="espeak-"
-new2=".zip"
+new2="-source.zip"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

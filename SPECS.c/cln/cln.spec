@@ -1,6 +1,6 @@
 Name:           cln
 Version:	1.3.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Class Library for Numbers
 Summary(zh_CN.UTF-8): 数字类库
 
@@ -9,8 +9,7 @@ Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            http://www.ginac.de/CLN/
 Source0:        http://www.ginac.de/CLN/%{name}-%{version}.tar.bz2
-Patch0:		cln-1.2.2-gcc44.patch
-Patch1:   cln-1.3.3-fix-mips64el.patch
+Patch1:   cln-1.3.4-fix-mips64el.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): /sbin/install-info
@@ -46,7 +45,6 @@ the CLN library.
 
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
 
 %build
@@ -92,6 +90,9 @@ fi
 %exclude %{_libdir}/*.la
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3.4-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3.4-2
 - 更新到 1.3.4
 

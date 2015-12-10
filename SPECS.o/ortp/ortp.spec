@@ -1,6 +1,6 @@
 Name:           ortp
 Version:	0.24.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Summary(zh_CN.UTF-8): RTP 协议的 C 库实现
 Epoch:          1
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:0.24.2-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:0.24.2-2
 - 为 Magic 3.0 重建
 

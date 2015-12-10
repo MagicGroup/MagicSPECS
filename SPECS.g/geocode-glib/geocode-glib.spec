@@ -2,7 +2,7 @@
 
 Name:           geocode-glib
 Version:	3.18.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Geocoding helper library
 Summary(zh_CN.UTF-8): 地理编码辅助库
 
@@ -76,6 +76,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
 - 更新到 3.18.0
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.11
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: A Ruby client for Apache Solr
 Group: Development/Languages
 License: ASL 2.0
@@ -66,6 +66,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.11-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.11-4
 - 为 Magic 3.0 重建
 

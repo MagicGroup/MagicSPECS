@@ -7,8 +7,7 @@ Summary:   Cron daemon for executing programs at set times
 Summary(zh_CN.UTF-8): 在指定的时间执行程序的 cron 服务
 Name:      cronie
 Version:	1.5.0
-Release:   6%{?dist}
-Patch0:    correct-env.patch
+Release:   7%{?dist}
 Patch1:    unitfile-killprocess.patch
 License:   MIT and BSD and ISC and GPLv2+
 Group:     System Environment/Base
@@ -96,7 +95,6 @@ extra features.
 
 %prep
 %setup -q
-%patch0 -p1 -b .jobenv
 %patch1 -p1
 
 %build
@@ -222,6 +220,9 @@ exit 0
 %attr(0644,root,root) %{_sysconfdir}/cron.d/dailyjobs
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.5.0-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.0-6
 - 更新到 1.5.0
 

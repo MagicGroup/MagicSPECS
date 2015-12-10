@@ -4,7 +4,7 @@
 Summary:		ANother Tool for Language Recognition
 Name:			antlr
 Version:		2.7.7
-Release:		34%{?dist}
+Release:		36%{?dist}
 Epoch:			0
 License:		Public Domain
 URL:			http://www.antlr.org/
@@ -193,6 +193,12 @@ install -p -m 644 %{SOURCE3} $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
 %{python_sitelib}/antlr-*
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:2.7.7-36
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:2.7.7-35
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0:2.7.7-34
 - 为 Magic 3.0 重建
 

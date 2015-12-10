@@ -1,6 +1,6 @@
 Name:           perl-Mail-RFC822-Address
 Version:        0.3
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Perl extension for validating email addresses according to RFC822
 License:        MIT
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.3-16
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.3-15
 - 为 Magic 3.0 重建
 

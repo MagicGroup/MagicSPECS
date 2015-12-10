@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A fast, high resolution timer library for recording performance metrics
 Group: Development/Languages
 License: ISC
@@ -80,6 +80,9 @@ popd
 %{gem_instdir}/examples/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.2-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.2-3
 - 为 Magic 3.0 重建
 

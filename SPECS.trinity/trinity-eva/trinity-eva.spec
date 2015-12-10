@@ -29,9 +29,9 @@ Summary(zh_CN.UTF-8): KDE 下的 QQ 客户端
 Name: trinity-%{tde_pkg}
 Version: 0.4.92
 %if %{git}
-Release: 0.git%{gitdate}%{?dist}.3
+Release: 0.git%{gitdate}%{?dist}.4
 %else
-Release: %{_release}.3
+Release: %{_release}.4
 %endif
 License: GPL
 URL: http://www.sourceforge.net/projects/evaq
@@ -104,6 +104,9 @@ magic_rpm_clean.sh
 %{tde_datadir}
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.4.92-0.cvs.20111229.2.4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.92-0.cvs.20111229.2.3
 - 为 Magic 3.0 重建
 

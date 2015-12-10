@@ -2,7 +2,7 @@
 
 Name:           xfce4-settings
 Version:	4.12.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary:        Settings Manager for Xfce
 Summary(zh_CN.UTF-8): Xfce 的设置管理程序
 
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 %{_datadir}/icons/hicolor/128x128/devices/xfce-*.png
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 4.12.0-5
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.12.0-4
 - 为 Magic 3.0 重建
 

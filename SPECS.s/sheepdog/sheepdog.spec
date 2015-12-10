@@ -2,7 +2,7 @@ Name: sheepdog
 Summary: The Sheepdog Distributed Storage System for KVM/QEMU
 Summary(zh_CN.UTF-8): KVM/QEMU 使用的 sheepdog 分布式存储系统
 Version: 0.3.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: GPLv2 and GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -93,6 +93,9 @@ fi
 %{_mandir}/man8/sheep.8*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.3.0-11
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.0-10
 - 为 Magic 3.0 重建
 

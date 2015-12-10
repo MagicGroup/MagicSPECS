@@ -1,6 +1,6 @@
 Name:           perl-Test-DistManifest
 Version:	1.014
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Author test that validates a package MANIFEST
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ rm debug*.list
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.014-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.014-2
 - 为 Magic 3.0 重建
 

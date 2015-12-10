@@ -1,6 +1,6 @@
 Name:		btrfs-progs
-Version:	4.2.3
-release:	3%{?dist}
+Version:	4.3.1
+release:	1%{?dist}
 Summary:	Userspace programs for btrfs
 Summary(zh_CN.UTF-8): btrfs 的用户空间程序
 
@@ -14,7 +14,6 @@ Source0:	https://www.kernel.org/pub/linux/kernel/people/kdave/%{name}/%{name}-v%
 # Still must reverse-engineer fixes in there and get upstream
 Patch0:		btrfs-progs-valgrind.patch
 Patch1:		btrfs-init-dev-list.patch
-# Applied
 Patch2:		btrfs-mkfs-missing-exit.patch
 
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -52,8 +51,6 @@ btrfs filesystem-specific programs.
 
 %prep
 %setup -q -n %{name}-v%{version}
-
-%patch2 -p1
 
 %build
 ./autogen.sh
@@ -95,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libbtrfs.so
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 4.2.3-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.2.3-3
 - 更新到 4.2.3
 

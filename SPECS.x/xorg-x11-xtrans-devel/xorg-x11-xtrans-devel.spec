@@ -7,7 +7,7 @@ Summary: X.Org X11 developmental X transport library
 Summary(zh_CN.UTF-8): X.Org X11 X transport 开发库
 Name: xorg-x11-xtrans-devel
 Version:	1.3.5
-Release:	4%{?dist}
+Release:	5%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -60,6 +60,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %{_docdir}/%{name}-%{version}-%{release}/xtrans.*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.3.5-5
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.3.5-4
 - 为 Magic 3.0 重建
 

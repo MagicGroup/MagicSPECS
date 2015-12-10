@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.7.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Ruby Modelling and Generator Framework
 Group: Development/Languages
 License: MIT
@@ -75,6 +75,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.0-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.7.0-3
 - 为 Magic 3.0 重建
 

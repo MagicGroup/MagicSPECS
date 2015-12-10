@@ -2,7 +2,7 @@ Summary: A perfect hash function generator
 Summary(zh_CN.UTF-8): 完美哈希函数生成器
 Name: gperf
 Version: 3.0.4
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv3+
 Source: ftp://ftp.gnu.org/pub/gnu/gperf/gperf-%{version}.tar.gz
 Group: Development/Tools
@@ -59,6 +59,9 @@ exit 0
 %{_infodir}/gperf.info*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.0.4-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.0.4-7
 - 为 Magic 3.0 重建
 

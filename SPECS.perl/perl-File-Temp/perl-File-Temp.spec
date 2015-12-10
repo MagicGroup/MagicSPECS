@@ -2,7 +2,7 @@
 Name:           perl-File-Temp
 # Keep 2-digit version to align with future versions
 Version:        %(echo '%{cpan_version}' | sed 's/\(\...\)\(.\)/\1.\2/')
-Release:        348%{?dist}
+Release:        349%{?dist}
 Summary:        Return name and handle of a temporary file safely
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -79,6 +79,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.23.04-349
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.23.04-348
 - 为 Magic 3.0 重建
 

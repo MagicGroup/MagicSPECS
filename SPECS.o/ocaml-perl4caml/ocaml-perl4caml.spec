@@ -3,7 +3,7 @@
 
 Name:           ocaml-perl4caml
 Version:        0.9.5
-Release:        33%{?dist}
+Release:        35%{?dist}
 Summary:        OCaml library for calling Perl libraries and code
 Summary(zh_CN.UTF-8): 调用 Perl 库和代码的 OCaml 库
 License:        LGPLv2+ with exceptions
@@ -122,6 +122,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.9.5-35
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.9.5-34
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.5-33
 - 为 Magic 3.0 重建
 

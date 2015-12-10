@@ -12,8 +12,8 @@ Summary:	Text editor for the GNOME desktop
 Summary(zh_CN.UTF-8): GNOME 桌面下的文本编辑器
 Name:		gedit
 Epoch:		2
-Version:	3.18.1
-Release:	2%{?dist}
+Version:	3.18.2
+Release:	1%{?dist}
 License:	GPLv2+ and GFDL
 Group:		Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/编辑器
@@ -137,11 +137,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %files -f %{name}.lang
 %doc README COPYING AUTHORS
 %{_datadir}/gedit
-%{_datadir}/applications/gedit.desktop
+%{_datadir}/applications/org.gnome.gedit.desktop
 %{_mandir}/man1/*
 %{python3_sitearch}/gi/overrides/Gedit.py*
 %{python3_sitearch}/gi/overrides/__pycache__/*
-%{_datadir}/appdata/gedit.appdata.xml
+%{_datadir}/appdata/org.gnome.gedit.appdata.xml
 %{_libexecdir}/gedit
 %{_libdir}/gedit/girepository-1.0
 %dir %{_libdir}/gedit

@@ -1,6 +1,6 @@
 Name:           perl-Bencode
 Version:	1.402
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        BitTorrent serialization format
 Summary(zh_CN.UTF-8): BitTorrent 的序列化格式
 License:        GPL+ or Artistic
@@ -49,6 +49,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.402-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.402-3
 - 为 Magic 3.0 重建
 

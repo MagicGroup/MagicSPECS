@@ -3,7 +3,7 @@
 
 Name:		hawkey
 Version:	0.4.19
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Library providing simplified C and Python API to libsolv
 Summary(zh_CN.UTF-8): libsolv 的简单 C 和 Python API
 Group:		System Environment/Libraries
@@ -109,6 +109,9 @@ popd
 %exclude %{python3_sitearch}/hawkey/test/__pycache__
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.19-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.4.19-3
 - 为 Magic 3.0 重建
 

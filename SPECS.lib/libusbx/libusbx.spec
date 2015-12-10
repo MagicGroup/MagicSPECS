@@ -2,7 +2,7 @@ Summary:        Library for accessing USB devices
 Summary(zh_CN.UTF-8): 访问 USB 设备的库
 Name:           libusbx
 Version: 1.0.20
-Release: 2%{?dist}
+Release: 102%{?dist}
 Source0:        http://downloads.sourceforge.net/libusb/libusb-%{version}.tar.bz2
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -11,6 +11,9 @@ URL:            http://sourceforge.net/apps/mediawiki/libusbx/
 BuildRequires:  doxygen
 Provides:       libusb1 = %{version}-%{release}
 Obsoletes:      libusb1 <= 1.0.9
+
+# Patch needed for Chromium
+Patch0:         libusb-1.0.20-chromium-libusb_interrupt_handle_event.patch
 
 %description
 This package provides a way for applications to access USB devices.
@@ -61,6 +64,8 @@ This package contains API documentation for %{name}.
 
 %prep
 %setup -q -n libusb-%{version}
+%patch0 -p1 -b .chromium
+autoreconf -ifv
 
 %build
 %configure --disable-static --enable-examples-build
@@ -93,6 +98,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.0.20-102
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.20-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.20-2
 - 更新到 1.0.20
 

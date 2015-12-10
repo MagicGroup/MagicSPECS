@@ -2,7 +2,7 @@ Summary:   List or change SCSI/SATA disk parameters
 Summary(zh_CN.UTF-8): 列出或更改 SCSI/SATA 磁盘参数
 Name:      sdparm
 Version:	1.09
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:   BSD
 Group:     Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %{_mandir}/man8/%{name}*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.09-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.09-2
 - 为 Magic 3.0 重建
 

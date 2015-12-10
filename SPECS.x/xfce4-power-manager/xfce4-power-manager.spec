@@ -2,7 +2,7 @@
 
 Name:           xfce4-power-manager
 Version:	1.5.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary:        Power management for the Xfce desktop environment
 Summary(zh_CN.UTF-8): Xfce 桌面环境的电源管理程序
 
@@ -93,6 +93,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.5.2-5
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.5.2-4
 - 为 Magic 3.0 重建
 

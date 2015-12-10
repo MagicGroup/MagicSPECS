@@ -4,7 +4,7 @@
 Summary: Allows RESTful routing without Javascript and multiple submit buttons
 Name: rubygem-%{gem_name}
 Version: 1.2.2
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/martincik/%{gem_name}
@@ -78,6 +78,9 @@ popd
 %{gem_instdir}/Gemfile.lock
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.2-11
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.2.2-10
 - 为 Magic 3.0 重建
 

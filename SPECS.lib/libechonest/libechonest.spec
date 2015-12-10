@@ -1,6 +1,6 @@
 Name:		libechonest
 Version: 2.3.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	C++ wrapper for the Echo Nest API
 Summary(zh_CN.UTF-8): Echo Nest APi 的 C++ 接口
 
@@ -85,6 +85,9 @@ test "$(pkg-config --modversion libechonest)" = "%{version}"
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.3.1-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.3.1-3
 - 更新到 2.3.1
 

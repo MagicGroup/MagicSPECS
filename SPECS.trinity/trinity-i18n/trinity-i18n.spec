@@ -22,7 +22,7 @@ BuildRequires: autoconf automake libtool m4
 Name:		trinity-i18n
 Summary:	Internationalization support for Trinity
 Version:	3.5.13.2
-Release:	1%{?dist}%{?_variant}
+Release:	2%{?dist}%{?_variant}
 
 Vendor:		Trinity Project
 Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -1230,6 +1230,9 @@ find "%{buildroot}%{tde_tdedocdir}/HTML" -size 0 -exec rm -f {} \;
 %endif
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.5.13.2-2.opt
+- 为 Magic 3.0 重建
+
 * Wed Oct 03 2012 Francois Andriot <francois.andriot@free.fr> - 3.5.13.1-1
 - Initial build for TDE 3.5.13.1
 

@@ -2,7 +2,7 @@
 
 Name:           xmms
 Version:        1.2.11
-Release:        44%{?dist}
+Release:        45%{?dist}
 Epoch:          1
 Summary:        The X MultiMedia System, a media player
 Summary(zh_CN.UTF-8): 一个媒体播放器
@@ -236,6 +236,9 @@ update-desktop-database -q || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:1.2.11-45
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:1.2.11-44
 - 为 Magic 3.0 重建
 

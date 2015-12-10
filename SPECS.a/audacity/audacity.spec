@@ -4,7 +4,7 @@
 Name: audacity
 
 Version: 2.0.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Multitrack audio editor
 Summary(zh_CN.UTF-8): 多音轨音频编辑器
 Group:   Applications/Multimedia
@@ -144,13 +144,10 @@ make
 # Audacity 1.3.8-beta complains if the help/manual directories
 # don't exist.
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/help/manual
-
-%{find_lang} %{realname}
+magic_rpm_clean.sh
+%{find_lang} %{realname} || :
 
 desktop-file-install --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-%if 0%{?fedora} && 0%{?fedora} < 19
-        --vendor fedora --delete-original                          \
-%endif
         $RPM_BUILD_ROOT%{_datadir}/applications/audacity.desktop
 
 # audacity manual must be unzipped to correct location
@@ -194,6 +191,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{realname}/help/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0.5-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.5-2
 - 为 Magic 3.0 重建
 

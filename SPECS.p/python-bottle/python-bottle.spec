@@ -2,7 +2,7 @@
 
 Name:           python-%{srcname}
 Version:	0.12.9
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Fast and simple WSGI-framework for small web-applications
 Summary(zh_CN.UTF-8): 小网页程序使用的快速简单 WSGI 框架
 
@@ -77,6 +77,9 @@ magic_rpm_clean.sh
 %{python3_sitelib}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.12.9-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12.9-2
 - 更新到 0.12.9
 

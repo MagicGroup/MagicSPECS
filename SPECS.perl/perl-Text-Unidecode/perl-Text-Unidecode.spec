@@ -1,6 +1,6 @@
 Name:           perl-Text-Unidecode
 Version:	1.27
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        US-ASCII transliterations of Unicode text
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.27-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.27-2
 - 更新到 1.27
 

@@ -1,0 +1,154 @@
+diff --git a/qtools/qcstring.cpp b/qtools/qcstring.cpp
+index 45ccef9..35b9bb8 100644
+--- a/qtools/qcstring.cpp
++++ b/qtools/qcstring.cpp
+@@ -460,6 +460,12 @@ ulong QCString::toULong(bool *ok) const
+   return s.toULong(ok);
+ }
+ 
++uint64 QCString::toUInt64(bool *ok) const
++{
++  QString s(data());
++  return s.toUInt64(ok);
++}
++
+ QCString &QCString::setNum(short n)
+ {
+   return setNum((long)n);
+diff --git a/qtools/qcstring.h b/qtools/qcstring.h
+index d8ce074..4f15b18 100644
+--- a/qtools/qcstring.h
++++ b/qtools/qcstring.h
+@@ -288,6 +288,7 @@ public:
+     uint toUInt( bool *ok=0 ) const;
+     long toLong( bool *ok=0 ) const;
+     ulong toULong( bool *ok=0 )	const;
++    uint64 toUInt64( bool *ok=0 ) const;
+     QCString &setNum(short n);
+     QCString &setNum(ushort n);
+     QCString &setNum(int n);
+diff --git a/qtools/qstring.cpp b/qtools/qstring.cpp
+index f51c0d4..458fd53 100644
+--- a/qtools/qstring.cpp
++++ b/qtools/qstring.cpp
+@@ -13935,6 +13935,60 @@ bye:
+ }
+ 
+ /*!
++  Returns the string converted to an <code>unsigned long</code>
++  value.
++
++  If \a ok is non-null, \a *ok is set to TRUE if there are no
++  conceivable errors, and FALSE if the string is not a number at all,
++  or if it has trailing garbage.
++*/
++
++uint64 QString::toUInt64( bool *ok, int base ) const
++{
++    const QChar *p = unicode();
++    uint64 val=0;
++    int l = length();
++    const uint64 max_mult = 1844674407370955161ULL;  // ULLONG_MAX/10, rounded down
++    bool is_ok = FALSE;
++    if ( !p )
++	goto bye;
++    while ( l && p->isSpace() )			// skip leading space
++	l--,p++;
++    if ( *p == '+' )
++	l--,p++;
++
++    // NOTE: toULong() code is similar
++    if ( !l || !ok_in_base(*p,base) )
++	goto bye;
++    while ( l && ok_in_base(*p,base) ) {
++	l--;
++	uint dv;
++	if ( p->isDigit() ) {
++	    dv = p->digitValue();
++	} else {
++	    if ( *p >= 'a' && *p <= 'z' )
++		dv = *p - 'a' + 10;
++	    else
++		dv = *p - 'A' + 10;
++	}
++	if ( val > max_mult || (val == max_mult && dv > (ULLONG_MAX%base)) )
++	    goto bye;
++	val = base*val + dv;
++	p++;
++    }
++
++    while ( l && p->isSpace() )			// skip trailing space
++	l--,p++;
++    if ( !l )
++	is_ok = TRUE;
++bye:
++    if ( ok )
++	*ok = is_ok;
++    return is_ok ? val : 0;
++}
++
++
++/*!
+   Returns the string converted to a <code>short</code> value.
+ 
+   If \a ok is non-null, \a *ok is set to TRUE if there are no
+diff --git a/qtools/qstring.h b/qtools/qstring.h
+index a64fabf..df3873d 100644
+--- a/qtools/qstring.h
++++ b/qtools/qstring.h
+@@ -463,6 +463,7 @@ public:
+     uint	toUInt( bool *ok=0, int base=10 )	const;
+     long	toLong( bool *ok=0, int base=10 )	const;
+     ulong	toULong( bool *ok=0, int base=10 )	const;
++    uint64	toUInt64( bool *ok=0, int base=10 )	const;
+     float	toFloat( bool *ok=0 )	const;
+     double	toDouble( bool *ok=0 )	const;
+ 
+diff --git a/src/util.cpp b/src/util.cpp
+index d367c40..db6a19c 100644
+--- a/src/util.cpp
++++ b/src/util.cpp
+@@ -18,6 +18,7 @@
+ #include <ctype.h>
+ #include <errno.h>
+ #include <math.h>
++#include <limits.h>
+ 
+ #include "md5.h"
+ 
+@@ -2472,6 +2473,35 @@ QCString fileToString(const char *name,bool filter,bool isSourceCode)
+ QCString dateToString(bool includeTime)
+ {
+   QDateTime current = QDateTime::currentDateTime();
++  QCString sourceDateEpoch = portable_getenv("SOURCE_DATE_EPOCH");
++  if (!sourceDateEpoch.isEmpty())
++  {
++    bool ok;
++    uint64 epoch = sourceDateEpoch.toUInt64(&ok);
++    if (!ok)
++    {
++      static bool warnedOnce=FALSE;
++      if (!warnedOnce)
++      {
++        warn_uncond("Environment variable SOURCE_DATE_EPOCH does not contain a valid number; value is '%s'\n",
++            sourceDateEpoch.data());
++        warnedOnce=TRUE;
++      }
++    }
++    else if (epoch>UINT_MAX)
++    {
++      static bool warnedOnce=FALSE;
++      if (!warnedOnce)
++      {
++        warn_uncond("Environment variable SOURCE_DATA_EPOCH must have a value smaller than or equal to %llu; actual value %llu\n",UINT_MAX,epoch);
++        warnedOnce=TRUE;
++      }
++    }
++    else // all ok, replace current time with epoch value
++    {
++      current.setTime_t((ulong)epoch); // TODO: add support for 64bit epoch value
++    }
++  }
+   return theTranslator->trDateTime(current.date().year(),
+                                    current.date().month(),
+                                    current.date().day(),

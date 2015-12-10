@@ -1,6 +1,6 @@
 Name:		perl-Class-Load
 Version:	0.23
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	A working (require "Class::Name") and more
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -99,6 +99,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Class::Load.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.23-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.23-2
 - 为 Magic 3.0 重建
 

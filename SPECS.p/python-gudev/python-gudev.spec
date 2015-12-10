@@ -7,7 +7,7 @@ Name:           python-gudev
 URL:            http://github.com/nzjrs/python-gudev
 
 Version:        147.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 %global srcname nzjrs-python-gudev-%{version}-0-ga9f8dd2
 %global _dirname nzjrs-python-gudev-ee8a644
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 147.2-10
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 147.2-9
 - 为 Magic 3.0 重建
 

@@ -39,7 +39,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0.5
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
 Summary:	Personal finance manager for TDE
 Summary(zh_CN.UTF-8): TDE 下的个人财务管理程序
 Group:		Applications/Utilities
@@ -245,5 +245,8 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:1.0.5-1.1
+- 为 Magic 3.0 重建
+
 * Mon Jul 29 2013 Francois Andriot <francois.andriot@free.fr> - 2:1.0.5-1
 - Initial release for TDE 14.0.0

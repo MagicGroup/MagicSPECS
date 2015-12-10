@@ -1,7 +1,7 @@
 Summary: A utility for getting files from remote servers (FTP, HTTP, and others)
 Name: curl
 Version: 7.45.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT
 Group: Applications/Internet
 Source: http://curl.haxx.se/download/%{name}-%{version}.tar.lzma
@@ -27,10 +27,6 @@ Patch106: 0106-curl-7.21.0-libssh2-valgrind.patch
 
 # work around valgrind bug (#678518)
 Patch107: 0107-curl-7.21.4-libidn-valgrind.patch
-
-# Fix character encoding of docs, which are of mixed encoding originally so
-# a simple iconv can't fix them
-Patch108: 0108-curl-7.32.0-utf8.patch
 
 Provides: webclient
 URL: http://curl.haxx.se/
@@ -106,9 +102,6 @@ documentation of the library, too.
 %prep
 %setup -q
 
-# upstream patches
-%patch1 -p1
-
 # Fedora patches
 %patch101 -p1
 %patch102 -p1
@@ -116,7 +109,6 @@ documentation of the library, too.
 %patch104 -p1
 %patch106 -p1
 %patch107 -p1
-%patch108 -p1
 
 # replace hard wired port numbers in the test suite (this only boosts test
 # coverage by enabling tests that would otherwise be disabled due to using
@@ -226,6 +218,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libcurl.m4
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 7.45.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.45.0-3
 - 更新到 7.45.0
 

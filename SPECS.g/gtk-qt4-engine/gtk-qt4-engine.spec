@@ -1,3 +1,4 @@
+#define debug_package %{nil}
 %define build_type release
 Summary: A project allowing GTK to use Qt widget styles.
 Summary(zh_CN.UTF-8): 一个允许GTK使用Qt控件风格的项目
@@ -6,7 +7,7 @@ Name: 	 gtk-qt4-engine
 Group:	 User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version: 1.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 License: GPL
 URL:     http://www.freedesktop.org/Software/gtk-qt
@@ -18,7 +19,7 @@ BuildRequires: desktop-file-utils
 BuildRequires: gettext
 BuildRequires: gtk2-devel >= 2.2
 #BuildRequires: libbonoboui-devel
-BuildRequires: qt-devel 
+BuildRequires: qt4-devel 
 BuildRequires: libpng-devel
 
 
@@ -79,7 +80,7 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 
-%files -f gtkqtengine.lang
+%files
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog
 %{_datadir}/themes/Qt4/
@@ -92,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %{kde4_iconsdir}/kcmgtk.png
 
 %changelog 
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.1-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.1-8
 - 为 Magic 3.0 重建
 

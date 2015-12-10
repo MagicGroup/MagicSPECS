@@ -1,6 +1,6 @@
 Name:           logback
 Version:        1.1.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A Java logging library
 License:        LGPLv2 or EPL
 URL:            http://logback.qos.ch/
@@ -202,6 +202,9 @@ cp -r %{name}-examples/pom.xml %{name}-examples/src %{buildroot}%{_datadir}/%{na
 %{_datadir}/%{name}-%{version}
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1.1-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.1-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           gnome-shell
 Version:	3.19.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Window management and application launching for GNOME
 Summary(zh_CN.UTF-8): GNOME 的窗口管理器和程序载入器
 
@@ -184,6 +184,9 @@ glib-compile-schemas --allow-any-name %{_datadir}/glib-2.0/schemas &> /dev/null 
 %exclude %{_datadir}/gtk-doc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-4
 - 更新到 3.19.1
 

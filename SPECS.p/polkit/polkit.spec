@@ -7,7 +7,7 @@ Summary: An authorization framework
 Summary(zh_CN.UTF-8): 认证的框架
 Name: polkit
 Version:	0.113
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/polkit
 Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
@@ -192,6 +192,9 @@ exit 0
 %{_libdir}/girepository-1.0/*.typelib
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.113-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.113-2
 - 为 Magic 3.0 重建
 

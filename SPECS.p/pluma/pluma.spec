@@ -16,7 +16,7 @@ Summary:  Text editor for the MATE desktop
 Summary(zh_CN.UTF-8): MATE 桌面的文本编辑器
 Name:     pluma
 Version: 1.11.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 #Release: 1%{?dist}
 License:  GPLv2+ and LGPLv2+
 Group:    Applications/Editors
@@ -192,6 +192,9 @@ fi
 %{_datadir}/gtk-doc/html/pluma/
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

@@ -13,7 +13,7 @@
 
 Name:           gradle
 Version:        2.9
-Release:        1%{?with_bootstrap:.boot}%{?dist}
+Release:        2%{?with_bootstrap:.boot}%{?dist}
 Summary:        Build automation tool
 # Some examples and integration tests are under GNU LGPL and Boost
 # Software License, but are not used to create binary package.
@@ -527,6 +527,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 2.9-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 23 2015 Michael Simacek <msimacek@redhat.com> - 2.9-1
 - Update to upstream version 2.9
 - Fix bootstrap build

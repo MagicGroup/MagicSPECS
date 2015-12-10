@@ -1,6 +1,6 @@
 Name:           SDL2_mixer
 Version:        2.0.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Simple DirectMedia Layer - Sample Mixer Library
 Summary(zh_CN.UTF-8): SDL 的混音库
 
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %{_includedir}/SDL2/*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.0-13
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.0-12
 - 为 Magic 3.0 重建
 

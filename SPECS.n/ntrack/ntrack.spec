@@ -2,7 +2,7 @@ Name:           ntrack
 Summary:        Network Connectivity Tracking library for Desktop Applications
 Summary(zh_CN.UTF-8): 桌面程序的网络连接能力跟踪库
 Version: 017
-Release: 2%{?dist}
+Release: 3%{?dist}
 License:        LGPLv3
 Url:            https://launchpad.net/%{name}
 Source:         http://launchpad.net/%{name}/main/%{version}/+download/%{name}-%{version}.tar.gz
@@ -201,6 +201,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 017-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 017-2
 - 为 Magic 3.0 重建
 

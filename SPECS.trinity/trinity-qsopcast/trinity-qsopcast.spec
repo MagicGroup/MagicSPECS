@@ -38,7 +38,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.3.6
-Release:	%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.2
 Summary:        A P2P Stream program
 Summary(zh_CN.UTF-8): P2P流媒体程序
 Group:		Applications/Multimedia
@@ -125,6 +125,9 @@ EOF
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.3.6-8.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.3.6-8.1
 - 为 Magic 3.0 重建
 

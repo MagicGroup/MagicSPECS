@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.3.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A simple XML library
 
 License:        BSD
@@ -62,6 +62,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3.14-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.3.14-2
 - 为 Magic 3.0 重建
 

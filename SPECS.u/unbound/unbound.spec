@@ -9,7 +9,7 @@ Summary: Validating, recursive, and caching DNS(SEC) resolver
 Summary(zh_CN.UTF-8): DNS 服务程序
 Name: unbound
 Version:	1.5.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: BSD
 Url: http://www.nlnetlabs.nl/unbound/
 Source: http://www.unbound.net/downloads/%{name}-%{version}.tar.gz
@@ -245,6 +245,9 @@ fi
 /bin/systemctl try-restart unbound-keygen.service >/dev/null 2>&1 || :
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.5.6-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1.5.6-2
 - 更新到 1.5.6
 

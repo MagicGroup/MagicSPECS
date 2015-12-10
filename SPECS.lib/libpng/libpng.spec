@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 处理 PNG 图像格式文件的库
 Name: libpng
 Epoch: 2
 Version: 1.6.18
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: zlib
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -131,6 +131,9 @@ make check
 %{_bindir}/pngfix
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2:1.6.18-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2:1.6.18-2
 - 更新到 1.6.18
 

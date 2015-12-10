@@ -9,7 +9,7 @@
 
 Name:           mingw-winpthreads
 Version:        3.1.999
-Release:        0.2.%{branch}.r%{snapshot_rev}.%{snapshot_date}%{?dist}
+Release:        0.3.%{branch}.r%{snapshot_rev}.%{snapshot_date}%{?dist}
 Summary:        MinGW pthread library
 # The main license of winpthreads is MIT, but parts of this library
 # are derived from the "Posix Threads library for Microsoft Windows"
@@ -206,6 +206,9 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.1.999-0.3.trunk.r6475.20140124
+- 为 Magic 3.0 重建
+
 * Fri Jan 24 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.1.999-0.2.trunk.r6460.20140124
 - Update to r6460 (20140124 snapshot)
 

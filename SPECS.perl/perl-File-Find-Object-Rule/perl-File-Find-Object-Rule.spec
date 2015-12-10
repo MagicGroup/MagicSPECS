@@ -2,7 +2,7 @@
 
 Name:           perl-File-Find-Object-Rule
 Version:        0.0305
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Alternative interface to File::Find::Object
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/File-Find-Object-Rule/
@@ -46,6 +46,9 @@ allows you to build rules which specify the desired files and directories.
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.0305-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.0305-6
 - 为 Magic 3.0 重建
 

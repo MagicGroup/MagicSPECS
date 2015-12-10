@@ -1,6 +1,6 @@
 Name:           maven-invoker-plugin
 Version:        1.8
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Maven Invoker Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-invoker-plugin/
@@ -65,6 +65,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.8-15
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8-14
 - 为 Magic 3.0 重建
 

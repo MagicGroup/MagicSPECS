@@ -13,7 +13,7 @@
 
 Name:           ccache
 Version:	3.1.9
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        C/C++ compiler cache
 Summary(zh_CN.UTF-8): C/C++ 编译器缓存
 
@@ -148,6 +148,9 @@ getent group ccache >/dev/null || groupadd -r ccache || :
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.1.9-3
+- 为 Magic 3.0 重建
+
 * Fri Mar 07 2014 Liu Di <liudidi@gmail.com> - 3.1.9-2
 - 更新到 3.1.9
 

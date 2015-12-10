@@ -1,7 +1,7 @@
 Name:		perl-Cpanel-JSON-XS
 Summary:	JSON::XS for Cpanel, fast and correct serializing
 Version:	3.0115
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Cpanel-JSON-XS/
 Source0:	http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-%{version}.tar.gz
@@ -92,6 +92,9 @@ make test IS_MAINTAINER=1 RELEASE_TESTING=1
 %{_mandir}/man3/Cpanel::JSON::XS::Boolean.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.0115-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.0115-2
 - 为 Magic 3.0 重建
 

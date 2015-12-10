@@ -6,7 +6,7 @@ Name: libmbim
 Summary: Support library for the Mobile Broadband Interface Model protocol
 Summary(zh_CN.UTF-8): 移动宽带接口模型协议的支持库
 Version: %{?realversion}
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+
 URL: http://freedesktop.org/software/libmbim
 
@@ -95,6 +95,9 @@ make check
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.12.2-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.1-2
 - 更新到 0.0.1
 

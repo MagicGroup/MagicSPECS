@@ -1,6 +1,6 @@
 Name:           perl-JavaScript-Beautifier
 Version:	0.18
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Beautify Javascript (beautifier for javascript)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.18-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.18-2
 - 为 Magic 3.0 重建
 

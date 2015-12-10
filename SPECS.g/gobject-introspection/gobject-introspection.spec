@@ -1,6 +1,6 @@
 Name:           gobject-introspection
 Version:	1.46.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Introspection system for GObject-based libraries
 Summary(zh_CN.UTF-8): 基于 GObject 库的自检系统
 
@@ -106,6 +106,9 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -exec rm -f {} ';'
 %{_datadir}/gtk-doc/html/gi/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.46.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.46.0-2
 - 更新到 1.46.0
 

@@ -10,7 +10,7 @@
 
 Name:           python-astroid
 Version:	1.3.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Python Abstract Syntax Tree New Generation
 Summary(zh_CN.UTF-8): Python 的新一代抽象语法树
 Group:          Development/Languages
@@ -134,6 +134,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.8-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.8-2
 - 为 Magic 3.0 重建
 

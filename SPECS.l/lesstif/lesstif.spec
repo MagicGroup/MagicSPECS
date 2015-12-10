@@ -1,7 +1,7 @@
 Summary: OSF/Motif library clone
 Name: lesstif
 Version: 0.95.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: LGPLv2+
 # in Xm-2.1/
 # some files are MIT
@@ -275,6 +275,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.95.2-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.95.2-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-PostScript
 Version:        0.06
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        PostScript Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-17
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.06-16
 - 为 Magic 3.0 重建
 

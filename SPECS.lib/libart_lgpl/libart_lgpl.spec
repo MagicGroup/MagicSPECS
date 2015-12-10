@@ -2,7 +2,7 @@ Summary: Library of graphics routines used by libgnomecanvas
 Summary(zh_CN.UTF-8): libgnomecanvas 使用的图形例行库
 Name: libart_lgpl
 Version: 2.3.21
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL: http://www.gnome.org/
 Source0: http://ftp.gnome.org/pub/gnome/sources/libart_lgpl/2.3/%{name}-%{version}.tar.bz2
 #Fedora specific patch
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 %{_includedir}/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.3.21-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.3.21-6
 - 为 Magic 3.0 重建
 

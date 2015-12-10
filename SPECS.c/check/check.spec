@@ -1,6 +1,6 @@
 Name:           check
 Version: 0.9.12
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A unit test framework for C
 Summary(zh_CN.UTF-8): C 语言的单元测试框架
 Source0:        http://downloads.sourceforge.net/check/%{name}-%{version}.tar.gz
@@ -105,6 +105,9 @@ fi
 %{_libdir}/libcheck.a
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9.12-7
+- 为 Magic 3.0 重建
+
 * Sun Mar 09 2014 Liu Di <liudidi@gmail.com> - 0.9.12-6
 - 更新到 0.9.12
 

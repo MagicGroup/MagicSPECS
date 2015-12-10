@@ -1,6 +1,6 @@
 Name:           perl-Digest-HMAC
 Version:        1.03
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Keyed-Hashing for Message Authentication
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.03-10
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.03-9
 - 为 Magic 3.0 重建
 

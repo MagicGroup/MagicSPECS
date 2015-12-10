@@ -6,7 +6,7 @@
 Summary:	Measure image size(GIF, PNG, JPEG ,,, etc)
 Name:		rubygem-%{gem_name}
 Version:	0.1.1
-Release:	17%{?dist}
+Release:	18%{?dist}
 Group:		Development/Languages
 License:	GPLv2 or Ruby
 
@@ -114,6 +114,9 @@ ruby -Ilib -rtest/unit ./test/test_image_size.rb || echo "rescue for now"
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.1-18
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.1.1-17
 - 为 Magic 3.0 重建
 

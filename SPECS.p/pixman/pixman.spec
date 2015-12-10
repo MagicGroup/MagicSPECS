@@ -3,7 +3,7 @@
 
 Name:           pixman
 Version:	0.33.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Pixel manipulation library
 
 Group:          System Environment/Libraries
@@ -62,6 +62,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/pixman-1.pc
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.33.4-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.33.4-2
 - 更新到 0.33.4
 

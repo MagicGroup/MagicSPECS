@@ -1,6 +1,6 @@
 Name:       perl-PDF-Reuse 
 Version:    0.36
-Release:    6%{?dist}
+Release:    7%{?dist}
 # Reuse.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -66,6 +66,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.36-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.36-6
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Parse numeric literals from ByteStrings
 
 License:        BSD
@@ -65,6 +65,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.6-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.6-8
 - 为 Magic 3.0 重建
 

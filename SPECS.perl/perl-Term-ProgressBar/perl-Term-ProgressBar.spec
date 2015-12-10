@@ -1,6 +1,6 @@
 Name:           perl-Term-ProgressBar
 Version:	2.17
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Provide a progress meter on a standard terminal
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.17-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.17-2
 - 为 Magic 3.0 重建
 

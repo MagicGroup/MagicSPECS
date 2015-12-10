@@ -10,9 +10,9 @@ Summary(zh_CN.UTF-8): 在 rpm 包之间建立三角关系
 Name: deltarpm
 Version: 3.6
 %if 0%{?git}
-Release: 0.17.%{vcsdate}git%{?dist}
+Release: 0.18.%{vcsdate}git%{?dist}
 %else
-Release: 4%{?dist}
+Release: 5%{?dist}
 %endif
 License: BSD
 Group: System Environment/Base
@@ -155,6 +155,9 @@ rm -rf %{buildroot}%{_libdir}/python3*
 %endif
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.6-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.6-4
 - 为 Magic 3.0 重建
 

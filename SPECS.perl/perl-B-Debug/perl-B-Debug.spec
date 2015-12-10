@@ -1,6 +1,6 @@
 Name:           perl-B-Debug
 Version:        1.23
-Release:        349%{?dist}
+Release:        350%{?dist}
 Summary:        Walk Perl syntax tree, print debug information about op-codes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.23-350
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.23-349
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-utf8-all
 Version:	0.016
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Turn on Unicode everywhere
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.016-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.016-2
 - 为 Magic 3.0 重建
 

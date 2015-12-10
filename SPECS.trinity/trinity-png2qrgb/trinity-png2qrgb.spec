@@ -27,7 +27,7 @@
 
 Name:		trinity-%{tde_pkg}
 Version:	0.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.3
 Summary:	Png2qrgb (Convert PNG images to an array of TQRgb hexadecimal values)
 Summary(zh_CN.UTF-8): 转转 PNG 图形到 TQRgb 数组
 Group:		System/GUI
@@ -111,6 +111,9 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.3-1.3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.3-1.2
 - 为 Magic 3.0 重建
 

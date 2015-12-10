@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.2.1.0
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        A mtl compatible with GHC-API monads and monad-transformers
 
 License:        BSD
@@ -66,6 +66,12 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 1.2.1.0-9
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.2.1.0-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.2.1.0-7
 - 为 Magic 3.0 重建
 

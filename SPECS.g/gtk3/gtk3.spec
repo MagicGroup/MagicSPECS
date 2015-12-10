@@ -16,7 +16,7 @@
 
 Summary: The GIMP ToolKit (GTK+), a library for creating GUIs for X
 Name: gtk3
-Version:	3.19.1
+Version:	3.19.3
 Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -243,6 +243,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_bindir}/gtk3-icon-browser
 %{_bindir}/gtk-encode-symbolic-svg
 %{_bindir}/gtk-builder-tool
+%{_bindir}/gtk-query-settings
 %{_libdir}/libgtk-3.so.*
 %{_libdir}/libgdk-3.so.*
 %{_libdir}/libgailutil-3.so.*
@@ -276,6 +277,7 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/glib-2.0/schemas/org.gtk.Settings.Debug.gschema.xml
 %{_mandir}/man1/gtk3-demo.1.gz
 %{_mandir}/man1/gtk3-widget-factory.1.gz
+%{_mandir}/man1/gtk-query-settings.1.gz
 
 %files -n gtk-update-icon-cache
 #%doc COPYING
@@ -328,6 +330,12 @@ gtk-query-immodules-3.0-%{__isa_bits} --update-cache
 %{_datadir}/installed-tests
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 3.19.3-2
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
 - 更新到 3.19.1
 

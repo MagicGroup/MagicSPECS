@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.2
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Rails observer (removed from core in Rails 4.0)
 Group: Development/Languages
 License: MIT
@@ -90,6 +90,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.2-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.2-8
 - 为 Magic 3.0 重建
 

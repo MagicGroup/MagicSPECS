@@ -20,7 +20,7 @@ Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Summary(zh_CN.UTF-8): 增强的 Linux 声音服务
 Version:        %{pa_major}%{?pa_minor}
-Release:        10%{?dist}
+Release:        11%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -566,6 +566,9 @@ exit 0
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 7.1-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 7.1-10
 - 更新到 7.1
 

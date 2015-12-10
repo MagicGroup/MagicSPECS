@@ -1,6 +1,6 @@
 Name:           maven-verifier
 Version:        1.5
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Maven verifier
 License:        ASL 2.0
 URL:            http://maven.apache.org/shared/maven-verifier
@@ -47,6 +47,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.5-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5-6
 - 为 Magic 3.0 重建
 

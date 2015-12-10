@@ -33,7 +33,7 @@
 
 Name:        avalon-%{short_name}
 Version:     2.1
-Release:     23%{?dist}
+Release:     24%{?dist}
 Epoch:       0
 Summary:     Java logging toolkit
 License:     ASL 2.0
@@ -119,6 +119,9 @@ cp -pr dist/docs/api/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:2.1-24
+- 为 Magic 3.0 重建
+
 * Fri Oct 16 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:2.1-23
 - Require geronimo-jms instead of jms
 

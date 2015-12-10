@@ -3,7 +3,7 @@ Summary: Chinese Man Pages from Chinese Man Pages Project
 Summary(zh_CN.UTF-8): 来自中文手册页项目的中文手册页
 Name: man-pages-zh-CN
 Version: 1.5.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GFDL
 Group: Documentation
 Group(zh_CN.UTF-8): 文档
@@ -74,6 +74,9 @@ magic_rpm_clean.sh
 %{_mandir}/zh_CN/man*/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.5.2-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.2-3
 - 为 Magic 3.0 重建
 

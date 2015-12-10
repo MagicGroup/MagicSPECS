@@ -8,54 +8,16 @@
 Summary: A tool for automatically mounting and unmounting filesystems
 Summary(zh_CN.UTF-8): 自动挂载和删除文件系统的工具
 Name: autofs
-Version: 5.1.0
-Release: 12%{?dist}
+Version: 5.1.1
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 Source: ftp://ftp.kernel.org/pub/linux/daemons/autofs/v5/autofs-%{version}.tar.gz
-Patch1: autofs-5.1.0-fix-compile-error-in-defaults_c.patch
-Patch2: autofs-5.1.0-add-serialization-to-sasl-init.patch
-Patch3: autofs-5.1.0-dont-allocate-dev_ctl_ops-too-early.patch
-Patch4: autofs-5.1.0-fix-incorrect-round-robin-host-detection.patch
-Patch5: autofs-5.0.9-fix-race-accessing-qdn-in-get_query_dn.patch
-Patch6: autofs-5.1.0-fix-leak-in-cache_push_mapent.patch
-Patch7: autofs-5.1.0-fix-config-entry-read-buffer-not-checked.patch
-Patch8: autofs-5.1.0-fix-FILE-pointer-check-in-defaults_read_config.patch
-Patch9: autofs-5.1.0-fix-memory-leak-in-conf_amd_get_log_options.patch
-Patch10: autofs-5.1.0-fix-signed-comparison-in-inet_fill_net.patch
-Patch11: autofs-5.1.0-fix-buffer-size-checks-in-get_network_proximity.patch
-Patch12: autofs-5.1.0-fix-leak-in-get_network_proximity.patch
-Patch13: autofs-5.1.0-fix-buffer-size-checks-in-merge_options.patch
-Patch14: autofs-5.1.0-check-amd-lex-buffer-len-before-copy.patch
-Patch15: autofs-5.1.0-add-return-check-in-ldap-check_map_indirect.patch
-Patch16: autofs-5.1.0-check-host-macro-is-set-before-use.patch
-Patch17: autofs-5.1.0-check-options-length-before-use-in-parse_amd_c.patch
-Patch18: autofs-5.1.0-fix-some-out-of-order-evaluations-in-parse_amd_c.patch
-Patch19: autofs-5.1.0-fix-copy-and-paste-error-in-dup_defaults_entry.patch
-Patch20: autofs-5.1.0-fix-leak-in-parse_mount.patch
-Patch21: autofs-5.1.0-add-mutex-call-return-check-in-defaults_c.patch
-Patch22: autofs-5.1.0-force-disable-browse-mode-for-amd-format-maps.patch
-Patch23: autofs-5.1.0-fix-hosts-map-options-check-in-lookup_amd_instance.patch
-Patch24: autofs-5.1.0-fix-mem-leak-in-create_client.patch
-Patch25: autofs-5.1.0-fix-memory-leak-in-get_exports.patch
-Patch26: autofs-5.1.0-fix-memory-leak-in-get_defaults_entry.patch
-Patch27: autofs-5.1.0-fix-out-of-order-clearing-of-options-buffer.patch
-Patch28: autofs-5.1.0-fix-reset-amd-lexer-scan-buffer.patch
-Patch29: autofs-5.1.0-ignore-multiple-commas-in-options-strings.patch
-Patch30: autofs-5.1.0-fix-typo-in-flagdir-configure-option.patch
-Patch31: autofs-5.1.0-clarify-multiple-mounts-description.patch
-Patch32: autofs-5.1.0-gaurd-against-incorrect-umount-return.patch
-Patch33: autofs-5.1.0-update-man-page-autofs-8-for-systemd.patch
-Patch34: autofs-5.1.0-fix-fix-master-map-type-check.patch
-Patch35: autofs-5.1.0-init-qdn-before-use.patch
-Patch36: autofs-5.1.0-fix-typo-in-update_hosts_mounts.patch
-Patch37: autofs-5.1.0-fix-hosts-map-update-on-reload.patch
-Patch38: autofs-5.1.0-make-negative-cache-update-consistent-for-all-lookup-modules.patch
-Patch39: autofs-5.1.0-ensure-negative-cache-isnt-updated-on-remount.patch
-Patch40: autofs-5.1.0-dont-add-wildcard-to-negative-cache.patch
-Patch41: autofs-5.1.0-make-service-want-network-online.patch
+Patch1: autofs-5.1.1-fix-fix-gcc5-complaints.patch
+Patch2: autofs-5.1.1-update-libtirpc-workaround-for-new-soname.patch
+Patch3: autofs-5.1.1-revert-fix-libtirpc-name-clash.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 %if %{with_systemd}
 BuildRequires: systemd-units
@@ -96,47 +58,10 @@ echo %{version}-%{release} > .version
   %define unitdir %{?_unitdir:/usr/lib/systemd/system}
   %define systemd_configure_arg --with-systemd
 %endif
+
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1
-%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
-%patch30 -p1
-%patch31 -p1
-%patch32 -p1
-%patch33 -p1
-%patch34 -p1
-%patch35 -p1
-%patch36 -p1
-%patch37 -p1
-%patch38 -p1
-%patch39 -p1
-%patch40 -p1
-%patch41 -p1
 
 %build
 LDFLAGS=-Wl,-z,now
@@ -231,6 +156,9 @@ fi
 %dir /etc/auto.master.d
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:5.1.0-13
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:5.1.0-12
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: An ELF prelinking utility
 Summary(zh_CN.UTF-8): ELF 预链接工具
 Name: prelink
 Version: 0.5.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 %global svnver 205
 License: GPLv2+
 Group: System Environment/Base
@@ -95,6 +95,9 @@ touch /var/lib/prelink/force
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/log/prelink/prelink.log
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5.0-3
 - 为 Magic 3.0 重建
 

@@ -6,12 +6,12 @@
 
 # We're building from the 4.02 branch.  As the releases are
 # rather intermittent, build git versions instead.
-%global gitcommit cf1935d38ce90b023e2445219f39bd5027db44d5
-%global shortcommit cf1935d3
+%global gitcommit baf801028e2f75665b737b515c0e8112545d9b54
+%global shortcommit baf80102
 
 Name:          ocaml-camlp4
-Version:       4.02.1
-Release:       0.4.git%{shortcommit}%{?dist}
+Version:       4.02.3
+Release:       0.6.git%{shortcommit}%{?dist}
 
 Summary:       Pre-Processor-Pretty-Printer for OCaml
 Summary(zh_CN.UTF-8): OCaml 的预处理程序
@@ -119,6 +119,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 4.02.1-0.6.gitcf1935d3
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 4.02.1-0.5.gitcf1935d3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.02.1-0.4.gitcf1935d3
 - 为 Magic 3.0 重建
 

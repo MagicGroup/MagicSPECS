@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Request-Params
 Version:	1.02
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Retrieve GET/POST Parameters from HTTP Requests
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.02-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.02-2
 - 为 Magic 3.0 重建
 

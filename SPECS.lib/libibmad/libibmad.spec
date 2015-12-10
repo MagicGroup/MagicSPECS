@@ -2,7 +2,7 @@ Summary: OpenFabrics Alliance InfiniBand MAD library
 Summary(zh_CN.UTF-8): 开放结构联盟的 InfiniBand MAD 库
 Name: libibmad
 Version: 1.3.12
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2 or BSD
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libibmad.a
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.3.12-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.3.12-4
 - 更新到 1.3.12
 

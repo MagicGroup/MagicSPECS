@@ -4,7 +4,7 @@
 
 Name:           python-%{upstream_name}
 Version:        0.24
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Python library for passing trusted data to untrusted environments
 Summary(zh_CN.UTF-8): 传递可信任数据到不可信任环境的 Python 库
 License:        BSD
@@ -97,6 +97,9 @@ popd
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.24-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.24-6
 - 为 Magic 3.0 重建
 

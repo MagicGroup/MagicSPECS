@@ -2,10 +2,12 @@
 
 Name:           gstreamer1-rtsp-server
 Version:        1.6.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GStreamer RTSP server library
+Summary(zh_CN.UTF-8): GStreamer RTSP 服务器库
 
 Group:          Applications/Multimedia
+Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/
 Source0:        http://gstreamer.freedesktop.org/src/gst-rtsp/gst-rtsp-server-%{version}.tar.xz
@@ -26,9 +28,14 @@ Requires:       gstreamer1-plugins-base%{?_isa} >= %{version}
 %description
 A GStreamer-based RTSP server library.
 
+%description -l zh_CN.UTF-8
+GStreamer RTSP 服务器库。
+
 %package devel
 Summary:        Development files for %{name}
+Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 Requires:       gstreamer1-devel%{?_isa} >= %{version}
 Requires:       gstreamer1-plugins-base-devel%{?_isa} >= %{version}
@@ -37,14 +44,21 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description devel
 Development files for %{name}, the GStreamer RTSP server library.
 
+%description devel -l zh_CN.UTF-8
+%{name} 的开发包。
+
 %package devel-docs
 Summary:         Developer documentation for GStreamer-based RTSP server library
+Summary(zh_CN.UTF-8): %{name} 的开发文档
 Requires:        %{name} = %{version}-%{release}
 BuildArch:       noarch
 
 %description devel-docs
 This %{name}-devel-docs contains developer documentation for the
 GStreamer-based RTSP server library.
+
+%description devel-docs -l zh_CN.UTF-8
+%{name} 的开发文档。
 
 %prep
 %setup -q -n gst-rtsp-server-%{version}
@@ -69,6 +83,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 # can't tweak libtool, see:
 # https://bugzilla.gnome.org/show_bug.cgi?id=634376#c1
 chrpath --delete %{buildroot}%{_libdir}/libgstrtspserver-%{majorminor}.so*
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -93,6 +108,9 @@ chrpath --delete %{buildroot}%{_libdir}/libgstrtspserver-%{majorminor}.so*
 %doc %{_datadir}/gtk-doc/html/gst-rtsp-server-%{majorminor}
 
 %changelog
+* Mon Dec 07 2015 Liu Di <liudidi@gmail.com> - 1.6.1-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 2 2015 Wim Taymans <wtaymans@redhat.com> - 1.6.1-1
 - update to 1.6.1
 

@@ -2,7 +2,7 @@ Summary: Windows MetaFile Library
 Summary(zh_CN.UTF-8): Windows 元文件库
 Name: libwmf
 Version: 0.2.8.4
-Release: 34%{?dist}
+Release: 36%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 #libwmf is under the LGPLv2+, however...
@@ -55,6 +55,14 @@ Patch13: libwmf-0.2.8.4-CVE-2007-2756.patch
 Patch14: libwmf-0.2.8.4-CAN-2004-0941.patch
 # CVE-2009-3546
 Patch15: libwmf-0.2.8.4-CVE-2009-3546.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=925929
+Patch16: libwmf-aarch64.patch
+# CVE-2015-0848+CVE-2015-4588
+Patch17: libwmf-0.2.8.4-CVE-2015-0848+CVE-2015-4588.patch
+# CVE-2015-4695
+Patch18: libwmf-0.2.8.4-CVE-2015-4695.patch
+# CVE-2015-4696
+Patch19: libwmf-0.2.8.4-CVE-2015-4696.patch
 
 Requires: urw-fonts
 Requires: %{name}-lite = %{version}-%{release}
@@ -113,6 +121,10 @@ using libwmf.
 %patch13 -p1 -b .CVE-2007-2756
 %patch14 -p1 -b .CAN-2004-0941
 %patch15 -p1 -b .CVE-2009-3546
+%patch16 -p1 -b .aarch64
+%patch17 -p1 -b .CVE-2015-0848+CVE-2015-4588
+%patch18 -p1 -b .CVE-2015-4695
+%patch19 -p1 -b .CVE-2015-4696
 f=README ; iconv -f iso-8859-2 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 
 %build
@@ -179,6 +191,12 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 
 
 %changelog
+* Mon Nov 30 2015 Liu Di <liudidi@gmail.com> - 0.2.8.4-36
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.2.8.4-35
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.2.8.4-34
 - 为 Magic 3.0 重建
 

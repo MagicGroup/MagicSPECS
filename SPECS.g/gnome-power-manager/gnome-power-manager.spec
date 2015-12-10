@@ -2,7 +2,7 @@ Summary: GNOME power management service
 Summary(zh_CN.UTF-8): GNOME 电源管理服务
 Name: gnome-power-manager
 Version:	3.18.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+ and GFDL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -63,15 +63,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/*
 %{_datadir}/applications/*.desktop
 %{_datadir}/glib-2.0/schemas/*.gschema.xml
-#%{_datadir}/gnome-power-manager/*.ui
 %{_datadir}/appdata/gnome-power-statistics.appdata.xml
-%{_datadir}/icons/HighContrast/*/*/*.*
-%{_datadir}/icons/hicolor/*/apps/gnome-power-statistics.*
-#%dir %{_datadir}/gnome-power-manager
-%{_datadir}/glib-2.0/schemas/*.gschema.xml
+%{_datadir}/icons/hicolor/*/apps/gnome-power-statistics*.*
 %{_mandir}/man1/*.1.gz
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
 - 更新到 3.18.0
 

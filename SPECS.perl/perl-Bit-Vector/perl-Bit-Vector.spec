@@ -1,6 +1,6 @@
 Name:           perl-Bit-Vector
 Version:	7.4
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Efficient bit vector, set of integers and "big int" math library
 Summary(zh_CN.UTF-8): 高效位向量，整数和大整数集合的数学库
 
@@ -63,6 +63,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 7.4-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 7.4-3
 - 为 Magic 3.0 重建
 

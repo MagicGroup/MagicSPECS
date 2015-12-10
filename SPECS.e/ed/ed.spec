@@ -2,7 +2,7 @@ Summary: The GNU line editor
 Summary(zh_CN.UTF-8): GNU 行编辑器
 Name: ed
 Version: 1.12
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv3+
 Group:  Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.12-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.12-3
 - 更新到 1.12
 

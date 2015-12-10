@@ -4,7 +4,7 @@ Summary: GnomeCanvas widget
 Summary(zh_CN.UTF-8): GnomeCanvas 部件
 Name: libgnomecanvas
 Version: 2.30.3
-Release: 7%{?dist}
+Release: 8%{?dist}
 URL: http://www.gnome.org/
 Source0: http://download.gnome.org/sources/libgnomecanvas/2.30/%{name}-%{version}.tar.bz2
 License: LGPLv2+
@@ -76,6 +76,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libgnomecanvas
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.30.3-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.30.3-7
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        2.3.3
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        A model for human color perception
 
 License:        MIT
@@ -64,6 +64,9 @@ rm %{buildroot}%{_datadir}/%{pkg_name}-%{version}/{README,CHANGELOG}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.3.3-13
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.3.3-12
 - 为 Magic 3.0 重建
 

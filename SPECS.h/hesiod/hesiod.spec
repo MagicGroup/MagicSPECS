@@ -1,6 +1,6 @@
 Name: hesiod
 Version: 3.2.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Source: ftp://athena-dist.mit.edu/pub/ATHENA/hesiod/hesiod-%{version}.tar.gz
 Summary: Shared libraries for querying the Hesiod naming service
 Summary(zh_CN.UTF-8): 查询 Hesiod 名称服务的共享库
@@ -40,6 +40,9 @@ the header files and libraries required for building programs which use Hesiod.
 %{name} 的开发包。
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.2.1-4
+- 为 Magic 3.0 重建
+
 * Tue Apr 15 2014 Liu Di <liudidi@gmail.com> - 3.2.1-3
 - 为 Magic 3.0 重建
 

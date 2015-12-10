@@ -1,6 +1,6 @@
 Name:           yaml-cpp
 Version:        0.5.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A YAML parser and emitter for C++
 Summary(zh_CN.UTF-8): C++ 的 YAML 解析器
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make VERBOSE=1 %{?_smp_mflags}
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.5.1-10
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.5.1-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           libgnomemm26
 Version:        2.30.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        C++ interface for Gnome libs (a GUI library for X)
 Summary(zh_CN.UTF-8): Gnome 库的 C++ 接口
@@ -84,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.30.0-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.30.0-4
 - 为 Magic 3.0 重建
 

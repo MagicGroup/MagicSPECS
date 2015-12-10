@@ -1,0 +1,48 @@
+Description: Tighten FreeBSD system name check not to match kFreeBSD
+Author: Modestas Vainius <modax@debian.org>
+Bug-Debian: http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=729239
+Origin: vendor
+Last-Update: 2013-11-17
+
+CMAKE_SYSTEM_NAME on GNU/kFreeBSD is "kFreeBSD" so we cannot use MATCHES
+(regexp) operation here.
+
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -1287,7 +1287,7 @@ if (UNIX AND NOT APPLE)
+   # they end up getting ignored.  This appends them to the very end of the link
+   # line, ensuring they're always used.
+   find_package(X11)
+-  if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++  if (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+     target_link_libraries(clementine_lib ${X11_X11_LIB})
+   else ()
+     target_link_libraries(clementine_lib ${X11_X11_LIB} ${CMAKE_DL_LIBS})
+@@ -1320,9 +1320,9 @@ add_executable(clementine
+   main.cpp
+ )
+ 
+-if (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++if (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+   target_link_libraries(clementine execinfo)
+-endif (${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++endif (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+ 
+ target_link_libraries(clementine
+   clementine_lib
+--- a/ext/clementine-tagreader/CMakeLists.txt
++++ b/ext/clementine-tagreader/CMakeLists.txt
+@@ -33,11 +33,11 @@ target_link_libraries(clementine-tagread
+   libclementine-tagreader
+ )
+ 
+-if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++if(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+   target_link_libraries(clementine-tagreader
+     execinfo
+   )
+-endif(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
++endif(${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+ 
+ if(APPLE)
+   target_link_libraries(clementine-tagreader

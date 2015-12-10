@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Auto-scrubbing bytestring memory chunks
 
 License:        BSD
@@ -72,6 +72,9 @@ rm %{buildroot}%{_datadir}/%{pkg_name}-%{version}/README.md
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.3-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.3-7
 - 为 Magic 3.0 重建
 

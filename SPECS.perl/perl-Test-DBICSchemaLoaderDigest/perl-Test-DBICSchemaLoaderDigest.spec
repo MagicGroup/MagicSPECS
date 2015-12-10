@@ -1,6 +1,6 @@
 Name:           perl-Test-DBICSchemaLoaderDigest
 Version:        0.04
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Test the DBIC::Schema::Loader's MD5 sum
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.04-7
 - 为 Magic 3.0 重建
 

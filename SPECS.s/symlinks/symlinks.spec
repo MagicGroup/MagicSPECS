@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): 维护系统符号链接的工具
 Name: symlinks
 URL: ftp://metalab.unc.edu/pub/Linux/utils/file/
 Version: 1.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License: Copyright only
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/symlinks.8*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.4-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4-8
 - 为 Magic 3.0 重建
 

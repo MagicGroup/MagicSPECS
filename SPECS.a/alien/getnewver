@@ -1,7 +1,7 @@
 #!/bin/bash
 url="http://ftp.debian.org/debian/pool/main/a/alien/?C=M&O=D"
 new1="alien_"
-new2=".tar.gz"
+new2=".tar.xz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

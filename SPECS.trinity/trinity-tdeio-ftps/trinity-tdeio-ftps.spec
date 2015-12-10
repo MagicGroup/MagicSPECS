@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.3
 Summary:	An ftps TDEIO slave for Trinity
 Summary(zh_CN.UTF-8): TDE 下的 ftps TDEIO
 Group:		Productivity/Networking/Ftp/Clients
@@ -124,6 +124,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.1-1.3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.1-1.2
 - 为 Magic 3.0 重建
 

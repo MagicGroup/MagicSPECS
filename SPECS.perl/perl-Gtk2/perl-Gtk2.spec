@@ -10,7 +10,7 @@
 
 Name:           perl-Gtk2
 Version:	1.2496
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to the 2.x series of the Gimp Toolkit library
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -278,6 +278,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.2496-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.2496-2
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8):	产生随机密码的自动密码生成器
 Name:			apg
 
 Version:		2.3.0b
-Release:		15%{?dist}
+Release:		16%{?dist}
 License:		BSD
 Group:			System Environment/Base
 Group(zh_CN.UTF-8):	系统环境/基本
@@ -66,6 +66,9 @@ fi
 %{_sysconfdir}/xinetd.d/apgd
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.3.0b-16
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.3.0b-15
 - 为 Magic 3.0 重建
 

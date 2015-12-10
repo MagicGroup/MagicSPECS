@@ -2,7 +2,7 @@
 %define beta beta3
 Name:		kde4-krusader
 Version:	2.4.0
-Release:	0.3%{?dist}
+Release:	0.4%{?dist}
 Summary:	An advanced twin-panel (commander-style) file-manager for KDE
 Summary(zh_CN):	KDE 下的一个高级双面板文件管理器
 
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.4.0-0.4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.4.0-0.3
 - 为 Magic 3.0 重建
 

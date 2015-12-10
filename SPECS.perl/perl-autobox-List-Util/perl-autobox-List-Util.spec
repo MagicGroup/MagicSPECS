@@ -1,6 +1,6 @@
 Name:           perl-autobox-List-Util
 Version:        20090629
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Bring the List::Util functions to autobox
 Summary(zh_CN.UTF-8): 把 List::Util 函数转换到 autobox
 License:        GPL+ or Artistic
@@ -48,6 +48,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 20090629-17
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 20090629-16
 - 为 Magic 3.0 重建
 

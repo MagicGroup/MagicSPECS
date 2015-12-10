@@ -1,6 +1,6 @@
 Name:           perl-IPC-ShareLite
 Version:        0.17
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Lightweight interface to shared memory
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.17-10
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.17-9
 - 为 Magic 3.0 重建
 

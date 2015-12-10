@@ -4,7 +4,7 @@
 
 Name:           pyparsing
 Version:	2.0.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        An object-oriented approach to text processing
 Summary(zh_CN.UTF-8): 面向对象的文本处理方法
 Group:          Development/Libraries
@@ -119,6 +119,9 @@ rm -rf %{buildroot}
 %doc CHANGES README LICENSE HowToUsePyparsing.html docs examples htmldoc
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0.4-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0.4-2
 - 更新到 2.0.4
 

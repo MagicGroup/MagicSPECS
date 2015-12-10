@@ -1,6 +1,6 @@
 Name:		perl-Text-Hunspell
 Version:	2.11
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Perl interface to the Hunspell library
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Text::Hunspell.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.11-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.11-5
 - 为 Magic 3.0 重建
 

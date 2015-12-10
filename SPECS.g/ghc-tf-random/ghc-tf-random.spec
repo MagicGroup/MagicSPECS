@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        High-quality splittable pseudorandom number generator
 
 # main license is BSD
@@ -100,6 +100,9 @@ rm %{buildroot}/%{_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.5-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5-4
 - 为 Magic 3.0 重建
 

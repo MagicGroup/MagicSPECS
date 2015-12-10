@@ -10,7 +10,7 @@
 Summary: Methods to encode/decode Adobe's binary-to-text encoding of the same name
 Name: rubygem-%{gem_name}
 Version: 1.0.2
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://ascii85.rubyforge.org/
@@ -96,6 +96,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.2-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.2-8
 - 为 Magic 3.0 重建
 

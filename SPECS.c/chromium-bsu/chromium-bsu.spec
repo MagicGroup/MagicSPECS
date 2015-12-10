@@ -1,6 +1,6 @@
 Name:           chromium-bsu
 Version:	0.9.15.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Fast paced, arcade-style, top-scrolling space shooter
 Summary(zh_CN.UTF-8): 一个纵版飞行射击街机游戏
 Group:          Amusements/Games
@@ -69,6 +69,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9.15.1-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.9.15.1-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 Summary: Compass compatible Sass port of 960.gs
 Name: rubygem-%{gem_name}
 Version: 0.10.4
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/chriseppstein/compass-960-plugin
@@ -60,6 +60,9 @@ cp -a .%{gem_dir}/* %{buildroot}%{gem_dir}/
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.10.4-12
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.10.4-11
 - 为 Magic 3.0 重建
 

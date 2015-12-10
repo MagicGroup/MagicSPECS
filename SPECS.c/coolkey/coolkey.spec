@@ -22,7 +22,7 @@
 
 Name: coolkey
 Version: 1.1.0
-Release: 22%{?dist}
+Release: 23%{?dist}
 Summary: CoolKey PKCS #11 module
 License: LGPLv2
 URL: http://directory.fedora.redhat.com/wiki/CoolKey
@@ -119,6 +119,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.1.0-23
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.1.0-22
 - 为 Magic 3.0 重建
 

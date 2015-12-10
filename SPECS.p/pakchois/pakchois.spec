@@ -2,7 +2,7 @@ Summary: A wrapper library for PKCS#11
 Summary(zh_CN.UTF-8): PKCS#11 的接口库
 Name: pakchois
 Version: 0.4
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.4-9
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.4-8
 - 为 Magic 3.0 重建
 

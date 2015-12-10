@@ -2,7 +2,7 @@ Summary:   Simple wrapper for rpm and the Fedora package metadata
 Summary(zh_CN.UTF-8): rpm 和 Magic 包元数据的简单接口
 Name:      zif
 Version:	0.3.6
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:   GPLv2+
 URL:       http://people.freedesktop.org/~hughsient/zif/
 Source0:   http://people.freedesktop.org/~hughsient/zif/releases/%{name}-%{version}.tar.xz
@@ -109,6 +109,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/*.gir
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.3.6-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.3.6-3
 - 为 Magic 3.0 重建
 

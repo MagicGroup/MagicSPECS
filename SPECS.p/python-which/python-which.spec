@@ -2,7 +2,7 @@
 
 Name:           python-which
 Version:        1.1.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Small which replacement that can be used as a Python module
 Summary(zh_CN.UTF-8): 可以做为 which 替代的 Python 模块
 
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.1.0-13
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1.0-12
 - 为 Magic 3.0 重建
 

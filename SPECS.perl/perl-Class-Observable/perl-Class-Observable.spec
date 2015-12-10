@@ -1,6 +1,6 @@
 Name:           perl-Class-Observable
 Version:        1.04
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Allow other classes and objects to respond to events in yours
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.04-19
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.04-18
 - 为 Magic 3.0 重建
 

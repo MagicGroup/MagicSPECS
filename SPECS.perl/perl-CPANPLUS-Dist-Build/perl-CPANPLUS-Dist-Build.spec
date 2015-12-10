@@ -1,6 +1,6 @@
 Name:           perl-CPANPLUS-Dist-Build
 Version:	0.78
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Module::Build extension for CPANPLUS
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -120,6 +120,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.78-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.78-2
 - 为 Magic 3.0 重建
 

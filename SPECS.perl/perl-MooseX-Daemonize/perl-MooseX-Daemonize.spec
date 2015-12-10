@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Daemonize
 Version:	0.20
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Role for daemonizing your Moose based application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.20-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.20-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: The GObject Builder
 Summary(zh_CN.UTF-8): GObject 构建程序
 Name: gob2
 Version:	2.0.20
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.0.20-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.20-2
 - 为 Magic 3.0 重建
 

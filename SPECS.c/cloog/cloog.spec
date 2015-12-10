@@ -1,7 +1,7 @@
 Name:           cloog
 %global         tarball_name %{name}
 Version:	0.18.4
-Release:	3%{?dist}
+Release:	4%{?dist}
 Epoch:		1
 Summary:        The Chunky Loop Generator
 
@@ -101,6 +101,9 @@ fi
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.18.4-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.18.4-3
 - 为 Magic 3.0 重建
 

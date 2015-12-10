@@ -2,7 +2,7 @@ Summary: Converts text and other types of files to PostScript
 Summary(zh_CN.UTF-8): 转换文本和其它类型文件到 PostScript 文件 
 Name: a2ps
 Version: 4.14
-Release: 24%{?dist}
+Release: 26%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -40,6 +40,7 @@ Patch36: a2ps-forward-null.patch
 Patch37: a2ps-overrun-dynamic.patch
 Patch38: a2ps-overrun-static.patch
 Patch39: a2ps-resource-leak.patch
+Patch40: a2ps-CVE-2014-0466.patch
 Requires: fileutils sh-utils info
 BuildRequires: gperf
 BuildRequires: emacs, flex, libtool, texinfo, groff
@@ -188,6 +189,9 @@ the emacs-%{name} package to use emacs-%{name} with GNU Emacs.
 # Coverity fix (resource-leak).
 %patch39 -p1 -b .resource-leak
 
+# Invoke gs with the -dSAFER option in fixps (CVE-2014-0466, bug #1082411).
+%patch40 -p1 -b .CVE-2014-0466
+
 for file in AUTHORS ChangeLog; do
   iconv -f latin1 -t UTF-8 < $file > $file.utf8
   touch -c -r $file $file.utf8
@@ -265,7 +269,7 @@ rm -f %{buildroot}%{_infodir}/dir
 
 magic_rpm_clean.sh
 
-%find_lang %name
+%find_lang %name || :
 
 %clean
 rm -rf %{buildroot}
@@ -293,7 +297,8 @@ exit 0
 
 %postun -p /sbin/ldconfig
 
-%files -f %{name}.lang
+#%%files -f %{name}.lang
+%files
 %defattr(-,root,root,-)
 %dir %{_sysconfdir}/a2ps
 %config %{_sysconfdir}/a2ps.cfg
@@ -329,6 +334,12 @@ exit 0
 %{_emacs_sitelispdir}/%{name}/*.el
 
 %changelog
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 4.14-26
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 4.14-25
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.14-24
 - 为 Magic 3.0 重建
 

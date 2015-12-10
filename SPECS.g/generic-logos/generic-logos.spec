@@ -1,6 +1,6 @@
 Name:       generic-logos
 Version:    17.0.0
-Release:    8%{?dist}
+Release:    9%{?dist}
 Summary:    Icons and pictures
 Summary(zh_CN.UTF-8): 图标和图像
 
@@ -164,6 +164,9 @@ rm -rf %{buildroot}
 %{_datadir}/pixmaps/poweredby.png
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 17.0.0-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 17.0.0-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		oniguruma
 Version:	5.9.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Regular expressions library
 Summary(zh_CN.UTF-8): 正则表达式库
 
@@ -112,6 +112,9 @@ magic_rpm_clean.sh
 %{_includedir}/onig*.h
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.9.6-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 25 2015 Liu Di <liudidi@gmail.com> - 5.9.6-1
 - 更新到 5.9.6
 

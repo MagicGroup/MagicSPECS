@@ -1,6 +1,6 @@
 Name:           compface
 Version:        1.5.2
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Library and tools for handling X-Face data
 Summary(zh_CN.UTF-8): 处理 X-Face 数据的库和工具
 
@@ -87,6 +87,9 @@ cmp %{SOURCE1} __test.xbm
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.5.2-16
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.2-15
 - 为 Magic 3.0 重建
 

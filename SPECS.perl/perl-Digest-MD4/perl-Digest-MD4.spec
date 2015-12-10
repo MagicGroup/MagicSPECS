@@ -1,6 +1,6 @@
 Name:		perl-Digest-MD4
 Version:	1.9
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Perl interface to the MD4 Algorithm
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Digest::MD4.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.9-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.9-2
 - 为 Magic 3.0 重建
 

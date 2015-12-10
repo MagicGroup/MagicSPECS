@@ -13,7 +13,7 @@ the CJK Unifonts project.
 
 Name:           %{fontname}-fonts
 Version:        0.2.20080216.1
-Release:        51%{?dist}
+Release:        52%{?dist}
 Summary:        Chinese Unicode TrueType font in Kai face
 Summary(zh_CN.UTF-8): 楷体字体
 
@@ -79,6 +79,9 @@ ln -s %{_fontdir}/ %{buildroot}%{catalogue}/%{name}
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.2.20080216.1-52
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.2.20080216.1-51
 - 为 Magic 3.0 重建
 

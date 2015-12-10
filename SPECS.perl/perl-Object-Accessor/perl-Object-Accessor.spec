@@ -2,7 +2,7 @@ Name:           perl-Object-Accessor
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.48
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Interface to create per object accessors
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:0.48-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:0.48-9
 - 为 Magic 3.0 重建
 

@@ -1,11 +1,12 @@
-From 8b0b78dc06ae1ed1c5f3c7a13271e7037091d0be Mon Sep 17 00:00:00 2001
+From e439feb47e0bd603b6e2d84b6ae280f2a2d4d134 Mon Sep 17 00:00:00 2001
 From: Boris Ranto <branto@redhat.com>
-Date: Wed, 15 Apr 2015 14:06:24 +0200
+Date: Wed, 11 Nov 2015 17:08:06 +0100
 Subject: [PATCH] Disable erasure_codelib neon build
 
 ---
  src/erasure-code/jerasure/Makefile.am | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ src/erasure-code/shec/Makefile.am     | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/src/erasure-code/jerasure/Makefile.am b/src/erasure-code/jerasure/Makefile.am
 index 9ca4fbb..147d57e 100644
@@ -24,6 +25,23 @@ index 9ca4fbb..147d57e 100644
  
  libec_jerasure_sse3_la_SOURCES = ${jerasure_sources}
  libec_jerasure_sse3_la_CFLAGS = ${AM_CFLAGS}  \
+diff --git a/src/erasure-code/shec/Makefile.am b/src/erasure-code/shec/Makefile.am
+index 1449a41..f5d5997 100644
+--- a/src/erasure-code/shec/Makefile.am
++++ b/src/erasure-code/shec/Makefile.am
+@@ -81,9 +81,9 @@ if LINUX
+ libec_shec_neon_la_LDFLAGS += -export-symbols-regex '.*__erasure_code_.*'
+ endif
+ 
+-if HAVE_NEON
+-erasure_codelib_LTLIBRARIES += libec_shec_neon.la
+-endif
++#if HAVE_NEON
++#erasure_codelib_LTLIBRARIES += libec_shec_neon.la
++#endif
+ 
+ libec_shec_sse3_la_SOURCES = ${shec_sources}
+ libec_shec_sse3_la_CFLAGS = ${AM_CFLAGS}  \
 -- 
 2.1.0
 

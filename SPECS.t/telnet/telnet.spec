@@ -2,7 +2,7 @@ Summary: The client program for the telnet remote login protocol.
 Summary(zh_CN.UTF-8): 远程登录协议 - telnet - 的客户端
 Name: telnet
 Version: 0.17
-Release: 48%{?dist}
+Release: 49%{?dist}
 Epoch: 1
 License: BSD
 Group: Applications/Internet
@@ -160,6 +160,9 @@ install -p -m644 %SOURCE6 ${RPM_BUILD_ROOT}%{_unitdir}/telnet.socket
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:0.17-49
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1:0.17-48
 - 为 Magic 3.0 重建
 

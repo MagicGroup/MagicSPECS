@@ -1,6 +1,6 @@
 Name:           freealut
 Version:        1.1.0
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Implementation of OpenAL's ALUT standard
 Summary(zh_CN.UTF-8): OpenAL 的 ALUT 标准的实现 
 
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/freealut.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.1.0-18
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.0-17
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 Summary:	Test::Unit::RR - RR adapter for Test::Unit
 Name:		rubygem-%{gem_name}
 Version:	1.0.3
-Release:	5%{?dist}
+Release:	6%{?dist}
 Group:		Development/Languages
 # https://github.com/test-unit/test-unit-rr/issues/1
 License:	LGPLv2+
@@ -106,6 +106,9 @@ ruby -Ilib test/run-test.rb
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.3-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.3-5
 - 为 Magic 3.0 重建
 

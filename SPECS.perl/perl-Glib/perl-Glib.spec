@@ -1,6 +1,6 @@
 Name:           perl-Glib
 Version:	1.314
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to GLib
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -96,6 +96,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/Glib::xsapi.3pm.gz
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.314-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.314-2
 - 更新到 1.314
 

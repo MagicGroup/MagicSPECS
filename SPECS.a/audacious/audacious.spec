@@ -2,7 +2,7 @@
 %define version 3.6.2
 %define testver %{nil}
 %if 0%{?testver}
-%define release 0.%{testver}.1%{?dist}.3
+%define release 0.%{testver}.1%{?dist}.4
 %else
 %define release 1%{?dist}
 %endif
@@ -87,6 +87,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.6.2-1
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.6.2-1
 - 为 Magic 3.0 重建
 

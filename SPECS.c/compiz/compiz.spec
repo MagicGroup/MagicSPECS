@@ -11,7 +11,7 @@ License:        GPLv2+ and LGPLv2+ and MIT
 Group:          User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version:        0.8.8
-Release:        29%{?dist}
+Release:        30%{?dist}
 Epoch:          1
 Summary:        OpenGL window and compositing manager
 Summary(zh_CN.UTF-8): OpenGL 窗口管理器
@@ -333,6 +333,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.8.8-30
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.8.8-29
 - 为 Magic 3.0 重建
 

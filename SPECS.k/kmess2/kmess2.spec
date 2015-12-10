@@ -4,7 +4,7 @@
 
 Name:          kmess2
 Version:        2.0.6.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        MSN Messenger / Windows Live Messenger client for KDE
 Summary(zh_CN.UTF-8): KDE 下的 MSN Messenger / Windows Live Messenger 客户端
 
@@ -95,6 +95,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/sounds/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.0.6.2-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.6.2-3
 - 为 Magic 3.0 重建
 

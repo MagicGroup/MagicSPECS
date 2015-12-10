@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2.2.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Levenshtein and restricted Damerau-Levenshtein edit distances
 
 License:        BSD
@@ -78,6 +78,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.2.2.1-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.2.1-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: The libglade library for loading user interfaces
 Summary(zh_CN.UTF-8): 载入用户界面的 libglade 库
 Name: libglade2
 Version: 2.6.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -87,6 +87,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libglade
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.6.4-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.6.4-9
 - 为 Magic 3.0 重建
 

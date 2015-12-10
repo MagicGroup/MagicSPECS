@@ -2,7 +2,7 @@
 
 Name:           ocaml-tplib
 Version:        1.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Tropical Polyhedra Library
 Summary(zh_CN.UTF-8): Tropical Polyhedra 库
 
@@ -116,6 +116,9 @@ _build/tests/test_tplib_rational
 %doc %{_mandir}/man1/*
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.3-9
+- 为 Magic 3.0 重建
+
 * Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 1.3-8
 - 为 Magic 3.0 重建
 

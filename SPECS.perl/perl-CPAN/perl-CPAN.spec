@@ -2,7 +2,7 @@
 
 Name:           perl-CPAN
 Version:        2.11
-Release:        349%{?dist}
+Release:        350%{?dist}
 Summary:        Query, download and build perl modules from CPAN sites
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -207,6 +207,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.11-350
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.11-349
 - 为 Magic 3.0 重建
 

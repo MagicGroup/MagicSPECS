@@ -2,7 +2,7 @@
 
 Name:           mousepad
 Version:        0.3.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Simple text editor for Xfce desktop environment
 Summary(zh_CN.UTF-8): Xfce 桌面环境下的简单文本编辑器
 
@@ -92,6 +92,9 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.3.0-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.3.0-7
 - 为 Magic 3.0 重建
 

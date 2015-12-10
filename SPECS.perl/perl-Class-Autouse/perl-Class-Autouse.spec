@@ -1,6 +1,6 @@
 Name:		perl-Class-Autouse
 Version:	2.01
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	Run-time class loading on first method call
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -62,6 +62,9 @@ AUTOMATED_TESTING=1 PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.01-10
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.01-9
 - 为 Magic 3.0 重建
 

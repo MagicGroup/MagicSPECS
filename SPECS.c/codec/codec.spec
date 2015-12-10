@@ -1,7 +1,8 @@
+%define debug_package %{nil}
 %define _missing_build_ids_terminate_build %{nil}
 Name: codec
 Version: 20110131
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: package of win32 codec and linux codec for mplayer and xine
 Summary(zh_CN.UTF-8): mplayer 和 xine 的 win32 和 linux 编解码器
 Group: Applications/Multimedia
@@ -16,7 +17,7 @@ Obsoletes: mplayer-win32codec
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 Autoreq: no
 
-BuildArch: %{ix86} x86_64
+BuildArch: i686
 
 %description
 These are Video and Audio codecs binary packages add support for codecs that are not yet
@@ -53,6 +54,9 @@ rm -rf ${RPM_BUILD_DIR}/all-%{version}
 %{_libdir}/codecs/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 20110131-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 20110131-3
 - 为 Magic 3.0 重建
 

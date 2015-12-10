@@ -2,7 +2,7 @@ Summary:	Macros for aclocal to install configuration files
 Summary(zh_CN.UTF-8): 安装配置文件的 aclocal 宏
 Name:		sysconftool
 Version:	0.17
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPLv3 with exceptions
 Source0:	http://downloads.sourceforge.net/project/courier/sysconftool/%{version}/%{name}-%{version}.tar.bz2
 URL:		http://www.courier-mta.org/sysconftool/
@@ -49,6 +49,9 @@ make check
 %{_datadir}/aclocal/sysconftool.m4
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.17-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.17-3
 - 为 Magic 3.0 重建
 

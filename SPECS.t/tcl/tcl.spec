@@ -6,7 +6,7 @@ Summary: Tool Command Language, pronounced tickle
 Summary(zh_CN.UTF-8): 工具命令语言(TCL) 
 Name: tcl
 Version: %{vers}
-Release: 3%{?dist}
+Release: 4%{?dist}
 Epoch: 1
 License: TCL
 Group: Development/Languages
@@ -147,6 +147,9 @@ magic_rpm_clean.sh
 %{_datadir}/%{name}%{majorver}/tclAppInit.c
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:8.6.4-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1:8.6.4-3
 - 为 Magic 3.0 重建
 

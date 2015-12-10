@@ -13,31 +13,6 @@
 -libdir="%libdir%"
 +includedir=`pkg-config --variable includedir freetype2`
 +libdir=`pkg-config --variable libdir freetype2`
- enable_shared="%build_libtool_libs%"
  
  usage()
-@@ -119,20 +119,20 @@ else
- fi
- 
- if test "$echo_ft_version" = "yes" ; then
--  major=`grep define ${SYSROOT}$includedir/freetype2/freetype.h \
-+  major=`grep define ${SYSROOT}$includedir/freetype.h \
-          | grep FREETYPE_MAJOR \
-          | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
--  minor=`grep define ${SYSROOT}$includedir/freetype2/freetype.h \
-+  minor=`grep define ${SYSROOT}$includedir/freetype.h \
-          | grep FREETYPE_MINOR \
-          | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
--  patch=`grep define ${SYSROOT}$includedir/freetype2/freetype.h \
-+  patch=`grep define ${SYSROOT}$includedir/freetype.h \
-          | grep FREETYPE_PATCH \
-          | sed 's/.*[ 	]\([0-9][0-9]*\).*/\1/'`
-   echo $major.$minor.$patch
- fi
- 
- if test "$echo_cflags" = "yes" ; then
--  cflags="-I${SYSROOT}$includedir/freetype2"
-+  cflags="-I${SYSROOT}$includedir"
-   echo $cflags
- fi
- 
+ {

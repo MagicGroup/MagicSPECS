@@ -4,7 +4,7 @@
 Name:    iris
 Summary: A library for working with the XMPP/Jabber protocol
 Version: 1.0.0
-Release: 0.17.git%{vcsdate}%{?dist}
+Release: 0.18.git%{vcsdate}%{?dist}
 License: LGPLv2+
 URL:     https://github.com/psi-im/iris
 Source0: iris-git%{vcsdate}git.tar.xz
@@ -125,6 +125,9 @@ test "$(pkg-config --modversion qjdns)" = "1.0.0"
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.0-0.18.git20151030
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.0-0.17.git20151030
 - 更新到 20151030 日期的仓库源码
 

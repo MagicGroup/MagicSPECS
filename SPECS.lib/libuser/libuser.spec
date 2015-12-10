@@ -4,7 +4,7 @@
 
 Name: libuser
 Version: 0.62
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 License: LGPLv2+
@@ -129,6 +129,9 @@ python -c "import libuser"
 %{_datadir}/gtk-doc/html/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.62-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.62-2
 - 更新到 0.62
 

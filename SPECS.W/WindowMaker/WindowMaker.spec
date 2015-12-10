@@ -2,7 +2,7 @@ Summary:        A fast, feature rich Window Manager
 Summary(zh_CN.UTF-8): 一个快速，功能丰富的窗口管理器
 Name:           WindowMaker
 Version:	0.95.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License:        GPLv2+
 Group:          User Interface/Desktops
@@ -235,6 +235,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/get-wutil-flags*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.95.7-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.95.7-2
 - 为 Magic 3.0 重建
 

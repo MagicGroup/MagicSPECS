@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.0
-Release: 11%{?dist}
+Release: 12%{?dist}
 Summary: Transparent proxy support for any EventMachine protocol
 Group: Development/Languages
 License: MIT
@@ -73,6 +73,9 @@ cp -p %{SOURCE1} %{buildroot}/%{gem_instdir}/
 %{gem_instdir}/em-socksify.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.3.0-12
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.0-11
 - 为 Magic 3.0 重建
 

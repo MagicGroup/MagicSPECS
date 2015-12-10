@@ -1,6 +1,6 @@
 Name:           qtsoap
 Version:        2.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        The Simple Object Access Protocol Qt-based client side library
 Summary(zh_CN.UTF-8): 基于 Qt 的简单对象访问协议库
 
@@ -81,6 +81,9 @@ rm -rf %{buildroot}
 %{_qt4_headerdir}/QtSoap/
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.7-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.7-6
 - 为 Magic 3.0 重建
 

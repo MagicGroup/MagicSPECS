@@ -1,5 +1,5 @@
 Name:           elementary
-Version:	1.16.0-beta3
+Version:	1.16.0
 Release:        2%{?dist}
 Summary:        Basic widget set that is easy to use based on EFL
 Summary(zh_CN.UTF-8): 易于使用基于 EFL 系统的基本部件集
@@ -91,6 +91,7 @@ fi
 
 %files devel
 %{_includedir}/elementary-1
+%{_includedir}/elementary-cxx-1
 %{_libdir}/libelementary.so
 %{_libdir}/pkgconfig/elementary.pc
 %{_libdir}/cmake/Elementary/ElementaryConfig.cmake
@@ -100,7 +101,7 @@ fi
 
 %changelog
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com>
-- 更新到 1.16.0-beta3
+- 更新到 1.16.0
 
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 1.15.1-1
 - 更新到 1.15.1

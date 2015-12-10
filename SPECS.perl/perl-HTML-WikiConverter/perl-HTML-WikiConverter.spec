@@ -1,6 +1,6 @@
 Name:           perl-HTML-WikiConverter
 Version:        0.68
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl module to convert HTML to wiki markup
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.68-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.68-13
 - 为 Magic 3.0 重建
 

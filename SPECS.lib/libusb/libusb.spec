@@ -1,7 +1,7 @@
 Name: libusb
 Epoch: 1
 Version: 0.1.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A library which allows userspace access to USB devices
 Summary(zh_CN.UTF-8): 允许用户空间程序访问 USB 设备的库
 Group: System Environment/Libraries
@@ -100,6 +100,9 @@ rm -rf %{buildroot}
 %{_libdir}/libusb.a
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1:0.1.5-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:0.1.5-3
 - 为 Magic 3.0 重建
 

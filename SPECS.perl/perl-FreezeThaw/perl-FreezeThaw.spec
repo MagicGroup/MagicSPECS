@@ -1,6 +1,6 @@
 Name:           perl-FreezeThaw
 Version:        0.5001
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Convert Perl structures to strings and back
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.5001-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5001-13
 - 为 Magic 3.0 重建
 

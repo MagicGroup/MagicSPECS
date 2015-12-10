@@ -1,6 +1,6 @@
 Name:           perl-LWP-Authen-Wsse
 Version:        0.05
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Library for enabling X-WSSE authentication in LWP
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.05-17
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.05-16
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:		gperftools
 Version:	2.1
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	BSD
 Group:		Development/Tools
 Summary:	Very fast malloc and performance analysis tools
@@ -111,6 +111,9 @@ rm -rf %{buildroot}%{_pkgdocdir}/INSTALL
 %{_libdir}/*.so.*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1-7
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.1-6
 - 为 Magic 3.0 重建
 

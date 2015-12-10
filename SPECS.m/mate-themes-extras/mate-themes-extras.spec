@@ -21,7 +21,6 @@ Requires: 	faience-icon-theme
 Requires: 	dmz-cursor-themes
 Requires: 	adwaita-cursor-theme
 Requires: 	gtk-smooth-engine
-Requires:   adwaita-gtk3-theme
 Requires:   mate-icon-theme
 Requires:   gnome-icon-theme
 # not needed for the momment
@@ -73,46 +72,17 @@ make %{?_smp_mflags}
 # save space by linking identical images
 hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Blue-Submarine
 hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/DeLorean-Dark
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Gnome-Cupertino
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Gnome-Cupertino-Mint
 hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/GnomishBeige
-hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Green-Submarine
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Faience
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Faience-Ocre
 hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Smoothly
 hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Smoothly-Black
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Colors
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Brave
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Dust
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Human
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Illustrious
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Noble
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Wine
-#hardlink -c -v $RPM_BUILD_ROOT%{_datadir}/themes/Zukitwo-Wise
 magic_rpm_clean.sh
 
 %files
 %doc AUTHORS COPYING README ChangeLog
 %{_datadir}/themes/Blue-Submarine/
 %{_datadir}/themes/DeLorean-Dark/
-#%{_datadir}/themes/Faience/
-#%{_datadir}/themes/Faience-Ocre/
-#%{_datadir}/themes/Gnome-Cupertino/
-#%{_datadir}/themes/Gnome-Cupertino-Mint/
 %{_datadir}/themes/GnomishBeige/
 %{_datadir}/themes/Green-Submarine/
-%{_datadir}/themes/Smoothly/
-%{_datadir}/themes/Smoothly-Black/
-#%{_datadir}/themes/Zukitwo/
-#%{_datadir}/themes/Zukitwo-Colors/
-#%{_datadir}/themes/Zukitwo-Brave/
-#%{_datadir}/themes/Zukitwo-Dust/
-#%{_datadir}/themes/Zukitwo-Human/
-#%{_datadir}/themes/Zukitwo-Illustrious/
-#%{_datadir}/themes/Zukitwo-Noble/
-#%{_datadir}/themes/Zukitwo-Wine/
-#%{_datadir}/themes/Zukitwo-Wise/
 
 
 %changelog

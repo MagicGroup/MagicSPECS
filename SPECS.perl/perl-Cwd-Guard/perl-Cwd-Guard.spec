@@ -1,6 +1,6 @@
 Name:		perl-Cwd-Guard
 Version:	0.04
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Temporarily change the current directory
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Cwd-Guard/
@@ -61,6 +61,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/Cwd::Guard.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04-6
 - 为 Magic 3.0 重建
 

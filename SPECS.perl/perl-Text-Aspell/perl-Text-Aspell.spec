@@ -2,7 +2,7 @@
 
 Name:		perl-%{base}
 Version:	0.09
-Release:	24%{?dist}
+Release:	25%{?dist}
 Summary:	Perl interface to the GNU Aspell library
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -52,6 +52,9 @@ make test TEST_POD=t
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.09-25
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.09-24
 - 为 Magic 3.0 重建
 

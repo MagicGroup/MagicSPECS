@@ -1,6 +1,6 @@
 Name:           perl-DBD-CSV
 Version:	0.48
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        DBI driver for CSV files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -63,6 +63,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.48-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.48-2
 - 为 Magic 3.0 重建
 

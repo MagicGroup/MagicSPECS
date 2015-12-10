@@ -5,7 +5,7 @@
 
 Name:           ocaml-xml-light
 Version:        2.3
-Release:        0.10.svn%{svnrev}%{?dist}
+Release:        0.12.svn%{svnrev}%{?dist}
 Summary:        Minimal XML parser and printer for OCaml
 Summary(zh_CN.UTF-8): OCaml 下迷你版的 XML 解析器和打印程序
 
@@ -119,6 +119,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.3-0.12.svn234
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.3-0.11.svn234
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.3-0.10.svn234
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        7.3.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Happstack web server
 
 License:        BSD
@@ -106,6 +106,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 7.3.9-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 7.3.9-3
 - 为 Magic 3.0 重建
 

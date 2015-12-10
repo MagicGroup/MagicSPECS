@@ -1,7 +1,7 @@
-From c89bde7d3563e2c7bb725272334fabf53044bd9c Mon Sep 17 00:00:00 2001
+From d63e08ea4d073b2f5d5297eff396110d949c0352 Mon Sep 17 00:00:00 2001
 From: Michel Normand <normand@linux.vnet.ibm.com>
 Date: Tue, 18 Mar 2014 09:15:47 -0400
-Subject: [PATCH 08/15] Add support for ppc64le.
+Subject: [PATCH 08/19] Add support for ppc64le.
 
 Signed-off-by: Michel Normand <normand@linux.vnet.ibm.com>
 ---
@@ -1556,10 +1556,10 @@ index 0000000..6101d53
 +
 +let fundecl f = (new selector)#emit_fundecl f
 diff --git a/asmrun/Makefile b/asmrun/Makefile
-index 5da022c..c0362b6 100644
+index 788fee9..a63321e 100644
 --- a/asmrun/Makefile
 +++ b/asmrun/Makefile
-@@ -99,6 +99,12 @@ power64.o: power64-$(SYSTEM).o
+@@ -128,6 +128,12 @@ power64.o: power64-$(SYSTEM).o
  power64.p.o: power64-$(SYSTEM).o
  	cp power64-$(SYSTEM).o power64.p.o
  
@@ -1858,7 +1858,7 @@ index 0000000..f49d00c
 +power64-elf.S
 \ No newline at end of file
 diff --git a/asmrun/stack.h b/asmrun/stack.h
-index 5202c3a..94b81e4 100644
+index 81263da..e23da0c 100644
 --- a/asmrun/stack.h
 +++ b/asmrun/stack.h
 @@ -55,6 +55,15 @@
@@ -1892,10 +1892,10 @@ index b79252d..049652e 100755
  	echo powerpc-unknown-linux-${LIBC}
  	exit ;;
 diff --git a/configure b/configure
-index 57c8699..c04272c 100755
+index cb289fb..6157157 100755
 --- a/configure
 +++ b/configure
-@@ -815,6 +815,7 @@ case "$target" in
+@@ -844,6 +844,7 @@ case "$target" in
    i[3456]86-*-gnu*)             arch=i386; system=gnu;;
    i[3456]86-*-mingw*)           arch=i386; system=mingw;;
    powerpc64-*-linux*)           arch=power64; model=ppc64; system=elf;;
@@ -1903,7 +1903,7 @@ index 57c8699..c04272c 100755
    powerpc*-*-linux*)            arch=power; model=ppc; system=elf;;
    powerpc-*-netbsd*)            arch=power; model=ppc; system=elf;;
    powerpc-*-openbsd*)           arch=power; model=ppc; system=bsd_elf;;
-@@ -897,6 +898,8 @@ case "$arch,$system" in
+@@ -926,6 +927,8 @@ case "$arch,$system" in
                    aspp="${TOOLPREF}gcc -c";;
    power64,elf)    as='${TOOLPREF}as -u -m ppc64'
                    aspp='${TOOLPREF}gcc -c';;
@@ -1913,5 +1913,5 @@ index 57c8699..c04272c 100755
                    aspp="$bytecc -c";;
    sparc,solaris)  as="${TOOLPREF}as"
 -- 
-2.1.0
+2.4.3
 

@@ -2,7 +2,7 @@ Name:           perl-Module-CoreList
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        5.20150820
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        What modules are shipped with versions of perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -82,6 +82,9 @@ make test
 %{_mandir}/man1/corelist.*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:5.20150820-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:5.20150820-3
 - 为 Magic 3.0 重建
 

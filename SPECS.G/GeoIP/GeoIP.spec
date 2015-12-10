@@ -6,7 +6,7 @@
 
 Name:		GeoIP
 Version:	1.6.6
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Library for country/city/organization to IP address or hostname mapping
 Group:		Development/Libraries
 License:	LGPLv2+
@@ -111,6 +111,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/geoip.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.6.6-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6.6-3
 - 为 Magic 3.0 重建
 

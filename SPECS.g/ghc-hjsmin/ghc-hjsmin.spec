@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.4.7
-Release:        9%{?dist}
+Release:        11%{?dist}
 Summary:        Haskell implementation of a javascript minifier
 
 License:        BSD
@@ -85,6 +85,12 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.1.4.7-11
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.4.7-10
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.4.7-9
 - 为 Magic 3.0 重建
 

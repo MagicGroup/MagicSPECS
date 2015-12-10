@@ -6,9 +6,9 @@ Summary(zh_CN.UTF-8): 小型 C 编译器
 Name: tcc
 Version: 0.9.26
 %if %{git}
-Release: 0.git%{gitdate}%{?dist}.5
+Release: 0.git%{gitdate}%{?dist}.6
 %else
-Release: 5%{?dist}
+Release: 6%{?dist}
 %endif
 License: LGPL
 Group: Development/Languages
@@ -89,6 +89,9 @@ make test
 %{_infodir}/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.9.26-0.git20120213.6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.9.26-0.git20120213.5
 - 更新到 20151104 日期的仓库源码
 

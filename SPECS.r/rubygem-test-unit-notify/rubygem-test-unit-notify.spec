@@ -6,7 +6,7 @@
 Summary:	Test::Unit::Notify - A test result notify extension for Test::Unit
 Name:		rubygem-%{gem_name}
 Version:	1.0.4
-Release:	4%{?dist}
+Release:	5%{?dist}
 Group:		Development/Languages
 # https://github.com/test-unit/test-unit-notify/issues/2
 License:	LGPLv2+ and (LGPLv2+ or GFDL or CC-BY-SA)
@@ -88,6 +88,9 @@ rm -f %{buildroot}%{gem_instdir}/{Gemfile,Rakefile,.yardopts}
 %doc	%{gem_instdir}/screenshot/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.4-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.4-4
 - 为 Magic 3.0 重建
 

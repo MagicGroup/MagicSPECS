@@ -8,7 +8,7 @@ Summary: Mobile broadband modem management service
 Summary(zh_CN.UTF-8): 移动宽带调制解调器管理服务
 Name: ModemManager
 Version: 1.3.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 #
 # Source from http://freedesktop.org/software/ModemManager/
 #
@@ -194,6 +194,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/vala/vapi/libmm-glib.*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 为 Magic 3.0 重建
 

@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.4.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 Summary:	Python packages to support TDE applications (scripts)
 Summary(zh_CN.UTF-8): 支持 TDE 程序的 Python 包
 Group:		Development/Libraries
@@ -241,6 +241,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.4.0-1.3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.4.0-1.2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 
 Name:          jackson-parent
 Version:       2.4.1
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Parent pom for all Jackson components
 License:       ASL 2.0
 URL:           https://github.com/FasterXML/jackson-parent
@@ -39,6 +39,9 @@ sed -i 's/\r//' LICENSE-2.0.txt
 %doc LICENSE-2.0.txt README.md
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.4.1-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.4.1-3
 - 为 Magic 3.0 重建
 

@@ -16,9 +16,11 @@
 # limitations under the License.
 #
 
+%define debug_package %{nil}
+
 Name:           google-gadgets
 Version:        0.11.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        Apache License Version 2.0
 Group:          Productivity/Networking/Web/Utilities
 Group(zh_CN.UTF-8): 	应用程序/系统
@@ -328,7 +330,7 @@ CXXFLAGS="${CXXFLAGS:-%optflags -Wno-invalid-offsetof }" ; export CXXFLAGS ;
 %configure \
   --with-browser-plugins-dir=%{_libdir}/flash-plugin \
   --disable-werror --enable-ltdl-install=no --disable-gtkmoz-browser-element --disable-smjs-script-runtime
-for i in `find . -name Makefile`;do sed -i 's/\-fstack-protector/\-fstack-protector\ \-fno-strict-aliasing/g' $i;done
+#for i in `find . -name Makefile`;do sed -i 's/\-fstack-protector/\-fstack-protector\ \-fno-strict-aliasing/g' $i;done
 make %{?_smp_mflags} 
 
 %install
@@ -455,9 +457,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files -n google-gadgets-gtk
 %defattr(-, root, root)
-#%{_bindir}/ggl-gtk
-#%{_datadir}/applications/ggl-gtk.desktop
-#%{_datadir}/applications/ggl-designer.desktop
+%{_bindir}/ggl-gtk
+%{_datadir}/applications/ggl-gtk.desktop
+%{_datadir}/applications/ggl-designer.desktop
 %{_libdir}/google-gadgets/modules/gtk-*.so
 
 %files -n google-gadgets-qt
@@ -472,18 +474,19 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files -n google-gadgets-webkit
 %defattr(-, root, root)
-#%{_libdir}/google-gadgets/modules/gtkwebkit-browser-element.so
+%{_libdir}/google-gadgets/modules/gtkwebkit-browser-element.so
 %{_libdir}/google-gadgets/modules/soup-xml-http-request.so
-#%{_libdir}/google-gadgets/modules/webkit-script-runtime.so
-#%{_libdir}/libggadget-webkitjs-1.0.so.*
+%{_libdir}/google-gadgets/modules/webkit-script-runtime.so
+%{_libdir}/libggadget-webkitjs-1.0.so.*
 
-%if 0
 %files -n google-gadgets-webkit-devel
 %{_libdir}/libggadget-webkitjs-1.0.so
 %{_libdir}/libggadget-webkitjs-1.0.la
-%endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.11.2-8
+- 为 Magic 3.0 重建
+
 * Mon Apr 14 2014 Liu Di <liudidi@gmail.com> - 0.11.2-7
 - 为 Magic 3.0 重建
 

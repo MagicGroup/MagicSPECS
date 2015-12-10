@@ -4,7 +4,7 @@ Summary:        SMTP client library
 Summary(zh_CN.UTF-8): SMTP 客户端库
 Name:           libesmtp
 Version:        1.0.6
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libesmtp.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.6-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.6-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           xqilla
 Version:        2.3.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        XQuery and XPath 2.0 library, built on top of Xerces-C
 Summary(zh_CN.UTF-8): XQuery 和 XPath 2.0 库
 
@@ -97,6 +97,9 @@ install -D -p -m0664 %{SOURCE1} %{buildroot}/%{_mandir}/man1/%{name}.1
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 2.3.0-10
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.3.0-9
 - 为 Magic 3.0 重建
 

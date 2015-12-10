@@ -1,6 +1,6 @@
 Name:           perl-Perl-PrereqScanner
 Version:	1.023
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Tool to scan your Perl code for its prerequisites
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.023-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.023-2
 - 为 Magic 3.0 重建
 

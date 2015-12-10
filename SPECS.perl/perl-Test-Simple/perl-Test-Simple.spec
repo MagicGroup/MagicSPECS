@@ -5,7 +5,7 @@
 Name:           perl-Test-Simple
 Summary:        Basic utilities for writing tests
 Version:        1.001014
-Release:        348%{?dist}
+Release:        349%{?dist}
 # CC0: lib/ok.pm
 # Public Domain: lib/Test/Tutorial.pod
 # GPL+ or Artistic: the rest of the distribution
@@ -114,6 +114,9 @@ make test AUTHOR_TESTING=1
 %{_mandir}/man3/Test::use::ok.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.001014-349
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001014-348
 - 为 Magic 3.0 重建
 

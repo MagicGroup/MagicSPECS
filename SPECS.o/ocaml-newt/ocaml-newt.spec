@@ -2,7 +2,7 @@
 
 Name:           ocaml-newt
 Version:        0.9
-Release:        21%{?dist}
+Release:        23%{?dist}
 Summary:        OCaml library for using newt text mode window system
 Summary(zh_CN.UTF-8): 使用 newt 文本模式窗口系统的 OCaml 库
 License:        LGPLv2+ with exceptions
@@ -101,6 +101,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.9-23
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.9-22
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9-21
 - 为 Magic 3.0 重建
 

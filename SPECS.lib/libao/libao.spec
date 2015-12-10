@@ -1,6 +1,6 @@
 Name:           libao
 Version:        1.1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Cross Platform Audio Output Library
 Summary(zh_CN.UTF-8): 跨平台的音频输出库
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.1.0-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.0-7
 - 为 Magic 3.0 重建
 

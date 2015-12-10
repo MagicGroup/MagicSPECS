@@ -4,7 +4,7 @@
 
 Name:           vinagre
 Version:	3.18.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        VNC client for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的 VNC 客户端
 
@@ -134,6 +134,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 为 Magic 3.0 重建
 

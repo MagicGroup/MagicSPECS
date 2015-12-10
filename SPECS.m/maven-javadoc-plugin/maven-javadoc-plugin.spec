@@ -1,6 +1,6 @@
 Name:           maven-javadoc-plugin
 Version:        2.10.3
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Maven Javadoc Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-javadoc-plugin
@@ -88,6 +88,15 @@ rm -f src/main/java/org/apache/maven/plugin/javadoc/*FixJavadocMojo.java
 %doc LICENSE NOTICE 
 
 %changelog
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.10.3-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.10.3-4
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.10.3-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

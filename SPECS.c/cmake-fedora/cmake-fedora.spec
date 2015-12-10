@@ -1,6 +1,6 @@
 Name:       cmake-fedora
 Version:    0.8.3
-Release:    2%{?dist}
+Release:    3%{?dist}
 Summary:    CMake helper modules for fedora developers
 Summary(zh_CN.UTF-8): fedora 开发人员用的 cmake 模块
 License:    BSD
@@ -67,8 +67,12 @@ fedora 开发人员用的 cmake 模块。
 %{_datadir}/cmake/Modules/cmake_uninstall.cmake.in
 %{_datadir}/cmake/Templates/fedora
 %config %{_sysconfdir}/cmake-fedora.conf
+%{_docdir}/cmake-fedora-%{version}/examples/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.8.3-3
+- 为 Magic 3.0 重建
+
 * Wed Mar 12 2014 Liu Di <liudidi@gmail.com> - 0.8.3-2
 - 更新到
 

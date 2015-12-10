@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		1.0
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:		Manage applications automatic startup
 Summary(zh_CN.UTF-8): 管理自动启动的程序
 Group:			Applications/Utilities
@@ -130,6 +130,9 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:1.0-1.2
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:1.0-1.1
 - 为 Magic 3.0 重建
 

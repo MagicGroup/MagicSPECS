@@ -48,7 +48,7 @@ Name:			trinity-%{tde_pkg}
 Summary:		Full-Screen Task Manager for TDE
 Summary(zh_CN.UTF-8): TDE 下的全屏任务管理器
 Version:		0.5.3
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 
 License:		GPLv2+
 Group:			Applications/Utilities
@@ -156,6 +156,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.5.3-1.opt.3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.5.3-1.opt.2
 - 为 Magic 3.0 重建
 

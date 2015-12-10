@@ -1,6 +1,6 @@
 Name:           perl-Log-Message-Simple
 Version:        0.10
-Release:        296%{?dist}
+Release:        297%{?dist}
 Summary:        Simplified interface to Log::Message
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.10-297
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.10-296
 - 为 Magic 3.0 重建
 

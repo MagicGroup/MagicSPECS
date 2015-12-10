@@ -31,7 +31,7 @@
 Summary:        Java XPath, XSLT 2.0 and XQuery implementation
 Name:           saxon
 Version:        9.3.0.4
-Release:        16%{?dist}
+Release:        17%{?dist}
 # net.sf.saxon.om.XMLChar is from ASL-licensed Xerces
 # net/sf/saxon/option/jdom/ is MPLv1.1
 # net/sf/saxon/serialize/codenorm/ is UCD
@@ -200,6 +200,9 @@ update-alternatives --install %{_javadir}/jaxp_transform_impl.jar \
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 9.3.0.4-17
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9.3.0.4-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -4,7 +4,7 @@
 Summary: Ruby wrapper for UglifyJS JavaScript compressor
 Name: rubygem-%{gem_name}
 Version: 2.4.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 # Uglifier itself is MIT
 # the bundled JavaScript from UglifyJS is BSD
@@ -82,6 +82,9 @@ popd
 %doc %{gem_instdir}/CONTRIBUTING.md
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.4.0-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.4.0-5
 - 为 Magic 3.0 重建
 

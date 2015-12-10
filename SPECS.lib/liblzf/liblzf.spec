@@ -1,6 +1,6 @@
 Name:           liblzf
 Version:        3.6
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Small data compression library
 Summary(zh_CN.UTF-8): 小数据压缩库
 
@@ -88,6 +88,9 @@ rm -f %{buildroot}%{_libdir}/liblzf.la
 %{_libdir}/pkgconfig/liblzf.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 3.6-12
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.6-11
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.1.11
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Ruby Wrapper for the Google Closure Compiler
 Group: Development/Languages
 License: ASL 2.0
@@ -97,6 +97,9 @@ popd
 %doc %{gem_instdir}/README.textile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.1.11-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.1.11-3
 - 为 Magic 3.0 重建
 

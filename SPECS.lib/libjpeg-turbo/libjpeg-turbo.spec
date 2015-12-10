@@ -1,6 +1,6 @@
 Name:		libjpeg-turbo
 Version: 1.3.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A MMX/SSE2 accelerated library for manipulating JPEG image files
 Summary(zh_CN.UTF-8): 使用 MMX/SSE2 加速处理 JPEG 图像文件的库
 
@@ -194,6 +194,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/turbojpeg.h
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.3.1-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.3.1-5
 - 更新到 1.3.1
 

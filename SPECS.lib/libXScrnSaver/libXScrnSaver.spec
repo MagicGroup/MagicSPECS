@@ -2,7 +2,7 @@ Summary: X.Org X11 libXss runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXss 运行库
 Name: libXScrnSaver
 Version: 1.2.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 %{_includedir}/X11/extensions/scrnsaver.h
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.2.2-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.2-4
 - 为 Magic 3.0 重建
 

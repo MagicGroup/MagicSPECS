@@ -3,7 +3,7 @@
 
 Name:           python-%{srcname}
 Version:        0.7.6
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Configurable sidebar-enabled Sphinx theme
 Summary(zh_CN.UTF-8): 可配置的启用滚动条的 Sphinx 主题
 
@@ -75,6 +75,9 @@ rm -rf %{pypi_name}.egg-info
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.7.6-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.7.6-6
 - 为 Magic 3.0 重建
 

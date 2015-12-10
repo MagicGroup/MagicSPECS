@@ -3,7 +3,7 @@ Summary: A GNU set of database routines which use extensible hashing
 Summary(zh_CN.UTF-8): 使用可扩展散列的数据库例程的 GNU 版本集合
 Name: gdbm
 Version:	1.11
-Release: 8%{?dist}
+Release: 9%{?dist}
 Source: http://ftp.gnu.org/gnu/gdbm/gdbm-%{version}.tar.gz
 # Prevent gdbm from storing uninitialized memory content
 # to database files.
@@ -76,7 +76,7 @@ make %{?_smp_mflags}
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 # create symlinks for compatibility
 mkdir -p $RPM_BUILD_ROOT/%{_includedir}/gdbm 
@@ -106,7 +106,7 @@ if [ $1 = 0 ]; then
         --entry="* gdbm: (gdbm).                   The GNU Database." || :
 fi
 
-%files -f %{name}.lang
+%files 
 %doc COPYING NEWS README THANKS AUTHORS NOTE-WARNING 
 %{_libdir}/libgdbm.so.4*
 %{_libdir}/libgdbm_compat.so.4*
@@ -122,6 +122,9 @@ fi
 %{_mandir}/man3/* 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.11-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.11-8
 - 为 Magic 3.0 重建
 

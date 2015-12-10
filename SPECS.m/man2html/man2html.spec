@@ -3,7 +3,7 @@
 
 Name:       man2html
 Version:    1.6
-Release:    17.%{posttag}%{?dist}
+Release:    18.%{posttag}%{?dist}
 Summary:    Convert man pages to HTML - CGI scripts
 Summary(zh_CN.UTF-8): 转换手册页为 HTML - CGI 脚本
 
@@ -204,6 +204,9 @@ rm -f %{_localstatedir}/cache/man2html/* || :
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.6-18.g
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6-17.g
 - 为 Magic 3.0 重建
 

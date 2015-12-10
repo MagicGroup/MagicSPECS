@@ -48,7 +48,7 @@ Name:			trinity-%{tde_pkg}
 Summary:        Frontend for clamav
 Summary(zh_CN.UTF-8): clamav 的图形前端
 Version:		0.46
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 
 License:		GPLv2+
 Group:			Applications/Utilities
@@ -180,6 +180,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.46-1.opt.3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.46-1.opt.2
 - 为 Magic 3.0 重建
 

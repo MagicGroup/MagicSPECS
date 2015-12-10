@@ -1,6 +1,6 @@
 Name:           perl-List-Compare
 Version:	0.53
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Compare elements of two or more lists
 
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.53-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.53-2
 - 为 Magic 3.0 重建
 

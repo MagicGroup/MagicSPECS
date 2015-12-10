@@ -4,7 +4,7 @@
 
 Name:           uniconvertor
 Version:        2.0
-Release:        0.10%{?SVN:.svn%{SVN}}%{?dist}
+Release:        0.11%{?SVN:.svn%{SVN}}%{?dist}
 Summary:        Universal vector graphics translator
 Summary(zh_CN.UTF-8): 通用的向量图形转换程序
 
@@ -61,6 +61,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datarootdir}/mime/packages/vnd.sk1project.pdxf-graphics.xml
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2.0-0.11.svn362
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.0-0.10.svn362
 - 为 Magic 3.0 重建
 

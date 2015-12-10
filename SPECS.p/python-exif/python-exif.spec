@@ -5,7 +5,7 @@ Summary:        Python module to extract EXIF information
 Summary(zh_CN.UTF-8): 提取 EXIF 信息的 Python 模块
 Name:           python-exif
 Version:	2.1.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.1.2-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.1.2-2
 - 更新到 2.1.2
 

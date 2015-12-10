@@ -2,8 +2,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           glibmm24
-Version:	2.46.1
-Release:        2%{?dist}
+Version:	2.46.2
+Release:        1%{?dist}
 Summary:        C++ interface for the GLib library
 Summary(zh_CN.UTF-8): GLib 的 C++ 接口
 
@@ -97,6 +97,12 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
+* Wed Dec 09 2015 Liu Di <liudidi@gmail.com> - 2.46.2-1
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.46.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.46.1-2
 - 更新到 2.46.1
 

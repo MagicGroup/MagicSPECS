@@ -4,7 +4,7 @@
 Summary: Makes HTTP fun! Also, makes consuming restful web services dead easy
 Name: rubygem-%{gem_name}
 Version: 0.13.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://jnunemaker.github.com/httparty
@@ -89,6 +89,9 @@ popd
 %{gem_instdir}/*.yml
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.13.1-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.13.1-3
 - 为 Magic 3.0 重建
 

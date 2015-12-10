@@ -3,7 +3,7 @@
 
 Name:		gstreamer-rtsp
 Version:	0.10.8
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	GStreamer RTSP server library
 
 Group:		Applications/Multimedia
@@ -109,6 +109,9 @@ chrpath --delete %{buildroot}%{python_sitearch}/gst-0.10/gst/rtspserver.so
 %{_datadir}/vala/vapi/gst-rtsp-server-0.10.vapi
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.8-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.10.8-5
 - 为 Magic 3.0 重建
 

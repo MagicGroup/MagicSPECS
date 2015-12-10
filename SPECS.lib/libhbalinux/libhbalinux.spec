@@ -1,6 +1,6 @@
 Name:               libhbalinux
 Version:            1.0.17
-Release:            4%{?dist}
+Release:            5%{?dist}
 Summary:            FC-HBAAPI implementation using scsi_transport_fc interfaces
 Summary(zh_CN.UTF-8): 使用 scsi_transport_fc 接口实现的 FC-HBAAPI
 Group:              System Environment/Libraries
@@ -80,6 +80,9 @@ fi
 %{_libdir}/%{name}.so
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.17-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.17-4
 - 为 Magic 3.0 重建
 

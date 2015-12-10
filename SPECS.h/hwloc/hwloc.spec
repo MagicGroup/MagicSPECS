@@ -1,11 +1,12 @@
 Summary:   Portable Hardware Locality - portable abstraction of hierarchical architectures
 Name:      hwloc
-Version:   1.8.1
-Release:   5%{?dist}
+Version:   1.11.0
+Release:   6%{?dist}
 License:   BSD
 Group:     Applications/System
 URL:       http://www.open-mpi.org/projects/hwloc/
-Source0:   http://www.open-mpi.org/software/hwloc/v%{version}/downloads/%{name}-%{version}.tar.bz2
+Source0:   http://www.open-mpi.org/software/hwloc/v1.11/downloads/%{name}-%{version}.tar.bz2
+Requires:  %{name}-libs%{?_isa} = %{version}-%{release}
 
 BuildRequires: cairo-devel
 BuildRequires: libpciaccess-devel
@@ -17,13 +18,13 @@ BuildRequires: ncurses-devel
 BuildRequires: transfig doxygen w3m
 BuildRequires: texlive-latex texlive-makeindex
 BuildRequires: autoconf automake libtool
+BuildRequires: desktop-file-utils
 %ifnarch s390 s390x
 BuildRequires: libibverbs-devel
 %endif
-%ifnarch s390 s390x %{arm} aarch64
+%ifnarch s390 s390x %{arm}
 BuildRequires: numactl-devel
 %endif
-Requires:  %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description
 The Portable Hardware Locality (hwloc) software package provides 
@@ -42,7 +43,10 @@ about the hardware, bind processes, and much more.
 %package devel
 Summary:   Headers and shared development libraries for hwloc
 Group:     Development/Libraries
-Requires:  %{name}-libs = %{version}-%{release}
+Requires:  %{name}-libs%{?_isa} = %{version}-%{release}
+%ifnarch s390 s390x
+Requires:  libibverbs-devel%{?_isa}
+%endif
 
 %description devel
 Headers and shared object symbolic links for the hwloc.
@@ -54,25 +58,50 @@ Group:     Development/Libraries
 %description libs
 Run time libraries for the hwloc
 
+%package gui
+Summary:   The gui-based hwloc program(s)
+Group:     Development/Libraries
+Requires:  %{name}-libs%{?_isa} = %{version}-%{release}
+
+%description gui
+GUI-based tool for displaying system topology information.
+
+%package plugins
+Summary:   Plugins for hwloc
+Group:     Development/Libraries
+Requires:  %{name}-plugins%{?_isa} = %{version}-%{release}
+
+%description plugins
+ This package contains plugins for hwloc. This includes
+  - PCI support
+  - GL support
+  - libxml support
+
 %prep
 %setup -q
 
 %build
+# Remove rpaths
 autoreconf --force --install
-%configure
-make %{?_smp_mflags} V=1
+%configure --enable-plugins --disable-silent-rules
+make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot} INSTALL="%{__install} -p"
-
-#Fix wrong permition on file hwloc-assembler-remote => I have reported this to upstream already
-chmod 0755 %{buildroot}%{_bindir}/hwloc-assembler-remote
 
 # We don't ship .la files.
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 cp -p AUTHORS COPYING NEWS README VERSION %{buildroot}%{_defaultdocdir}/%{name}
-cp -p doc/hwloc-hello.c %{buildroot}%{_defaultdocdir}/%{name}
+cp -pr doc/examples %{buildroot}%{_defaultdocdir}/%{name}
+# Fix for BZ1253977
+mv  %{buildroot}%{_defaultdocdir}/%{name}/examples/Makefile  %{buildroot}%{_defaultdocdir}/%{name}/examples/Makefile_%{_arch}
+
+desktop-file-validate %{buildroot}/%{_datadir}/applications/lstopo.desktop
+
+# Avoid making hwloc-gui depend on hwloc
+rm %{buildroot}%{_mandir}/man1/lstopo.1
+ln %{buildroot}%{_mandir}/man1/lstopo-no-graphics.1 %{buildroot}%{_mandir}/man1/lstopo.1
 
 %check
 make check
@@ -83,10 +112,9 @@ make check
 
 %files
 %{_bindir}/%{name}*
-%{_bindir}/lstopo
 %{_bindir}/lstopo-no-graphics
 %{_mandir}/man1/%{name}*
-%{_mandir}/man1/lstopo*
+%{_mandir}/man1/lstopo-no-graphics*
 
 %files devel
 %{_libdir}/pkgconfig/*
@@ -94,7 +122,7 @@ make check
 %dir %{_includedir}/%{name}
 %{_includedir}/%{name}/*
 %{_includedir}/%{name}.h
-%{_defaultdocdir}/%{name}/*c
+%{_defaultdocdir}/%{name}/examples
 %{_libdir}/*.so
 
 %files libs
@@ -104,10 +132,24 @@ make check
 %{_datadir}/%{name}/%{name}-valgrind.supp
 %dir %{_defaultdocdir}/%{name}
 %{_defaultdocdir}/%{name}/*[^c]
-%{_libdir}/libhwloc*so.*
+%{_libdir}/libhwloc*so.5*
 
+%files gui
+%{_bindir}/lstopo
+%{_mandir}/man1/lstopo.1*
+%{_datadir}/applications/lstopo.desktop
+
+%files plugins
+%dir %{_libdir}/%{name}
+%{_libdir}/hwloc*
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.11.0-6
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.8.1-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.8.1-5
 - 为 Magic 3.0 重建
 

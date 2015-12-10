@@ -7,7 +7,7 @@
 %endif
 
 Name:           ocaml-menhir
-Version:	匹配到二进制文件
+Version:	20151112
 Release:	2%{?dist}
 Summary:        LR(1) parser generator for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 LR(1) 解析器生成器
@@ -53,17 +53,11 @@ for f in AUTHORS menhir.1 src/standard.mly; do
   mv -f $f.fixed $f
 done
 
-# Fix a dependency
-sed "s|/usr/bin/env ocaml|/usr/bin/ocaml|" demos/ocamldep.wrapper > foo
-touch -r demos/ocamldep.wrapper foo
-mv -f foo demos/ocamldep.wrapper
-chmod a+x demos/ocamldep.wrapper
-
-# Prevent embedding buildroot paths into the executable
-sed -i 's/install: all/install:/' Makefile
-
 # Enable debuginfo
 sed -i 's/-j 0/-cflag -g -lflag -g &/' src/Makefile
+
+# Do not ship the obsolete demos
+rm -fr demos/obsolete
 
 %build
 make PREFIX=%{_prefix} TARGET=%{target}
@@ -75,8 +69,6 @@ mkdir -p $OCAMLFIND_DESTDIR
 make install PREFIX=$RPM_BUILD_ROOT%{_prefix} TARGET=%{target}
 rm -fr $RPM_BUILD_ROOT%{_docdir}/menhir
 
-# Install the ocamldep wrapper
-mv demos/ocamldep.wrapper $RPM_BUILD_ROOT%{_bindir}/menhir-ocamldep
 magic_rpm_clean.sh
 
 %files
@@ -89,9 +81,6 @@ magic_rpm_clean.sh
 %{_libdir}/ocaml/menhirLib/
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
-- 更新到 匹配到二进制文件 index.html
-
 * Mon Mar 09 2015 Liu Di <liudidi@gmail.com> - 20141215-1
 - 更新到 20141215
 

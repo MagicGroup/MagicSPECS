@@ -1,6 +1,6 @@
 Name:           celt051
 Version:        0.5.1.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        An audio codec for use in low-delay speech and audio communication
 
 Group:          System Environment/Libraries
@@ -69,6 +69,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libcelt051.la
 %{_libdir}/libcelt051.so
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5.1.3-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.5.1.3-7
 - 为 Magic 3.0 重建
 

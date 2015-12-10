@@ -3,7 +3,7 @@
 
 Name:           maven-%{bname}
 Version:        2.6
-Release:        10%{?dist}
+Release:        11%{?dist}
 Epoch:          0
 Summary:        Tools to manage artifacts and deployment
 License:        ASL 2.0
@@ -199,6 +199,9 @@ Javadoc for %{name}.
 %doc LICENSE NOTICE DEPENDENCIES
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0:2.6-11
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0:2.6-10
 - 为 Magic 3.0 重建
 

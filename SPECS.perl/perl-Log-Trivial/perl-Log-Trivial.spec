@@ -1,6 +1,6 @@
 Name:           perl-Log-Trivial
 Version:	0.40
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Very simple tool for writing very simple log files
 License:        GPLv3+
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.40-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.40-2
 - 为 Magic 3.0 重建
 

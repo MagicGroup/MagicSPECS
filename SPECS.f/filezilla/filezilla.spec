@@ -1,7 +1,7 @@
 #define fz_rc   rc2
 Name:           filezilla
 Version:	3.14.1
-Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.2
+Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.3
 Summary:        FileZilla FTP, FTPS and SFTP client
 Summary(zh_CN.UTF-8): FTP, FTPS 和 SFTP 客户端
 
@@ -25,6 +25,8 @@ BuildRequires:  gettext
 BuildRequires:  gnutls-devel >= 2.8.4
 BuildRequires:  libidn-devel
 BuildRequires:  wx-gtk2-unicode-devel >= 2.8.9
+
+Provides: bundled(pugixml)
 
 #暂时使用内部的
 #BuildRequires:	tinyxml-devel
@@ -53,11 +55,16 @@ FileZilla is a FTP, FTPS and SFTP client for Linux with a lot of features.
 
 
 %build
+# for wxGTK3 - needed to find wxrc
+export WXRC=%{_bindir}/wxrc-3.0
 %configure \
   --disable-static \
   --enable-locales \
-  --with-tinyxml=builtin \
   --disable-manualupdatecheck \
+  --with-pugixml=builtin \
+  --with-wx-config=wx-config-3.0 \
+  --with-dbus \
+  --enable-gnutlssystemciphers \
   --disable-autoupdatecheck 
 
 ## Do not use --enable-buildtype=official 
@@ -119,11 +126,15 @@ fi || :
 %{_datadir}/filezilla/
 %{_datadir}/applications/*%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.*
+%{_datadir}/appdata/filezilla.appdata.xml
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.14.1-1.3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.14.1-1.2
 - 更新到 3.14.1
 

@@ -6,7 +6,7 @@ Summary: Core X11 protocol client library
 Summary(zh_CN.UTF-8): 核心的 X11 协议客户端库
 Name: libX11
 Version: 1.6.3
-Release: 2%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release: 3%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -129,6 +129,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/*.5*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.6.3-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6.3-2
 - 更新到 1.6.3
 

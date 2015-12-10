@@ -10,7 +10,7 @@
 Name:           octave
 Epoch:          6
 Version:	4.0.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        A high-level language for numerical computations
 Summary(zh_CN.UTF-8): 数值计算的高级语言
 Group:          Applications/Engineering
@@ -310,6 +310,9 @@ fi
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 6:4.0.0-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 15 2015 Liu Di <liudidi@gmail.com> - 6:4.0.0-1
 - 更新到 4.0.0
 

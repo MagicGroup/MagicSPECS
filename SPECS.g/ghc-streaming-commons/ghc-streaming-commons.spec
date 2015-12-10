@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.10.0
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Common lower-level functions for streaming data libraries
 
 License:        MIT
@@ -93,6 +93,12 @@ mv text_cbits.h include/
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.1.10.0-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.10.0-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.10.0-3
 - 为 Magic 3.0 重建
 

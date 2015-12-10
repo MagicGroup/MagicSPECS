@@ -43,7 +43,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.6.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	Internationalization support for Koffice [Trinity]
 Summary(zh_CN.UTF-8): TDE 下 Koffice 的国际化支持
 Group:		User Interface/Desktops
@@ -167,6 +167,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:1.6.3-1.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.6.3-1.1
 - 为 Magic 3.0 重建
 

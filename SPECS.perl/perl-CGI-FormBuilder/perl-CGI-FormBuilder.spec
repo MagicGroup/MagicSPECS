@@ -1,7 +1,7 @@
 Name:           perl-CGI-FormBuilder
 %global         cpanversion 3.09
 Version:        %{cpanversion}00
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Easily generate and process stateful forms
 
 License:        GPL+ or Artistic
@@ -69,6 +69,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.0900-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.0900-3
 - 为 Magic 3.0 重建
 

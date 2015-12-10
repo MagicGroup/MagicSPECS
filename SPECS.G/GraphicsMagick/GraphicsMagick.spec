@@ -5,7 +5,7 @@
 Summary: An ImageMagick fork, offering faster image generation and better quality
 Name: GraphicsMagick
 Version:	1.3.22
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: Applications/Multimedia
 Source0: http://downloads.sourceforge.net/sourceforge/graphicsmagick/GraphicsMagick-%{version}.tar.xz
@@ -252,6 +252,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3.22-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3.22-2
 - 更新到 1.3.22
 

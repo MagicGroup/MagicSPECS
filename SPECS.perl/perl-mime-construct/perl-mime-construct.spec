@@ -1,6 +1,6 @@
 Name:           perl-mime-construct
 Version:        1.11
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Construct/send MIME messages from the command line 
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.11-13
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.11-12
 - 为 Magic 3.0 重建
 

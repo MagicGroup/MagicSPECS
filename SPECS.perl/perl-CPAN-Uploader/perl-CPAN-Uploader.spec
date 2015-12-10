@@ -1,6 +1,6 @@
 Name:           perl-CPAN-Uploader
 Version:	0.103011
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Upload things to the CPAN
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.103011-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.103011-2
 - 更新到 0.103011
 

@@ -4,7 +4,7 @@ Summary: Printing library for GNOME
 Summary(zh_CN.UTF-8): GNOME 打印库
 Name:  libgnomeprint22
 Version: 2.18.8
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: LGPLv2+ and BSD
 # BSD applies to ttsubset code that was taken from STSF
 Group:          System Environment/Base
@@ -113,6 +113,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/libgnomeprint
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.18.8-12
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.18.8-11
 - 为 Magic 3.0 重建
 

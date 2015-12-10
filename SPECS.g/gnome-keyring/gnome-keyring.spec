@@ -8,7 +8,7 @@ Summary: Framework for managing passwords and other secrets
 Summary(zh_CN.UTF-8): 管理密码和其它秘密的框架
 Name: gnome-keyring
 Version:	3.18.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -114,12 +114,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/GConf/gsettings/*.convert
 %{_datadir}/glib-2.0/schemas/*.gschema.xml
 %{_datadir}/p11-kit/modules/gnome-keyring.module
+%{_mandir}/man1/gnome-keyring*.1*
 
 %files pam
 /%{_lib}/security/*.so
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.3-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.3-2
 - 更新到 3.18.3
 

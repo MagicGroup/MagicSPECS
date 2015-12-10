@@ -3,7 +3,7 @@
 Summary: New wave Internationalization support for Ruby
 Name: rubygem-%{gem_name}
 Version: 0.7.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT and (BSD or Ruby)
 URL: http://github.com/svenfuchs/i18n
@@ -73,6 +73,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.0-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.0-4
 - 为 Magic 3.0 重建
 

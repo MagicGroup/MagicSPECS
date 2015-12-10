@@ -3,7 +3,7 @@
 
 Name:           zbar
 Version:        0.10
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Bar code reader
 
 Group:          User Interface/X Hardware Support
@@ -186,6 +186,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/zbar/QZBar*.h
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.10-22
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.10-21
 - 为 Magic 3.0 重建
 

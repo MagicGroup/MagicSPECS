@@ -7,7 +7,7 @@
 Summary: X.Org X11 Protocol headers
 Name: xorg-x11-proto-devel
 Version: 7.7
-Release: 14%{?dist}
+Release: 15%{?dist}
 License: MIT
 Group: Development/System
 URL: http://www.x.org
@@ -287,6 +287,9 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/*/*.{html,svg}
 %{_datadir}/pkgconfig/xproxymngproto.pc
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 7.7-15
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.7-14
 - 为 Magic 3.0 重建
 

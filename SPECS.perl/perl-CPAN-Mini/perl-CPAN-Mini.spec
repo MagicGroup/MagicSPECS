@@ -1,7 +1,7 @@
 Name:           perl-CPAN-Mini
 Summary:        Create a minimal mirror of CPAN
 Version:	1.111016
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/CPAN-Mini-%{version}.tar.gz 
@@ -64,6 +64,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man[13]/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.111016-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.111016-2
 - 为 Magic 3.0 重建
 

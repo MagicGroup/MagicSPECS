@@ -6,7 +6,6 @@
 %bcond_without		systemd
 %bcond_with		sysv
 %bcond_without		tmpfiles
-%bcond_without		unrar
 %bcond_without		noarch
 %bcond_without		bytecode
 ##
@@ -54,19 +53,11 @@ Requires(postun):	 /bin/systemctl\
 Summary:	End-user tools for the Clam Antivirus scanner
 Name:		clamav
 Version:	0.98.7
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	%{?with_unrar:proprietary}%{!?with_unrar:GPLv2}
 Group:		Applications/File
 URL:		http://www.clamav.net
-%if 0%{?with_unrar:1}
 Source0:	http://download.sourceforge.net/sourceforge/clamav/%name-%version%{?prerelease}.tar.gz
-%else
-# Unfortunately, clamav includes support for RAR v3, derived from GPL
-# incompatible unrar from RARlabs. We have to pull this code out.
-# tarball was created by
-#  make clean-sources NAME=clamav VERSION=<version> TARBALL=clamav-<version>.tar.gz TARBALL_CLEAN=clamav-<version>-norar.tar.xz
-Source0:	%name-%version%{?prerelease}-norar.tar.xz
-%endif
 # To download the *.cvd, go to http://www.clamav.net and use the links
 # there (I renamed the files to add the -version suffix for verifying).
 Source10:	http://db.local.clamav.net/main-55.cvd
@@ -886,6 +877,9 @@ test "$1" != "0" || /sbin/initctl -q stop clamav-milter || :
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.98.7-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.98.7-5
 - 为 Magic 3.0 重建
 

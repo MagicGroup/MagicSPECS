@@ -1,6 +1,6 @@
 Name:           perl-HTML-Toc
 Version:        1.12
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Generate, insert and update HTML Table of Contents
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.12-13
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.12-12
 - 为 Magic 3.0 重建
 

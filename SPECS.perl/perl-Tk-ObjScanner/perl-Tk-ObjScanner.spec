@@ -1,6 +1,6 @@
 Name:           perl-Tk-ObjScanner
 Version:	2.016
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Tk data scanner
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.016-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.016-2
 - 为 Magic 3.0 重建
 

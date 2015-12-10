@@ -1,6 +1,6 @@
 Name:           joda-convert
 Version:        1.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Java library for conversion to and from standard string formats
 License:        ASL 2.0 
 URL:            https://github.com/JodaOrg/joda-convert/
@@ -41,6 +41,9 @@ sed -i s/// *.txt
 %doc LICENSE.txt NOTICE.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.7-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.7-3
 - 为 Magic 3.0 重建
 

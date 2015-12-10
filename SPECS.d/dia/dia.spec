@@ -1,6 +1,6 @@
 Name:           dia
 Version:	0.97.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        Diagram drawing program
 Summary(zh_CN.UTF-8): 图像绘制程序
@@ -9,9 +9,8 @@ Group(zh_CN.UTF-8): 应用程序/多媒体
 License:        GPLv2+
 URL:            http://www.gnome.org/projects/dia/
 Source0:        ftp://ftp.gnome.org/pub/GNOME/sources/dia/0.97/dia-%{version}.tar.xz
-Patch0:         dia-noglib.patch
-Patch1:         dia-unregister-import.patch
-Patch2:         dia-0.97.2-fix-freetype2.patch
+
+Patch1:		dia-0.97.3-fixcompile.patch
 
 BuildRequires:  libgnomeui-devel pygtk2-devel desktop-file-utils
 BuildRequires:  intltool docbook-utils docbook-style-dsssl docbook-style-xsl
@@ -31,16 +30,16 @@ and can export to PostScript(TM).
 
 %prep
 %setup -q
-%patch0 -p0 -b .noglib
-%patch1 -p1 -b .unregister-import
-%patch2 -p1 -b .freetype2
+%patch1 -p1
 
-sed -i 's|libdia_la_LDFLAGS = -avoid-version|libdia_la_LDFLAGS = -avoid-version $(shell pkg-config gtk+-2.0 libxml-2.0 libart-2.0 libgnome-2.0 --libs)|' \
+sed -i 's|libdia_la_LDFLAGS = -avoid-version|libdia_la_LDFLAGS = -avoid-version $(shell pkg-config --libs gtk+-2.0 libxml-2.0 libart-2.0)|' \
   lib/Makefile.*
 chmod -x `find objects/AADL -type f`
 iconv -f WINDOWS-1252 -t UTF8 doc/en/usage-layers.xml > usage-layers.xml.UTF-8
 mv usage-layers.xml.UTF-8 doc/en/usage-layers.xml
 
+# run in single window mode (--integrated) by default (#910275)
+sed -i 's|Exec=dia|Exec=dia --integrated|' dia.desktop.in.in
 
 %build
 %configure --enable-gnome --enable-db2html
@@ -94,6 +93,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.97.3-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:0.97.3-3
 - 更新到 0.97.3
 

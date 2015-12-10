@@ -10,7 +10,7 @@
 Summary:	Ruby binding of GStreamer
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	4%{?dist}
+Release:	5%{?dist}
 Group:		Development/Languages
 # from README
 License:	LGPLv2
@@ -151,6 +151,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.2.5-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2.5-4
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:           perl-App-Cache
 Summary:        Easy application-level caching
 Summary(zh_CN.UTF-8): 易用的应用程序级别缓存
 Version:        0.37
-Release:        19%{?dist}
+Release:        20%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LB/LBROCARD/App-Cache-%{version}.tar.gz 
@@ -77,6 +77,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.37-20
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.37-19
 - 为 Magic 3.0 重建
 

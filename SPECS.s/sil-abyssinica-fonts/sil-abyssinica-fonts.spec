@@ -5,7 +5,7 @@
 
 Name:           %{fontname}-fonts
 Version:        1.200
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        SIL Abyssinica fonts
 Summary(zh_CN.UTF-8): SIL Abyssinica 字体
 
@@ -67,6 +67,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.200-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.200-8
 - 为 Magic 3.0 重建
 

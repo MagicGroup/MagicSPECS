@@ -3,7 +3,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.7.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Manual authoring tool
 
 Group:          Development/Tools
@@ -76,6 +76,9 @@ rm -rf %{buildroot}%{gem_instdir}/{INSTALLING,Rakefile,test,man,ronn.gemspec,con
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.3-10
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.7.3-9
 - 为 Magic 3.0 重建
 

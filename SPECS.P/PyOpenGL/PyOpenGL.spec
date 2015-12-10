@@ -1,6 +1,6 @@
 Name:           PyOpenGL
 Version: 3.1.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Python bindings for OpenGL
 Summary(zh_CN.UTF-8): OpenGL 的 Python 绑定
 License:        BSD
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/OpenGL/Tk
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.1.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.1.0-2
 - 为 Magic 3.0 重建
 

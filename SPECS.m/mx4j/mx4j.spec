@@ -30,7 +30,7 @@
 
 Name:           mx4j
 Version:        3.0.1
-Release:        19%{?dist}
+Release:        20%{?dist}
 Epoch:          1
 Summary:        Open source implementation of JMX Java API
 License:        ASL 1.1
@@ -213,6 +213,9 @@ fi
 %doc dist/docs/*
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-20
+- 为 Magic 3.0 重建
+
 * Wed Jun 11 2014 Liu Di <liudidi@gmail.com> - 1:3.0.1-19
 - 为 Magic 3.0 重建
 

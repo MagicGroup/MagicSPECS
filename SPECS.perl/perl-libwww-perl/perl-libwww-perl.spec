@@ -1,6 +1,6 @@
 Name:           perl-libwww-perl
 Version:	6.13
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        A Perl interface to the World-Wide Web
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -109,6 +109,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 6.13-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 6.13-3
 - 为 Magic 3.0 重建
 

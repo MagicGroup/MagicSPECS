@@ -1,12 +1,12 @@
 Name: reiserfs-utils
-Version: 3.6.21
-Release: 8%{?dist}
+Version: 3.6.24
+Release: 1%{?dist}
 Summary: Tools for creating, repairing, and debugging ReiserFS filesystems
 Summary(zh_CN.UTF-8): 创建，修复和调试 ReiserFS 文件系统的工具
 #URL: http://www.namesys.com/
 URL: http://ftp.kernel.org/pub/linux/utils/fs/reiserfs/
 #Source0: ftp://namesys.com/pub/reiserfsprogs/reiserfsprogs-%{version}.tar.gz
-Source0: http://ftp.kernel.org/pub/linux/utils/fs/reiserfs/reiserfsprogs-%{version}.tar.bz2
+Source0: http://ftp.kernel.org/pub/linux/kernel/people/jeffm/reiserfsprogs/v%{version}/reiserfsprogs-%{version}.tar.xz
 # See README.
 License: GPLv2 with exceptions
 Group: System Environment/Base
@@ -34,7 +34,7 @@ ReiserFS on any of your partitions.
 %setup -q -n reiserfsprogs-%{version}
 
 %build
-export CFLAGS="$RPM_OPT_FLAGS" CXXFLAGS="$RPM_OPT_FLAGS"
+export CFLAGS="$RPM_OPT_FLAGS -std=gnu89" CXXFLAGS="$RPM_OPT_FLAGS"
 find . -name "config.cache" |xargs rm -f
 %configure
 make %{?_smp_mflags}
@@ -62,12 +62,17 @@ magic_rpm_clean.sh
 /sbin/reiserfstune
 /sbin/mkfs.reiserfs
 /sbin/fsck.reiserfs
+/sbin/debugfs.reiserfs
+/sbin/tunefs.reiserfs
 %{_mandir}/*/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2:3.6.21-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2:3.6.21-8
 - 为 Magic 3.0 重建
 

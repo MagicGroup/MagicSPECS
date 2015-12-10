@@ -1,7 +1,7 @@
 %global oname jaxb-api
 Name:          glassfish-jaxb-api
 Version:       2.2.9
-Release:       8%{?dist}
+Release:       9%{?dist}
 Summary:       Java Architecture for XML Binding
 License:       CDDL or GPLv2 with exception
 URL:           http://jaxb.java.net/
@@ -72,6 +72,9 @@ mv %{buildroot}%{_javadocdir}/%{name} \
 %{_javadocdir}/%{oname}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.2.9-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.2.9-8
 - 为 Magic 3.0 重建
 

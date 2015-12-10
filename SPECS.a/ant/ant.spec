@@ -36,7 +36,7 @@
 
 Name:           ant
 Version:        1.9.6
-Release:        2%{?dist}
+Release:        8%{?dist}
 Epoch:          0
 Summary:        Java build tool
 Summary(it):    Tool per la compilazione di programmi java
@@ -598,6 +598,24 @@ cp -pr build/javadocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 # -----------------------------------------------------------------------------
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-8
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-7
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-6
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-5
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-4
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0:1.9.6-4
 - 更新到 1.9.6
 

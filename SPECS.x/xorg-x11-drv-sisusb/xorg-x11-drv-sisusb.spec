@@ -6,7 +6,7 @@ Summary:    Xorg X11 sisusb video driver
 Summary(zh_CN.UTF-8): Xorg X11 sisusb 显卡驱动
 Name:	    xorg-x11-drv-sisusb
 Version:    0.9.6
-Release:    16%{?dist}
+Release:    17%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/*.4*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.9.6-17
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.9.6-16
 - 为 Magic 3.0 重建
 

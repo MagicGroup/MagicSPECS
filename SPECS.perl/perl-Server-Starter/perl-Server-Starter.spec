@@ -1,6 +1,6 @@
 Name:           perl-Server-Starter
 Version:	0.32
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Superdaemon for hot-deploying server programs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man1/start_server.*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.32-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.32-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: langdao-ce-gb dictionary data files for StarDict2
 Summary(zh_CN.UTF-8): StarDict2用的朗道汉英字典
 Name:          stardict-langdao-ce-gb
 Version:       2.4.2
-Release:       6%{?dist}
+Release:       7%{?dist}
 License:       GPL
 Group:         Applications/System
 Group(zh_CN.UTF-8):  应用程序/系统
@@ -36,6 +36,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/stardict/dic/*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.4.2-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.4.2-6
 - 为 Magic 3.0 重建
 

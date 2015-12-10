@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Lite
 Version:	2.44
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Lightweight HTTP implementation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.44-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.44-2
 - 为 Magic 3.0 重建
 

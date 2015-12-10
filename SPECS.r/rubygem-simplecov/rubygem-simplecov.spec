@@ -4,7 +4,7 @@
 Summary:       Code coverage analysis tool for Ruby 1.9
 Name:          rubygem-%{gem_name}
 Version:       0.10.0
-Release:       2%{?dist}
+Release:       3%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://github.com/colszowka/simplecov
@@ -100,6 +100,9 @@ popd
 %{gem_instdir}/CONTRIBUTING.md
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.10.0-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.10.0-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-constant-defer
 Version:	6
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Constant subs with deferred value calculation
 Summary(zh_CN.UTF-8): 常量子程序的延迟计算
 License:        GPLv3+
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 6-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 6-3
 - 为 Magic 3.0 重建
 

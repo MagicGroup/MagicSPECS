@@ -1,6 +1,6 @@
 Name:		fcode-utils
 Version:	1.0.2
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	Utilities for dealing with FCode
 Summary(zh_CN.UTF-8): 处理 FCode 的工具
 Group:		Development/Languages
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.2-14
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0.2-13
 - 为 Magic 3.0 重建
 

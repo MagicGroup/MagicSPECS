@@ -4,7 +4,7 @@ Summary: Configuration and data files for the desktop menus
 Summary(zh_CN.UTF-8): 桌面菜单的配置和数据文件
 Name: magic-menus
 Version: 12.0.2
-Release: 10%{?dist}
+Release: 11%{?dist}
 URL: http://www.magiclinux.org
 Source0: %{name}-%{version}.tar.xz
 License: GPL+
@@ -63,6 +63,9 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/desktop-directories/*.directory
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 12.0.2-11
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 12.0.2-10
 - 为 Magic 3.0 重建
 

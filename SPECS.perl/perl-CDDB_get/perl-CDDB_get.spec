@@ -11,7 +11,7 @@ Summary: Reads the CDDB entry for an audio CD in your drive
 Summary(zh_CN): 读取您驱动器中音频 CD 的 CDDB 条目
 Name: perl-CDDB_get
 Version:	2.28
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: Artistic/GPL
 Group: Applications/CPAN
 Group(zh_CN): 应用程序/CPAN
@@ -59,6 +59,9 @@ in order to do that.
 %{perl_vendorlib}/CDDB_cache.pm
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.28-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.28-2
 - 为 Magic 3.0 重建
 

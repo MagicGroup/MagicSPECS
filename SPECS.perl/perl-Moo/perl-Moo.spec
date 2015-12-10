@@ -1,6 +1,6 @@
 Name:           perl-Moo
 Version:	2.000002
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Minimalist Object Orientation (with Moose compatibility)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.000002-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.000002-3
 - 为 Magic 3.0 重建
 

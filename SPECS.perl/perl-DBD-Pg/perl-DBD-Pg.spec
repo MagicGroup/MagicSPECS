@@ -1,7 +1,7 @@
 Name:           perl-DBD-Pg
 Summary:        A PostgreSQL interface for perl
 Version:	3.5.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/T/TU/TURNSTEP/DBD-Pg-%{version}.tar.gz 
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.5.3-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.5.3-2
 - 更新到 3.5.3
 

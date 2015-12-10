@@ -2,7 +2,7 @@ Summary: Theora Video Compression Codec
 Summary(zh_CN.UTF-8): Theora 视频压缩编码
 Name: libtheora
 Version: 1.1.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 License: BSD
 Group: System Environment/Libraries
@@ -150,6 +150,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1:1.1.1-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1:1.1.1-4
 - 为 Magic 3.0 重建
 

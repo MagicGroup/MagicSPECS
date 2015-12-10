@@ -8,7 +8,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.5.4.1
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        Compression and decompression in the gzip and zlib formats
 
 License:        BSD
@@ -81,6 +81,9 @@ rm -r cbits
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.5.4.1-33
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5.4.1-32
 - 为 Magic 3.0 重建
 

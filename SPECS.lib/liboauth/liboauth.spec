@@ -1,6 +1,6 @@
 Name:           liboauth
 Version:        1.0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        OAuth library functions
 
 Group:          System Environment/Libraries
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.1-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.1-4
 - 为 Magic 3.0 重建
 

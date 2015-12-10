@@ -6,7 +6,7 @@ BuildRequires:	%1 \
 
 Name:		rubygem-%{gem_name}
 Version:	2.1.8
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 Summary:	RD-document-based presentation application
 # CC-BY: rubykaigi2011-background-white.jpg and
@@ -175,6 +175,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %doc	%{gem_instdir}/sample/	
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.1.8-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.8-3
 - 为 Magic 3.0 重建
 

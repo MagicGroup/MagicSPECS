@@ -4,7 +4,7 @@ Summary: X.Org X11 X resource utilities
 Summary(zh_CN.UTF-8): X.Org X11 X 资源工具
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/viewres.1*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 7.5-7
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.5-6
 - 为 Magic 3.0 重建
 

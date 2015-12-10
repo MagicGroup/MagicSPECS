@@ -2,7 +2,7 @@ Summary:   Writes audio CD-Rs in disk-at-once (DAO) mode
 Summary(zh_CN.UTF-8): 以 DAO 模式写入音频 CD
 Name:      cdrdao
 Version:   1.2.3
-Release:   17%{?dist}
+Release:   18%{?dist}
 License:   GPLv2+
 Group:     Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -22,6 +22,7 @@ ExcludeArch: s390 s390x
 # Missing includes causes failure build
 Patch1: cdrdao-1.2.3-stat.patch
 Patch2: cdrdao-1.2.3-helpmansync.patch
+Patch3: cdrdao-1.2.3-format_security.patch
 
 %description
 Cdrdao records audio CD-Rs in disk-at-once (DAO) mode, based on a
@@ -37,6 +38,7 @@ of pre-gaps, the pause areas between tracks.
 %setup -q
 %patch1 -p1 -b .stat
 %patch2 -p1 -b .helpmansync
+%patch3 -p1 -b .fmt-sct
 
 %build
 %configure \
@@ -65,6 +67,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.2.3-18
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.3-17
 - 为 Magic 3.0 重建
 

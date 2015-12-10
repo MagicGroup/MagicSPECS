@@ -2,7 +2,7 @@ Name: kde4-style-crystal
 Summary: Crystal kwin decoration theme to KDE 4.x
 Summary(zh_CN): KDE 4.x 的 Crystal 窗口装饰
 Version: 2.2.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Source0: http://www.kde-look.org/CONTENT/content-files/75140-crystal-%version.tar.bz2
 URL: http://www.kde-look.org/content/show.php/crystal?content=75140
 Group: Graphical desktop/KDE
@@ -54,6 +54,9 @@ popd
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.2.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.2.1-2
 - 为 Magic 3.0 重建
 

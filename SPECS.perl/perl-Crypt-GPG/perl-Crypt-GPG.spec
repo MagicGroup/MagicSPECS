@@ -3,7 +3,7 @@
 Summary:	Perl Object Oriented Interface to GnuPG
 Name:		perl-Crypt-GPG
 Version:	1.64
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/%{pkgname}/
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Crypt::GPG.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.64-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.64-2
 - 为 Magic 3.0 重建
 

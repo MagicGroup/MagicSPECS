@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Daemon-SSL
 Version:	1.05_01
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Simple http server class with SSL support
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/HTTP::Daemon::SSL.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.05_01-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.05_01-2
 - 为 Magic 3.0 重建
 

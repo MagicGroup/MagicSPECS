@@ -14,7 +14,7 @@ Summary: CUPS printing system
 Name: cups
 Epoch: 1
 Version: 2.1
-Release: 0.5%{prever}%{?dist}
+Release: 0.6%{prever}%{?dist}
 License: GPLv2
 Url: http://www.cups.org/
 Source0: http://www.cups.org/software/%{VERSION}/cups-%{VERSION}-source.tar.bz2
@@ -621,6 +621,9 @@ rm -f %{cups_serverbin}/backend/smb
 %{_mandir}/man5/ipptoolfile.5.gz
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:2.1-0.6rc1
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:2.1-0.5rc1
 - 为 Magic 3.0 重建
 

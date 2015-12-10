@@ -7,7 +7,7 @@ Name: libqmi
 Summary: Support library to use the Qualcomm MSM Interface (QMI) protocol
 Summary(zh_CN.UTF-8): 使用 Qualcomm MSM Interface (QMI) 协议的支持库
 Version: %{?realversion}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
@@ -100,6 +100,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.12.6-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.12.6-2
 - 更新到 1.12.6
 

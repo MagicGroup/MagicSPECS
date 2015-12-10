@@ -7,7 +7,7 @@
 Summary: Provide a list of changes between two sequenced collections
 Name: rubygem-%{gem_name}
 Version: 1.2.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 #lib/diff/lcs.rb is Artistic or Ruby or BSD
 #lib/diff/lcs/*.rb is GPLv2+ or Artistic or Ruby or BSD
@@ -101,6 +101,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.5-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.5-6
 - 为 Magic 3.0 重建
 

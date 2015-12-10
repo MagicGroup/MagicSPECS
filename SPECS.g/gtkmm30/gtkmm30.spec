@@ -4,7 +4,7 @@
 
 Name:           gtkmm30
 Version:	3.18.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        C++ interface for the GTK+ library
 Summary(zh_CN.UTF-8): GTK 3 的 C++ 接口
 
@@ -46,7 +46,7 @@ developing applications that use %{name}.
 Summary:        API documentation for %{name}
 Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
-Summary(zh_CN.UTF-8): 文档
+Group(zh_CN.UTF-8): 文档
 BuildArch:      noarch
 Requires:       %{name} = %{version}-%{release}
 Requires:       glibmm24-doc
@@ -111,6 +111,9 @@ make check %{?_smp_mflags}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
 - 更新到 3.18.0
 

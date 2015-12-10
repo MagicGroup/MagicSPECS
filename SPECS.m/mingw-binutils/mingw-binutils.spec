@@ -2,7 +2,7 @@
 
 Name:           mingw-binutils
 Version:        2.24
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Cross-compiled version of binutils for Win32 and Win64 environments
 Summary(zh_CN.UTF-8): 交叉编译 Win32 和 Win64 程序用的二进制工具
 
@@ -268,6 +268,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.24-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.24-3
 - 为 Magic 3.0 重建
 

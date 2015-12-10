@@ -3,7 +3,7 @@
 %global namedversion %{version}%{?namedreltag}
 Name:          eclipselink-persistence-api
 Version:       2.0.5
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       JPA 2.0 Spec OSGi Bundle
 License:       EPL and ASL 2.0
 URL:           http://www.eclipse.org/eclipselink/
@@ -79,6 +79,9 @@ done
 %doc license.html
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0.5-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.0.5-5
 - 为 Magic 3.0 重建
 

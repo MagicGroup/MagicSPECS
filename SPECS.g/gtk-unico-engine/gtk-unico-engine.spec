@@ -4,7 +4,7 @@
 
 Name:           gtk-unico-engine
 Version:        1.0.3
-Release:        0.6.%{revision_date}bzr%{revision}%{?dist}
+Release:        0.7.%{revision_date}bzr%{revision}%{?dist}
 Summary:        Unico Gtk+ theming engine
 Summary(zh_CN.UTF-8): Unico Gtk+ 主题引擎
 
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.3-0.7.20140109bzr152
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.3-0.6.20140109bzr152
 - 为 Magic 3.0 重建
 

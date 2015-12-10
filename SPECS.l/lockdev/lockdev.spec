@@ -10,7 +10,7 @@
 Summary: A library for locking devices
 Name: lockdev
 Version: 1.0.4
-Release: 0.6.%{checkout}%{?dist}
+Release: 0.7.%{checkout}%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 URL: https://alioth.debian.org/projects/lockdev/
@@ -92,6 +92,9 @@ exit 0
 %{_includedir}/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.4-0.7.20111007git
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.4-0.6.20111007git
 - 为 Magic 3.0 重建
 

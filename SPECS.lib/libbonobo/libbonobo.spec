@@ -6,7 +6,7 @@
 Summary: Bonobo component system
 Name: libbonobo
 Version: 2.32.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://ftp.gnome.org
 Source0: http://download.gnome.org/sources/libbonobo/2.32/%{name}-%{version}.tar.bz2
 License: GPLv2+ and LGPLv2+
@@ -124,6 +124,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/bonobo-activation
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.32.1-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.32.1-5
 - 为 Magic 3.0 重建
 

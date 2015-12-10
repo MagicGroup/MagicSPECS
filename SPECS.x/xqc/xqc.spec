@@ -2,7 +2,7 @@
 
 Name:           xqc
 Version:        1.0
-Release:        0.12.%{snapshot}%{?dist}
+Release:        0.13.%{snapshot}%{?dist}
 Summary:        C/C++ API for interfacing with XQuery processors
 Summary(zh_CN.UTF-8): XQuery 处理的 C/C++ API 接口
 
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.0-0.13.20101120svn7
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.0-0.12.20101120svn7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           ftgl
 Version:        2.1.3
-Release:        0.5.rc5%{?dist}
+Release:        0.6.rc5%{?dist}
 Summary:        OpenGL frontend to Freetype 2
 Summary(zh_CN.UTF-8): Freetype 2 的 OpenGL 前端
 
@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1.3-0.6.rc5
+- 为 Magic 3.0 重建
+
 * Thu Apr 17 2014 Liu Di <liudidi@gmail.com> - 2.1.3-0.5.rc5
 - 为 Magic 3.0 重建
 

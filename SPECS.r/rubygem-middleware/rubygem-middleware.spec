@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Generalized implementation of the middleware abstraction for Ruby
 Group: Development/Languages
 License: MIT
@@ -82,6 +82,9 @@ popd
 %exclude %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.0-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.0-5
 - 为 Magic 3.0 重建
 

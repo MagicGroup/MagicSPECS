@@ -1,7 +1,7 @@
 Name:		gnome-bluetooth
 Epoch:		1
-Version:	3.18.0
-Release:	2%{?dist}
+Version:	3.18.1
+Release:	1%{?dist}
 Summary:	Bluetooth graphical utilities
 Summary(zh_CN.UTF-8): 蓝牙管理图形工具 
 
@@ -101,8 +101,8 @@ install -m0644 -D %{SOURCE1} $RPM_BUILD_ROOT/usr/lib/udev/rules.d/61-gnome-bluet
 # gnome-bluetooth2 is the name for the gettext domain,
 # gnome-bluetooth is the name in the docs
 magic_rpm_clean.sh
-%find_lang gnome-bluetooth2
-%find_lang %{name} --with-gnome
+%find_lang gnome-bluetooth2 || :
+%find_lang %{name} --with-gnome || :
 cat %{name}.lang >> gnome-bluetooth2.lang
 
 %post
@@ -153,6 +153,9 @@ fi
 %{_datadir}/gtk-doc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:3.18.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:3.18.0-2
 - 更新到 3.18.0
 

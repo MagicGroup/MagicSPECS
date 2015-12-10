@@ -1,7 +1,7 @@
 %define _hardened_build 1
 Name:           stress
 Version:        1.0.4
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        A tool to put given subsystems under a specified load
 
 Group:          Development/Tools
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 30 2015 Liu Di <liudidi@gmail.com> - 1.0.4-15
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.4-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

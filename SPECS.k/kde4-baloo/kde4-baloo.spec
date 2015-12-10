@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): 查找和管理元数据的框架
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: 4.14.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 %define rversion %version
@@ -154,6 +154,9 @@ fi
 %{_kde4_libdir}/cmake/Baloo/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 为 Magic 3.0 重建
 

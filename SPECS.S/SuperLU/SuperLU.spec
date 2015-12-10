@@ -1,6 +1,6 @@
 Name:			SuperLU
 Version:		4.3
-Release:		9%{?dist}
+Release:		10%{?dist}
 Summary:		Subroutines to solve sparse linear systems
 %{?el5:Group:		System/Libraries}
 
@@ -100,6 +100,9 @@ popd
 %{_libdir}/libsuperlu.so
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.3-10
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.3-9
 - 为 Magic 3.0 重建
 

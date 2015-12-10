@@ -5,7 +5,7 @@ Summary: Interfaces for accessibility support
 Summary(zh_CN.UTF-8): 可访问性支持的接口
 Name: atk
 Version: 2.18.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -78,6 +78,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.18.0-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.18.0-2
 - 更新到 2.18.0
 

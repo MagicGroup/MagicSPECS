@@ -3,7 +3,7 @@
 
 Name: gnome-themes-standard
 Version:	3.18.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Standard themes for GNOME applications
 Summary(zh_CN.UTF-8): GNOME 程序的标准主题 
 
@@ -94,7 +94,7 @@ done
 %exclude %{_datadir}/themes/Adwaita/gtk-2.0
 
 # Background
-%{_datadir}/gnome-background-properties/*
+#%{_datadir}/gnome-background-properties/*
 
 # A11y themes
 %ghost %{_datadir}/icons/HighContrast/icon-theme.cache
@@ -109,6 +109,9 @@ done
 %{_sysconfdir}/gtk-2.0/gtkrc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-5
 - 更新到 3.18.0
 

@@ -2,7 +2,7 @@ Summary: A plain ASCII to PostScript converter
 Summary(zh_CN.UTF-8): 一个纯 ASCII 文本到 PostScript 的转换程序
 Name: enscript
 Version: 1.6.6
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -69,7 +69,7 @@ mkdir -p %{buildroot}%{_datadir}/locale/{de,es,fi,fr,nl,sl}/LC_MESSAGES
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_datadir}/info/dir
 magic_rpm_clean.sh
-%find_lang %name
+%find_lang %name || :
 
 # XXX note doubled %% in sed script below.
 (cd %{buildroot};find .%{_datadir}/enscript/* \! -type d) | \
@@ -81,7 +81,7 @@ magic_rpm_clean.sh
   ln .%{_prefix}/bin/enscript .%{_prefix}/bin/nenscript
 )
 
-%find_lang %{name} %{name}.lang
+%find_lang %{name} %{name}.lang || :
 
 for all in README THANKS; do
 	iconv -f ISO88591 -t UTF8 < $all > $all.new
@@ -103,7 +103,7 @@ fi
 [ -f %{_infodir}/%{name}.info.gz ] && \
   /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 
-%files -f %{name}.lang -f share.list
+%files -f share.list
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING docs/FAQ.html NEWS README README.ESCAPES THANKS TODO
 %{_bindir}/*
@@ -113,6 +113,9 @@ fi
 %config(noreplace) %{_sysconfdir}/enscript.cfg
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.6.6-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.6.6-3
 - 为 Magic 3.0 重建
 

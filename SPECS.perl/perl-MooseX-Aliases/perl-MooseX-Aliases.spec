@@ -1,6 +1,6 @@
 Name:           perl-MooseX-Aliases
 Version:        0.11
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Easy aliasing of methods and attributes in Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.11-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.11-5
 - 为 Magic 3.0 重建
 

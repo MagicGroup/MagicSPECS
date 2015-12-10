@@ -1,6 +1,6 @@
 Name:           perl-String-Flogger
 Version:	1.101245
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        String munging for loggers
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.101245-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.101245-2
 - 为 Magic 3.0 重建
 

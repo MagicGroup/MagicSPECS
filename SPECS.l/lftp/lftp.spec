@@ -2,7 +2,7 @@ Summary:	A sophisticated file transfer program
 Summary(zh_CN.UTF-8): 文件传输程序
 Name:		lftp
 Version:	4.6.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv3+
 Group:		Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 4.6.4-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.6.4-2
 - 为 Magic 3.0 重建
 

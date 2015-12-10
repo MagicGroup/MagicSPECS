@@ -5,7 +5,7 @@ Summary: MSWord 6/7/8/9 binary file format to HTML converter
 Summary(zh_CN.UTF-8):  微软 Word 格式到 HTML 的转换库
 Name: wv2
 Version: 0.4.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/File
 Group(zh_CN.UTF-8): 应用程序/文件
@@ -82,6 +82,9 @@ you will need to install %{name}-devel.
 %exclude %{_libdir}/libwv2.la
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.4.2-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.4.2-3
 - 为 Magic 3.0 重建
 

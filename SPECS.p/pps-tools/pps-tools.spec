@@ -1,6 +1,6 @@
 Name:		pps-tools
 Version:	0
-Release:	0.8.20120407git0deb9c%{?dist}
+Release:	0.9.20120407git0deb9c%{?dist}
 Summary:	LinuxPPS user-space tools
 Summary(zh_CN.UTF-8): LinuxPPS 用户空间工具
 
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/sys/timepps.h
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0-0.9.20120407git0deb9c
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0-0.8.20120407git0deb9c
 - 为 Magic 3.0 重建
 

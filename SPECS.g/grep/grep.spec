@@ -2,7 +2,7 @@ Summary: Pattern matching utilities
 Summary(zh_CN.UTF-8): 文本模式匹配工具
 Name: grep
 Version: 2.21
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv3+
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -87,6 +87,9 @@ fi
 %{_mandir}/*/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.21-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.21-4
 - 更新到 2.21
 

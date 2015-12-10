@@ -1,6 +1,6 @@
 Name:           perl-BZ-Client
 Version:	2.0_1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A client for the Bugzilla web services API
 Summary(zh_CN.UTF-8): Bugzilla 网页服务 API 的客户端
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0_1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0_1-2
 - 更新到 2.0_1
 

@@ -2,7 +2,7 @@ Name: pacpl
 Summary: A tool for converting multiple audio types from one format to another
 Summary(zh_CN): 一个用于转换多种音频格式的工具
 Version:	5.0.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN): 应用程序/多媒体
 License: GPL
@@ -153,6 +153,9 @@ install -D -m 644 %{SOURCE1} %{buildroot}%{_sysconfdir}/pacpl/po/zh_CN.UTF-8.po
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.0.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.0.1-2
 - 为 Magic 3.0 重建
 

@@ -4,5 +4,7 @@ if [ -z "$1" ] ; then
         exit 1
 fi
 pushd $(dirname $0)
-sed -i "s/%define version.*/%define version $1/g" alien.spec
+NAME=$(basename $(pwd))
+sed -i "s/Version:.*/Version:\t$1/g" $NAME.spec
+sed -i "s/Release:.*/Release:\t0%{?dist}/g" $NAME.spec
 popd

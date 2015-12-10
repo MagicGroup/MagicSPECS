@@ -4,7 +4,7 @@
 
 Name:           libxml++
 Version:	2.91.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        C++ wrapper for the libxml2 XML parser library
 Summary(zh_CN.UTF-8): libxml2 XML 解析库的 C++ 接口
 
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.91.2-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.91.2-2
 - 更新到 2.91.2
 

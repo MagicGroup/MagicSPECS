@@ -2,7 +2,7 @@ Summary: Library providing the Gnome XSLT engine
 Summary(zh_CN.UTF-8): 提供  Gnome XSLT 引擎的库
 Name: libxslt
 Version: 1.1.28
-Release: 4%{?dist}%{?extra_release}
+Release: 6%{?dist}%{?extra_release}
 License: MIT
 Group: Development/Libraries
 Source: ftp://xmlsoft.org/XSLT/libxslt-%{version}.tar.gz
@@ -138,6 +138,12 @@ make tests
 %doc python/tests/*.xsl
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.1.28-6
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1.28-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.28-4
 - 为 Magic 3.0 重建
 

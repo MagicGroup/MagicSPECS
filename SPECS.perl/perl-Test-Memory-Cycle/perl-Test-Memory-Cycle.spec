@@ -1,6 +1,6 @@
 Name:           perl-Test-Memory-Cycle
 Version:        1.04
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Check for memory leaks and circular memory references
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.04-20
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.04-19
 - 为 Magic 3.0 重建
 

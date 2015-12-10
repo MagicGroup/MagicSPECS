@@ -4,7 +4,7 @@
 
 Name:            polkit-qt
 Version:         0.112.0
-Release:         7%{?dist}
+Release:         8%{?dist}
 Summary:         Qt bindings for PolicyKit
 
 License:         GPLv2+
@@ -161,6 +161,9 @@ install -p -m644 -D %{SOURCE10} %{buildroot}%{rpm_macros_dir}/macros.polkit-qt
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.112.0-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.112.0-7
 - 为 Magic 3.0 重建
 

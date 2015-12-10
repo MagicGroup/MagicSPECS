@@ -1,6 +1,6 @@
 Name:           python-cherrypy
 Version:	3.8.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Pythonic, object-oriented web development framework
 Group:          Development/Libraries
 License:        BSD
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.8.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.8.0-2
 - 为 Magic 3.0 重建
 

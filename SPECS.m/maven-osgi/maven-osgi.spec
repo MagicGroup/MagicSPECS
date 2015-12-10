@@ -1,6 +1,6 @@
 Name:           maven-osgi
 Version:        0.2.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 # Maven-shared defines maven-osgi version as 0.3.0
 Epoch:          1
 Summary:        Library for Maven-OSGi integration
@@ -62,6 +62,9 @@ cp -p %{SOURCE1} LICENSE
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1:0.2.0-12
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:0.2.0-11
 - 为 Magic 3.0 重建
 

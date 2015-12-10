@@ -1,6 +1,6 @@
 Name: libdaemon
 Version: 0.14
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Library for writing UNIX daemons
 Summary(zh_CN.UTF-8): 编写 UNIX 下服务的库
 Group: System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.14-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.14-6
 - 为 Magic 3.0 重建
 

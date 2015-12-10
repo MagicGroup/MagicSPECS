@@ -1,7 +1,7 @@
 Summary: Utilities for managing ext2, ext3, and ext4 filesystems
 Name: e2fsprogs
 Version: 1.42.9
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # License tags based on COPYING file distinctions for various components
 License: GPLv2
@@ -335,6 +335,9 @@ exit 0
 %{_libdir}/pkgconfig/ss.pc
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.42.9-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.42.9-3
 - 为 Magic 3.0 重建
 

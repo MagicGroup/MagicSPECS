@@ -5,7 +5,7 @@ Name:	 dirmngr
 Summary: Client for Managing/Downloading CRLs
 Summary(zh_CN.UTF-8): 管理/下载 CRL 的客户端
 Version: 1.1.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: GPLv3+
 Group:	 System Environment/Libraries
@@ -129,6 +129,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.1.1-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.1-3
 - 为 Magic 3.0 重建
 

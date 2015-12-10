@@ -2,7 +2,7 @@ Summary: POSIX File System Archiver
 Summary(zh_CN.UTF-8): POSIX 文件系统归档
 Name: pax
 Version: 3.4
-Release: 17%{?dist}
+Release: 18%{?dist}
 License: BSD
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %doc %{_mandir}/man1/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.4-18
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.4-17
 - 为 Magic 3.0 重建
 

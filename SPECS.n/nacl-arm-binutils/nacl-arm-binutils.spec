@@ -26,7 +26,7 @@ ExclusiveArch: x86_64
 Summary: A GNU collection of binary utilities
 Name: nacl-arm-binutils%{?_with_debug:-debug}
 Version: 2.25.2
-Release: 1.git%{gitver}%{?dist}
+Release: 2.git%{gitver}%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -434,6 +434,9 @@ exit 0
 %endif # %%{isnative}
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.25.2-2.gitcde986c
+- 为 Magic 3.0 重建
+
 * Thu Oct 15 2015 Tom Callaway <spot@fedoraproject.org> - 2.25.2-1.gitcde986c
 - update for chromium 46
 

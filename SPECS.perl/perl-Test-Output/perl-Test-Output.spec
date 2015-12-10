@@ -1,6 +1,6 @@
 Name:           perl-Test-Output
 Version:        1.03
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Utilities to test STDOUT and STDERR messages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/Test::Output.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.03-12
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.03-11
 - 为 Magic 3.0 重建
 

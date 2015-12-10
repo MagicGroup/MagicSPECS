@@ -1,6 +1,6 @@
 Name:           perl-ModelSim-List
 Version:        0.06
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Analyse the 'list' output of the ModelSim simulator
 
 License:        GPL+ or Artistic
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-15
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-14
 - 为 Magic 3.0 重建
 

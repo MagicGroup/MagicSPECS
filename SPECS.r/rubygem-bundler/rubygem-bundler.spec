@@ -18,7 +18,7 @@ done
 Summary: Library and utilities to manage a Ruby application's gem dependencies
 Name: rubygem-%{gem_name}
 Version: 1.7.8
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://gembundler.com
@@ -163,6 +163,9 @@ rspec spec
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.7.8-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.7.8-5
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name:           maven-eclipse-plugin
 Version:        2.9
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Maven Eclipse Plugin
 
 Group:          Development/Libraries
@@ -90,6 +90,9 @@ ln -s "$plugin_file" $CORE_PLUGIN_DIR/resources-$CORE_FAKE_VERSION.jar
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.9-11
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 2.9-10
 - 为 Magic 3.0 重建
 

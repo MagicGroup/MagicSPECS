@@ -1,0 +1,26 @@
+Patch by Robert Scheck <robert@fedoraproject.org> for gnokii <= 0.6.31 which adds
+the missing linking to -lsqlite3 by correcting the configure script. Without this
+patch the libsmsd_sqlite.so fails with "undefined symbol: sqlite3_open" simply.
+
+--- gnokii-0.6.31/configure.in			2011-12-02 15:53:04.000000000 +0100
++++ gnokii-0.6.31/configure.in.sqlite3		2014-10-12 00:39:03.000000000 +0200
+@@ -747,7 +747,7 @@
+ have_sqlite=no
+ PKG_CHECK_MODULES(SQLITE3, sqlite3, have_sqlite=yes, have_sqlite=no)
+ if test x$enable_sqlite != xno && test x$PKGCONF != xno ; then
+-	SQLITE_LIBS=SQLITE3_LIBS
++	SQLITE_LIBS=$SQLITE3_LIBS
+ 	dnl SQLITE_CFLAGS=SQLITE3_CFLAGS
+ 	AC_SUBST(SQLITE_LIBS)
+ 	AC_SUBST(SQLITE_CFLAGS)
+--- gnokii-0.6.31/configure			2011-12-02 15:54:03.000000000 +0100
++++ gnokii-0.6.31/configure.sqlite3		2014-10-12 00:38:38.000000000 +0200
+@@ -17951,7 +17951,7 @@
+ 	have_sqlite=yes
+ fi
+ if test x$enable_sqlite != xno && test x$PKGCONF != xno ; then
+-	SQLITE_LIBS=SQLITE3_LIBS
++	SQLITE_LIBS=$SQLITE3_LIBS
+ 
+ 
+ fi

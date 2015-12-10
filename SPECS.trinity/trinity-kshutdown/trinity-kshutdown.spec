@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.0.4
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	An advanced shut down utility for TDE
 Summary(zh_CN.UTF-8): TDE 下的高级关机工具
 Group:		Applications/Multimedia
@@ -156,6 +156,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:1.0.4-1.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.0.4-1.1
 - 为 Magic 3.0 重建
 

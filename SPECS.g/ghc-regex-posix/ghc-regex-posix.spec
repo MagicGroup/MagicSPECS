@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.95.2
-Release:        34%{?dist}
+Release:        36%{?dist}
 Summary:        Haskell posix regex library
 
 License:        BSD
@@ -69,6 +69,12 @@ rm -r cbits
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.95.2-36
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.95.2-35
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.95.2-34
 - 为 Magic 3.0 重建
 

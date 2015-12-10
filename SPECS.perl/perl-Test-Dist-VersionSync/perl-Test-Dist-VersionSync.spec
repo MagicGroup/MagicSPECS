@@ -1,6 +1,6 @@
 Name:           perl-Test-Dist-VersionSync
 Version:	v1.1.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Verify that all the modules in a distribution have the same version number
 License:        GPLv3
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - v1.1.4-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - v1.1.4-2
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 4.2.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Job framework with pluggable queues
 Group: Development/Languages
 License: MIT
@@ -83,6 +83,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.2.4-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.2.4-3
 - 为 Magic 3.0 重建
 

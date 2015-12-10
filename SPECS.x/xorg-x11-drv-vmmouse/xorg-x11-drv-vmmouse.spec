@@ -9,7 +9,7 @@ Summary:    Xorg X11 vmmouse input driver
 Summary(zh_CN.UTF-8): Xorg X11 vmmouse 输入驱动
 Name:	    xorg-x11-drv-vmmouse
 Version:    13.1.0
-Release:    7%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
+Release:    8%{?gitdate:.%{gitdate}git%{gitversion}}%{?dist}
 URL:	    http://www.x.org
 License:    MIT
 Group:	    User Interface/X Hardware Support
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT/%{_datadir}/hal/fdi/
 %{_prefix}/lib/udev/rules.d/*.rules
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 13.1.0-8
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 13.1.0-7
 - 为 Magic 3.0 重建
 

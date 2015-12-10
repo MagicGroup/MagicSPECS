@@ -2,7 +2,7 @@ Name: shorten
 Summary: Audio file lossless compress/uncompress utility
 Summary(zh_CN.UTF-8): 音频文件无损压缩/解压缩工具
 Version:	3.6.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: shorten license
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -45,6 +45,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_mandir}/*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.6.1-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.6.1-2
 - 为 Magic 3.0 重建
 

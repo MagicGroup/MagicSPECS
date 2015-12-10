@@ -1,6 +1,6 @@
 Name:           perl-Test-File-ShareDir
 Version:	1.001001
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Create a Fake ShareDir for your modules for testing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.001001-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.001001-2
 - 为 Magic 3.0 重建
 

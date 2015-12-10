@@ -7,7 +7,7 @@ Summary: A process-transparent configuration system
 Summary(zh_CN.UTF-8): 一种进程透明的配置系统
 Name: GConf2
 Version:	3.2.6
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: LGPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -175,6 +175,9 @@ fi
 %doc %{_mandir}/man1/gsettings-schema-convert.1*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.2.6-7
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.2.6-6
 - 为 Magic 3.0 重建
 

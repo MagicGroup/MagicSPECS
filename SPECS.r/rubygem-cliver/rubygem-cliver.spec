@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.3.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Cross-platform version constraints for cli tools
 Group: Development/Languages
 License: MIT
@@ -76,6 +76,9 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.3.2-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.2-5
 - 为 Magic 3.0 重建
 

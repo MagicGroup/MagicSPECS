@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        4.1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Compositional pipelines
 
 License:        BSD
@@ -87,6 +87,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.1.4-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 4.1.4-3
 - 为 Magic 3.0 重建
 

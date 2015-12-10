@@ -3,7 +3,7 @@
 
 Name:           gnokii
 Version:        0.6.31
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Linux/Unix tool suite for various mobile phones
 
 Group:          Applications/Communications
@@ -20,6 +20,8 @@ Patch0:         %{name}-htmlview.patch
 # Patch to remove port locking and apply the system-wide /usr/sbin directory
 # to the path instead of the default /usr/local
 Patch1:         %{name}-config.patch
+Patch2:         %{name}-0.6.31-sqlite3.patch
+Patch3:         %{name}-0.6.31-gcc5.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	flex
@@ -109,6 +111,8 @@ Requires:       pkgconfig
 %setup -q
 #%patch0 -p0
 %patch1 -p0
+%patch2 -p1
+%patch3 -p1
 install -pm 644 %{SOURCE5} smsd2mail.sh
 install -pm 644 %{SOURCE6} README.smsd2mail
 
@@ -268,6 +272,9 @@ fi
 %{_libdir}/pkgconfig/xgnokii.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6.31-10
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.6.31-9
 - 为 Magic 3.0 重建
 

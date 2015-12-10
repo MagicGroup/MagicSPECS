@@ -2,7 +2,7 @@ Summary: Event expression library inspired by CEE
 Summary(zh_CN.UTF-8): 来自于 CEE 的事件表达库
 Name: libee
 Version: 0.4.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: LGPLv2+ and MIT and GPL+ 
 Group: System Environment/Libraries 
@@ -87,6 +87,9 @@ make check
 %{_sbindir}/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.4.1-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.1-5
 - 为 Magic 3.0 重建
 

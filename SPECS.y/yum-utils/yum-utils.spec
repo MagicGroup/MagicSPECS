@@ -6,7 +6,7 @@
 Summary: Utilities based around the yum package manager
 Name: yum-utils
 Version: 1.1.31
-Release: 23%{?dist}
+Release: 24%{?dist}
 License: GPLv2+
 Group: Development/Tools
 Source: http://yum.baseurl.org/download/yum-utils/%{name}-%{version}.tar.gz
@@ -659,6 +659,9 @@ fi
 %{pluginhome}/puppetverify.*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.1.31-24
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.1.31-23
 - 为 Magic 3.0 重建
 

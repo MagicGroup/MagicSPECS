@@ -1,6 +1,6 @@
 Name: 		perl-Test-Inline
 Version:	2.213
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: 	Test::Inline Perl module
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.213-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.213-2
 - 为 Magic 3.0 重建
 

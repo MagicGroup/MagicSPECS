@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.2
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Parse library using mtl package
 
 License:        LGPLv3+
@@ -62,6 +62,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.2-15
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.2-14
 - 为 Magic 3.0 重建
 

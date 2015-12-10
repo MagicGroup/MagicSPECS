@@ -1,6 +1,6 @@
 Name:           python-systemd
 Version:        230
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Python module wrapping systemd functionality
 
 License:        LGPLv2+
@@ -75,6 +75,9 @@ cp README.md %{buildroot}%{_pkgdocdir}
 %{python3_sitearch}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 230-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 230-3
 - 为 Magic 3.0 重建
 

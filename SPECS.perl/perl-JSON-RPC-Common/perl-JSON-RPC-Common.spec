@@ -1,6 +1,6 @@
 Name:           perl-JSON-RPC-Common
 Version:	0.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl module for handling JSON-RPC objects
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.11-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.11-2
 - 为 Magic 3.0 重建
 

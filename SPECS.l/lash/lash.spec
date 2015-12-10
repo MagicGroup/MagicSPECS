@@ -3,7 +3,7 @@
 Summary:      LASH Audio Session Handler
 Name:         lash
 Version:      0.5.4
-Release:      21%{?dist}
+Release:      22%{?dist}
 License:      GPLv2+
 Group:        System Environment/Libraries
 URL:          http://www.nongnu.org/lash/
@@ -161,6 +161,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{python_sitearch}/lash.py*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.5.4-22
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.5.4-21
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:           librsvg2
 Summary:        An SVG library based on cairo
 Summary(zh_CN.UTF-8): 基于 cairo 的 SVG 库
 Version:	2.40.11
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -131,6 +131,9 @@ gdk-pixbuf-query-loaders-%{__isa_bits} --update-cache || :
 %{_mandir}/man1/rsvg-convert.1*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.40.11-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.40.11-2
 - 更新到 2.40.11
 

@@ -1,6 +1,6 @@
 Name:           perl-Test-Number-Delta
 Version:	1.06
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Compare the difference between numbers against a given tolerance
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ AUTHOR_TESTING=1 make test
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.06-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.06-2
 - 为 Magic 3.0 重建
 

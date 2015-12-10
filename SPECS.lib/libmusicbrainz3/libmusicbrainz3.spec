@@ -8,7 +8,7 @@ Summary: Library for accessing MusicBrainz servers
 Summary(zh_CN.UTF-8): 访问 MusicBrainz 服务的库
 Name: libmusicbrainz3
 Version: 3.0.3
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -99,6 +99,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 3.0.3-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 3.0.3-7
 - 为 Magic 3.0 重建
 

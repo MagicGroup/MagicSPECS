@@ -2,7 +2,7 @@
 
 Name:           felix-framework
 Version:        4.4.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Apache Felix Framework
 Group:          Development/Libraries
 License:        ASL 2.0
@@ -52,6 +52,9 @@ rm src/test/java/org/apache/felix/framework/ServiceRegistryTest.java
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.4.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.4.0-3
 - 为 Magic 3.0 重建
 

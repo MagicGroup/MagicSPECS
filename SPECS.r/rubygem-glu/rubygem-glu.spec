@@ -4,7 +4,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	8.2.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 
 Summary:	Glu bindings for the opengl gem
 License:	MIT
@@ -100,6 +100,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 8.2.1-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 8.2.1-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Role-Tiny
 Version:	2.000001
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A nouvelle cuisine portion size slice of Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/Role::Tiny::With.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.000001-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.000001-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           gt
 Version:        0.4
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Modified Timidity which supportes enhanced gus format patches
 Summary(zh_CN.UTF-8): 带有 gus 格式补丁的增强版 Timidity
 Group:          Applications/Multimedia
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4-19
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.4-18
 - 为 Magic 3.0 重建
 

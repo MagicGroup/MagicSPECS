@@ -1,7 +1,7 @@
 #!/bin/bash
-url="http://ceph.com/download/?C=M&O=D"
+url="http://download.ceph.com/tarballs/?C=M&O=D"
 new1="ceph-"
-new2=".tar.gz"
+new2=".tar.bz2"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null
 rm -f index.html && $downcommand "$url" -O index.html

@@ -7,7 +7,7 @@ Summary: SQL relational database management system
 Summary(zh_CN.UTF-8): SQL 关系数据库管理系统
 Name:  firebird
 Version: 2.5.4.26856.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Group:  Applications/Databases
 Group(zh_CN.UTF-8): 应用程序/数据库
@@ -518,6 +518,9 @@ fi
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.5.4.26856.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.5.4.26856.0-2
 - 为 Magic 3.0 重建
 

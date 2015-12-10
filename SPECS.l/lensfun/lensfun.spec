@@ -2,7 +2,7 @@
 Name:    lensfun
 Version: 0.2.8
 Summary: Library to rectify defects introduced by photographic lenses
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: LGPLv3 and CC-BY-SA
 URL: http://lensfun.berlios.de/
@@ -78,6 +78,9 @@ rm -rfv %{buildroot}%{_docdir}/%{name}-%{version}*
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.2.8-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.2.8-3
 - 为 Magic 3.0 重建
 

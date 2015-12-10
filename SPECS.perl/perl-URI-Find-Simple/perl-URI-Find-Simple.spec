@@ -1,6 +1,6 @@
 Name:           perl-URI-Find-Simple
 Version:	1.06
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Simple interface to URI::Find
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.06-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.06-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name: 		perl-prefork
 Version: 	1.04
-Release: 	12%{?dist}
+Release: 	13%{?dist}
 Summary: 	Optimized module loading for forking or non-forking processes
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.04-13
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.04-12
 - 为 Magic 3.0 重建
 

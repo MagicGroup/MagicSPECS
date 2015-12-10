@@ -1,6 +1,6 @@
 Name:           perl-B-Hooks-OP-Check-StashChange
 Version:        0.06
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Invoke callbacks when the stash code is being compiled in changes
 Summary(zh_CN.UTF-8): 当隐藏代码在编译时变化的调用回调
 License:        GPL+ or Artistic
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-21
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-20
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:       perl-PlRPC 
 Version:    0.2020 
-Release:    22%{?dist}
+Release:    23%{?dist}
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Interface for writing PlRPC clients and servers
@@ -60,6 +60,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.2020-23
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.2020-22
 - 为 Magic 3.0 重建
 

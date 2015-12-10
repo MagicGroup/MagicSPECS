@@ -1,6 +1,6 @@
 Name: 		perl-Pod-Tests
 Version: 	1.19
-Release: 	15%{?dist}
+Release: 	16%{?dist}
 Summary: 	Extract embedded tests and code examples from POD
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -58,6 +58,9 @@ rm -rf t/99_pmv.t
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.19-16
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.19-15
 - 为 Magic 3.0 重建
 

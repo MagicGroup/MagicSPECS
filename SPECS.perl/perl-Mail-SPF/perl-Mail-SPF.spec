@@ -1,6 +1,6 @@
 Name:           perl-Mail-SPF
 Version:	2.9.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Object-oriented implementation of Sender Policy Framework
 License:        BSD
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.9.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.9.0-2
 - 为 Magic 3.0 重建
 

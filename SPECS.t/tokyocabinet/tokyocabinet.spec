@@ -2,7 +2,7 @@ Summary:	A modern implementation of a DBM
 Summary(zh_CN.UTF-8): DBM 的一个现代实现
 Name:		tokyocabinet
 Version:	1.4.48
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -91,6 +91,9 @@ make check
 %doc doc/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.4.48-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4.48-2
 - 为 Magic 3.0 重建
 

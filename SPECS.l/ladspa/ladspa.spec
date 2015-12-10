@@ -1,6 +1,6 @@
 Name:           ladspa
 Version:        1.13
-Release:        11%{?dist}
+Release:        12%{?dist}
 
 Summary:        Linux Audio Developer's Simple Plug-in API, examples and tools
 Summary(zh_CN.UTF-8): Linux 音频开发的简单插件 API，样例和工具
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.13-12
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.13-11
 - 为 Magic 3.0 重建
 

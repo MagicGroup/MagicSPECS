@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.9.0
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Collection of crypto hashes, fast, pure and practical
 
 License:        BSD
@@ -86,6 +86,12 @@ rm %{buildroot}%{_datadir}/%{pkg_name}-%{version}/README.md
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.9.0-10
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.9.0-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.9.0-8
 - 为 Magic 3.0 重建
 

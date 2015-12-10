@@ -2,7 +2,7 @@
 
 Name:           perl-File-Find-Object
 Version:        0.2.13
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Object oriented File::Find replacement
 License:        GPLv2+ or Artistic 2.0
 URL:            http://search.cpan.org/dist/File-Find-Object/
@@ -67,6 +67,9 @@ chmod 644 examples/tree
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.2.13-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.2.13-4
 - 为 Magic 3.0 重建
 

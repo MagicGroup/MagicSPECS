@@ -7,7 +7,7 @@
 
 Name:           mingw-crt
 Version:        3.9.999
-Release:        0.2.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
+Release:        0.3.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
 Summary:        MinGW Windows cross-compiler runtime
 
 License:        Public Domain and ZPLv2.1
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT%{mingw64_includedir}/*.c
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.9.999-0.3.trunk.git.b08afb.20140912
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.9.999-0.2.trunk.git.b08afb.20140912
 - 为 Magic 3.0 重建
 

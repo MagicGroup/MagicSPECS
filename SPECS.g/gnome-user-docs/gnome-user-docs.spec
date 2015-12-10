@@ -2,7 +2,7 @@ Summary:        GNOME User Documentation
 Summary(zh_CN.UTF-8): GNOME 用户文档
 Name:           gnome-user-docs
 Version:	3.18.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GFDL
 #VCS: git:git://git.gnome.org/gnome-user-docs
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -39,6 +39,9 @@ magic_rpm_clean.sh
 %doc COPYING AUTHORS NEWS README
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 更新到 3.18.1
 

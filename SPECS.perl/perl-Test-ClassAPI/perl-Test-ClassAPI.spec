@@ -1,6 +1,6 @@
 Name: 		perl-Test-ClassAPI
 Version: 	1.06
-Release: 	17%{?dist}
+Release: 	18%{?dist}
 Summary: 	Provides basic first-pass API testing for large class trees
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -68,6 +68,9 @@ rm -rf t/99_pmv.t
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.06-18
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.06-17
 - 为 Magic 3.0 重建
 

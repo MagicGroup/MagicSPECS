@@ -6,7 +6,7 @@ URL:          http://www.kornshell.com/
 Group:        System Environment/Shells
 License:      EPL
 Version:      20120801
-Release:      5%{?dist}
+Release:      6%{?dist}
 Source0:      http://www.research.att.com/~gsf/download/tgz/ast-ksh.%{releasedate}.tgz
 Source1:      http://www.research.att.com/~gsf/download/tgz/INIT.%{releasedate}.tgz
 Source2:      kshcomp.conf
@@ -138,6 +138,9 @@ fi
     rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 20120801-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20120801-5
 - 为 Magic 3.0 重建
 

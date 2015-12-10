@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.16.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: A pagination engine plugin for Rails 3+ and other modern frameworks
 Group: Development/Languages
 License: MIT
@@ -93,6 +93,9 @@ cp -a .%{gem_dir}/* \
 %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.16.1-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.16.1-4
 - 为 Magic 3.0 重建
 

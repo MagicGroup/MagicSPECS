@@ -2,7 +2,7 @@
 
 Name:           ocaml-postgresql
 Version:	3.2.1
-Release:	2%{?dist}
+Release:	4%{?dist}
 Summary:        OCaml library for accessing PostgreSQL databases
 Summary(zh_CN.UTF-8): 访问 PostgreSQL 数据库的 OCaml 库
 
@@ -86,6 +86,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 3.2.1-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 3.2.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.2.1-2
 - 更新到 3.2.1
 

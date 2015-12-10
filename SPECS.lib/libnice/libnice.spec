@@ -1,6 +1,6 @@
 Name:           libnice
 Version: 0.1.13
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GLib ICE implementation
 Summary(zh_CN.UTF-8): GLib ICE 实现 
 
@@ -94,6 +94,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/Nice-0.1.gir
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.1.13-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.13-2
 - 为 Magic 3.0 重建
 

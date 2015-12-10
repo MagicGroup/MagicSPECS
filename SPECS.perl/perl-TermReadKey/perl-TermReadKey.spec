@@ -1,6 +1,6 @@
 Name:           perl-TermReadKey
 Version:	2.33
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A perl module for simple terminal control
 Group:          Development/Libraries
 License:        (Copyright only) and (Artistic or GPL+)
@@ -48,6 +48,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.33-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.33-2
 - 为 Magic 3.0 重建
 

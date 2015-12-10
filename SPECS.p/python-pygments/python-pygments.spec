@@ -4,7 +4,7 @@
 
 Name:           python-pygments
 Version:	2.0.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Syntax highlighting engine written in Python
 Summary(zh_CN.UTF-8): Python 编写的语法高亮引擎
 
@@ -194,6 +194,9 @@ popd
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0.2-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0.2-2
 - 为 Magic 3.0 重建
 

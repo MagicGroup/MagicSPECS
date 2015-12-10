@@ -6,7 +6,7 @@
 Summary:	Unicode Normalization Form support library for CRuby
 Name:		rubygem-%{gem_name}
 Version:	0.0.7.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 
 Group:		Development/Languages
 # LICENSE.txt
@@ -134,6 +134,9 @@ test/test_unf_ext.rb
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.0.7.1-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.7.1-4
 - 为 Magic 3.0 重建
 

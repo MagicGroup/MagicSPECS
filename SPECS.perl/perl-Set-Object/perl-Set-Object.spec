@@ -1,6 +1,6 @@
 Name: perl-Set-Object
 Version:	1.35
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: GPL+ or Artistic
 Summary: Set of objects and strings
 Group: Development/Libraries
@@ -75,6 +75,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.35-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.35-2
 - 为 Magic 3.0 重建
 

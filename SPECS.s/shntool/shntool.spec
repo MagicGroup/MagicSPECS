@@ -1,6 +1,6 @@
 Name:           shntool
 Version:        3.0.10
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A multi-purpose WAVE data processing and reporting utility
 Summary(zh_CN.UTF-8): 多用途音频数据处理和报告工具
 
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.0.10-8
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.0.10-7
 - 为 Magic 3.0 重建
 

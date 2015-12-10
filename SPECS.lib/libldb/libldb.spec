@@ -9,7 +9,7 @@
 
 Name: libldb
 Version: 1.1.21
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Development/Libraries
 Summary: A schema-less, ldap like, API and database
 Requires: libtalloc%{?_isa} >= %{talloc_version}
@@ -177,6 +177,9 @@ rm -rf %{buildroot}
 %postun -n pyldb -p /sbin/ldconfig
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.1.21-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.21-2
 - 为 Magic 3.0 重建
 

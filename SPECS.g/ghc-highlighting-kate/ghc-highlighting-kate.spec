@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.5.11.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Sourcecode syntax highlighting
 
 License:        GPLv2+
@@ -96,6 +96,9 @@ LANG=en_US.utf8
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.5.11.1-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.5.11.1-2
 - 为 Magic 3.0 重建
 

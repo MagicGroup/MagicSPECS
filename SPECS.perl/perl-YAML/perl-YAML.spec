@@ -1,6 +1,6 @@
 Name:           perl-YAML
 Version:	1.15
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        YAML Ain't Markup Language (tm)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -f %{buildroot}%{perl_vendorlib}/Test/YAML* \
 %{_mandir}/man3/YAML*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.15-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.15-2
 - 为 Magic 3.0 重建
 

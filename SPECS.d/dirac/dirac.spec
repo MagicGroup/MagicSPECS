@@ -1,6 +1,6 @@
 Name:           dirac
 Version:        1.0.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Dirac is an open source video codec 
 Summary(zh_CN.UTF-8): 一个开源的视频编码
 
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0.2-10
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0.2-9
 - 为 Magic 3.0 重建
 

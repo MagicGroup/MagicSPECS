@@ -1,6 +1,6 @@
 Name:           clutter-gst
 Version:        1.6.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        ClutterMedia interface to GStreamer
 Summary(zh_CN.UTF-8): Clutter 的 GStreamer 接口
 
@@ -81,6 +81,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_datadir}/gir-1.0/ClutterGst-1.0.gir
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.6.0-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.6.0-7
 - 为 Magic 3.0 重建
 

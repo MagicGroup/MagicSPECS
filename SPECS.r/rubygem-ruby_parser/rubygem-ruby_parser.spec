@@ -5,7 +5,7 @@
 Summary: A ruby parser written in pure ruby
 Name: rubygem-%{gem_name}
 Version: 3.6.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/seattlerb/ruby_parser
@@ -93,6 +93,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.6.1-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.6.1-4
 - 为 Magic 3.0 重建
 

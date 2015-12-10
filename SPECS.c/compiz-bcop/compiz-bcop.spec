@@ -1,6 +1,6 @@
 Name: compiz-bcop
 Version: 0.8.8
-Release: 10%{?dist}
+Release: 11%{?dist}
 Epoch: 1
 Summary: Compiz option code generator       
 
@@ -45,6 +45,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.8.8-11
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.8.8-10
 - 为 Magic 3.0 重建
 

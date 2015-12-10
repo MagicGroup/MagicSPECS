@@ -2,7 +2,7 @@
 %global pypi_name chardet
 Name:           python-%{pypi_name}
 Version:	2.3.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Character encoding auto-detection in Python
 Summary(zh_CN.UTF-8): Python 的自动字符编码检测
 
@@ -90,6 +90,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.3.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.3.0-2
 - 为 Magic 3.0 重建
 

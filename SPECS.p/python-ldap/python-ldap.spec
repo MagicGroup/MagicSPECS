@@ -2,7 +2,7 @@
 
 Name: python-ldap
 Version:	2.4.22
-Release:	2%{?dist}
+Release:	3%{?dist}
 Epoch: 0
 License: Python
 Group: System Environment/Libraries
@@ -66,6 +66,9 @@ magic_rpm_clean.sh
 %{python_sitearch}/python_ldap-%{version}-*.egg-info
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0:2.4.22-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0:2.4.22-2
 - 更新到 2.4.22
 

@@ -9,7 +9,7 @@
 
 Name:           jing-trang
 Version:        20091111
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Schema validation and conversion based on RELAX NG
 
 Group:          Applications/Text
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 20091111-17
+- 为 Magic 3.0 重建
+
 * Mon Nov 25 2013 Ville Skyttä <ville.skytta@iki.fi> - 20091111-16
 - Fix build and depend on headless JRE on EL7 (Jan Pokorný).
 

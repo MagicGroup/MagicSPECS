@@ -1,6 +1,6 @@
 Name:           perl-MooX-Types-MooseLike
 Version:        0.29
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Some Moosish types and a type builder
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/MooX-Types-MooseLike/
@@ -71,6 +71,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.29-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.29-4
 - 为 Magic 3.0 重建
 

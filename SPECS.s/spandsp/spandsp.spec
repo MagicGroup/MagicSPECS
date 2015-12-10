@@ -4,7 +4,7 @@ Summary: A DSP library for telephony
 Summary(zh_CN.UTF-8): 通信用的 DSP 库
 Name: spandsp
 Version: 0.0.6
-Release: 0.8%{?pre:.pre%{pre}}%{?dist}
+Release: 0.9%{?pre:.pre%{pre}}%{?dist}
 License: LGPLv2 and GPLv2
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -111,6 +111,9 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.0.6-0.9.pre21
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.0.6-0.8.pre21
 - 为 Magic 3.0 重建
 

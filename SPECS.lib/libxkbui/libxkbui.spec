@@ -2,7 +2,7 @@ Summary: X.Org X11 libxkbui runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libxkbui 运行库
 Name: libxkbui
 Version: 1.0.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT/X11
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xkbui.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.2-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.2-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:		fdupes
 Summary:	Finds duplicate files in a given set of directories
 Summary(zh_CN.UTF-8): 在给定的目录集合中查找重复文件
 Version:	1.51
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	MIT
 Group:		Applications/File
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -60,6 +60,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.51-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.51-4
 - 为 Magic 3.0 重建
 

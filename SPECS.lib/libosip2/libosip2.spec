@@ -1,6 +1,6 @@
 Name:           libosip2
 Version: 4.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 Summary:        oSIP is an implementation of SIP
 Summary(zh_CN.UTF-8): oSIP 是 SIP 的一个实现 
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/osip2.1*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.0.0-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.0.0-3
 - 为 Magic 3.0 重建
 

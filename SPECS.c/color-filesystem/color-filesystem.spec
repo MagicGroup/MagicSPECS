@@ -1,6 +1,6 @@
 Name:           color-filesystem
 Version:        1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Color filesystem layout
 Summary(zh_CN.UTF-8): Color 文件系统
 
@@ -52,6 +52,9 @@ EOF
 %config %{_sysconfdir}/rpm/macros.color
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1-13
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1-12
 - 为 Magic 3.0 重建
 

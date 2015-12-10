@@ -1,6 +1,6 @@
 Name:           perl-Authen-SASL
 Version:	2.16
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        SASL Authentication framework for Perl
 Summary(zh_CN.UTF-8): Perl 下的 SASL 认证框架
 License:        GPL+ or Artistic
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.16-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.16-3
 - 为 Magic 3.0 重建
 

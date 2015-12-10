@@ -12,7 +12,7 @@ Summary: Disks
 Summary(zh_CN.UTF-8): GNOME 的磁盘工具
 Name: gnome-disk-utility
 Version:	3.18.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库 
@@ -80,10 +80,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/gnome-settings-daemon-3.0/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gnome-settings-daemon-3.0/*.a
 
-desktop-file-install --delete-original  \
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications \
-  $RPM_BUILD_ROOT%{_datadir}/applications/gnome-disks.desktop \
-  $RPM_BUILD_ROOT%{_datadir}/applications/gnome-disk-image-mounter.desktop
 magic_rpm_clean.sh
 %find_lang %{name}
 
@@ -113,15 +109,13 @@ done
 %files -f %{name}.lang
 %{_bindir}/gnome-disks
 %{_bindir}/gnome-disk-image-mounter
-%{_datadir}/applications/gnome-disks.desktop
+%{_datadir}/applications/org.gnome.DiskUtility.desktop
 %{_datadir}/applications/gnome-disk-image-mounter.desktop
 %{_datadir}/glib-2.0/schemas/org.gnome.Disks.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.gdu-sd.gschema.xml
-
-#%dir %{_datadir}/gnome-disk-utility
-#%{_datadir}/gnome-disk-utility/*.ui
+%{_datadir}/appdata/org.gnome.DiskUtility.appdata.xml
+%{_datadir}/dbus-1/services/org.gnome.DiskUtility.service
 %{_datadir}/icons/hicolor/*/apps/gnome-disks*
-%{_datadir}/icons/HighContrast/*/apps/gnome-disks.png
 %{_datadir}/applications/gnome-disk-image-writer.desktop
 
 %{_mandir}/man1/*
@@ -132,6 +126,9 @@ done
 %doc README AUTHORS NEWS COPYING
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 更新到 3.18.1
 

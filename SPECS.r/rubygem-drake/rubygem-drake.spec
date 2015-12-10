@@ -6,7 +6,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.9.2.0.3.1
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A branch of Rake supporting automatic parallelizing of tasks
 
 Group:          Development/Tools
@@ -92,6 +92,9 @@ chmod 644 %{buildroot}%{gem_instdir}/lib/rake/ruby182_test_unit_fix.rb
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.9.2.0.3.1-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.9.2.0.3.1-6
 - 为 Magic 3.0 重建
 

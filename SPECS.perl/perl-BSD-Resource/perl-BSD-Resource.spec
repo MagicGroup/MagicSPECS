@@ -1,7 +1,7 @@
 Name:           perl-BSD-Resource
 Version:	1.29.08
 %define module_version %(echo %{version} | awk -F. '{print $1"."$2$3}')
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        BSD process resource limit and priority functions
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.29.08-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.29.08-2
 - 更新到 1.29.08
 

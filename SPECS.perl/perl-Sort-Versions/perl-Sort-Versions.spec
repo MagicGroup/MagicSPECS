@@ -1,6 +1,6 @@
 Name: 		perl-Sort-Versions
 Version:	1.61
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: 	Perl module for sorting of revision-like numbers 
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.61-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.61-2
 - 为 Magic 3.0 重建
 

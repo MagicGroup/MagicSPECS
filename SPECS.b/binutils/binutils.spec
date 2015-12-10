@@ -18,7 +18,7 @@ Summary: A GNU collection of binary utilities
 Summary(zh_CN.UTF-8): 一组 GNU 二进制工具
 Name: %{?cross}binutils%{?_with_debug:-debug}
 Version: 2.25.1
-Release: 2%{?dist}
+Release: 5%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -52,8 +52,17 @@ Patch12: binutils-2.25-kernel-ld-r.patch
 Patch13: binutils-2.23.2-aarch64-em.patch
 # Fix detections little endian PPC shared libraries
 Patch14: binutils-2.24-ldforcele.patch
-# Fix allocation of space for x86_64 PIE relocs.
-Patch15: binutils-2.25-x86_64-pie-relocs.patch
+# Fix parsing of corupt iHex binaries
+Patch15: binutils-2.25.1-ihex-parsing.patch
+# backport https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;h=e9c1bdad269c0c3352eebcc9481ed65144001b0b
+# Qt linked with gold crash on startup, BZ #1193044
+Patch16: binutils-2.25.1-dynamic_list.patch
+Patch17: binutils-2.25.1-aarch64-pr18668.patch
+# Fix incorrectly generated ELF binaries and DSOs
+Patch18: binutils-rh1247126.patch
+# Fix infinite recursion when a plugin tries to claim an unrecognized binary
+Patch19: binutils-2.25.1-plugin-format-checking.patch
+
 
 Provides: bundled(libiberty)
 
@@ -393,22 +402,22 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 rm -f %{buildroot}%{_infodir}/dir
 rm -rf %{buildroot}%{_prefix}/%{binutils_target}
 magic_rpm_clean.sh
-%find_lang %{?cross}binutils
-%find_lang %{?cross}opcodes
-%find_lang %{?cross}bfd
-%find_lang %{?cross}gas
-%find_lang %{?cross}gprof
+%find_lang %{?cross}binutils || :
+%find_lang %{?cross}opcodes || :
+%find_lang %{?cross}bfd || :
+%find_lang %{?cross}gas || :
+%find_lang %{?cross}gprof || :
 cat %{?cross}opcodes.lang >> %{?cross}binutils.lang
 cat %{?cross}bfd.lang >> %{?cross}binutils.lang
 cat %{?cross}gas.lang >> %{?cross}binutils.lang
 cat %{?cross}gprof.lang >> %{?cross}binutils.lang
 
 if [ -x ld/ld-new ]; then
-  %find_lang %{?cross}ld
+  %find_lang %{?cross}ld || :
   cat %{?cross}ld.lang >> %{?cross}binutils.lang
 fi
 if [ -x gold/ld-new ]; then
-  %find_lang %{?cross}gold
+  %find_lang %{?cross}gold || :
   cat %{?cross}gold.lang >> %{?cross}binutils.lang
 fi
 
@@ -501,6 +510,15 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.25.1-5
+- 为 Magic 3.0 重建
+
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.25.1-4
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.25.1-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.25.1-2
 - 更新到 2.25.1
 

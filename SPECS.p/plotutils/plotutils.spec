@@ -1,7 +1,7 @@
 
 Name:      plotutils
 Version:   2.6
-Release:   12%{?dist}
+Release:   13%{?dist}
 Summary:   GNU vector and raster graphics utilities and libraries
 Summary(zh_CN.UTF-8): GNU 向量和栅格图形的工具和库
 
@@ -125,6 +125,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.6-13
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.6-12
 - 为 Magic 3.0 重建
 

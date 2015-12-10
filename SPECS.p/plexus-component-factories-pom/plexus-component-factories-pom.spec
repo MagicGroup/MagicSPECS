@@ -2,7 +2,7 @@
 
 Name:		plexus-component-factories-pom
 Version:	1.0
-Release:	0.10.alpha11%{?dist}
+Release:	0.11.alpha11%{?dist}
 Summary:	Plexus Component Factories POM
 BuildArch:	noarch
 Group:		Development/Libraries
@@ -36,6 +36,9 @@ cp -p %{SOURCE1} LICENSE
 %doc LICENSE
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.0-0.11.alpha11
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-0.10.alpha11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

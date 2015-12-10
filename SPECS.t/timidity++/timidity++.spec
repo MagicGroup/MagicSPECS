@@ -2,7 +2,7 @@ Summary: A software wavetable MIDI synthesizer
 Summary(zh_CN.UTF-8): 软件 MIDI 波表合成器
 Name: timidity++
 Version:	2.14.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
 Source: http://downloads.sourceforge.net/timidity/TiMidity++-%{version}.tar.bz2
@@ -122,6 +122,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2.14.0-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.14.0-2
 - 为 Magic 3.0 重建
 

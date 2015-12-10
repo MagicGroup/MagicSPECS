@@ -2,7 +2,7 @@ Summary: Terminal emulator for the X Window System
 Summary(zh_CN.UTF-8): X 窗口系统下的终端模拟器
 Name: xterm
 Version:	320
-Release:	3%{?dist}
+Release:	4%{?dist}
 URL: http://dickey.his.com/xterm
 License: MIT
 Group: User Interface/X
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 %{x11_app_defaults_dir}/XTerm*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 320-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 320-3
 - 为 Magic 3.0 重建
 

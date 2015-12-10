@@ -1,6 +1,6 @@
 Name:           tuxpaint-stamps
 Version:	2014.08.23
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Extra stamp files for tuxpaint
 Summary(zh_CN.UTF-8): tuxpaint 的额外 stamp 文件
 Group:          Applications/Multimedia
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/tuxpaint/stamps/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2014.08.23-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2014.08.23-2
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 
 Name:           scim-tables
 Version:        0.5.12
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        SCIM Generic Table IMEngine
 
 License:        GPLv2+
@@ -491,6 +491,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/scim/icons/Uyghur.png
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.5.12-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.5.12-8
 - 为 Magic 3.0 重建
 

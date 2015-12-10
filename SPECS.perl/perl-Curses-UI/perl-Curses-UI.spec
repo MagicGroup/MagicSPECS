@@ -1,6 +1,6 @@
 Name:           perl-Curses-UI
 Version:	0.9609
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Curses based OO user interface framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.9609-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.9609-2
 - 为 Magic 3.0 重建
 

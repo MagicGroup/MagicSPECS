@@ -2,7 +2,7 @@ Summary: A tool for converting XML files to various formats
 Summary(zh_CN.UTF-8): 转换 XML 文件到多种格式的工具
 Name: xmlto
 Version:	0.0.26
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.0.26-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.0.26-2
 - 为 Magic 3.0 重建
 

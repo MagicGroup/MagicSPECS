@@ -1,6 +1,6 @@
 Name:           perl-DBIx-ContextualFetch
 Version:        1.03
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Add contextual fetches to DBI
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.03-23
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.03-22
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 Summary:            Advanced IP routing and network device configuration tools
 Name:               iproute
 Version:	4.2.0
-Release:            4%{?dist}
+Release:            5%{?dist}
 Group:              Applications/System
 URL:                http://kernel.org/pub/linux/utils/net/%{name}2/
 Source0:            http://kernel.org/pub/linux/utils/net/%{name}2/%{name}2-%{version}.tar.gz
@@ -175,6 +175,9 @@ done
 %{_includedir}/libnetlink.h
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.2.0-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.2.0-4
 - 更新到 4.2.0
 

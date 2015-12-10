@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Nits
 Version:	1.0.0
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:        Policies of nits I like to pick
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0.0-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.0-9
 - 为 Magic 3.0 重建
 

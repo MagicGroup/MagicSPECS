@@ -1,8 +1,10 @@
 Name:           go-srpm-macros
 Version:        2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        RPM macros for building Golang packages for various architectures
+Summary(zh_CN.UTF-8): 构建 Golang 包需要的 RPM 宏
 Group:          Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
 License:        GPLv3+
 Source0:        macros.go-srpm
 BuildArch:      noarch
@@ -12,6 +14,9 @@ BuildRequires:  coreutils
 %description
 The package provides macros for building projects in Go
 on various architectures.
+
+%description -l zh_CN.UTF-8
+构建 Golang 包需要的 RPM 宏。
 
 %prep
 # nothing to prep, just for hooks
@@ -27,6 +32,9 @@ install -m 644 -D "%{SOURCE0}" \
 %{_rpmconfigdir}/macros.d/macros.go-srpm
 
 %changelog
+* Tue Dec 08 2015 Liu Di <liudidi@gmail.com> - 2-4
+- 为 Magic 3.0 重建
+
 * Thu Sep 10 2015 jchaloup <jchaloup@redhat.com> - 2-3
 - Remove compiler specific macros (moved to go-compiler package)
 - Define go-compiler macro to signal go-compiler packages is available

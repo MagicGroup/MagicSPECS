@@ -1,6 +1,6 @@
 Name: plib
 Version: 1.8.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: A Suite of Portable Game Libraries
 Summary(zh_CN.UTF-8): 一套可移植游戏库
 License: GPL
@@ -133,6 +133,9 @@ cp -a `find . -name "libplib*.so*"` $RPM_BUILD_ROOT%{_libdir}
 %{_libdir}/libplib*.so
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.8.5-9
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8.5-8
 - 为 Magic 3.0 重建
 

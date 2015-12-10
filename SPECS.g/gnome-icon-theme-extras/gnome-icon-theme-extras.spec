@@ -2,7 +2,7 @@ Summary: Additional GNOME icons
 Summary(zh_CN.UTF-8): 额外的 GNOME 图标
 Name: gnome-icon-theme-extras
 Version:	3.12.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 #VCS: git:git://git.gnome.org/gnome-icon-theme-extras
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0: http://download.gnome.org/sources/gnome-icon-theme-extras/%{majorver}/%{name}-%{version}.tar.xz
@@ -48,6 +48,9 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.12.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.12.0-3
 - 为 Magic 3.0 重建
 

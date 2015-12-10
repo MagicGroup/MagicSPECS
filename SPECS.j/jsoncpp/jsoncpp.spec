@@ -1,17 +1,13 @@
-%global src_release 0.6.0
-%global src_prerelease rc2
-%global src_version %{src_release}-%{src_prerelease}
-
 Name:       jsoncpp
-Version:    %{src_release}
-Release:    0.13.%{src_prerelease}%{?dist}
+Version:    0.10.5
+Release:    1%{?dist}
 Summary:    JSON library implemented in C++
 Summary(zh_CN.UTF-8): C++ 实现的 JSON 库
 Group:      System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:    Public Domain or MIT
-URL:        http://sourceforge.net/projects/%{name}/
-Source0:    http://downloads.sourceforge.net/project/%{name}/%{name}/%{src_version}/%{name}-src-%{src_version}.tar.gz
+URL:        https://github.com/open-source-parsers/jsoncpp
+Source0:    https://github.com/open-source-parsers/%{name}/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1:    jsoncpp.pc
 
 BuildRequires:  python scons doxygen
@@ -53,9 +49,9 @@ This package contains the documentation for %{name}
 %{name} 的文档。
 
 %prep
-%setup -q -n %{name}-src-%{src_version}
+%setup -q -n %{name}-%{version}
 grep -e "-Wall" SConstruct
-sed 's/CCFLAGS = "-Wall"/CCFLAGS = "%{optflags}"/' -i SConstruct
+sed 's|CCFLAGS = "-Wall"|CCFLAGS = "%{optflags}"|' -i SConstruct
 
 %build
 scons platform=linux-gcc %{?_smp_mflags}
@@ -75,7 +71,7 @@ ln -s %{_libdir}/lib%{name}.so.0.0.0 $RPM_BUILD_ROOT%{_libdir}/lib%{name}.so.0
 install -d $RPM_BUILD_ROOT%{_includedir}/%{name}/json
 install -p -m 0644 include/json/*.h $RPM_BUILD_ROOT%{_includedir}/%{name}/json
 mkdir -p $RPM_BUILD_ROOT%{_docdir}/%{name}/html
-for f in AUTHORS LICENSE NEWS.txt README.txt ; do
+for f in AUTHORS LICENSE NEWS.txt README.md ; do
     install -p -m 0644 $f $RPM_BUILD_ROOT%{_docdir}/%{name}
 done
 install -p -m 0644 dist/doxygen/*/*.{html,png} $RPM_BUILD_ROOT%{_docdir}/%{name}/html
@@ -103,6 +99,9 @@ magic_rpm_clean.sh
 %{_docdir}/%{name}/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6.0-0.14.rc2
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.6.0-0.13.rc2
 - 为 Magic 3.0 重建
 

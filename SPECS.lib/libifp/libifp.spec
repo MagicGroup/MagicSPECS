@@ -1,6 +1,6 @@
 Name:           libifp
 Version:        1.0.0.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A general-purpose library-driver for iRiver's iFP portable audio players
 Summary(zh_CN.UTF-8): 一个iRiver的iFP可移动音频播放器的多用途的驱动库
 
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.0.2-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.0.2-9
 - 为 Magic 3.0 重建
 

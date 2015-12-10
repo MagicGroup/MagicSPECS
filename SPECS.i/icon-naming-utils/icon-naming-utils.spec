@@ -1,6 +1,6 @@
 Name:           icon-naming-utils
 Version:        0.8.90
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary: 	A script to handle icon names in desktop icon themes
 Summary(zh_CN.UTF-8): 处理桌面图标主题里的图标名称的脚本
 
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/icon-naming-utils.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.8.90-11
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.8.90-10
 - 为 Magic 3.0 重建
 

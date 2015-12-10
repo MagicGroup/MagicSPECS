@@ -1,7 +1,7 @@
 Name:		perl-parent
 Epoch:		1
 Version:	0.234
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Establish an ISA relationship with base classes at compile time
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/parent.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:0.234-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:0.234-2
 - 为 Magic 3.0 重建
 

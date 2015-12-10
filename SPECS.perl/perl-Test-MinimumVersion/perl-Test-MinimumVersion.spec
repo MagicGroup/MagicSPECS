@@ -1,6 +1,6 @@
 Name:		perl-Test-MinimumVersion
 Version:	0.101081
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Check whether your code requires a newer perl
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.101081-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.101081-3
 - 为 Magic 3.0 重建
 

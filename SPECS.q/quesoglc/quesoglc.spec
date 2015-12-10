@@ -1,6 +1,6 @@
 Name:           quesoglc
 Version:        0.7.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        The OpenGL Character Renderer
 Summary(zh_CN.UTF-8): OpenGL 字符渲染器
 
@@ -79,6 +79,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.7.2-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.2-10
 - 为 Magic 3.0 重建
 

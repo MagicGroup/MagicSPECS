@@ -14,7 +14,7 @@
 Summary: Distributed testing toolkit
 Name: rubygem-%{gem_name}
 Version: 0.24.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/ngauthier/hydra
@@ -94,6 +94,9 @@ chmod 755 %{buildroot}%{gem_instdir}/test/fixtures/many_outputs_to_console.rb
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.24.0-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.24.0-8
 - 为 Magic 3.0 重建
 

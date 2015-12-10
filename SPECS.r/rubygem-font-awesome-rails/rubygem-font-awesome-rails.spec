@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 4.4.0.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: An asset gemification of the font-awesome icon font library
 Group: Development/Languages
 # Fonts are licensed with SIL Open Font License 1.1
@@ -83,6 +83,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.4.0.0-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.4.0.0-3
 - 为 Magic 3.0 重建
 

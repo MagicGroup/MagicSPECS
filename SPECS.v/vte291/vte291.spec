@@ -1,7 +1,7 @@
 %global apiver 2.91
 
 Name:           vte291
-Version:	0.43.0
+Version:	0.42.1
 Release:        2%{?dist}
 Summary:        Terminal emulator library
 Summary(zh_CN.UTF-8): 终端模拟器库
@@ -107,8 +107,8 @@ magic_rpm_clean.sh
 %{_sysconfdir}/profile.d/vte.sh
 
 %changelog
-* Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.43.0-2
-- 更新到 0.43.0
+* Tue Dec 08 2015 Liu Di <liudidi@gmail.com> - 0.42.1-2
+- 为 Magic 3.0 重建
 
 * Mon Oct 19 2015 Liu Di <liudidi@gmail.com> - 0.42.1-1
 - 更新到 0.42.1

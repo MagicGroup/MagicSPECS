@@ -11,7 +11,7 @@
 
 Name:           dnsmasq
 Version:	2.75
-Release:        7%{?extraversion}%{?dist}
+Release:        8%{?extraversion}%{?dist}
 Summary:        A lightweight DHCP/caching DNS server
 Summary(zh_CN.UTF-8): 一个轻量级的 DHCP/DNS缓存 服务
 
@@ -150,6 +150,9 @@ fi
 %{_mandir}/man1/dhcp_*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.75-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.75-7
 - 更新到 2.75
 

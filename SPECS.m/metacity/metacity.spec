@@ -2,7 +2,7 @@ Summary: Unobtrusive window manager
 Summary(zh_CN.UTF-8): 窗口管理器
 Name: metacity
 Version:	3.18.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://download.gnome.org/sources/metacity/
 Source0: http://download.gnome.org/sources/metacity/3.12/metacity-%{version}.tar.xz
 # http://bugzilla.gnome.org/show_bug.cgi?id=558723
@@ -155,6 +155,9 @@ fi
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.18.1-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.18.1-4
 - 更新到 3.18.1
 

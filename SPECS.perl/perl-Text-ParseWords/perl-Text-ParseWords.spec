@@ -1,6 +1,6 @@
 Name:           perl-Text-ParseWords
 Version:        3.30
-Release:        348%{?dist}
+Release:        349%{?dist}
 Summary:        Parse text into an array of tokens or array of arrays
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.30-349
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.30-348
 - 为 Magic 3.0 重建
 

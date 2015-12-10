@@ -2,7 +2,7 @@
 %define with_python 0
 Name:           obexftp
 Version:        0.24
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Tool to access devices via the OBEX protocol
 Summary(zh_CN.UTF-8): 通过 OBEX 协议访问设备的工具
 License:        GPLv2+
@@ -146,6 +146,9 @@ make DESTDIR=%{buildroot} RUBYARCHDIR=%{buildroot}%{ruby_vendorarchdir} install
 %{ruby_vendorarchdir}/obexftp.so
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.24-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.24-6
 - 为 Magic 3.0 重建
 

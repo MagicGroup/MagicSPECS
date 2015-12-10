@@ -10,7 +10,7 @@
 
 Name: python-beaker
 Version:	1.7.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: WSGI middleware layer to provide sessions
 Summary(zh_CN.UTF-8): 提供会话的 WSGI 中间层
 
@@ -144,6 +144,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.7.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.7.0-2
 - 更新到 1.7.0
 

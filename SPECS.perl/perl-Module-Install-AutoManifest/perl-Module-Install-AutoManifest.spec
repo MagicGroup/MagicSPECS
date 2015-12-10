@@ -1,6 +1,6 @@
 Name:           perl-Module-Install-AutoManifest
 Version:        0.003
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        The module generates MANIFEST automatically
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.003-9
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.003-8
 - 为 Magic 3.0 重建
 

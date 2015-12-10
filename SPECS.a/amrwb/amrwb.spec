@@ -2,12 +2,13 @@ Name: amrwb
 Summary: AMR NarrowBand speech codec
 Summary(zh_CN.UTF-8): AMR 宽带语音编码译码器
 Version: 11.0.0.0
-Release: 4%{?dist}
+Release: 8%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.penguin.cz/~utx/amr
-Source: http://www.penguin.cz/~utx/ftp/amr/%{name}-%{version}.tar.bz2
+Source0: http://www.penguin.cz/~utx/ftp/amr/%{name}-%{version}.tar.bz2
+Source1: 26204-b00.zip
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 BuildRequires: gcc-c++
 
@@ -35,6 +36,7 @@ AMR-NB 是一款窄带语音编码译码器，它用于移动电话中。这是�
 
 %build
 %configure --enable-shared --enable-static
+cp -f %{SOURCE1} .
 %{__make} %{?_smp_mflags}
 
 %install
@@ -62,6 +64,18 @@ AMR-NB 是一款窄带语音编码译码器，它用于移动电话中。这是�
 %{_libdir}/libamrwb.so
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 11.0.0.0-8
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 11.0.0.0-7
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 11.0.0.0-6
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 11.0.0.0-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 11.0.0.0-4
 - 为 Magic 3.0 重建
 

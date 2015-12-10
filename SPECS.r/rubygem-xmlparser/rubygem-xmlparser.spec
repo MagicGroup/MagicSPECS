@@ -3,7 +3,7 @@
 Summary: Ruby bindings to the Expat XML parsing library
 Name: rubygem-%{gem_name}
 Version: 0.7.2.1
-Release: 14%{?dist}
+Release: 15%{?dist}
 Group: Development/Languages
 # src/lib/xml/xpath.rb is GPLv2+
 # src/ext/encoding.h and the functions of encoding map are GPLv2+ or Artistic
@@ -65,6 +65,9 @@ cp -a ./%{gem_extdir_mri}/{gem.build_complete,*.so} %{buildroot}%{gem_extdir_mri
 %{gem_spec}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.2.1-15
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.7.2.1-14
 - 为 Magic 3.0 重建
 

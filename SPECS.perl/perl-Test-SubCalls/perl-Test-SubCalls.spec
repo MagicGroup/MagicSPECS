@@ -1,6 +1,6 @@
 Name:           perl-Test-SubCalls
 Version:        1.09
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Track the number of times subs are called
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Test::SubCalls.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.09-16
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.09-15
 - 为 Magic 3.0 重建
 

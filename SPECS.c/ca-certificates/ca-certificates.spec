@@ -36,7 +36,7 @@ Name: ca-certificates
 # because all future versions will start with 2013 or larger.)
 
 Version: 2013.1.96
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: Public Domain
 
 Group: System Environment/Base
@@ -299,6 +299,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2013.1.96-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2013.1.96-4
 - 为 Magic 3.0 重建
 

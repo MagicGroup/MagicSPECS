@@ -7,7 +7,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.5.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: ANSI at your fingertips!
 Group: Development/Languages
 License: BSD
@@ -102,6 +102,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.5.0-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.5.0-4
 - 为 Magic 3.0 重建
 

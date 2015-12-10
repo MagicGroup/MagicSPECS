@@ -1,6 +1,6 @@
 Name: 		perl-Number-Compare
 Version: 	0.03
-Release: 	9%{?dist}
+Release: 	10%{?dist}
 Summary: 	Perl module for numeric comparisons
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -41,6 +41,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.03-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.03-9
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 Summary:       A development framework for Ruby
 Name:          rubygem-%{gem_name}
 Version:       0.1
-Release:       6.1%{?dist}
+Release:       7.1%{?dist}
 License:       GPLv3+
 
 URL:           http://rubyforge.org/projects/rubeyond
@@ -83,6 +83,9 @@ cp -a .%{gem_dir}/* \
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1-7.1
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1-6.1
 - 为 Magic 3.0 重建
 

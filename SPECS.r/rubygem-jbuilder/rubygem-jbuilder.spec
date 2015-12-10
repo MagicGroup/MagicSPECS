@@ -5,7 +5,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.3.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Create JSON structures via a Builder-style DSL
 Group: Development/Languages
 License: MIT
@@ -88,6 +88,9 @@ popd
 %{gem_instdir}/Appraisals
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.3.0-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.0-3
 - 为 Magic 3.0 重建
 

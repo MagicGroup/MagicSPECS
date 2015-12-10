@@ -6,7 +6,7 @@ Name:           perl-IO-Prompt
 Summary:        Interactively prompt for user input
 %global cpanver 0.997002
 Version:	0.997003
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DC/DCONWAY/IO-Prompt-%{cpanver}.tar.gz 
@@ -65,6 +65,9 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.997003-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.997003-2
 - 为 Magic 3.0 重建
 

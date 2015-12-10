@@ -1,6 +1,6 @@
 Name:           userspace-rcu
 Version:        0.8.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        RCU (read-copy-update) implementation in user space
 
 Group:          System Environment/Libraries
@@ -11,7 +11,7 @@ Patch0:         userspace-rcu-aarch64.patch
 BuildRequires:  autoconf automake libtool
 BuildRequires:  pkgconfig 
 # Upstream do not yet support mips
-ExcludeArch:    mips
+ExcludeArch:    mips mips64el
 
 %description
 This data synchronization library provides read-side access which scales
@@ -72,9 +72,12 @@ rm -vf $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/liburcu*.pc
 %{_docdir}/%{name}/README
 %{_docdir}/%{name}/*.txt
-
+%{_docdir}/userspace-rcu/examples/*
 
 %changelog
+* Sat Nov 21 2015 Liu Di <liudidi@gmail.com> - 0.8.6-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

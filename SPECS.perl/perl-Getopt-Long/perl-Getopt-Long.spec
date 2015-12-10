@@ -1,6 +1,6 @@
 Name:           perl-Getopt-Long
 Version:        2.47
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Extended processing of command line options
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.47-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.47-3
 - 为 Magic 3.0 重建
 

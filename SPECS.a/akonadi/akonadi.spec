@@ -5,17 +5,15 @@
 # trim changelog included in binary rpms
 %global _changelog_trimtime %(date +%s -d "1 year ago")
 
-%if 0%{?rhel} == 6
-%define cmake_pkg cmake28
-%else
 %define cmake_pkg cmake
-%endif
+
+%undefine _hardened_build
 
 Summary: PIM Storage Service
 Summary(zh_CN.UTF-8): 个人信息管理存储服务
 Name:    akonadi
 Version: 1.13.0
-Release: 5%{?dist}
+Release: 9%{?dist}
 
 License: LGPLv2+
 URL:     http://community.kde.org/KDE_PIM/Akonadi 
@@ -33,9 +31,43 @@ Source10: akonadiserverrc.mysql
 
 ## upstreamable patches
 
-## upstream patches
+## upstream patches (1.13 branch)
+Patch1: 0001-FindSqlite-Use-CMAKE_FLAGS-the-right-way-in-try_comp.patch
+Patch2: 0002-Do-not-enter-the-test-directories-if-AKONADI_BUILD_T.patch
+Patch3: 0003-STORE-Allow-modifying-items-tags-via-Tag-RID-or-GID.patch
+Patch4: 0004-Fix-typo-in-if-condition.patch
+Patch5: 0005-Fix-buffer-overflow-in-AKTEST_FAKESERVER_MAIN.patch
+Patch6: 0006-Don-t-crash-when-setmntent-returns-NULL.patch
+Patch7: 0007-Don-t-call-insert-from-Q_ASSERT-breaks-unit-tests-in.patch
+Patch8: 0008-Suppress-unused-variable-warnings-in-release-mode.patch
+Patch9: 0009-Test-whether-compiler-supports-all-required-C-11-fea.patch
+Patch10: 0010-prevent-starting-a-QTimer-with-a-negative-interval.patch
+Patch11: 0011-Convert-some-qDebugs-to-akDebugs.patch
+Patch12: 0012-Optimize-Reduce-the-amount-of-allocations-required-t.patch
+Patch13: 0013-Intern-entity-strings-for-table-and-column-names.patch
+Patch14: 0014-No-semicolon-after-Q_DECLARE_METATYPE.patch
+Patch15: 0015-Use-QMutexLocker-instead-of-manual-lock-unlock-calls.patch
+Patch16: 0016-Use-an-QAtomicInt-instead-of-a-plain-bool-for-Entity.patch
+Patch17: 0017-Optimize-Only-do-one-hash-lookup-to-retrieve-value-f.patch
+Patch18: 0018-Optimize-Skip-value-condition-on-invalid-flags.patch
+Patch19: 0019-Optimize-queries-Do-not-retrieve-known-key-used-in-t.patch
+Patch20: 0020-Avoid-ridiculous-amount-of-SQL-queries-by-caching-Pa.patch
+Patch21: 0021-Implement-support-for-CASE.WHEN.THEN-SQL-statements-.patch
+Patch22: 0022-Implement-cache-for-CollectionStatistics-to-signific.patch
+Patch23: 0023-Always-create-a-new-PartType-when-it-does-not-exist.patch
+Patch24: 0024-Fix-compilation-with-strict-iterators.patch
+Patch25: 0025-Avoid-repeated-calls-to-PimItem-flags-and-PimItem-ta.patch
+Patch26: 0026-Avoid-recursive-collection-listing-in-SearchHelper.patch
+Patch27: 0027-Minor-improvements-in-StatisticsCache-as-suggested-b.patch
+Patch28: 0028-Extend-imapparser-benchmark-and-keep-static-data-aro.patch
+Patch29: 0029-Reduce-the-amount-of-allocations-by-preallocating-a-.patch
+Patch30: 0030-Preallocate-a-capacity-of-16-for-the-returned-list.patch
+Patch31: 0031-Less-C-11-fixes-build-with-clang.patch
+Patch32: 0032-Don-t-throw-exception-when-MOVE-handler-finds-no-ite.patch
+Patch33: 0033-Don-t-leak-old-external-payload-files.patch
+Patch34: 0034-set-cmake_min_req-to-match-kdelibs4-and-enable-newer.patch
 
-%define mysql_conf_timestamp 20130607
+%define mysql_conf_timestamp 20140709
 
 BuildRequires: automoc4
 BuildRequires: boost-devel
@@ -57,6 +89,8 @@ BuildRequires: postgresql-server
 Requires: qt4%{?_isa} >= 4.8.5-1
 
 Requires(postun): /sbin/ldconfig
+
+Recommends: %{name}-mysql = %{version}-%{release}
 
 %description
 %{summary}.
@@ -101,39 +135,26 @@ See also: %{_sysconfdir}/akonadi/mysql-global.conf
 
 
 %prep
-%setup -q -n akonadi-%{version}
-
+%autosetup -p1 -n akonadi-%{version}
 
 %build
-mkdir -p %{_target_platform}
+mkdir %{_target_platform}
 pushd %{_target_platform}
-%{?cmake28}%{!?cmake28:%{?cmake}} \
+%{cmake} .. \
+  -DCMAKE_BUILD_TYPE:STRING="Release" \
   -DCONFIG_INSTALL_DIR=%{_sysconfdir} \
   %{?database_backend:-DDATABASE_BACKEND=%{database_backend}} \
   -DINSTALL_QSQLITE_IN_QT_PREFIX:BOOL=ON \
-  ..
+  -DWITH_SOPRANO:BOOL=OFF
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
-
-%install
-rm -rf %{buildroot} 
 make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
 
 install -p -m644 -D %{SOURCE10} %{buildroot}%{_sysconfdir}/xdg/akonadi/akonadiserverrc.mysql
 
 mkdir -p %{buildroot}%{_datadir}/akonadi/agents
-
-# create "big" config (analog to -mobile.conf)
-install -p \
-  %{buildroot}%{_sysconfdir}/akonadi/mysql-global.conf \
-  %{buildroot}%{_sysconfdir}/akonadi/mysql-global-big.conf
-
-# default to small/mobile config
-install -p \
-  %{buildroot}%{_sysconfdir}/akonadi/mysql-global-mobile.conf \
-  %{buildroot}%{_sysconfdir}/akonadi/mysql-global.conf
 
 touch -d %{mysql_conf_timestamp} \
   %{buildroot}%{_sysconfdir}/akonadi/mysql-global*.conf \
@@ -146,6 +167,9 @@ mkdir -p %{buildroot}%{_libdir}/akonadi
 touch akonadiserverrc 
 install -p -m644 -D akonadiserverrc %{buildroot}%{_sysconfdir}/xdg/akonadi/akonadiserverrc
 
+## unpackaged files
+# omit mysql-global-mobile.conf
+rm -fv %{buildroot}%{_sysconfdir}/akonadi/mysql-global-mobile.conf
 magic_rpm_clean.sh
 
 %check
@@ -155,16 +179,18 @@ test "$(pkg-config --modversion akonadi)" = "%{version}"
 # 14/14 Test #14: akonadi-dbconfigtest
 xvfb-run -a dbus-launch --exit-with-session make test -C %{_target_platform}  ||:
 
-
-%post -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+touch --no-create %{_datadir}/mime/packages &> /dev/null || :
 
 %posttrans
-update-mime-database %{_datadir}/mime &> /dev/null || :
+update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 
 %postun
 /sbin/ldconfig ||:
 if [ $1 -eq 0 ] ; then
-  update-mime-database %{_datadir}/mime &> /dev/null ||:
+  touch --no-create %{_datadir}/mime/packages &> /dev/null || :
+  update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null ||:
 fi
 
 %files
@@ -211,12 +237,20 @@ fi
 %config(noreplace) %{_sysconfdir}/xdg/akonadi/akonadiserverrc.mysql
 %config(noreplace) %{_sysconfdir}/akonadi/mysql-global.conf
 %config(noreplace) %{_sysconfdir}/akonadi/mysql-local.conf
-# example conf's
-%{_sysconfdir}/akonadi/mysql-global-big.conf
-%{_sysconfdir}/akonadi/mysql-global-mobile.conf
-
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.13.0-9
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1.13.0-8
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1.13.0-7
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.13.0-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.13.0-5
 - 为 Magic 3.0 重建
 

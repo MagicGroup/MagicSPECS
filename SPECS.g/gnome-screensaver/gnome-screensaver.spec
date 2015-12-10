@@ -9,7 +9,7 @@ Summary: GNOME Screensaver
 Summary(zh_CN.UTF-8): GNOME 屏幕保护
 Name: gnome-screensaver
 Version: 3.6.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: Amusements/Graphics
 Group(zh_CN.UTF-8): 娱乐/图像
@@ -78,6 +78,9 @@ magic_rpm_clean.sh
 %doc %{_mandir}/man1/*.1.gz
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.6.1-7
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.6.1-6
 - 为 Magic 3.0 重建
 

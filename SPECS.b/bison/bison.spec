@@ -2,7 +2,7 @@ Summary: A GNU general-purpose parser generator
 Summary(zh_CN.UTF-8): GNU 通用语法分析器
 Name: bison
 Version: 3.0.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -152,11 +152,15 @@ fi
 %doc COPYING
 %defattr(-,root,root)
 %{_libdir}/liby.a
+%{_docdir}/bison/examples/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.0.4-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.0.4-2
 - 更新到 3.0.4
 

@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2.0.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Combinators for building fast hashing functions
 
 License:        BSD
@@ -78,6 +78,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.2.0.0-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2.0.0-3
 - 为 Magic 3.0 重建
 

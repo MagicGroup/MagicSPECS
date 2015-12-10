@@ -4,7 +4,7 @@ Summary: X.Org X11 xdm - X Display Manager
 Summary(zh_CN.UTF-8): X.Org X11 xdm - X 会话管理器
 Name: xorg-x11-%{pkgname}
 Version: 1.1.11
-Release: 8%{?dist}
+Release: 9%{?dist}
 # NOTE: Remove Epoch line if/when the package ever gets renamed.
 Epoch: 1
 License: MIT
@@ -164,6 +164,9 @@ mkdir -p $RPM_BUILD_ROOT%{_sharedstatedir}/xdm
 %{_unitdir}/xdm.service
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1:1.1.11-9
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:1.1.11-8
 - 为 Magic 3.0 重建
 

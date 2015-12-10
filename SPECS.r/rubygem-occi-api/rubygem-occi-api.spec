@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        4.3.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        OCCI development library providing a high-level client API
 
 Group:          Development/Languages
@@ -98,6 +98,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.3.2-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.3.2-3
 - 为 Magic 3.0 重建
 

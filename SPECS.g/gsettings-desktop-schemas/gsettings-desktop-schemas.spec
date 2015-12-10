@@ -2,7 +2,7 @@
 
 Name:           gsettings-desktop-schemas
 Version:	3.18.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A collection of GSettings schemas
 Summary(zh_CN.UTF-8): Gsettings 架构集合
 
@@ -79,6 +79,9 @@ fi
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 更新到 3.18.1
 

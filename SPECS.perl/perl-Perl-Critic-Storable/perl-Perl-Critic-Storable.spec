@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Storable
 Version:        0.01
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Policy for Storable.pm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.01-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.01-10
 - 为 Magic 3.0 重建
 

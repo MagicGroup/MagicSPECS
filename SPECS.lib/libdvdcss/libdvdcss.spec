@@ -1,6 +1,6 @@
 Name: libdvdcss
 Version: 1.2.13
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Summary: A portable abstraction library for DVD decryption
 Summary(zh_CN.UTF-8): 加密 DVD 的一个可移植抽取库
@@ -97,6 +97,9 @@ rm %{buildroot}%{_libdir}/*.la
 %_libdir/*.a
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2.13-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.13-2
 - 为 Magic 3.0 重建
 

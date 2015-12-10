@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.0.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Generic cryptography cipher types
 
 License:        BSD
@@ -68,6 +68,9 @@ rm $RPM_BUILD_ROOT%{_datadir}/%{pkg_name}-%{version}/README.md
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.0.9-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.0.9-8
 - 为 Magic 3.0 重建
 

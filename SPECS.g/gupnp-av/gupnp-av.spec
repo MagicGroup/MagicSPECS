@@ -1,6 +1,6 @@
 Name:          gupnp-av
 Version:	0.12.7
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       A collection of helpers for building UPnP AV applications
 Summary(zh_CN.UTF-8): 构建 UPnP 音视频程序的帮助程序
 
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.12.7-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.12.7-3
 - 更新到 0.12.7
 

@@ -1,6 +1,6 @@
 Name:           perl-Devel-Hide
 Version:	0.0009
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Forces the unavailability of specified Perl modules (for testing)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.0009-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.0009-2
 - 为 Magic 3.0 重建
 

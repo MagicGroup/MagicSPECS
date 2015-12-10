@@ -1,6 +1,6 @@
 Name:           perl-RPM-VersionCompare
 Version:        0.1.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Compare RPM version strings
 License:        GPLv3+
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.1.1-14
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.1.1-13
 - 为 Magic 3.0 重建
 

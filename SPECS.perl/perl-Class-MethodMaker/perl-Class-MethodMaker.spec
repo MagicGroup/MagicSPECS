@@ -1,6 +1,6 @@
 Name:           perl-Class-MethodMaker
 Version:	2.24
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl module for creating generic object-oriented methods
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ cd ..
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.24-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.24-2
 - 为 Magic 3.0 重建
 

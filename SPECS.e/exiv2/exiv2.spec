@@ -2,7 +2,7 @@ Summary: Exif and Iptc metadata manipulation library
 Summary(zh_CN.UTF-8): Exif 和 Iptc 元数据处理库
 Name:	 exiv2
 Version: 0.25
-Release: 3%{?dist}
+Release: 5%{?dist}
 
 License: GPLv2+
 Group:	 Applications/Multimedia
@@ -84,7 +84,7 @@ rm -rf %{buildroot}
 
 make install DESTDIR=%{buildroot}
 magic_rpm_clean.sh
-%find_lang exiv2
+%find_lang exiv2 || :
 
 ## Unpackaged files
 rm -fv %{buildroot}%{_libdir}/libexiv2.la
@@ -116,7 +116,7 @@ rm -rf %{buildroot}
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-%files libs -f exiv2.lang
+%files libs 
 %defattr(-,root,root,-)
 %{_libdir}/libexiv2.so.*
 
@@ -129,6 +129,12 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 07 2015 Liu Di <liudidi@gmail.com> - 0.25-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.25-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.25-3
 - 更新到 0.25
 

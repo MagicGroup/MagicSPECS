@@ -4,7 +4,7 @@
 Name:    grantlee
 Summary: Qt string template engine based on the Django template system
 Version: 0.4.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 License: LGPLv2+
 URL:     http://www.gitorious.org/grantlee/pages/Home
@@ -111,6 +111,9 @@ xvfb-run -a make test -C %{_target_platform}
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.0-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.4.0-5
 - 为 Magic 3.0 重建
 

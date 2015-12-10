@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Types-JSON
 Summary:        JSON data types for Moose
 Version:	1.00
-Release:	2%{?dist}
+Release:	3%{?dist}
 # see lib/MooseX/Types/JSON.pm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.00-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.00-2
 - 为 Magic 3.0 重建
 

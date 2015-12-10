@@ -12,7 +12,7 @@ Summary:       The Jack Audio Connection Kit
 Summary(zh_CN.UTF-8): Jack 音频连接工具
 Name:          jack-audio-connection-kit
 Version:       1.9.9.5
-Release:       7%{?dist}
+Release:       8%{?dist}
 # The entire source (~500 files) is a mixture of these three licenses
 License:       GPLv2 and GPLv2+ and LGPLv2+
 Group:         System Environment/Daemons
@@ -281,6 +281,9 @@ exit 0
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.9.9.5-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.9.9.5-7
 - 为 Magic 3.0 重建
 

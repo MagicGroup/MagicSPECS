@@ -1,6 +1,6 @@
 Name:           rasqal
 Version:	0.9.33
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        RDF Query Library
 Summary(zh_CN.UTF-8): RDF 查询库
 
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.9.33-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.9.33-2
 - 为 Magic 3.0 重建
 

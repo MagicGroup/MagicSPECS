@@ -13,7 +13,7 @@
 
 Name:			rubygem-%{gem_name}
 Version:		0.6.1.1
-Release:		4%{?dist}
+Release:		5%{?dist}
 Summary:		N-dimensional Numerical Array class for Ruby
 %{?el5:Group:		System Environment/Libraries}
 
@@ -154,6 +154,9 @@ ln -fs	%{gem_instdir}/%{gem_name}_ext.rb %{buildroot}%{gem_extdir_mri}
 %endif #0%{?fedora} >= 21 || 0%{?rhel} >= 8
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.6.1.1-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.6.1.1-4
 - 为 Magic 3.0 重建
 

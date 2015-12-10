@@ -4,7 +4,7 @@
 Summary: A utility for determining file types
 Name: file
 Version: 5.14
-Release: 18%{?dist}
+Release: 19%{?dist}
 License: BSD
 Group: Applications/File
 Source0: ftp://ftp.astron.com/pub/file/file-%{version}.tar.gz
@@ -196,6 +196,9 @@ cd %{py3dir}
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 5.14-19
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.14-18
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Plack
 Version:	1.0037
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Perl Superglue for Web frameworks and Web Servers (PSGI toolkit)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -136,6 +136,9 @@ make test %{?_with_apache:TEST_APACHE2=1 TEST_FCGI_CLIENT=1}
 %exclude %{perl_vendorlib}/auto/share/dist/Plack/#foo
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0037-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0037-3
 - 为 Magic 3.0 重建
 

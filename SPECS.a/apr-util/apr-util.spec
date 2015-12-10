@@ -16,7 +16,7 @@
 Summary: Apache Portable Runtime Utility library
 Name: apr-util
 Version: 1.5.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 Group: System Environment/Libraries
 URL: http://apr.apache.org/
@@ -245,6 +245,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*.m4
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.5.4-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.4-2
 - 更新到 1.5.4
 

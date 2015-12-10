@@ -3,7 +3,7 @@
 Summary: A thin and fast web server
 Name: rubygem-%{gem_name}
 Version: 1.6.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: (GPLv2 or Ruby) and MIT
 URL: http://code.macournoyer.com/thin/
@@ -124,6 +124,9 @@ popd
 %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.6.2-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.6.2-6
 - 为 Magic 3.0 重建
 

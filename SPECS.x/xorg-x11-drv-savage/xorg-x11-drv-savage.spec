@@ -6,7 +6,7 @@ Summary:   Xorg X11 savage video driver
 Summary(zh_CN.UTF-8): Xorg X11 savage 显卡驱动
 Name:      xorg-x11-drv-savage
 Version:	2.3.8
-Release:	3%{?dist}
+Release:	4%{?dist}
 URL:       http://www.x.org
 License: MIT
 Group:     User Interface/X Hardware Support
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/savage.4*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 2.3.8-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.3.8-3
 - 为 Magic 3.0 重建
 

@@ -32,7 +32,7 @@ Summary:	Parser Generator with Java Extension
 Summary(zh_CN.UTF-8): 解析器的 JAVA 扩展
 Name:		byaccj
 Version:	1.15
-Release:	13%{?dist}
+Release:	14%{?dist}
 Epoch:		0
 License:	Public Domain
 URL:		http://byaccj.sourceforge.net/
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %attr(755, root, root) %{_bindir}/%{name}
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0:1.15-14
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0:1.15-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-CPAN-Meta-YAML
 Version:	0.016
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Read and write a subset of YAML for CPAN Meta files
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -79,6 +79,9 @@ make test TEST_FILES="xt/*/*.t"
 %{_mandir}/man3/CPAN::Meta::YAML.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.016-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.016-2
 - 更新到 0.016
 

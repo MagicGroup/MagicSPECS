@@ -2,7 +2,7 @@ Summary: Command line tool for setting up authentication from network services
 Summary(zh_CN.UTF-8): 从网络服务上设置认证的命令行工具
 Name: authconfig
 Version: 6.2.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 ExclusiveOS: Linux
 Group: System Environment/Base
@@ -53,8 +53,7 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
-rm $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/acutilmodule.a
-rm $RPM_BUILD_ROOT/%{_libdir}/python*/site-packages/acutilmodule.la
+rm $RPM_BUILD_ROOT%{python_sitearch}/acutil.*a
 rm $RPM_BUILD_ROOT/%{_datadir}/%{name}/authconfig-tui.py
 ln -s authconfig.py $RPM_BUILD_ROOT/%{_datadir}/%{name}/authconfig-tui.py
 magic_rpm_clean.sh
@@ -95,7 +94,7 @@ authconfig --update --nostart >/dev/null 2>&1 || :
 %exclude %{_mandir}/man8/authconfig-gtk.*
 %{_mandir}/man8/*
 %{_mandir}/man5/*
-%{_libdir}/python*/site-packages/acutilmodule.so
+%{_libdir}/python*/site-packages/acutil.so
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/authconfig.py*
 %{_datadir}/%{name}/authconfig-tui.py*
@@ -134,6 +133,9 @@ authconfig --update --nostart >/dev/null 2>&1 || :
 %{_datadir}/icons/hicolor/256x256/apps/system-config-authentication.*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 6.2.10-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 6.2.10-2
 - 更新到 6.2.10
 

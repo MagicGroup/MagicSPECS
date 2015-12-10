@@ -1,6 +1,6 @@
 Name:           libevent
 Version: 2.0.22
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Abstract asynchronous event notification library
 Summary(zh_CN.UTF-8): 抽象异步事件通知库
 
@@ -12,7 +12,6 @@ Source0:        http://downloads.sourceforge.net/levent/%{name}-%{version}-stabl
 
 BuildRequires: doxygen openssl-devel
 
-Patch00: libevent-2.0.10-stable-configure.patch
 
 %description
 The libevent API provides a mechanism to execute a callback function
@@ -42,9 +41,6 @@ you will need to install %{name}-devel.
 
 %prep
 %setup -q -n libevent-%{version}-stable
-
-# 477685 -  libevent-devel multilib conflict
-%patch00 -p1
 
 %build
 %configure \
@@ -104,6 +100,12 @@ magic_rpm_clean.sh
 %{_docdir}/%{name}-devel-%{version}/sample/*
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 2.0.22-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.0.22-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.0.22-3
 - 更新到 2.0.22
 

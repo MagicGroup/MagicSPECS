@@ -1,12 +1,14 @@
 # Define aufs version
 %define git 1
-%define vcsdate 20151028
+%define vcsdate 20151120
+
+%define debug_package %{nil}
 
 Summary:		Utilities to Manipulate aufs Components
 Summary(zh_CN.UTF-8): 	处理 aufs 组件的工具
 Name:			aufs-util
 Version:			3.2
-Release:			0.git%{vcsdate}%{?dist}.7
+Release:			0.git%{vcsdate}%{?dist}.8
 License:			GPL
 Group:			System Environment/Base
 Group(zh_CN.UTF-8):		系统环境/基本
@@ -83,17 +85,22 @@ fi
 %defattr(-,root,root)
 %{_bindir}/aubrsync
 %{_bindir}/auchk
+%{_sbindir}/aumvdown
 %{_sbindir}/mount.aufs
 %{_sbindir}/umount.aufs
 %{_sbindir}/auplink
 %{_sysconfdir}/*
 %{_mandir}/man5/aufs*
+%{_mandir}/man8/aumvdown.8*
 %{_bindir}/aubusy
 %{_sbindir}/auibusy
 %{_libdir}/libau.so
 %{_libdir}/libau.so.2*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.2-0.git20151028.8
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.2-0.git20151028.7
 - 更新到 20151028 日期的仓库源码
 

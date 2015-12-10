@@ -17,7 +17,7 @@
 Summary:    Ruby library to obey robots.txt 
 Name:       rubygem-%{gem_name}
 Version:    1.0.0
-Release:    16%{?dist}
+Release:    17%{?dist}
 License:    MIT 
 Group:      Development/Languages
 URL:        http://www.github.com/chriskite/robotex
@@ -96,6 +96,9 @@ popd
 %{gem_instdir}/spec/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.0-17
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.0-16
 - 为 Magic 3.0 重建
 

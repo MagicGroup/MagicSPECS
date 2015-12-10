@@ -1,6 +1,6 @@
 Name:           mokutil
 Version:        0.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        Tool to manage UEFI Secure Boot MoK Keys
 License:        GPLv3+
@@ -43,6 +43,9 @@ make PREFIX=%{_prefix} LIBDIR=%{_libdir} DESTDIR=%{buildroot} install
 %{_mandir}/man1/*
 
 %changelog
+* Mon Nov 30 2015 Liu Di <liudidi@gmail.com> - 1:0.2.0-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

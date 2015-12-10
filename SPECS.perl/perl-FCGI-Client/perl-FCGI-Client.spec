@@ -1,7 +1,7 @@
 Name:           perl-FCGI-Client 
 Summary:        Client library for the fastcgi protocol 
 Version:        0.08
-Release:        16%{?dist}
+Release:        17%{?dist}
 # lib/FCGI/Client.pm -> GPL+ or Artistic
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.08-17
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.08-16
 - 为 Magic 3.0 重建
 

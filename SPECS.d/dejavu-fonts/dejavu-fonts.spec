@@ -16,7 +16,7 @@ original style, using an open collaborative development process.
 
 Name:    %{fontname}-fonts
 Version:	2.35
-Release: 5%{?alphatag}%{?dist}
+Release: 6%{?alphatag}%{?dist}
 Summary: DejaVu fonts
 
 Group:     User Interface/X
@@ -200,6 +200,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.35-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.35-5
 - 更新到 2.35
 

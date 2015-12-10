@@ -7,7 +7,7 @@ Summary:       Python bindings for CUPS
 Summary(zh_CN.UTF-8): CUPS 的 Python 绑定
 Name:          python-cups
 Version:	1.9.73
-Release:	2%{?dist}
+Release:	3%{?dist}
 URL:           http://cyberelk.net/tim/software/pycups/
 Source:        http://cyberelk.net/tim/data/pycups/pycups-%{version}.tar.bz2
 License:       GPLv2+
@@ -96,6 +96,9 @@ magic_rpm_clean.sh
 %doc examples html
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.9.73-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.9.73-2
 - 为 Magic 3.0 重建
 

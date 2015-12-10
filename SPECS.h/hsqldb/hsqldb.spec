@@ -2,7 +2,7 @@
 
 Name:           hsqldb
 Version:        2.3.3
-Release:        2%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        HyperSQL Database Engine
 License:        BSD
@@ -214,6 +214,12 @@ popd
 %files demo
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 1:2.3.3-4
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 1:2.3.3-3
+- 为 Magic 3.0 重建
+
 * Thu Oct  8 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1:2.3.3-2
 - Add After=network.target to systemd service
 - Resolves: rhbz#1269717

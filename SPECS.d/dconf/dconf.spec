@@ -3,7 +3,7 @@
 
 Name:           dconf
 Version:	0.24.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A configuration system
 Summary(zh_CN.UTF-8): 一个配置系统
 
@@ -47,19 +47,6 @@ development using dconf.
 %description devel -l zh_CN.UTF-8
 %{name} 的开发包。
 
-%package editor
-Summary: Configuration editor for dconf
-Summary(zh_CN.UTF-8): doconf 的配置编辑器
-Group:   Applications/System
-Group(zh_CN.UTF-8): 应用程序/系统
-Requires: %{name} = %{version}-%{release}
-
-%description editor
-dconf-editor allows you to browse and modify dconf databases.
-
-%description editor -l zh_CN.UTF-8
-doconf 的配置编辑器。
-
 %prep
 %setup -q
 
@@ -71,7 +58,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 magic_rpm_clean.sh
-%find_lang dconf
+%find_lang dconf || :
 
 %post
 /sbin/ldconfig
@@ -91,7 +78,8 @@ fi
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 
-%files -f dconf.lang
+#files -f dconf.lang
+%files
 %doc COPYING
 %{_libdir}/gio/modules/libdconfsettings.so
 %{_libexecdir}/dconf-service
@@ -100,7 +88,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_libdir}/libdconf.so.*
 %{_libdir}/libdconf-dbus-1.so.*
 %{_datadir}/bash-completion/completions/dconf
-%{_datadir}/glib-2.0/schemas/ca.desrt.dconf-editor.gschema.xml
+#{_datadir}/glib-2.0/schemas/ca.desrt.dconf-editor.gschema.xml
 %{_mandir}/man1/dconf-service.1.gz
 %{_mandir}/man1/dconf.1.gz
 %{_mandir}/man7/dconf.7.gz
@@ -115,18 +103,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/gtk-doc/html/dconf
 %{_datadir}/vala
 
-%files editor
-%{_bindir}/dconf-editor
-%{_datadir}/applications/dconf-editor.desktop
-#%dir %{_datadir}/dconf-editor
-#%{_datadir}/dconf-editor/dconf-editor.ui
-#%{_datadir}/dconf-editor/dconf-editor-menu.ui
-%{_datadir}/icons/hicolor/*/apps/dconf-editor.png
-%{_datadir}/icons/HighContrast/*/apps/dconf-editor.png
-%{_mandir}/man1/dconf-editor.1.gz
-%{_datadir}/appdata/dconf-editor.appdata.xml
-
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.24.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.24.0-2
 - 更新到 0.24.0
 

@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): 经典的四人麻将
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 Version: 4.14.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 %define rversion %version
@@ -79,6 +79,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_iconsdir}/*/*/a*/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 为 Magic 3.0 重建
 

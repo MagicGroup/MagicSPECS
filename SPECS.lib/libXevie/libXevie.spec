@@ -2,7 +2,7 @@ Summary: X Event Interceptor Library
 Summary(zh_CN.UTF-8): X 事件截取库
 Name: libXevie
 Version: 1.0.3
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.3-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.3-6
 - 为 Magic 3.0 重建
 

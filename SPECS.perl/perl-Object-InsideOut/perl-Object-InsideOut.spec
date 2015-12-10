@@ -1,6 +1,6 @@
 Name:           perl-Object-InsideOut
 Version:	4.02
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Comprehensive inside-out object support module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -82,6 +82,9 @@ make test
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.02-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.02-2
 - 为 Magic 3.0 重建
 

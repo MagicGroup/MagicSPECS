@@ -5,7 +5,7 @@
 
 Name:           ocaml-yojson
 Version:        1.1.8
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        An optimized parsing and printing library for the JSON format
 Summary(zh_CN.UTF-8): 优化的解析和打印 JSON 格式的库
 
@@ -103,6 +103,9 @@ $RPM_BUILD_ROOT%{_bindir}/ydump %{SOURCE1} >/dev/null 2>valid-err.log
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.1.8-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.8-7
 - 为 Magic 3.0 重建
 

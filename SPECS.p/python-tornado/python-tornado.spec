@@ -4,7 +4,7 @@
 
 Name:           python-%{pkgname}
 Version:	4.2.1
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:        Scalable, non-blocking web server and tools
 Summary(zh_CN.UTF-8): 可扩展，无阻塞的网络服务器和工具
 
@@ -169,6 +169,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.2.1-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 09 2015 Liu Di <liudidi@gmail.com> - 4.2.1-1
 - 更新到 4.2.1
 

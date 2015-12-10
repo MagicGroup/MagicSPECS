@@ -1,6 +1,6 @@
 Name:           perl-HTML-TokeParser-Simple
 Version:        3.16
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Easy to use HTML::TokeParser interface
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.16-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.16-6
 - 为 Magic 3.0 重建
 

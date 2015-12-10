@@ -1,6 +1,6 @@
 Name:		scrub
 Version:	2.5.2
-Release:	8%{?dist}
+Release:	9%{?dist}
 Summary:	Disk scrubbing program
 Summary(zh_CN.UTF-8): 磁盘清理程序
 License:	GPLv2+
@@ -38,6 +38,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/scrub.1*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.5.2-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.5.2-8
 - 为 Magic 3.0 重建
 

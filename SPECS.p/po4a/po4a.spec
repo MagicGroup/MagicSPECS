@@ -1,7 +1,7 @@
 %define num 4134
 Name: po4a
 Version:	0.47
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: A tool maintaining translations anywhere
 Summary(zh_CN.UTF-8): 在任何地方处理翻译的工具
 License: GPL+
@@ -90,6 +90,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/po4a.7*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.47-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.47-2
 - 为 Magic 3.0 重建
 

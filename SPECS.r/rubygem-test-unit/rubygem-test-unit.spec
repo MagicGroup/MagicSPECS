@@ -6,7 +6,7 @@
 Summary:	Improved version of Test::Unit bundled in Ruby 1.8.x
 Name:		rubygem-%{gem_name}
 Version:	3.1.3
-Release:	102%{?dist}
+Release:	103%{?dist}
 Group:		Development/Languages
 # lib/test/unit/diff.rb is under GPLv2 or Ruby or Python
 # lib/test-unit.rb is under LGPLv2+ or Ruby
@@ -112,6 +112,9 @@ popd
 %{gem_docdir}/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.1.3-103
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.1.3-102
 - 为 Magic 3.0 重建
 

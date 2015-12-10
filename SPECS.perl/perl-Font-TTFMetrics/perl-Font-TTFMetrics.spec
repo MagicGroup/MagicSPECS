@@ -1,6 +1,6 @@
 Name:           perl-Font-TTFMetrics
 Version:        0.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Parser for the TTF file
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.1-13
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.1-12
 - 为 Magic 3.0 重建
 

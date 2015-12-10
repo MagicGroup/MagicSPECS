@@ -2,7 +2,7 @@
 
 Name:             apache-%{short_name}
 Version:          34
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          Apache Commons Parent Pom
 Group:            Development/Libraries
 License:          ASL 2.0
@@ -46,6 +46,9 @@ The Project Object Model files for the apache-commons packages.
 %doc LICENSE.txt NOTICE.txt RELEASE-NOTES.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 34-4
+- 为 Magic 3.0 重建
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 34-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 

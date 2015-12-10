@@ -1,6 +1,6 @@
 Name:           perl-File-MMagic-XS
 Version:	0.09008
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Guess file type with XS
 Group:          Development/Libraries
 License:        ASL 2.0 and (GPL+ or Artistic)
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/File::MMagic::XS.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.09008-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.09008-2
 - 为 Magic 3.0 重建
 

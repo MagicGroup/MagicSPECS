@@ -6,7 +6,7 @@
 
 Name:           %{gstreamer}-plugins-good
 Version:        0.10.31
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        GStreamer plug-ins with good code and licensing
 
 Group:          Applications/Multimedia
@@ -260,6 +260,9 @@ export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/gstreamer-%{majorminor}.schemas > /dev/null || :
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.31-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.10.31-7
 - 为 Magic 3.0 重建
 

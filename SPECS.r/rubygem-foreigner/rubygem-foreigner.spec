@@ -4,7 +4,7 @@
 Summary:       Foreign Keys for Rails
 Name:          rubygem-%{gem_name}
 Version:       1.7.2
-Release:       4%{?dist}
+Release:       5%{?dist}
 License:       MIT
 
 URL:           http://github.com/matthuhiggins/foreigner
@@ -73,6 +73,9 @@ cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.7.2-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.7.2-4
 - 为 Magic 3.0 重建
 

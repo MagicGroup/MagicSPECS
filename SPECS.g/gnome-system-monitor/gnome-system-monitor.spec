@@ -10,8 +10,8 @@
 Summary: Process and resource monitor
 Summary(zh_CN.UTF-8): 进程和资源监视器
 Name: gnome-system-monitor
-Version:	3.18.0
-Release: 2%{?dist}
+Version:	3.18.2
+Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -48,7 +48,7 @@ such as CPU and memory.
 %setup -q
 
 %build
-%configure --enable-systemd
+%configure --enable-systemd --enable-wnck
 make %{?_smp_mflags}
 
 %install
@@ -84,6 +84,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/appdata/gnome-system-monitor.appdata.xml
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
 - 更新到 3.18.0
 

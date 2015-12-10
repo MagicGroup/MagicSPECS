@@ -1,6 +1,6 @@
 Name:           perl-Test-Object
 Version:        0.07
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Thoroughly testing objects via registered handlers
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.07-20
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.07-19
 - 为 Magic 3.0 重建
 

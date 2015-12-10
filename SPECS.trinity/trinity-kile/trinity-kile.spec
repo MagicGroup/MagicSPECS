@@ -37,7 +37,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		2.0.3
-Release:		%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:8}%{?preversion:7_%{preversion}}%{?dist}%{?_variant}.3
 Summary:		TDE Integrated LaTeX Environment [Trinity]
 Summary(zh_CN.UTF-8): TDE 下的 LaTeX 集成环境
 Group:			Applications/Publishing
@@ -213,6 +213,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 %{tde_datadir}/mimelnk/text/x-kilepr.desktop
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:2.0.3-8.3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:2.0.3-8.2
 - 为 Magic 3.0 重建
 

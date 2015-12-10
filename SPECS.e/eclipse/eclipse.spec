@@ -15,18 +15,8 @@ Epoch:                  1
 %global eclipse_tag     R4_5_1
 %global eclipse_version %{eclipse_major}.%{eclipse_minor}.%{eclipse_micro}
 
-%if 0%{?fedora} >= 24
 %global _jetty_version  9.3.4
 %global _lucene_version 5.3.1
-%else
-%if 0%{?fedora} >= 23
-%global _jetty_version  9.3.0
-%global _lucene_version 5.3.0
-%else
-%global _jetty_version  9.2.9
-%global _lucene_version 4.10.3
-%endif
-%endif
 
 %ifarch %{ix86}
     %define eclipse_arch x86
@@ -123,13 +113,8 @@ Patch19:        %{pkg_name}-support-symlink-bundles.patch
 Patch20:        %{pkg_name}-feature-plugins-to-category-ius.patch
 Patch21:        disable-non-linux.patch
 
-%if 0%{?fedora} >= 23
 # Port to Lucene 5
 Patch22: eclipse-lucene-5.patch
-%else
-# Port to Lucene 4
-Patch22: eclipse-lucene-4.patch
-%endif
 
 Patch23: %{pkg_name}-javaxannotation-import.patch
 Patch24: %{pkg_name}-fix-tests.patch
@@ -156,18 +141,9 @@ BuildRequires: java-1.8.0-openjdk-devel
 BuildRequires: libXt-devel
 BuildRequires: libXtst-devel
 BuildRequires: gtk2-devel
-%if 0%{?fedora}
 BuildRequires: gtk3-devel
 BuildRequires: webkitgtk-devel
 BuildRequires: webkitgtk4-devel
-%else
-%if 0%{?rhel} >= 7
-BuildRequires: gtk3-devel
-BuildRequires: webkitgtk3-devel
-%else
-BuildRequires: webkitgtk-devel
-%endif
-%endif
 BuildRequires: icu4j >= 1:54.1.1-2
 BuildRequires: ant-antlr ant-apache-bcel ant-apache-log4j ant-apache-oro ant-apache-regexp ant-apache-resolver ant-commons-logging ant-apache-bsf ant-commons-net
 BuildRequires: ant-javamail ant-jdepend ant-junit ant-swing ant-jsch ant-testutil ant-apache-xalan2 ant-jmf

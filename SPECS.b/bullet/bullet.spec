@@ -2,7 +2,7 @@
 
 Name: bullet
 Version:	2.83.6
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary: 3D Collision Detection and Rigid Body Dynamics Library
 Summary(zh_CN.UTF-8): 3D碰撞检测和刚体动力学库
 Group: Development/Libraries
@@ -196,6 +196,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.83.6-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.83.6-5
 - 为 Magic 3.0 重建
 

@@ -18,7 +18,7 @@ Summary: PHP Extension and Application Repository framework
 Summary(zh_CN.UTF-8): PHP 扩展和应用仓库框架
 Name: php-pear
 Version:	1.10.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Epoch: 1
 # PEAR, Archive_Tar, XML_Util are BSD
 # Console_Getopt is PHP
@@ -314,6 +314,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:1.10.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.10.1-2
 - 更新到 1.10.1
 

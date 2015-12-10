@@ -1,6 +1,6 @@
 Name:           perl-Future
 Version:        0.33
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl object system to represent an operation awaiting completion
 License:        GPL+ or Artistic
 
@@ -64,6 +64,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.33-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.33-4
 - 为 Magic 3.0 重建
 

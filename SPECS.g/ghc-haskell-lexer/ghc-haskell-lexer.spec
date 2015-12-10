@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        A fully compliant Haskell 98 lexer
 
 License:        MIT
@@ -59,6 +59,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.0-7
 - 为 Magic 3.0 重建
 

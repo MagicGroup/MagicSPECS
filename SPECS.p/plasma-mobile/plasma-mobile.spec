@@ -1,7 +1,7 @@
 
 Name:           plasma-mobile
 Version:        0.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A Plasma Active mobile workspace
 
 License:        GPLv2+
@@ -157,6 +157,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.4-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.4-5
 - 为 Magic 3.0 重建
 

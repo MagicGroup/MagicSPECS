@@ -1,6 +1,6 @@
 Name:           perl-perlmenu
 Version:        4.0
-Release:        27%{?dist}
+Release:        28%{?dist}
 Summary:        Perl library module for curses-based menus & data-entry templates
 
 Group:          Development/Libraries
@@ -35,6 +35,9 @@ install -p -m 644 perlmenu.pm $RPM_BUILD_ROOT%{perl_vendorlib}
 %{perl_vendorlib}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.0-28
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.0-27
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.13.0.6
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Binding to the Cairo library
 
 License:        BSD
@@ -81,6 +81,12 @@ rm -r %{buildroot}%{_datadir}/%{pkg_name}-%{version}
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.13.0.6-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.13.0.6-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.13.0.6-3
 - 为 Magic 3.0 重建
 

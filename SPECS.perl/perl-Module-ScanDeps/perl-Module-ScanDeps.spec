@@ -1,7 +1,7 @@
 Name:           perl-Module-ScanDeps
 Summary:        Recursively scan Perl code for dependencies
 Version:	1.20
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSCHUPP/Module-ScanDeps-%{version}.tar.gz 
@@ -84,6 +84,9 @@ make test
 %{_mandir}/man3/Module::ScanDeps.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.20-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.20-2
 - 更新到 1.20
 

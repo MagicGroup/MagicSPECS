@@ -1,6 +1,6 @@
 Name:           perl-Test-Identity
 Version:        0.01
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Assert the referential identity of a reference
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.01-13
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.01-12
 - 为 Magic 3.0 重建
 

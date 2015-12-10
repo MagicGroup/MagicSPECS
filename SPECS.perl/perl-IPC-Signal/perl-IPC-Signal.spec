@@ -1,6 +1,6 @@
 Name:           perl-IPC-Signal
 Version:        1.00
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Utility functions dealing with signals for Perl 
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.00-12
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.00-11
 - 为 Magic 3.0 重建
 

@@ -51,6 +51,8 @@ This package contains developer documentation for %{name}.
 
 %build
 %configure --disable-static
+find . -name Makefile|xargs sed -i 's!-Werror!!g'
+find . -name Makefile|xargs sed -i 's!=format-security!!g'
 make %{?_smp_mflags}
 
 %install

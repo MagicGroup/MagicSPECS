@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.1.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Creates a fake FTP server for use in testing
 Group: Development/Languages
 License: MIT
@@ -85,6 +85,9 @@ popd
 %doc %{gem_instdir}/CONTRIBUTORS.md
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.1-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.1.1-5
 - 为 Magic 3.0 重建
 

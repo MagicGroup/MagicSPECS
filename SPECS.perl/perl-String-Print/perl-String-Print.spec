@@ -1,6 +1,6 @@
 Name:           perl-String-Print
 Version:        0.15
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Alternative for Perl printf
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.15-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.15-5
 - 为 Magic 3.0 重建
 

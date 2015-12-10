@@ -3,7 +3,7 @@
 
 Name:           crda
 Version:        %{crda_version}_%{regdb_version}
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Regulatory compliance daemon for 802.11 wireless networking
 
 Group:          System Environment/Base
@@ -27,8 +27,6 @@ Source3:        setregdomain.1
 
 # Add udev rule to call setregdomain on wireless device add
 Patch0:         regulatory-rules-setregdomain.patch
-# Add DESTDIR in install rules for libreg in crda Makefile
-Patch1:         crda-Add-DESTDIR-support-in-install-libreg-rules-in-.patch 
 # Do not call ldconfig in crda Makefile
 Patch2:         crda-remove-ldconfig.patch
 
@@ -54,7 +52,6 @@ Header files to make use of libreg for accessing regulatory info.
 %setup -q -T -D -a 1
 
 cd crda-%{crda_version}
-%patch1 -p1 -b .libreg-DESTDIR
 %patch2 -p1 -b .ldconfig-remove
 
 %build
@@ -123,6 +120,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.18_2015.10.22-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.18_2015.10.22-4
 - 更新到 3.18_2015.10.22
 

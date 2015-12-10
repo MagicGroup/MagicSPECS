@@ -2,7 +2,7 @@ Name:           perl-Package-Constants
 # Epoch to compete with perl.spec
 Epoch:          1
 Version:        0.06
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        List all constants declared in a package
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:0.06-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:0.06-5
 - 为 Magic 3.0 重建
 

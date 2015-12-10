@@ -6,7 +6,7 @@ Summary: C library for multiple precision complex arithmetic
 Summary(zh_CN.UTF-8): 高精度的复数计算 C 库
 Name: libmpc
 Version: 1.0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv3+ and GFDL
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -120,6 +120,9 @@ fi
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.3-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.3-3
 - 更新到 1.0.3
 

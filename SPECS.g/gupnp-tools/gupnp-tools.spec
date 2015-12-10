@@ -1,6 +1,6 @@
 Name:          gupnp-tools
 Version:	0.8.10
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       A collection of dev tools utilising GUPnP and GTK+
 Summary(zh_CN.UTF-8): GUPnP 和 GTK+ 的开发工具集
 
@@ -74,6 +74,9 @@ desktop-file-install --vendor=gupnp \
 %{_datadir}/gupnp-tools/*.ui
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.8.10-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.8.10-3
 - 更新到 0.8.10
 

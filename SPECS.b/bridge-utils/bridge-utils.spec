@@ -1,8 +1,10 @@
+%undefine _hardened_build
+
 Summary:        Utilities for configuring the linux ethernet bridge
 Summary(zh_CN.UTF-8): 配置 Linux 以太网网桥的工具
 Name:           bridge-utils
 Version:        1.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2+
 URL:            http://www.linuxfoundation.org/collaborate/workgroups/networking/bridge
 Group:          System Environment/Base
@@ -50,6 +52,9 @@ make DESTDIR=%{buildroot} SUBDIRS="brctl doc" install
 %{_mandir}/man8/brctl.8*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.5-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5-4
 - 为 Magic 3.0 重建
 

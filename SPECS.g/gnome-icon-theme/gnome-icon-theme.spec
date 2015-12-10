@@ -5,7 +5,7 @@ Version:	3.12.0
 License:    LGPLv3+
 Group:      User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Release:    2%{?dist}
+Release:    3%{?dist}
 URL:        http://www.gnome.org
 
 #VCS: git:git://git.gnome.org/gnome-icon-theme
@@ -141,6 +141,9 @@ gtk-update-icon-cache %{_datadir}/icons/gnome &>/dev/null || :
 %{_datadir}/pkgconfig/gnome-icon-theme.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.12.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.12.0-2
 - 为 Magic 3.0 重建
 

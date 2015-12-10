@@ -1,6 +1,6 @@
 Name:           perl-Net-Domain-TLD
 Version:        1.73
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Work with TLD names
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.73-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.73-5
 - 为 Magic 3.0 重建
 

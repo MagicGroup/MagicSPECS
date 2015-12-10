@@ -6,7 +6,7 @@
 Name: qt3
 Summary: The shared library for the Qt 3 GUI toolkit
 Version: 3.3.8b
-Release: 67%{?dist}
+Release: 68%{?dist}
 License: QPL or GPLv2 or GPLv3
 Group: System Environment/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -645,6 +645,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.3.8b-68
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.3.8b-67
 - 为 Magic 3.0 重建
 

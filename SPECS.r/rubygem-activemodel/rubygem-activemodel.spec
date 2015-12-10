@@ -4,7 +4,7 @@
 Summary: A toolkit for building modeling frameworks
 Name: rubygem-%{gem_name}
 Version: 4.2.4
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -76,6 +76,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.2.4-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.2.4-3
 - 为 Magic 3.0 重建
 

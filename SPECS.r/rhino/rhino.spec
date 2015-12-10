@@ -35,7 +35,7 @@ Name:           rhino
 # of Javascript version 1.7 (which is independent from this particular implementation,
 # e.g., there is C++ implementation in Spidermonkey)
 Version:        1.7R3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        JavaScript for Java
 License:        MPLv1.1 or GPLv2+
 
@@ -178,6 +178,9 @@ install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.7R3-9
+- 为 Magic 3.0 重建
+
 * Fri Nov 30 2012 Liu Di <liudidi@gmail.com> - 1.7R3-8
 - 为 Magic 3.0 重建
 

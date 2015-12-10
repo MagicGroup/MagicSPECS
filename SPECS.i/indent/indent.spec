@@ -3,7 +3,7 @@ Summary: A GNU program for formatting C code
 Summary(zh_CN.UTF-8): 格式化 C 代码的 GNU 程序
 Name: indent
 Version: 2.2.11
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv3+
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -71,6 +71,9 @@ fi
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.2.11-7
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.2.11-6
 - 为 Magic 3.0 重建
 

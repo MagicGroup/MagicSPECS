@@ -5,7 +5,7 @@ Name:    libkgeomap
 Summary: A wrapper around different world-map components, to browse and arrange photos over a map
 Summary(zh_CN.UTF-8): 不同的世界地图组件的包装器，可以在地图上浏览和安排图像
 Version: 15.08.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 License: GPLv2+
 URL:     https://projects.kde.org/projects/kde/kdegraphics/libs/libkgeomap
@@ -80,6 +80,9 @@ pkg-config --modversion libkgeomap
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 15.08.2-2
+- 为 Magic 3.0 重建
+
 * Sun Apr 19 2015 Rex Dieter <rdieter@fedoraproject.org> 15.04.0-2
 - rebuild (marble)
 

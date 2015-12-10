@@ -11,10 +11,10 @@ Summary(zh_CN.UTF-8): 非常快速的 MPEG1/MPEG4/H263/RV 和 AC3/MPEG 声音编
 Name: ffmpeg
 %if %{svn}
 Version:	2.8.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 %else
 Version:	2.8.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 %endif
 License: GPL
 Group: System Environment/Libraries
@@ -222,6 +222,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{_mandir}/man3/lib*.3*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.8.1-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.8.1-2
 - 为 Magic 3.0 重建
 

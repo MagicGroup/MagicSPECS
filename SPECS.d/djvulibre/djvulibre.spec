@@ -2,7 +2,7 @@ Summary: DjVu viewers, encoders, and utilities
 Summary(zh_CN.UTF-8): DjVu 查看器，编码器和工具
 Name: djvulibre
 Version: 3.5.25.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -182,6 +182,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.5.25.3-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.5.25.3-5
 - 为 Magic 3.0 重建
 

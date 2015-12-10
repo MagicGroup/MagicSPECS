@@ -7,7 +7,7 @@ Name:  rodent
 Summary: Advanced user file manager for Linux/BSD systems
 Summary(zh_CN.UTF-8): Linux/BSD 系统下的高级用户文件管理器
 Version:	5.3.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: GPLv3+
 URL: http://xffm.org/
 Source0: http://sourceforge.net/projects/xffm/files/%{version}.5/rodent-%{version}.3.tar.bz2
@@ -259,6 +259,9 @@ appstream-util validate-relax --nonet $RPM_BUILD_ROOT%{_datadir}/appdata/*.appda
 %endif #with_rodenticonmgr
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.3.16-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.3.16-2
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@ Summary: DTS Coherent Acoustics decoder library
 Summary(zh_CN.UTF-8): DTS 相干声学解码库
 Name: libdca
 Version: 0.0.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 URL: http://www.videolan.org/developers/libdca.html
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}.so
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.0.5-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.5-8
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Name:           help2man
 Summary:        Create simple man pages from --help output
 Summary(zh_CN.UTF-8): 从 --help 的输出中生成简单的手册页 (man)
 Version: 1.47.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Group:          Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 License:        GPLv3+
@@ -67,6 +67,9 @@ fi
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.47.2-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.47.2-3
 - 更新到 1.47.2
 

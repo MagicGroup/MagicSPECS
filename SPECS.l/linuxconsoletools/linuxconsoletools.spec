@@ -1,6 +1,6 @@
 Name: linuxconsoletools
 Version: 1.4.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Tools for connecting joysticks & legacy devices to the kernel's input subsystem
 Summary(zh_CN.UTF-8): 连接游戏摇杆和过时设备到内核输入子系统的工具
 Group: Applications/System
@@ -68,6 +68,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.4.8-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.4.8-4
 - 更新到 1.4.8
 

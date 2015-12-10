@@ -1,6 +1,6 @@
 Name:		lzma-sdk457
 Version:	4.57
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	SDK for lzma compression
 Summary(zh_CN.UTF-8): lzma 压缩的 SDK
 Group:		Applications/Archiving
@@ -105,6 +105,9 @@ magic_rpm_clean.sh
 %{_libdir}/liblzmasdk457.so
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 4.57-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.57-5
 - 为 Magic 3.0 重建
 

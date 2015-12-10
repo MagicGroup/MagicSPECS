@@ -2,7 +2,7 @@ Summary: Access control list utilities
 Summary(zh_CN.UTF-8): 访问控制列表相关工具
 Name: acl
 Version: 2.2.52
-Release: 5%{?dist}
+Release: 7%{?dist}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gawk
 BuildRequires: gettext
@@ -113,7 +113,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libacl.la
 
 chmod 0755 $RPM_BUILD_ROOT/%{_libdir}/libacl.so.*.*.*
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,7 +122,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun -n libacl -p /sbin/ldconfig
 
-%files -f %{name}.lang
+#%%files -f %{name}.lang
+%files
 %defattr(-,root,root,-)
 %{_bindir}/chacl
 %{_bindir}/getfacl
@@ -145,6 +146,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libacl.so.*
 
 %changelog
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.2.52-7
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.2.52-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.2.52-5
 - 为 Magic 3.0 重建
 

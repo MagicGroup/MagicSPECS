@@ -2,7 +2,7 @@ Summary: A file compression and packaging utility compatible with PKZIP
 Summary(zh_CN.UTF-8): 与 PKZIP 兼容的文件压缩和打包工具
 Name: zip
 Version: 3.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: BSD
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -69,6 +69,9 @@ make -f unix/Makefile prefix=$RPM_BUILD_ROOT%{_prefix} \
 %{_mandir}/man1/zipsplit.1*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 3.0-8
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.0-7
 - 为 Magic 3.0 重建
 

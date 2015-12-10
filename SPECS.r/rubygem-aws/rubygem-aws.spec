@@ -3,7 +3,7 @@
 Summary: Ruby gem for all Amazon Web Services
 Name: rubygem-%{gem_name}
 Version: 2.9.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/appoxy/aws
@@ -46,6 +46,9 @@ maintained to track enhancements made by Amazon
 %exclude %{gem_instdir}/aws.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.9.1-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.9.1-4
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:		obmenu
 Version:	1.0
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A graphical menu editor for Openbox
 Summary(zh_CN.UTF-8): Openbox 的图形化菜单编辑器
 Group:		User Interface/Desktops
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.0-12
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0-11
 - 为 Magic 3.0 重建
 

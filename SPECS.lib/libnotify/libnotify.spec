@@ -5,7 +5,7 @@ Summary: Desktop notification library
 Summary(zh_CN.UTF-8): 桌面通知库
 Name: libnotify
 Version:	0.7.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://library.gnome.org/devel/notification-spec/
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0: http://download.gnome.org/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/Notify-0.7.gir
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.7.6-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.6-2
 - 为 Magic 3.0 重建
 

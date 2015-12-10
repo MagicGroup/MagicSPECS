@@ -2,7 +2,7 @@ Summary: Library for error values used by GnuPG components
 Summary(zh_CN.UTF-8): GnuPG 组件使用的错误值
 Name: libgpg-error
 Version: 1.20
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
@@ -103,6 +103,9 @@ exit 0
 %{_mandir}/man1/gpg-error-config.*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.20-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.20-2
 - 更新到 1.20
 

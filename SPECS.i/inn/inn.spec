@@ -4,7 +4,7 @@ Summary: The InterNetNews system, an Usenet news server
 Summary(zh_CN.UTF-8): InterNetNews 系统，一个新闻组服务器
 Name: inn
 Version: 2.6.0
-Release: 0.rc1.1%{?dist}.4
+Release: 0.rc1.1%{?dist}.5
 #see LICENSE file for details
 License: GPLv2+ and BSD and MIT and Public Domain
 Group: System Environment/Daemons
@@ -566,6 +566,9 @@ fi
 %{_mandir}/man1/inews*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.6.0-0.rc1.1.5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.6.0-0.rc1.1.4
 - 为 Magic 3.0 重建
 

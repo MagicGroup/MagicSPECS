@@ -1,6 +1,6 @@
 Name:		libprojectM
 Version:	2.0.1
-Release:	25%{?dist}
+Release:	26%{?dist}
 Summary:	The libraries for the projectM music visualization plugin
 Summary(zh_CN.UTF-8): projectM 音乐可视化插件的库
 Group:		Applications/Multimedia
@@ -106,6 +106,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.0.1-26
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.0.1-25
 - 为 Magic 3.0 重建
 

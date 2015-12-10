@@ -1,7 +1,7 @@
 %define _hardened_build 1
 Name:           bochs
 Version:        2.6.8
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Portable x86 PC emulator
 Summary(zh_CN.UTF-8): 可移植的 X86 PC 仿真器
 Group:          Applications/Emulators
@@ -247,6 +247,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_prefix}/include/bochs/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.6.8-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.6.8-7
 - 为 Magic 3.0 重建
 

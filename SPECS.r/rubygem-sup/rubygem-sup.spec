@@ -3,7 +3,7 @@
 Summary: A console-based email client written in ruby
 Name: rubygem-%{gem_name}
 Version: 0.21.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Applications/Internet
 License: GPLv2+
 URL: http://sup.rubyforge.org/
@@ -109,6 +109,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.21.0-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.21.0-5
 - 为 Magic 3.0 重建
 

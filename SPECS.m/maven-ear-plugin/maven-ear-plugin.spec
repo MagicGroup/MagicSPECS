@@ -1,6 +1,6 @@
 Name:           maven-ear-plugin
 Version:        2.8
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Maven EAR Plugin
 
 Group:          Development/Libraries
@@ -87,6 +87,9 @@ cp -pr target/site/api*/* %{buildroot}%{_javadocdir}/%{name}/
 %{_javadocdir}/%{name}
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.8-9
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.8-8
 - 为 Magic 3.0 重建
 

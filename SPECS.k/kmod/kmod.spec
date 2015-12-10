@@ -1,6 +1,6 @@
 Name:		kmod
 Version:	21
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Linux kernel module management utilities
 
 Group:		System Environment/Kernel
@@ -111,6 +111,9 @@ install -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_sbindir}/weak-modules
 %{_libdir}/libkmod.so
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 21-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 21-5
 - 为 Magic 3.0 重建
 

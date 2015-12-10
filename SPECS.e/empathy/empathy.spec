@@ -17,7 +17,7 @@
 
 Name:		empathy
 Version:	3.12.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Instant Messaging Client for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的即时消息客户端
 
@@ -203,6 +203,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/adium/message-styles/PlanetGNOME.AdiumMessageStyle/Contents/Resources/main.css
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.12.11-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.12.11-3
 - 更新到 3.12.11
 

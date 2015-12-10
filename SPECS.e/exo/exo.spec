@@ -5,7 +5,7 @@
 
 Name:           exo
 Version:        0.10.2
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Application library for the Xfce desktop environment
 
 Group:          System Environment/Libraries
@@ -174,6 +174,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.2-10
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.10.2-9
 - 更新到 0.10.7
 

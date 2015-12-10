@@ -5,7 +5,7 @@
 Summary: Ruby DNS(SEC) implementation
 Name: rubygem-%{gem_name}
 Version: 1.53
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://rubyforge.org/projects/dnsruby/
@@ -75,6 +75,9 @@ sed -i 's/\r//' %{buildroot}%{gem_instdir}/DNSSEC
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.53-12
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.53-11
 - 为 Magic 3.0 重建
 

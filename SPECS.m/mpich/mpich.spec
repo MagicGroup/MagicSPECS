@@ -3,8 +3,8 @@
 Summary:	A high-performance implementation of MPI
 Summary(zh_CN.UTF-8): MPI 的一个高性能实现
 Name:		mpich
-Version: 3.1.3
-Release: 1%{?dist}
+Version: 3.1.4
+Release: 10%{?dist}
 License:	MIT
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -12,13 +12,19 @@ URL:		http://www.mpich.org/
 
 Source0:	http://www.mpich.org/static/downloads/%{version}/%{name}-%{version}.tar.gz
 Source1:	mpich.macros	
+Source2:	mpich.pth.py2
+Source3:	mpich.pth.py3
 Patch0:		mpich-modules.patch
 
 BuildRequires:	gcc-gfortran
 BuildRequires:  hwloc-devel >= 1.8
-%ifnarch s390 s390x aarch64 mips64el
+%ifnarch s390 
 BuildRequires:	valgrind-devel
 %endif
+# For python[23]_sitearch
+BuildRequires:  python2-devel
+BuildRequires:  python3-devel
+BuildRequires:  rpm-mpi-hooks
 Provides:	mpi
 Provides:	mpich2 = 3.0.1
 Obsoletes:	mpich2 < 3.0
@@ -134,15 +140,16 @@ Contains documentations, examples and man-pages for mpich
 %endif
 
 %prep
-%setup -q
-%patch0 -p0 -b .modu
+%autosetup -p0
 
 %build
 %configure	\
 	--enable-sharedlibs=gcc					\
 	--enable-shared						\
+	--enable-static=no					\
 	--enable-lib-depend					\
 	--disable-rpath						\
+	--disable-silent-rules					\
 	--enable-fc						\
 	--with-device=%{selected_channels}			\
 	--with-pm=hydra:gforker					\
@@ -170,9 +177,9 @@ Contains documentations, examples and man-pages for mpich
 #	MPICH_MPICXX_FLAGS="%{m_option} -O2 %{?XFLAGS}"	\
 #	MPICH_MPIFC_FLAGS="%{m_option} -O2 %{?XFLAGS}"	\
 #	MPICH_MPIF77_FLAGS="%{m_option} -O2 %{?XFLAGS}"
-#	--with-openpa-prefix=embedded				\
+#	--with-openpa-prefix=embe%description -l zh_CN.UTF-8ed				\
 
-#	FCFLAGS="%{?opt_fc_fflags} -I%{_fmoddir}/%{name} %{?XFLAGS}"	\
+#	FCFLAGS="%{?opt_fc_fflags} -I%{_fmo%description -l zh_CN.UTF-8ir}/%{name} %{?XFLAGS}"	\
 
 #Try and work around 'unused-direct-shlib-dependency' rpmlint warnning
 sed -i -e 's! -shared ! -Wl,--as-needed\0!g' libtool
@@ -182,18 +189,19 @@ make %{?_smp_mflags} VERBOSE=1
 %install
 make DESTDIR=%{buildroot} install
 
-mv %{buildroot}%{_libdir}/%{name}/lib/pkgconfig %{buildroot}%{_libdir}/
-chmod -x %{buildroot}%{_libdir}/pkgconfig/*.pc
-
-#mkdir -p %{buildroot}/%{_fmoddir}/%{name}
-#mv  %{buildroot}%{_includedir}/%{name}/*.mod %{buildroot}/%{_fmoddir}/%{name}/
+#mkdir -p %{buildroot}/%{_fmo%description -l zh_CN.UTF-8ir}/%{name}
+#mv  %{buildroot}%{_includedir}/%{name}/*.mod %{buildroot}/%{_fmo%description -l zh_CN.UTF-8ir}/%{name}/
 
 # Install the module file
 mkdir -p %{buildroot}%{_sysconfdir}/modulefiles/mpi
-mkdir -p %{buildroot}%{python_sitearch}/%{name}
-cp -pr src/packaging/envmods/mpich.module %{buildroot}%{_sysconfdir}/modulefiles/mpi/%{name}-%{_arch}
-sed -i 's#'%{_bindir}'#'%{_libdir}/%{name}/bin'#;s#@LIBDIR@#'%{_libdir}'#;s#@pysitearch@#'%{python_sitearch}'#;s#@ARCH@#'%{_arch}'#' %{buildroot}%{_sysconfdir}/modulefiles/mpi/%{name}-%{_arch}
-cp -p %{buildroot}%{_sysconfdir}/modulefiles/mpi/%{name}-%{_arch} %{buildroot}%{_sysconfdir}/modulefiles/%{name}-%{_arch}
+sed 's#%{_bindir}#%{_libdir}/%{name}/bin#;
+     s#@LIBDIR@#%{_libdir}/%{name}#;
+     s#@MPINAME@#%{name}#;
+     s#@py2sitearch@#%{python2_sitearch}#;
+     s#@py3sitearch@#%{python3_sitearch}#;
+     s#@ARCH@#%{_arch}#' \
+     <src/packaging/envmods/mpich.module \
+     >%{buildroot}%{_sysconfdir}/modulefiles/mpi/%{name}-%{_arch}
 
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 cat << EOF > %{buildroot}%{_sysconfdir}/profile.d/mpich-%{_arch}.sh
@@ -203,50 +211,88 @@ EOF
 cp -p %{buildroot}%{_sysconfdir}/profile.d/mpich-%{_arch}.{sh,csh}
  
 # Install the RPM macros
-mkdir -p %{buildroot}%{_rpmconfigdir}/macros.d
-cp -p %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/macros.%{name}
+install -pDm0644 %{SOURCE1} %{buildroot}%{_rpmconfigdir}/macros.d/macros.%{name}
 
-find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
-rm -f %{buildroot}%{_libdir}/%{name}/lib/lib{*mpich*,opa,mpl,mpi*}.a
-magic_rpm_clean.sh
+# Install the .pth files
+mkdir -p %{buildroot}%{python2_sitearch}/%{name}
+install -pDm0644 %{SOURCE2} %{buildroot}%{python2_sitearch}/%{name}.pth
+mkdir -p %{buildroot}%{python3_sitearch}/%{name}
+install -pDm0644 %{SOURCE3} %{buildroot}%{python3_sitearch}/%{name}.pth
+
+find %{buildroot} -type f -name "*.la" -delete
 
 %check
-make check
+make check VERBOSE=1
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%doc CHANGES COPYRIGHT README README.envvar RELEASE_NOTES
+%license COPYRIGHT
+%doc CHANGES README README.envvar RELEASE_NOTES
 %dir %{_libdir}/%{name}
 %dir %{_libdir}/%{name}/lib
 %dir %{_libdir}/%{name}/bin
 %{_libdir}/%{name}/lib/*.so.*
 %{_libdir}/%{name}/bin/*
-%dir %{python_sitearch}/%{name}
-#%dir %{_mandir}/%{name}
-#%doc %{_mandir}/%{name}/man1/
+%dir %{python2_sitearch}/%{name}
+%{python2_sitearch}/%{name}.pth
+%dir %{python3_sitearch}/%{name}
+%{python3_sitearch}/%{name}.pth
+%dir %{_mandir}/%{name}
+%doc %{_mandir}/%{name}/man1/
 %{_sysconfdir}/modulefiles/mpi/
-%{_sysconfdir}/modulefiles/%{name}-%{_arch}
 
 %files autoload
 %{_sysconfdir}/profile.d/mpich-%{_arch}.*
 
 %files devel
 %{_includedir}/%{name}-%{_arch}/
-##%{_fmoddir}/%{name}/
+%{_libdir}/%{name}/lib/pkgconfig/
+##%%{_fmo%description -l zh_CN.UTF-8ir}/%%{name}/
 %{_libdir}/%{name}/lib/*.so
-%{_libdir}/pkgconfig/%{name}.pc
-%{_libdir}/pkgconfig/openpa.pc
 %{_rpmconfigdir}/macros.d/macros.%{name}
 
 %files doc
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/doc/
-#%{_mandir}/%{name}/man3/
+%{_mandir}/%{name}/man3/
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 3.1.4-10
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 3.1.4-9
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-8
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-7
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-6
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-4
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-3
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-2
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3.1.4-1
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.1.3-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 26 2014 Liu Di <liudidi@gmail.com> - 3.1.3-1
 - 更新到 3.1.3
 

@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.5.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Lightweight markup language
 Group: Development/Languages
 # README.creole says "the same license as Ruby" and "Copyright (c) 2008", so we
@@ -85,6 +85,9 @@ popd
 %exclude %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.5.0-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.0-7
 - 为 Magic 3.0 重建
 

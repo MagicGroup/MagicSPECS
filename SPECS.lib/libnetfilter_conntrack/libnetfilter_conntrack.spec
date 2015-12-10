@@ -1,6 +1,6 @@
 Name:           libnetfilter_conntrack
 Version:        1.0.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Netfilter conntrack userspace library
 Summary(zh_CN.UTF-8): Netfilter conntrack 用户空间库
 Group:          System Environment/Libraries
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/libnetfilter_conntrack/*.h
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.4-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.4-5
 - 为 Magic 3.0 重建
 

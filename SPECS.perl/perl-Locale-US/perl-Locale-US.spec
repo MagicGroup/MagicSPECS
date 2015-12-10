@@ -1,6 +1,6 @@
 Name:           perl-Locale-US
 Version:	3.04
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Two letter codes for state identification in the United States and vice versa
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.04-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.04-2
 - 为 Magic 3.0 重建
 

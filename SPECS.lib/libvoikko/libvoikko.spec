@@ -1,7 +1,7 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 Name:           libvoikko
 Version: 3.8
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Voikko is a library for spellcheckers and hyphenators
 Summary(zh_CN.UTF-8): 检查拼写和断字的库
 
@@ -138,6 +138,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/%{name}.py*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.8-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.8-2
 - 更新到 3.8
 

@@ -27,7 +27,7 @@ Name:             nss-softokn
 Version:          3.20.0
 # for Rawhide, please always use release >= 2
 # for Fedora release branches, please use release < 2 (1.0, 1.1, ...)
-Release:          4%{?dist}
+Release:          5%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
@@ -399,6 +399,9 @@ done
 %{_includedir}/nss3/shsign.h
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 3.20.0-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.20.0-4
 - 为 Magic 3.0 重建
 

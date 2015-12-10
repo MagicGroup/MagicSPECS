@@ -1,7 +1,7 @@
 
 Name:		perl-GO-TermFinder
 Version:	0.86
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Identify GO nodes that annotate a group of genes with a significant p-value
 License:	MIT
 Group:		Development/Libraries
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT %{__perl_provides}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.86-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.86-2
 - 为 Magic 3.0 重建
 

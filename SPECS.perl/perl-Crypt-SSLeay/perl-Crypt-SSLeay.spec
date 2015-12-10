@@ -1,7 +1,7 @@
 Name:           perl-Crypt-SSLeay
 Summary:        Crypt::SSLeay - OpenSSL glue that provides LWP https support
 Version:	0.73_04
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://www.cpan.org/authors/id/N/NA/NANIS/Crypt-SSLeay-%{version}.tar.gz
@@ -77,6 +77,9 @@ make test
 %{_mandir}/man3/Net::SSL.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.73_04-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.73_04-2
 - 为 Magic 3.0 重建
 

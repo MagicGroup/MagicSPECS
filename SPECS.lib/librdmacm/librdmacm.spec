@@ -1,6 +1,6 @@
 Name: librdmacm
 Version: 1.0.21
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Userspace RDMA Connection Manager
 Summary(zh_CN.UTF-8): 用户空间的 RDMA 连接管理器
 Group: System Environment/Libraries
@@ -105,6 +105,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.21-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.21-2
 - 更新到 1.0.21
 

@@ -2,7 +2,7 @@ Summary: Rendering of internationalized text for SDL (Simple DirectMedia Layer)
 Summary(zh_CN.UTF-8): SDL 渲染国际化文本的库
 Name: SDL_Pango
 Version: 0.1.2
-Release: 23%{?dist}
+Release: 24%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -81,6 +81,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.2-24
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.2-23
 - 为 Magic 3.0 重建
 

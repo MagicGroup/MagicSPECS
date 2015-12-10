@@ -5,7 +5,7 @@
 
 Name:           python-flask
 Version:        0.10.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          1
 Summary:        A micro-framework for Python based on Werkzeug, Jinja 2 and good intentions
 Summary(zh_CN.UTF-8): 基于 Werkzeug, Jinja2 的 Python 微框架
@@ -184,6 +184,9 @@ popd
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:0.10.1-8
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:0.10.1-7
 - 为 Magic 3.0 重建
 

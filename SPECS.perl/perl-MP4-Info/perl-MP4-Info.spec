@@ -7,7 +7,7 @@ Summary: Fetch info from MPEG-4 files
 Summary(zh_CN): 从 MPEG-4 文件中获取信息
 Name: perl-MP4-Info
 Version: 1.13
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -57,6 +57,9 @@ MP4::Info 模块可以用来从 MPEG-4 音频 (AAC) 和视频文件中解压缩�
 %{perl_vendorlib}
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.13-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.13-5
 - 为 Magic 3.0 重建
 

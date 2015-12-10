@@ -1,6 +1,6 @@
 Name:		perl-Module-Package-Au
 Version:	2
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Reusable Module::Install bits
 Group:		Development/Libraries
 License:	CC0
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/Module::Package::Au.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2-6
 - 为 Magic 3.0 重建
 

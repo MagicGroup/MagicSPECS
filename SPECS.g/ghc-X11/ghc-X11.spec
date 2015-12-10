@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.6.1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Haskell binding to the X11 graphics library
 
 License:        BSD
@@ -73,6 +73,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.6.1.2-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.6.1.2-3
 - 为 Magic 3.0 重建
 

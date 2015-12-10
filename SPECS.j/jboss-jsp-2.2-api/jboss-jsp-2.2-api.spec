@@ -3,7 +3,7 @@
 
 Name:             jboss-jsp-2.2-api
 Version:          1.0.1
-Release:          12%{dist}
+Release:          13%{dist}
 Summary:          JavaServer(TM) Pages 2.2 API
 Group:            Development/Libraries
 License:          CDDL or GPLv2 with exceptions
@@ -72,6 +72,9 @@ cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 %doc LICENSE README
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.1-13
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.1-12
 - 为 Magic 3.0 重建
 

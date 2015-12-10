@@ -13,8 +13,8 @@
 Summary: D-BUS message bus
 Name: dbus
 Epoch: 1
-Version:	1.6.18
-Release: 4%{?dist}
+Version:	1.10.4
+Release: 2%{?dist}
 URL: http://www.freedesktop.org/software/dbus/
 #VCS: git:git://git.freedesktop.org/git/dbus/dbus
 Source0: http://dbus.freedesktop.org/releases/dbus/%{name}-%{version}.tar.gz
@@ -45,11 +45,6 @@ BuildRequires: pkgconfig(dbus-glib-1)
 BuildRequires: dbus-python
 BuildRequires: pygobject2
 BuildRequires: /usr/bin/Xvfb
-
-# FIXME this should be upstreamed; need --daemon-bindir=/bin and --bindir=/usr/bin or something?
-Patch0: bindir.patch
-Patch1: 0001-name-test-Don-t-run-test-autolaunch-if-we-don-t-have.patch
-Patch2: avoid-undefined-7c00ed22d9b5c33f5b33221e906946b11a9bde3b.patch
 
 %description
 D-BUS is a system for sending messages between applications. It is
@@ -93,10 +88,6 @@ in this separate package so server systems need not install X.
 
 %prep
 %setup -q -n %{name}-%{version}
-
-%patch0 -p1 -b .bindir
-%patch1 -p1
-%patch2 -p1
 
 %build
 if test -f autogen.sh; then env NOCONFIGURE=1 ./autogen.sh; else autoreconf -v -f -i; fi
@@ -189,8 +180,8 @@ fi
 
 %dir %{_sysconfdir}/dbus-1
 %config %{_sysconfdir}/dbus-1/*.conf
-%dir %{_sysconfdir}/dbus-1/system.d
-%dir %{_sysconfdir}/dbus-1/session.d
+#%dir %{_sysconfdir}/dbus-1/system.d
+#%dir %{_sysconfdir}/dbus-1/session.d
 %ghost %dir %{_localstatedir}/run/dbus
 %dir %{_localstatedir}/lib/dbus/
 /bin/dbus-daemon
@@ -198,6 +189,14 @@ fi
 /bin/dbus-cleanup-sockets
 /bin/dbus-monitor
 /bin/dbus-uuidgen
+/bin/dbus-run-session
+/bin/dbus-test-tool
+/bin/dbus-update-activation-environment
+%{_datadir}/dbus-1/session.conf
+%{_datadir}/dbus-1/system.conf
+%{_mandir}/man1/dbus-run-session.1.gz
+%{_mandir}/man1/dbus-test-tool.1.gz
+%{_mandir}/man1/dbus-update-activation-environment.1.gz
 %{_mandir}/man*/dbus-cleanup-sockets.1.gz
 %{_mandir}/man*/dbus-daemon.1.gz
 %{_mandir}/man*/dbus-monitor.1.gz
@@ -244,6 +243,12 @@ fi
 %{_includedir}/*
 
 %changelog
+* Sat Nov 28 2015 Liu Di <liudidi@gmail.com> - 1:1.10.4-2
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:1.6.18-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.6.18-4
 - 为 Magic 3.0 重建
 

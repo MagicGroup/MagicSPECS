@@ -4,22 +4,14 @@
 
 Summary:	A 2D graphics library
 Name:		cairo
-Version:	1.14.2
-Release:	4%{?dist}
+Version:	1.14.4
+Release:	1%{?dist}
 URL:		http://cairographics.org
 Source0:	http://cairographics.org/releases/%{name}-%{version}.tar.xz
 License:	LGPLv2 or MPLv1.1
 Group:		System Environment/Libraries
 
-Patch0:		0001-xlib-Don-t-crash-when-swapping-a-0-sized-glyph.patch
-Patch1:		0002-xcb-Don-t-crash-when-swapping-a-0-sized-glyph.patch
 Patch3:         cairo-multilib.patch
-#
-# Fix for dot crashes
-# https://bugzilla.redhat.com/show_bug.cgi?id=1183242
-# Already upstreamed: 
-# http://cgit.freedesktop.org/cairo/patch/src/cairo-image-compositor.c?id=5c82d91a5e15d29b1489dcb413b24ee7fdf59934
-Patch4:         cairo-fix_crash_in_fill_xrgb32_lerp_opaque_spans.patch
 
 BuildRequires: pkgconfig
 BuildRequires: libXrender-devel
@@ -94,10 +86,7 @@ This package contains tools for working with the cairo graphics library.
 
 %prep
 %setup -q
-%patch0 -p1 -b .xlib-swap
-%patch1 -p1 -b .xcb-swap
 %patch3 -p1 -b .multilib
-%patch4 -p1
 
 %build
 %configure --disable-static	\
@@ -181,6 +170,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/cairo/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.14.2-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.14.2-4
 - 更新到 1.14.2
 

@@ -1,6 +1,6 @@
 Name:           perl-YAML-LibYAML
 Version:	0.59
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl YAML Serialization using XS and libyaml
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/YAML::LibYAML.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.59-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.59-2
 - 为 Magic 3.0 重建
 

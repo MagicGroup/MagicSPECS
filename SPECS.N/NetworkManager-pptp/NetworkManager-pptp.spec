@@ -6,7 +6,7 @@ Summary(zh_CN.UTF-8): NetWorkManager 的 PPTP VPN 插件
 Name:      NetworkManager-pptp
 Epoch:     1
 Version:	1.0.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:   GPLv2+
 URL:       http://www.gnome.org/projects/NetworkManager/
 Group:     System Environment/Base
@@ -100,6 +100,9 @@ magic_rpm_clean.sh
 %{_datadir}/gnome-vpn-properties/pptp/nm-pptp-dialog.ui
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:1.0.6-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.0.6-2
 - 更新到 1.0.6
 

@@ -6,7 +6,7 @@
 
 Name: libtevent
 Version: 0.9.25
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 Summary: The tevent library
@@ -134,6 +134,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.25-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.25-2
 - 为 Magic 3.0 重建
 

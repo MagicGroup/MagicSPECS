@@ -5,7 +5,7 @@ diff -ur imake-1.0.7.orig/imake.c imake-1.0.7/imake.c
  
    static const char*   suse = "/etc/SuSE-release";
    static const char* redhat = "/etc/redhat-release";
-+  static const char* magic  = "/ect/magic-release";
++  static const char* magic  = "/etc/magic-release";
    static const char* debian = "/etc/debian_version";
  
    fprintf (inFile, "%s\n", "#define LinuxUnknown    0");

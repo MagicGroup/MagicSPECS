@@ -1,6 +1,6 @@
 Name:           goocanvas
 Version:        1.0.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A new canvas widget for GTK+ that uses cairo for drawing
 Summary(zh_CN.UTF-8): 使用 cairo 绘画的 GTK+ 下的新画布控件
 
@@ -38,7 +38,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # remove static libraries and libtool droppings
 rm -f $RPM_BUILD_ROOT/%{_libdir}/lib%{name}.{a,la}
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -46,7 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %post   -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README TODO
 %{_libdir}/lib%{name}.so\.*
@@ -72,6 +72,9 @@ These are the files used for development.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.0-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.0-5
 - 为 Magic 3.0 重建
 

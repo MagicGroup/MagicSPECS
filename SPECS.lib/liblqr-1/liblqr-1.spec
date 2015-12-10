@@ -1,6 +1,6 @@
 Name:           liblqr-1
 Version:        0.4.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        LiquidRescale library
 Summary(zh_CN.UTF-8): LiquidRescale 库
 Group:          System Environment/Libraries
@@ -71,6 +71,9 @@ find $RPM_BUILD_ROOT -name \*.la -exec %{__rm} -f {} \;
 %{_libdir}/pkgconfig/lqr-1.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.4.2-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.2-3
 - 为 Magic 3.0 重建
 

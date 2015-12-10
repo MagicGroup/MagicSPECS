@@ -5,7 +5,7 @@ Summary: A PostScript interpreter and renderer
 Name: ghostscript
 Version: %{gs_ver}
 
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 # Included CMap data is Redistributable, no modification permitted,
 # see http://bugzilla.redhat.com/487510
@@ -342,6 +342,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgs.so
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 9.15-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 9.15-8
 - 为 Magic 3.0 重建
 

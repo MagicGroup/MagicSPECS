@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		1.0.5
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:		Internationalization support for TDE [Trinity]
 Summary(zh_CN.UTF-8): K3B 的国际化支持
 Group:			Applications/Archiving
@@ -227,6 +227,9 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:1.0.5-1.2
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:1.0.5-1.1
 - 为 Magic 3.0 重建
 

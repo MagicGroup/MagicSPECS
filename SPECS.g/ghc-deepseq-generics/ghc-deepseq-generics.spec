@@ -9,7 +9,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Generics-based normal form reduction for deepseq
 
 License:        BSD
@@ -95,6 +95,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.1.2-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.1.2-3
 - 为 Magic 3.0 重建
 

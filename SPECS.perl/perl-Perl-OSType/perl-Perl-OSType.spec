@@ -3,7 +3,7 @@
 
 Name:		perl-Perl-OSType
 Version:	1.009
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Map Perl operating system names to generic types
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -94,6 +94,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Perl::OSType.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.009-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.009-2
 - 更新到 1.009
 

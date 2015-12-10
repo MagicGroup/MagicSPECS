@@ -1,6 +1,6 @@
 Name:           libgdither
 Version:        0.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Library for applying dithering to PCM audio sources
 Summary(zh_CN.UTF-8): 为 PCM 音源添加抖动的库
 
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libgdither.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.6-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6-8
 - 为 Magic 3.0 重建
 

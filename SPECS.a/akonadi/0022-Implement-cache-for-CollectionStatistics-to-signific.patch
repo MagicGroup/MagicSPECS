@@ -1,0 +1,691 @@
+From c24329bb570ee16c033228588e6d22b0f6000f95 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Vr=C3=A1til?= <dvratil@redhat.com>
+Date: Fri, 5 Dec 2014 18:23:33 +0100
+Subject: [PATCH 22/30] Implement cache for CollectionStatistics to
+ significantly reduce amount of SQL queries
+
+Collection statistics are being requested extremely often (basically whenever
+a PimItem is changed, or when a Collection itself is changed), and it's always
+requested by at least 5 or so clients (including agents that listen to
+everything).
+
+To decrease the load on database we now cache the Collection statistics and
+we only invalidate a cache entry when respective collection (or it's content)
+is changed. The invalidation is invoked from NotificationCollector, which is
+basically a hack, but performance-wise it's the best place to avoid additional
+expensive queries.
+
+This patch also optimizes the SQL query needed to get up-to-date statistics.
+We now have only one query to get both full count and read items count, which
+a bit is faster as the database only has to deal with one large JOIN.
+
+Thanks to the cache the number of SQL queries for Collection statistics have
+reduced by 70%-80%, and average query duration is now between 20 and 80ms
+depending on average collection size and database used.
+---
+ server/CMakeLists.txt                        |   1 +
+ server/src/handler/link.cpp                  |   2 +-
+ server/src/handler/merge.cpp                 |   4 +-
+ server/src/handler/select.cpp                |  14 ++--
+ server/src/handler/status.cpp                |  20 ++---
+ server/src/handlerhelper.cpp                 |  81 ++------------------
+ server/src/handlerhelper.h                   |  22 ------
+ server/src/storage/collectionstatistics.cpp  | 108 +++++++++++++++++++++++++++
+ server/src/storage/collectionstatistics.h    |  70 +++++++++++++++++
+ server/src/storage/datastore.cpp             |   8 +-
+ server/src/storage/datastore.h               |   6 +-
+ server/src/storage/notificationcollector.cpp |   8 ++
+ server/tests/unittest/fakedatastore.cpp      |   8 +-
+ server/tests/unittest/fakedatastore.h        |   2 +
+ 14 files changed, 224 insertions(+), 130 deletions(-)
+ create mode 100644 server/src/storage/collectionstatistics.cpp
+ create mode 100644 server/src/storage/collectionstatistics.h
+
+diff --git a/server/CMakeLists.txt b/server/CMakeLists.txt
+index 275938d..f0e0093 100644
+--- a/server/CMakeLists.txt
++++ b/server/CMakeLists.txt
+@@ -161,6 +161,7 @@ set(libakonadiprivate_SRCS
+   src/search/searchmanager.cpp
+ 
+   src/storage/collectionqueryhelper.cpp
++  src/storage/collectionstatistics.cpp
+   src/storage/entity.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
+   ${CMAKE_CURRENT_BINARY_DIR}/akonadischema.cpp
+diff --git a/server/src/handler/link.cpp b/server/src/handler/link.cpp
+index ce18e47..227de11 100644
+--- a/server/src/handler/link.cpp
++++ b/server/src/handler/link.cpp
+@@ -25,10 +25,10 @@
+ #include "storage/itemqueryhelper.h"
+ #include "storage/transaction.h"
+ #include "storage/selectquerybuilder.h"
++#include "storage/collectionqueryhelper.h"
+ #include "entities.h"
+ 
+ #include "imapstreamparser.h"
+-#include <storage/collectionqueryhelper.h>
+ 
+ using namespace Akonadi::Server;
+ 
+diff --git a/server/src/handler/merge.cpp b/server/src/handler/merge.cpp
+index c26917d..5149916 100644
+--- a/server/src/handler/merge.cpp
++++ b/server/src/handler/merge.cpp
+@@ -88,7 +88,7 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
+       if ( !itemFlags.removed.isEmpty() ) {
+         const Flag::List removedFlags = HandlerHelper::resolveFlags( itemFlags.removed );
+         DataStore::self()->removeItemsFlags( PimItem::List() << currentItem, removedFlags,
+-                                             &flagsRemoved, true );
++                                             &flagsRemoved, col, true );
+       }
+ 
+       if ( flagsAdded || flagsRemoved ) {
+@@ -98,7 +98,7 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
+       bool flagsChanged = false;
+       const Flag::List flags = HandlerHelper::resolveFlags( itemFlags.added );
+       DataStore::self()->setItemsFlags( PimItem::List() << currentItem, flags,
+-                                        &flagsChanged, true );
++                                        &flagsChanged, col, true );
+       if ( flagsChanged ) {
+         mChangedParts << AKONADI_PARAM_FLAGS;
+       }
+diff --git a/server/src/handler/select.cpp b/server/src/handler/select.cpp
+index 1c5dd8a..f1ecc44 100644
+--- a/server/src/handler/select.cpp
++++ b/server/src/handler/select.cpp
+@@ -27,6 +27,7 @@
+ #include "handlerhelper.h"
+ #include "imapstreamparser.h"
+ #include "storage/selectquerybuilder.h"
++#include "storage/collectionstatistics.h"
+ #include "commandcontext.h"
+ 
+ #include "response.h"
+@@ -96,19 +97,14 @@ bool Select::parseStream()
+     response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String( " " ) ).toLatin1() + ")" );
+     Q_EMIT responseAvailable( response );
+ 
+-    const int itemCount = HandlerHelper::itemCount( col );
+-    if ( itemCount < 0 ) {
++    const CollectionStatistics::Statistics stats = CollectionStatistics::instance()->statistics(col);
++    if ( stats.count == -1 ) {
+       return failureResponse( "Unable to determine item count" );
+     }
+-    response.setString( QByteArray::number( itemCount ) + " EXISTS" );
++    response.setString( QByteArray::number( stats.count ) + " EXISTS" );
+     Q_EMIT responseAvailable( response );
+ 
+-    int readCount = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
+-                                                                          << QLatin1String( AKONADI_FLAG_IGNORED ) );
+-    if ( readCount < 0 || itemCount < readCount ) {
+-      return failureResponse( "Unable to retrieve unseen count" );
+-    }
+-    response.setString( "OK [UNSEEN " + QByteArray::number( itemCount - readCount ) + "] Message 0 is first unseen" );
++    response.setString( "OK [UNSEEN " + QByteArray::number( stats.count - stats.read ) + "] Message 0 is first unseen" );
+     Q_EMIT responseAvailable( response );
+   }
+ 
+diff --git a/server/src/handler/status.cpp b/server/src/handler/status.cpp
+index 8c6823d..283532c 100644
+--- a/server/src/handler/status.cpp
++++ b/server/src/handler/status.cpp
+@@ -25,6 +25,7 @@
+ #include "storage/datastore.h"
+ #include "storage/entity.h"
+ #include "storage/countquerybuilder.h"
++#include "storage/collectionstatistics.h"
+ 
+ #include "response.h"
+ #include "handlerhelper.h"
+@@ -62,9 +63,9 @@ bool Status::parseStream()
+     // Responses:
+     // REQUIRED untagged responses: STATUS
+ 
+-  qint64 itemCount, itemSize;
+-  if ( !HandlerHelper::itemStatistics( col, itemCount, itemSize ) ) {
+-    return failureResponse( "Failed to query statistics." );
++  const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
++  if (stats.count == -1) {
++      return failureResponse( "Failed to query statistics." );
+   }
+ 
+     // build STATUS response
+@@ -72,7 +73,7 @@ bool Status::parseStream()
+     // MESSAGES - The number of messages in the mailbox
+   if ( attributeList.contains( AKONADI_ATTRIBUTE_MESSAGES ) ) {
+     statusResponse += AKONADI_ATTRIBUTE_MESSAGES " ";
+-    statusResponse += QByteArray::number( itemCount );
++    statusResponse += QByteArray::number( stats.count );
+   }
+ 
+   if ( attributeList.contains( AKONADI_ATTRIBUTE_UNSEEN ) ) {
+@@ -80,21 +81,14 @@ bool Status::parseStream()
+       statusResponse += " ";
+     }
+     statusResponse += AKONADI_ATTRIBUTE_UNSEEN " ";
+-
+-    // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
+-    const int count = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
+-                                                                            << QLatin1String( AKONADI_FLAG_IGNORED ) );
+-    if ( count < 0 ) {
+-      return failureResponse( "Unable to retrieve unread count" );
+-    }
+-    statusResponse += QByteArray::number( itemCount - count );
++    statusResponse += QByteArray::number( stats.count - stats.read );
+   }
+   if ( attributeList.contains( AKONADI_PARAM_SIZE ) ) {
+     if ( !statusResponse.isEmpty() ) {
+       statusResponse += " ";
+     }
+     statusResponse += AKONADI_PARAM_SIZE " ";
+-    statusResponse += QByteArray::number( itemSize );
++    statusResponse += QByteArray::number( stats.size );
+   }
+ 
+   Response response;
+diff --git a/server/src/handlerhelper.cpp b/server/src/handlerhelper.cpp
+index 82347b4..39583ce 100644
+--- a/server/src/handlerhelper.cpp
++++ b/server/src/handlerhelper.cpp
+@@ -22,6 +22,7 @@
+ #include "storage/countquerybuilder.h"
+ #include "storage/datastore.h"
+ #include "storage/selectquerybuilder.h"
++#include "storage/collectionstatistics.h"
+ #include "storage/queryhelper.h"
+ #include "libs/imapparser_p.h"
+ #include "libs/protocol_p.h"
+@@ -78,74 +79,6 @@ QString HandlerHelper::pathForCollection( const Collection &col )
+   return parts.join( QLatin1String( "/" ) );
+ }
+ 
+-bool HandlerHelper::itemStatistics( const Collection &col, qint64 &count, qint64 &size )
+-{
+-  QueryBuilder qb( PimItem::tableName() );
+-  qb.addAggregation( PimItem::idColumn(), QLatin1String( "count" ) );
+-  qb.addAggregation( PimItem::sizeColumn(), QLatin1String( "sum" ) );
+-
+-  if ( col.isVirtual() ) {
+-    qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+-                CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
+-    qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
+-  } else {
+-    qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
+-  }
+-
+-  if ( !qb.exec() ) {
+-    return false;
+-  }
+-  if ( !qb.query().next() ) {
+-    akError() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
+-    return false;
+-  }
+-  count = qb.query().value( 0 ).toLongLong();
+-  size = qb.query().value( 1 ).toLongLong();
+-  return true;
+-}
+-
+-int HandlerHelper::itemWithFlagsCount( const Collection &col, const QStringList &flags )
+-{
+-  CountQueryBuilder qb( PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct );
+-  qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
+-              PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
+-  if ( col.isVirtual() ) {
+-    qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+-                CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
+-    qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
+-  } else {
+-    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
+-  }
+-  Query::Condition cond( Query::Or );
+-  // We use the below instead of an inner join in the query above because postgres seems
+-  // to struggle to optimize the two inner joins, despite having indices that should
+-  // facilitate that. This exploits the fact that the Flag::retrieveByName is fast because
+-  // it hits an in-memory cache.
+-  Q_FOREACH ( const QString &flag, flags ) {
+-    const Flag f = Flag::retrieveByName( flag );
+-    if (!f.isValid()) {
+-      // since we OR this condition, we can skip invalid flags to speed up the query
+-      continue;
+-    }
+-    cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, f.id() );
+-  }
+-  qb.addCondition( cond );
+-  if ( !qb.exec() ) {
+-    return -1;
+-  }
+-  return qb.result();
+-}
+-
+-int HandlerHelper::itemCount( const Collection &col )
+-{
+-  CountQueryBuilder qb( PimItem::tableName() );
+-  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
+-  if ( !qb.exec() ) {
+-    return -1;
+-  }
+-  return qb.result();
+-}
+-
+ int HandlerHelper::parseCachePolicy( const QByteArray &data, Collection &col, int start, bool *changed )
+ {
+   bool inheritChanged = false;
+@@ -233,14 +166,12 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
+   b += " " AKONADI_PARAM_VIRTUAL " " + QByteArray::number( col.isVirtual() ) + ' ';
+ 
+   if ( includeStatistics ) {
+-    qint64 itemCount, itemSize;
+-    if ( itemStatistics( col, itemCount, itemSize ) ) {
+-      b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number( itemCount ) + ' ';
+-      // itemWithFlagCount is twice as fast as itemWithoutFlagCount, so emulated that...
++    const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
++    if (stats.count > -1) {
++      b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number( stats.count ) + ' ';
+       b += AKONADI_ATTRIBUTE_UNSEEN " ";
+-      b += QByteArray::number( itemCount - itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
+-                                                                                  << QLatin1String( AKONADI_FLAG_IGNORED ) ) );
+-      b += " " AKONADI_PARAM_SIZE " " + QByteArray::number( itemSize ) + ' ';
++      b += QByteArray::number( stats.count - stats.read) ;
++      b += " " AKONADI_PARAM_SIZE " " + QByteArray::number( stats.size ) + ' ';
+     }
+   }
+ 
+diff --git a/server/src/handlerhelper.h b/server/src/handlerhelper.h
+index 22e6e1c..cf9ac22 100644
+--- a/server/src/handlerhelper.h
++++ b/server/src/handlerhelper.h
+@@ -52,28 +52,6 @@ class HandlerHelper
+     static QString pathForCollection( const Collection &col );
+ 
+     /**
+-      Returns the amount of existing items in the given collection.
+-      @return -1 on error
+-    */
+-    static int itemCount( const Collection &col );
+-
+-    /**
+-     * Queries for collection statistics.
+-     * @param col The collection to query.
+-     * @param count The total amount of items in this collection.
+-     * @param size The size of all items in this collection.
+-     * @return @c false on a query error, @c true otherwise
+-     */
+-    static bool itemStatistics( const Collection &col, qint64 &count, qint64 &size );
+-
+-    /**
+-      Returns the amount of existing items in the given collection
+-      which have a given flag set.
+-      @return -1 on error.
+-    */
+-    static int itemWithFlagsCount( const Collection &col, const QStringList &flags );
+-
+-    /**
+       Parse cache policy and update the given Collection object accoordingly.
+       @param changed Indicates whether or not the cache policy already available in @p col
+       has actually changed
+diff --git a/server/src/storage/collectionstatistics.cpp b/server/src/storage/collectionstatistics.cpp
+new file mode 100644
+index 0000000..85ee449
+--- /dev/null
++++ b/server/src/storage/collectionstatistics.cpp
+@@ -0,0 +1,108 @@
++/*
++ * Copyright (C) 2014  Daniel Vrátil <dvratil@redhat.com>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ *
++ */
++
++#include "collectionstatistics.h"
++#include "querybuilder.h"
++#include "countquerybuilder.h"
++#include "akdebug.h"
++#include "entities.h"
++
++#include <libs/protocol_p.h>
++
++#include <QDateTime>
++
++using namespace Akonadi::Server;
++
++CollectionStatistics *CollectionStatistics::sInstance = 0;
++
++CollectionStatistics* CollectionStatistics::instance()
++{
++    static QMutex lock;
++    lock.lock();
++    if (sInstance == 0) {
++        sInstance = new CollectionStatistics();
++    }
++    lock.unlock();
++    return sInstance;
++}
++
++void CollectionStatistics::invalidateCollection(const Collection &col)
++{
++    QMutexLocker lock(&mCacheLock);
++    mCache.remove(col.id());
++}
++
++const CollectionStatistics::Statistics& CollectionStatistics::statistics(const Collection &col)
++{
++    QMutexLocker lock(&mCacheLock);
++    auto it = mCache.find(col.id());
++    if (it == mCache.constEnd()) {
++        it = mCache.insert(col.id(), getCollectionStatistics(col));
++    }
++    return it.value();
++}
++
++CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(const Collection &col)
++{
++    QueryBuilder qb(PimItem::tableName());
++    // COUNT(DISTINCT PimItemTable.id)
++    qb.addAggregation(QString::fromLatin1("DISTINCT %1")
++                          .arg(PimItem::idFullColumnName()),
++                      QLatin1String("count"));
++    // SUM(PimItemTable.size)
++    qb.addAggregation(PimItem::sizeFullColumnName(), QLatin1String("sum"));
++    // SUM(CASE WHEN FlagTable.name IN ('\SEEN', '$IGNORED') THEN 1 ELSE 0 END)
++    // This allows us to get read messages count in a single query with the other
++    // statistics. It is much than doing two queries, because the database
++    // only has to calculate the JOINs once.
++    //
++    // Flag::retrieveByName() will hit the Entity cache, which allows us to avoid
++    // a second JOIN with FlagTable, which PostgreSQL seems to struggle to optimize.
++    Query::Condition cond(Query::Or);
++    cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(),
++                           Query::Equals,
++                           Flag::retrieveByName(QLatin1String(AKONADI_FLAG_SEEN)).id());
++    cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(),
++                           Query::Equals,
++                           Flag::retrieveByName(QLatin1String(AKONADI_FLAG_IGNORED)).id());
++    Query::Case caseStmt(cond, QLatin1String("1"), QLatin1String("0"));
++    qb.addAggregation(caseStmt, QLatin1String("sum"));
++
++    qb.addJoin(QueryBuilder::LeftJoin, PimItemFlagRelation::tableName(),
++               PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());
++    if (col.isVirtual()) {
++        qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
++                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
++        qb.addValueCondition(CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id());
++    } else {
++        qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, col.id());
++    }
++
++    if (!qb.exec()) {
++        return { -1, -1, -1 };
++    }
++    if (!qb.query().next()) {
++        akError() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
++        return { -1, -1, -1 };
++    }
++
++    return { qb.query().value(0).toLongLong(),
++             qb.query().value(1).toLongLong(),
++             qb.query().value(2).toLongLong() };
++}
+diff --git a/server/src/storage/collectionstatistics.h b/server/src/storage/collectionstatistics.h
+new file mode 100644
+index 0000000..2c0af6a
+--- /dev/null
++++ b/server/src/storage/collectionstatistics.h
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2014  Daniel Vrátil <dvratil@redhat.com>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
++ *
++ */
++
++#ifndef AKONADI_SERVER_COLLECTIONSTATISTICS_H
++#define AKONADI_SERVER_COLLECTIONSTATISTICS_H
++
++class QMutex;
++
++#include <QHash>
++#include <QMutex>
++
++namespace Akonadi {
++namespace Server {
++
++class Collection;
++
++/**
++ * Provides cache for collection statistics
++ *
++ * Collection statistics are requested very often, so to take some load from the
++ * database we cache the results until the statistics are invalidated (see
++ * NotificationCollector, which takes care for invalidating the statistics).
++ *
++ * The cache (together with optimization of the actual SQL query) seems to
++ * massively improve initial folder listing on system start (when IO and CPU loads
++ * are very high).
++ */
++class CollectionStatistics
++{
++public:
++    struct Statistics {
++        qint64 count;
++        qint64 size;
++        qint64 read;
++    };
++
++    static CollectionStatistics* instance();
++
++    const Statistics& statistics(const Collection &col);
++    void invalidateCollection(const Collection &col);
++
++private:
++    Statistics getCollectionStatistics(const Collection &col);
++
++    QMutex mCacheLock;
++    QHash<qint64, Statistics> mCache;
++
++    static CollectionStatistics *sInstance;
++};
++
++} // namespace Server
++} // namespace Akonadi
++
++#endif // AKONADI_SERVER_COLLECTIONSTATISTICS_H
+diff --git a/server/src/storage/datastore.cpp b/server/src/storage/datastore.cpp
+index 304f0e8..0983d84 100644
+--- a/server/src/storage/datastore.cpp
++++ b/server/src/storage/datastore.cpp
+@@ -209,7 +209,7 @@ DataStore *DataStore::self()
+ /* --- ItemFlags ----------------------------------------------------- */
+ 
+ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
+-                               bool *flagsChanged, bool silent )
++                               bool *flagsChanged, const Collection &col, bool silent )
+ {
+   QSet<QByteArray> removedFlags;
+   QSet<QByteArray> addedFlags;
+@@ -258,7 +258,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
+   }
+ 
+   if ( !silent && ( !addedFlags.isEmpty() || !removedFlags.isEmpty() ) ) {
+-    mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
++    mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags, col );
+   }
+ 
+   setBoolPtr( flagsChanged, ( addedFlags != removedFlags ) );
+@@ -361,7 +361,7 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
+ }
+ 
+ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
+-                                  bool *flagsChanged, bool silent )
++                                  bool *flagsChanged, const Collection &col, bool silent )
+ {
+   QSet<QByteArray> removedFlags;
+   QVariantList itemsIds;
+@@ -393,7 +393,7 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
+   if ( qb.query().numRowsAffected() != 0 ) {
+     setBoolPtr( flagsChanged, true );
+     if ( !silent ) {
+-      mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
++      mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags, col );
+     }
+   }
+ 
+diff --git a/server/src/storage/datastore.h b/server/src/storage/datastore.h
+index 395b227..a2d8a42 100644
+--- a/server/src/storage/datastore.h
++++ b/server/src/storage/datastore.h
+@@ -119,10 +119,12 @@ class DataStore : public QObject
+     static DataStore *self();
+ 
+     /* --- ItemFlags ----------------------------------------------------- */
+-    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0, bool silent = false );
++    virtual bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
++                                bool *flagsChanged = 0, const Collection &col = Collection(), bool silent = false );
+     virtual bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0,
+                                    bool checkIfExists = true, const Collection &col = Collection(), bool silent = false );
+-    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0, bool silent = false );
++    virtual bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0,
++                                   const Collection &collection = Collection(), bool silent = false );
+ 
+     /* --- ItemTags ----------------------------------------------------- */
+     virtual bool setItemsTags( const PimItem::List &items, const Tag::List &tags, bool *tagsChanged = 0, bool silent = false );
+diff --git a/server/src/storage/notificationcollector.cpp b/server/src/storage/notificationcollector.cpp
+index 67f57d1..dbc7883 100644
+--- a/server/src/storage/notificationcollector.cpp
++++ b/server/src/storage/notificationcollector.cpp
+@@ -20,6 +20,7 @@
+ #include "notificationcollector.h"
+ #include "storage/datastore.h"
+ #include "storage/entity.h"
++#include "storage/collectionstatistics.h"
+ #include "handlerhelper.h"
+ #include "cachecleaner.h"
+ #include "intervalcheck.h"
+@@ -133,6 +134,7 @@ void NotificationCollector::collectionChanged( const Collection &collection,
+   if ( AkonadiServer::instance()->intervalChecker() ) {
+     AkonadiServer::instance()->intervalChecker()->collectionAdded( collection.id() );
+   }
++  CollectionStatistics::instance()->invalidateCollection(collection);
+   collectionNotification( NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
+ }
+ 
+@@ -159,6 +161,8 @@ void NotificationCollector::collectionRemoved( const Collection &collection,
+   if ( AkonadiServer::instance()->intervalChecker() ) {
+     AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
+   }
++  CollectionStatistics::instance()->invalidateCollection(collection);
++
+   collectionNotification( NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource );
+ }
+ 
+@@ -183,6 +187,8 @@ void NotificationCollector::collectionUnsubscribed( const Collection &collection
+   if ( AkonadiServer::instance()->intervalChecker() ) {
+     AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
+   }
++  CollectionStatistics::instance()->invalidateCollection(collection);
++
+   collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
+ }
+ 
+@@ -282,6 +288,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
+     copy.setParentCollection( iter.key() );
+     copy.setResource( resource );
+ 
++    CollectionStatistics::instance()->invalidateCollection(Collection::retrieveById(iter.key()));
+     dispatchNotification( copy );
+   }
+ 
+@@ -304,6 +311,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
+   }
+   msg.setResource( res );
+ 
++  CollectionStatistics::instance()->invalidateCollection(col);
+   dispatchNotification( msg );
+ }
+ 
+diff --git a/server/tests/unittest/fakedatastore.cpp b/server/tests/unittest/fakedatastore.cpp
+index 12214fa..43ef7e6 100644
+--- a/server/tests/unittest/fakedatastore.cpp
++++ b/server/tests/unittest/fakedatastore.cpp
+@@ -91,13 +91,15 @@ bool FakeDataStore::init()
+ bool FakeDataStore::setItemsFlags( const PimItem::List &items,
+                                    const QVector<Flag> &flags,
+                                    bool *flagsChanged,
++                                   const Collection &col,
+                                    bool silent )
+ {
+   mChanges.insert( QLatin1String( "setItemsFlags" ),
+                    QVariantList() << QVariant::fromValue( items )
+                                   << QVariant::fromValue( flags )
++                                  << QVariant::fromValue( col )
+                                   << silent );
+-  return DataStore::setItemsFlags( items, flags, flagsChanged, silent );
++  return DataStore::setItemsFlags( items, flags, flagsChanged, col, silent );
+ }
+ 
+ bool FakeDataStore::appendItemsFlags( const PimItem::List &items,
+@@ -119,13 +121,15 @@ bool FakeDataStore::appendItemsFlags( const PimItem::List &items,
+ bool FakeDataStore::removeItemsFlags( const PimItem::List &items,
+                                       const QVector<Flag> &flags,
+                                       bool *flagsChanged,
++                                      const Collection &col,
+                                       bool silent )
+ {
+   mChanges.insert( QLatin1String( "removeItemsFlags" ),
+                    QVariantList() << QVariant::fromValue( items )
+                                   << QVariant::fromValue( flags )
++                                  << QVariant::fromValue( col )
+                                   << silent );
+-  return DataStore::removeItemsFlags( items, flags, flagsChanged, silent );
++  return DataStore::removeItemsFlags( items, flags, flagsChanged, col, silent );
+ }
+ 
+ 
+diff --git a/server/tests/unittest/fakedatastore.h b/server/tests/unittest/fakedatastore.h
+index 62c5b75..cd9ab13 100644
+--- a/server/tests/unittest/fakedatastore.h
++++ b/server/tests/unittest/fakedatastore.h
+@@ -41,6 +41,7 @@ class FakeDataStore: public DataStore
+     virtual bool setItemsFlags( const PimItem::List &items,
+                                 const QVector<Flag> &flags,
+                                 bool *flagsChanged = 0,
++                                const Collection &col = Collection(),
+                                 bool silent = false );
+     virtual bool appendItemsFlags( const PimItem::List &items,
+                                    const QVector<Flag> &flags,
+@@ -51,6 +52,7 @@ class FakeDataStore: public DataStore
+     virtual bool removeItemsFlags( const PimItem::List &items,
+                                    const QVector<Flag> &flags,
+                                    bool *flagsChanged = 0,
++                                   const Collection &col = Collection(),
+                                    bool silent = false );
+ 
+     virtual bool setItemsTags( const PimItem::List &items,
+-- 
+2.1.0
+

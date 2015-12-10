@@ -1,8 +1,8 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-gsl
-Version: 1.18.5
-Release: 2%{?dist}
+Version: 1.19.0
+Release: 1%{?dist}
 Summary:        Interface to GSL (GNU scientific library) for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 GSL (GNU 科学库) 接口
 License:        GPLv2
@@ -80,6 +80,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.18.5-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.18.5-2
 - 更新到 1.18.5
 

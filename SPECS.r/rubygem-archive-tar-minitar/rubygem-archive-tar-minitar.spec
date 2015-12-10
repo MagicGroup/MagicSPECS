@@ -5,7 +5,7 @@
 Summary: Provides POSIX tar archive management from Ruby programs
 Name: rubygem-%{gem_name}
 Version: 0.5.2
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: Development/Languages
 License: GPLv2+ or Ruby
 URL: http://rubyforge.org/projects/ruwiki
@@ -101,6 +101,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.5.2-14
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.2-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,7 @@
+%define debug_package %{nil}
 Name:           fusesmb
 Version:        0.8.7
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Mount "network neighbourhood"
 Summary(zh_CN.UTF-8): 挂载“网上邻居”
 Group:          Applications/Internet
@@ -70,6 +71,9 @@ done
 %{_sysconfdir}/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.8.7-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.8.7-7
 - 为 Magic 3.0 重建
 

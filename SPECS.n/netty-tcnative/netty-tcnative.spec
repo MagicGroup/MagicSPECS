@@ -3,7 +3,7 @@
 
 Name:           netty-tcnative
 Version:        1.1.30
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Fork of Tomcat Native with improved OpenSSL and mavenized build
 License:        ASL 2.0
 URL:            https://github.com/netty/netty/wiki/Forked-Tomcat-Native
@@ -76,6 +76,9 @@ javac -d . -cp $RPM_BUILD_ROOT%{_jnidir}/%{name}/%{name}.jar %{SOURCE1}
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.1.30-3
+- 为 Magic 3.0 重建
+
 * Mon Jul 13 2015 Jiri Vanek <jvanek@redhat.com> - 1.1.30-2
 - adapted to parent pom, enabled kr.motd.maven:os-maven-plugin and added buildrequires dependence 
 

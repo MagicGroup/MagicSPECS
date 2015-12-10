@@ -12,7 +12,7 @@
 
 Name:           %{pkg_name}
 Version:        1.20.3
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Colorize Haskell code
 
 # the source does not state intended GPL version
@@ -86,6 +86,9 @@ This package provides the Haskell %{name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.20.3-15
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.20.3-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           plexus-containers
 Version:        1.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Containers for Plexus
 Summary(zh_CN.UTF-8): Plexus 的容器
 License:        ASL 2.0 and MIT
@@ -135,6 +135,9 @@ sed -i "s|<version>2.3</version>|<version> %{javadoc_plugin_version}</version>|"
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.6-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.6-5
 - 为 Magic 3.0 重建
 

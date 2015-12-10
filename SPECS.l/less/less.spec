@@ -2,7 +2,7 @@ Summary: A text file browser similar to more, but better
 Summary(zh_CN.UTF-8): 文本文件浏览器，类似 more，但是更好
 Name: less
 Version:	481
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: GPLv3+
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
@@ -83,6 +83,9 @@ ls -la $RPM_BUILD_ROOT/etc/profile.d
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 481-12
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 481-11
 - 更新到 481
 

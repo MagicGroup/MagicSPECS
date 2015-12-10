@@ -13,7 +13,7 @@
 Summary: RR (Double Ruby) is a test double framework 
 Name: rubygem-%{gem_name}
 Version: 1.1.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://pivotallabs.com
@@ -140,6 +140,9 @@ rm  -rf %{buildroot}%{gem_instdir}/gemfiles
 %{gem_instdir}/rr.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.1.2-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.1.2-6
 - 为 Magic 3.0 重建
 

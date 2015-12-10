@@ -13,7 +13,7 @@
 
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.4.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A FFI wrapper around the OpenSCAP library
 Group: Development/Languages
 License: GPLv2+
@@ -110,6 +110,9 @@ cp -pa .%{gem_dir}/* \
 %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.4.3-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.3-3
 - 为 Magic 3.0 重建
 

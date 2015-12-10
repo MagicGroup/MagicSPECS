@@ -2,7 +2,7 @@ Summary: The GNU version of the awk text processing utility
 Summary(zh_CN.UTF-8): awk 文本处理工具的 GNU 版本
 Name: gawk
 Version:	4.1.3
-Release: 2%{?dist}
+Release: 4%{?dist}
 # Most of source files are licensed under GPLv3+,
 # several files are GPL or LGPLv2.1+ licensed,
 # gettext.h is LGPL and random.c is BSD licensed
@@ -49,7 +49,7 @@ ln -sf gawk $RPM_BUILD_ROOT%{_bindir}/awk
 # remove %{version}* , when we are building a snapshot...
 rm -f $RPM_BUILD_ROOT/%{_bindir}/{,p}gawk-%{version}* $RPM_BUILD_ROOT%{_infodir}/dir
 magic_rpm_clean.sh
-%find_lang %name
+%find_lang %name || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -64,7 +64,7 @@ if [ $1 = 0 -a -f %{_infodir}/gawk.info.gz ]; then
     /sbin/install-info --delete %{_infodir}/gawk.info.gz %{_infodir}/dir || :
 fi
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root,-)
 %doc README COPYING NEWS
 %doc README_d/README.multibyte README_d/README.tests POSIX.STD
@@ -79,6 +79,12 @@ fi
 %{_libdir}/gawk
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.1.3-4
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.1.3-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.1.3-2
 - 更新到 4.1.3
 

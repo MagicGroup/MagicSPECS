@@ -79,7 +79,7 @@
 Summary: Cross C compiler
 Name: %{cross}-gcc
 Version: %{gcc_version}
-Release: %{cross_gcc_release}%{?dist}.3
+Release: %{cross_gcc_release}%{?dist}.4
 # libgcc, libgfortran, libmudflap, libgomp, libstdc++ and crtstuff have
 # GCC Runtime Exception.
 License: GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions and LGPLv2+ and BSD
@@ -258,7 +258,7 @@ the number of packages. \
 %do_package m68k-linux-gnu	%{build_m68k}
 %do_package metag-linux-gnu	%{build_metag}
 %do_package microblaze-linux-gnu %{build_microblaze}
-%do_package mipsel-linux-gnu	%{build_mips}
+%do_package mipsel-linux-gnu	%{build_mipsel}
 %do_package mips64el-linux-gnu	%{build_mips64el}
 %do_package mn10300-linux-gnu	%{build_mn10300}
 %do_package nios2-linux-gnu	%{build_nios2}
@@ -925,6 +925,9 @@ rm -rf %{buildroot}
 %do_files xtensa-linux-gnu	%{build_xtensa}
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 5.2.1-3.4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.2.1-3.3
 - 为 Magic 3.0 重建
 

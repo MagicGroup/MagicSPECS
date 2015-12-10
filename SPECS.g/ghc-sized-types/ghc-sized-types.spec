@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.4.0
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Sized types in Haskell
 
 License:        BSD
@@ -66,6 +66,9 @@ This package provides the Haskell %{pkg_name} library development files.
 %doc test
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.3.4.0-12
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.4.0-11
 - 为 Magic 3.0 重建
 

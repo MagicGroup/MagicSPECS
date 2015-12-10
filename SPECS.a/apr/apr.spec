@@ -7,7 +7,7 @@ Summary: Apache Portable Runtime library
 Summary(zh_CN.UTF-8): Apache 可移植运行库
 Name: apr
 Version: 1.5.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 # ASL 2.0: everything
 # ISC: network_io/apr-1.4.6/network_io/unix/inet_?to?.c
 # BSD with advertising: strings/apr_snprintf.c, strings/apr_fnmatch.c,
@@ -140,6 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/*.m4
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.5.2-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.5.2-3
 - 更新到 1.5.2
 

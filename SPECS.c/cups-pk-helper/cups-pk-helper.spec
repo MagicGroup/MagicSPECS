@@ -1,6 +1,6 @@
 Name:           cups-pk-helper
 Version:        0.2.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A helper that makes system-config-printer use PolicyKit
 Summary(zh_CN.UTF-8): 让 system-config-printer 使用 PolicyKit 的一个辅助程序
 
@@ -66,6 +66,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.2.5-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.5-3
 - 为 Magic 3.0 重建
 

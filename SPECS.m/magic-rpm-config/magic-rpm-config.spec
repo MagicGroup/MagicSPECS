@@ -8,7 +8,7 @@ Summary: Magic specific rpm configuration files
 Summary(zh_CN.UTF-8): Magic 特定的 rpm 配置文件
 Name: magic-rpm-config
 Version: 3.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -144,6 +144,9 @@ install -p -m 755 -t %{buildroot}%{_bindir} magic_rpm_clean.sh
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.0-11
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.0-10
 - 为 Magic 3.0 重建
 

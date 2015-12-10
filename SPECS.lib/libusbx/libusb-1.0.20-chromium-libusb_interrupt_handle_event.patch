@@ -1,0 +1,51 @@
+diff -up libusb-1.0.20/libusb/interrupt.c.chromium libusb-1.0.20/libusb/interrupt.c
+--- libusb-1.0.20/libusb/interrupt.c.chromium	2015-10-01 10:24:33.320193918 -0400
++++ libusb-1.0.20/libusb/interrupt.c	2015-10-01 10:24:33.320193918 -0400
+@@ -0,0 +1,11 @@
++// Copyright (c) 2013 The Chromium Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#include "libusbi.h"
++
++int API_EXPORTED libusb_interrupt_handle_event(struct libusb_context* ctx) {
++  unsigned char dummy = 1;
++  USBI_GET_CONTEXT(ctx);
++  return usbi_write(ctx->event_pipe[1], &dummy, sizeof(dummy));
++}
+diff -up libusb-1.0.20/libusb/interrupt.h.chromium libusb-1.0.20/libusb/interrupt.h
+--- libusb-1.0.20/libusb/interrupt.h.chromium	2015-10-01 10:24:33.320193918 -0400
++++ libusb-1.0.20/libusb/interrupt.h	2015-10-01 10:24:33.320193918 -0400
+@@ -0,0 +1,20 @@
++// Copyright (c) 2013 The Chromium Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef THIRD_PARTY_LIBUSB_SRC_LIBUSB_INTERRUPT_H
++#define THIRD_PARTY_LIBUSB_SRC_LIBUSB_INTERRUPT_H
++
++#include "libusb.h"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++int LIBUSB_CALL libusb_interrupt_handle_event(struct libusb_context* ctx);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif  // THIRD_PARTY_LIBUSB_SRC_LIBUSB_INTERRUPT_H
+diff -up libusb-1.0.20/libusb/Makefile.am.chromium libusb-1.0.20/libusb/Makefile.am
+--- libusb-1.0.20/libusb/Makefile.am.chromium	2015-10-01 10:24:33.320193918 -0400
++++ libusb-1.0.20/libusb/Makefile.am	2015-10-01 10:25:16.554865110 -0400
+@@ -80,7 +80,7 @@ libusb_1_0_la_LDFLAGS = $(LTLDFLAGS)
+ libusb_1_0_la_SOURCES = libusbi.h core.c descriptor.c io.c strerror.c sync.c \
+ 	os/linux_usbfs.h os/darwin_usb.h os/windows_usb.h os/windows_common.h \
+ 	hotplug.h hotplug.c $(THREADS_SRC) $(OS_SRC) \
+-	os/poll_posix.h os/poll_windows.h
++	os/poll_posix.h os/poll_windows.h interrupt.c interrupt.h
+ 
+ if OS_HAIKU
+ libusb_1_0_la_LIBADD = os/haiku/libhaikuusb.la

@@ -2,7 +2,7 @@
 
 Name:           pygame
 Version:        1.9.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Python modules for writing games
 Summary(zh_CN.UTF-8): 编写游戏的 Python 模块
 
@@ -120,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.9.1-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.9.1-13
 - 为 Magic 3.0 重建
 

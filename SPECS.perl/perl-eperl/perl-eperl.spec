@@ -1,6 +1,6 @@
 Name:           perl-eperl
 Version:        2.2.14
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        Embedded Perl Language
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.2.14-33
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.2.14-32
 - 为 Magic 3.0 重建
 

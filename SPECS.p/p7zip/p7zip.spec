@@ -2,7 +2,7 @@ Summary: Very high compression ratio file archiver
 Summary(zh_CN.UTF-8): 非常高压缩率的文件归档程序
 Name: p7zip
 Version:	15.09
-Release:	2%{?dist}
+Release:	3%{?dist}
 # Files under C/Compress/Lzma/ are dual LGPL or CPL
 License: LGPLv2 and (LGPLv2+ or CPL)
 Group: Applications/Archiving
@@ -119,6 +119,9 @@ find contrib -type f -exec chmod -x {} \;
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 15.09-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 15.09-2
 - 更新到 15.09
 

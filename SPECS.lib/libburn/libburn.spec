@@ -1,6 +1,6 @@
 Name:           libburn
 Version: 1.4.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library for reading, mastering and writing optical discs
 Summary(zh_CN.UTF-8): 读取、管理和写入光盘的库
 
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.4.0-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.0-2
 - 更新到 1.4.0
 

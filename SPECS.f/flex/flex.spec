@@ -2,7 +2,7 @@ Summary: A tool for creating scanners (text pattern recognizers)
 Summary(zh_CN.UTF-8): 生成扫描器的工具（文本模式识别）
 Name: flex
 Version:	2.5.37
-Release: 5%{?dist}
+Release: 6%{?dist}
 # parse.c and parse.h are under GPLv3+ with exception which allows
 #	relicensing.  Since flex is shipped under BDS-style license,
 #	let's  assume that the relicensing was done.
@@ -147,6 +147,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_datadir}/doc/flex-doc-%{version}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.5.37-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.5.37-5
 - 为 Magic 3.0 重建
 

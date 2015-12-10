@@ -4,7 +4,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.4.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Dynect REST API library
 
 Group:          Development/Languages
@@ -86,6 +86,9 @@ rm -f %{buildroot}%{gem_instdir}/.rspec
 %doc %{gem_instdir}/VERSION
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.4.3-8
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Liu Di <liudidi@gmail.com> - 0.4.3-7
 - 为 Magic 3.0 重建
 

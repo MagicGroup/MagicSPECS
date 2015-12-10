@@ -1,6 +1,6 @@
 Name:          openpgm
 Version:       5.2.122
-Release:       6%{?dist}
+Release:       7%{?dist}
 Summary:       An implementation of the PGM reliable multicast protocol
 Summary(zh_CN.UTF-8): PGM 可靠组播协议实现
 
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.2.122-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.2.122-6
 - 为 Magic 3.0 重建
 

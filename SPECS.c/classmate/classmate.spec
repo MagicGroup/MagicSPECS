@@ -1,6 +1,6 @@
 Name:          classmate
 Version:       0.8.0
-Release:       7%{?dist}
+Release:       8%{?dist}
 Summary:       Java introspection library
 License:       ASL 2.0
 Url:           http://github.com/cowtowncoder/java-classmate/
@@ -59,6 +59,9 @@ rm -r src/test/java/com/fasterxml/classmate/TestReadme.java \
 %doc LICENSE-2.0.txt
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.8.0-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.8.0-7
 - 为 Magic 3.0 重建
 

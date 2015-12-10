@@ -1,6 +1,6 @@
 Name:           perl-PerlIO-utf8_strict
 Version:        0.006
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Fast and correct UTF-8 I/O
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/PerlIO::utf8_strict.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.006-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.006-5
 - 为 Magic 3.0 重建
 

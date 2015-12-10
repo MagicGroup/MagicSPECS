@@ -1,6 +1,6 @@
 Name:       perl-MooseX-MultiInitArg 
 Version:    0.02 
-Release:    5%{?dist}
+Release:    6%{?dist}
 # lib/MooseX/MultiInitArg.pm -> GPL+ or Artistic
 # lib/MooseX/MultiInitArg/Attribute.pm -> GPL+ or Artistic
 # lib/MooseX/MultiInitArg/Trait.pm -> GPL+ or Artistic
@@ -51,6 +51,9 @@ perl Build.PL --installdirs vendor
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.02-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.02-5
 - 为 Magic 3.0 重建
 

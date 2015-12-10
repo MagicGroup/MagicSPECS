@@ -50,7 +50,7 @@
 Name:			graphviz
 Summary:		Graph Visualization Tools
 Version:	2.38.0
-Release:		15%{?dist}
+Release:		18%{?dist}
 Group:			Applications/Multimedia
 License:		EPL
 URL:			http://www.graphviz.org/
@@ -577,6 +577,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.38.0-18
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.38.0-17
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.38.0-16
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.38.0-15
 - 为 Magic 3.0 重建
 

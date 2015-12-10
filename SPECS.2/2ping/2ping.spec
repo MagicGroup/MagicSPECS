@@ -1,6 +1,6 @@
 Name:           2ping
 Version:        2.0
-Release:        5%{?dist}
+Release:        8%{?dist}
 Summary:        Bi-directional ping utility
 Summary(zh_CN.UTF-8): 双向 ping 工具
 License:        GPLv2+
@@ -40,6 +40,15 @@ make install PREFIX=%{_prefix} DESTDIR=%{buildroot}
 %{_mandir}/man8/2ping6.8*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0-8
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0-7
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0-5
 - 为 Magic 3.0 重建
 

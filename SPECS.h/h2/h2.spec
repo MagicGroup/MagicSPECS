@@ -1,6 +1,6 @@
 Name:           h2
 Version:        1.3.176
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Java SQL database
 
 License:        EPL
@@ -77,6 +77,9 @@ cp -rp %SOURCE1 $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
 %doc src/docsrc/html/license.html
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3.176-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3.176-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           clamz
 Version:        0.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Amazon Downloader
 Summary(zh_CN.UTF-8): 亚马逊下载器
 Group:          Applications/Internet
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_datadir}/mime/packages/%{name}.xml
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.5-5
 - 为 Magic 3.0 重建
 

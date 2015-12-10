@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Type class for sequence of bytes
 
 License:        BSD
@@ -71,6 +71,9 @@ rm %{buildroot}%{_datadir}/%{pkg_name}-%{version}/README.md
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.1-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.1-7
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:  GNOME library for CUPS integration
 Summary(zh_CN.UTF-8): 集成 CUPS 的 GNOME 库
 Name:     libgnomecups
 Version:  0.2.3
-Release:  17%{?dist}
+Release:  18%{?dist}
 License:  LGPLv2
 Group:    Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.2.3-18
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.2.3-17
 - 为 Magic 3.0 重建
 

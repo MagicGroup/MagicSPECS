@@ -4,7 +4,7 @@ Summary: X.Org X11 X client utilities
 Summary(zh_CN.UTF-8): X.Org X11 X 客户端工具
 Name: xorg-x11-%{pkgname}
 Version: 7.5
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xwininfo.1*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 7.5-11
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.5-10
 - 为 Magic 3.0 重建
 

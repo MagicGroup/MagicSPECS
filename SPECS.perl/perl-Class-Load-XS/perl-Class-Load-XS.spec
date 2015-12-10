@@ -3,7 +3,7 @@
 
 Name:		perl-Class-Load-XS
 Version:	0.09
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	XS implementation of parts of Class::Load
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -68,6 +68,9 @@ make test
 %{_mandir}/man3/Class::Load::XS.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.09-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.09-2
 - 更新到
 

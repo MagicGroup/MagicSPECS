@@ -1,6 +1,6 @@
 Name:           perl-Net-Server-SS-PreFork
 Version:        0.05
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Hot-deployable variant of Net::Server::PreFork
 License:        GPL+ or Artistic
 
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/Net*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.05-16
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.05-15
 - 为 Magic 3.0 重建
 

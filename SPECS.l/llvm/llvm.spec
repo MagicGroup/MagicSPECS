@@ -30,8 +30,8 @@
 #global prerel rc3
 
 Name:           llvm
-Version:        3.6.2
-Release:        5%{?dist}
+Version:        3.7.0
+Release:        2%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -48,10 +48,13 @@ Source3:        http://llvm.org/releases/%{version}/lldb-%{version}.src.tar.xz
 Source10:       llvm-Config-config.h
 Source11:       llvm-Config-llvm-config.h
 
-# patches
-Patch2:         0001-data-install-preserve-timestamps.patch
+Patch10:	clang-3.7.0-magic.patch
 
-Patch10:	clang-3.6.2-magic.patch
+# patches
+# there is a double slash in an include, it breaks debugedit
+Patch0:         fix-broken-include-path.patch
+
+Patch2:         0001-data-install-preserve-timestamps.patch
 
 # the next two are various attempts to get clang to actually work on arm
 # by forcing a hard-float ABI.  They don't apply anymore as of 3.5.0,
@@ -130,14 +133,12 @@ Documentation for the LLVM compiler infrastructure.
 %package libs
 Summary:        LLVM shared libraries
 Group:          System Environment/Libraries
-%if 0%{?fedora} > 20
 ## retire OpenGTL/libQtGTL here
 Obsoletes: OpenGTL < 0.9.18-50
 Obsoletes: OpenGTL-libs < 0.9.18-50
 Obsoletes: OpenGTL-devel < 0.9.18-50
 Obsoletes: libQtGTL < 0.9.3-50
 Obsoletes: libQtGTL-devel < 0.9.3-50
-%endif
 Obsoletes: python-llvmpy < 0.12.7-2
 Obsoletes: python3-llvmpy < 0.12.7-2
 
@@ -312,6 +313,7 @@ mv compiler-rt-*/ projects/compiler-rt
 mv lldb-*/ tools/lldb
 %endif
 
+%patch0 -p1
 %patch2 -p1
 
 pushd tools/clang
@@ -331,6 +333,7 @@ popd
 sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' configure
 sed -i 's|(PROJ_prefix)/lib|(PROJ_prefix)/%{_lib}/%{name}|g' Makefile.config.in
 sed -i 's|/lib\>|/%{_lib}/%{name}|g' tools/llvm-config/llvm-config.cpp
+sed -ri "/ifeq.*CompilerTargetArch/s#i386#i686#g" projects/compiler-rt/make/platform/clang_linux.mk
 
 %build
 %ifarch s390
@@ -338,16 +341,18 @@ sed -i 's|/lib\>|/%{_lib}/%{name}|g' tools/llvm-config/llvm-config.cpp
 %global optflags %(echo %{optflags} | sed 's/-g /-g1 /')
 %endif
 
+mkdir build
+cd build
+ln -s ../configure .
 # clang is lovely and all, but fedora builds with gcc
 # -fno-devirtualize shouldn't be necessary, but gcc has scary template-related
 # bugs that make it so.  gcc 5 ought to be fixed.
 export CC=gcc
 export CXX=g++
-export CFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
-export CXXFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
+export CFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON -DHAVE_PROCESS_VM_READV"
+export CXXFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON -DHAVE_PROCESS_VM_READV"
 %configure \
-  --with-extra-options="-fno-devirtualize" \
-  --with-extra-ld-options=-Wl,-Bsymbolic \
+  --with-extra-ld-options="-Wl,-Bsymbolic -static-libstdc++" \
   --libdir=%{_libdir}/%{name} \
   --disable-polly \
   --disable-libcpp \
@@ -374,7 +379,6 @@ export CXXFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
   --enable-zlib \
   --enable-pic \
   --enable-shared \
-  --disable-embed-stdcxx \
   --enable-timestamps \
   --enable-backtraces \
   --enable-targets=x86,powerpc,arm,aarch64,cpp,nvptx,systemz,r600 \
@@ -398,14 +402,14 @@ export CXXFLAGS="%{optflags} -DLLDB_DISABLE_PYTHON"
 %if %{with gold}
   --with-binutils-include=%{_includedir} \
 %endif
-  --with-c-include-dirs=%{_includedir}:$(echo %{_prefix}/lib/gcc/%{_target_cpu}-magic-linux/*/include) \
-  --with-optimize-option=-O3
 
 make %{?_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1
 #make REQUIRES_RTTI=1 VERBOSE=1
 
 %install
+cd build
 make install DESTDIR=%{buildroot} PROJ_docsdir=/moredocs
+cd -
 
 # you have got to be kidding me
 rm -f %{buildroot}%{_bindir}/{FileCheck,count,not,verify-uselistorder,obj2yaml,yaml2obj}
@@ -486,6 +490,11 @@ mv %{buildroot}/moredocs/ocamldoc/html %{buildroot}%{llvmdocdir %{name}-ocaml-do
 
 # clang
 %if %{with clang}
+cd tools/clang/docs/
+make -f Makefile.sphinx man
+cd -
+cp tools/clang/docs/_build/man/clang.1 %{buildroot}%{_mandir}/man1/clang.1
+
 mkdir -p %{buildroot}%{llvmdocdir clang}
 for f in LICENSE.TXT NOTES.txt README.txt CODE_OWNERS.TXT; do
   cp tools/clang/$f %{buildroot}%{llvmdocdir clang}/
@@ -513,8 +522,8 @@ mkdir -p %{buildroot}%{_datadir}/llvm/cmake/
 cp -p cmake/modules/*.cmake %{buildroot}%{_datadir}/llvm/cmake/
 
 # remove RPATHs
-file %{buildroot}/%{_bindir}/* | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
-file %{buildroot}/%{_libdir}/%{name}/*.so | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
+file %{buildroot}%{_bindir}/* | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
+file %{buildroot}%{_libdir}/%{name}/*.so | awk -F: '$2~/ELF/{print $1}' | xargs -r chrpath -d
 
 %check
 # the Koji build server does not seem to have enough RAM
@@ -680,6 +689,12 @@ exit 0
 %endif
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 3.7.0-2
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.6.2-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.6.2-5
 - 为 Magic 3.0 重建
 

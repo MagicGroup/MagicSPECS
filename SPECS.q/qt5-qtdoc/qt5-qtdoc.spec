@@ -5,7 +5,7 @@ Summary: Main Qt5 Reference Documentation
 Summary(zh_CN.UTF-8): 主要的 Qt5 参考文档
 Name:    qt5-%{qt_module}
 Version: 5.5.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: GFDL
 Url:     http://qt-project.org/
@@ -48,6 +48,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.5.1-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
 - 更新到 5.5.1
 

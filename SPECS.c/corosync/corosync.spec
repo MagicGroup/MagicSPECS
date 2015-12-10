@@ -21,7 +21,7 @@
 Name: corosync
 Summary: The Corosync Cluster Engine and Application Programming Interfaces
 Version: 2.3.5
-Release: 2%{?gitver}%{?dist}
+Release: 3%{?gitver}%{?dist}
 License: BSD
 Group: System Environment/Base
 URL: http://www.corosync.org/
@@ -195,6 +195,7 @@ fi
 %config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example
 %config(noreplace) %{_sysconfdir}/corosync/corosync.conf.example.udpu
 %config(noreplace) %{_sysconfdir}/sysconfig/corosync-notifyd
+%{_sysconfdir}/logrotate.d/corosync
 %if %{with dbus}
 %{_sysconfdir}/dbus-1/system.d/corosync-signals.conf
 %endif
@@ -331,6 +332,9 @@ The Corosync Cluster Engine APIs.
 %{_mandir}/man8/quorum_overview.8*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.3.5-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.3.5-2
 - 更新到 2.3.5
 

@@ -9,7 +9,7 @@
 
 Name:           numpy
 Version:        1.9.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          1
 Summary:        A fast multidimensional array facility for Python
 
@@ -227,6 +227,9 @@ popd &> /dev/null
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:1.9.1-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.9.1-4
 - 为 Magic 3.0 重建
 

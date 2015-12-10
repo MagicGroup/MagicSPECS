@@ -4,7 +4,7 @@ Summary:        C++ client API for PostgreSQL
 Summary(zh_CN.UTF-8): PostgreSQL 的 C++ 客户端 API
 Epoch:          1
 Version:        4.0.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 
 License:        BSD
 URL:            http://pqxx.org/
@@ -92,6 +92,9 @@ make %{?_smp_mflags} check ||:
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1:4.0.1-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1:4.0.1-3
 - 为 Magic 3.0 重建
 

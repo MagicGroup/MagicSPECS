@@ -4,7 +4,7 @@
 Summary: The next generation developer focused tool for automated testing of webapps
 Name: rubygem-%{gem_name}
 Version: 2.45.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://selenium.googlecode.com
@@ -69,6 +69,9 @@ rm -f %{buildroot}%{gem_instdir}/%{gem_name}.gemspec
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.45.0-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.45.0-5
 - 为 Magic 3.0 重建
 

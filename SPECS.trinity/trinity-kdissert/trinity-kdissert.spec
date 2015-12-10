@@ -49,7 +49,7 @@ Name:			trinity-%{tde_pkg}
 Summary:        Mindmapping Tool
 Summary(zh_CN.UTF-8): 思维导图工具
 Version:		1.0.6c
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 
 License:		GPLv2+
 Group:			Applications/Utilities
@@ -192,6 +192,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.0.6c-1.opt.2
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.6c-1.opt.1
 - 为 Magic 3.0 重建
 

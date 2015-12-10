@@ -1,6 +1,6 @@
 Name:           libsmi
 Version:        0.4.8
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A library to access SMI MIB information
 Summary(zh_CN.UTF-8): 访问 SMI MIB 信息的库
 
@@ -110,6 +110,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.4.8-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.8-9
 - 为 Magic 3.0 重建
 

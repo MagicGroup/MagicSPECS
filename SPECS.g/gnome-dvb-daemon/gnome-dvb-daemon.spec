@@ -2,7 +2,7 @@
 
 Name:		gnome-dvb-daemon
 Version:	0.2.90
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Digital Television manager
 Summary(zh_CN.UTF-8): 数字电视管理器
 
@@ -13,19 +13,19 @@ URL:		http://live.gnome.org/DVBDaemon
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gnome-dvb-daemon/0.2/%{name}-%{version}.tar.xz
 
 BuildRequires:	intltool
-BuildRequires:	gstreamer-plugins-good
-BuildRequires:	gstreamer-plugins-base-devel
-BuildRequires:	gstreamer-plugins-bad-free
+BuildRequires:	gstreamer1-plugins-good
+BuildRequires:	gstreamer1-plugins-base-devel
+BuildRequires:	gstreamer1-plugins-bad
 # Daemon
-BuildRequires:	dbus-glib-devel pkgconfig(gee-1.0) sqlite-devel gstreamer-rtsp-devel libgudev1-devel
+BuildRequires:	dbus-glib-devel pkgconfig(gee-1.0) sqlite-devel gstreamer1-rtsp-server-devel libgudev1-devel
 # UI
-BuildRequires:	python-devel gstreamer-python-devel pygobject3-devel dbus-python
+BuildRequires:	python3-devel gstreamer-python-devel pygobject3-devel dbus-python
 # Plugin
 BuildRequires:	totem-devel
 
 Requires:	hicolor-icon-theme
 Requires:	pygobject3 gstreamer-python
-Requires:	gstreamer-plugins-bad-free
+Requires:	gstreamer1-plugins-bad
 # For initial tuning data
 Requires:	dvb-apps
 
@@ -75,7 +75,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %defattr(-,root,root,-)
 %doc AUTHORS COPYING README
 %{_bindir}/*
-%{python_sitelib}/*
+%{python3_sitelib}/*
 %{_datadir}/dbus-1/services/org.gnome.DVB.service
 %{_datadir}/dbus-1/services/org.gnome.UPnP.MediaServer2.DVBDaemon.service
 # So as not to require Totem itself
@@ -85,6 +85,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/*/apps/*.*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.90-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.2.90-2
 - 更新到 0.2.90
 

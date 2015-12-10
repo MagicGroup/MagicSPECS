@@ -1,6 +1,6 @@
 Name:           eb
 Version:        4.4.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Library for accessing Japanese CD-ROM electronic books
 Summary(zh_CN.UTF-8):   访问日文 CD-ROM 电子书的库
 
@@ -64,8 +64,8 @@ rm -rf tmp
 mkdir -p tmp
 mv $RPM_BUILD_ROOT%{_datadir}/eb/doc tmp/html
 magic_rpm_clean.sh
-%find_lang %{name}
-%find_lang %{name}utils
+%find_lang %{name} || :
+%find_lang %{name}utils || :
 cat %{name}utils.lang >> %{name}.lang
 
 
@@ -75,7 +75,8 @@ cat %{name}utils.lang >> %{name}.lang
 %postun -p /sbin/ldconfig
 
 
-%files -f %{name}.lang
+#files -f %{name}.lang
+%files
 %doc AUTHORS COPYING NEWS README
 %{_bindir}/*
 %{_libdir}/libeb.so.*
@@ -91,6 +92,9 @@ cat %{name}utils.lang >> %{name}.lang
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 4.4.3-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 4.4.3-2
 - 为 Magic 3.0 重建
 

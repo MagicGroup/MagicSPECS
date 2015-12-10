@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		0.8.8
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:		Xine-based media player
 Summary(zh_CN.UTF-8): 基于 Xine 的媒体播放器
 Group:			Applications/Multimedia
@@ -269,6 +269,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.8.8-1.2
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.8.8-1.1
 - 为 Magic 3.0 重建
 

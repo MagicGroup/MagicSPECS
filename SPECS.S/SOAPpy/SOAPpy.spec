@@ -4,7 +4,7 @@
 
 Name:           SOAPpy
 Version:        0.11.6
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Full-featured SOAP library for Python
 
 Group:          Development/Languages
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.11.6-18
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.11.6-17
 - 为 Magic 3.0 重建
 

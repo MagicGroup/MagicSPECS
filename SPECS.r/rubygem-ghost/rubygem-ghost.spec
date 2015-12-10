@@ -3,7 +3,7 @@
 Summary:        Allows you to create, list, and modify local hostnames
 Name:           rubygem-%{gem_name}
 Version:        0.3.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://github.com/bjeanes/ghost
@@ -77,6 +77,9 @@ find $RPM_BUILD_ROOT%{gem_instdir} -maxdepth 1 -empty -delete
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.3.0-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.3.0-10
 - 为 Magic 3.0 重建
 

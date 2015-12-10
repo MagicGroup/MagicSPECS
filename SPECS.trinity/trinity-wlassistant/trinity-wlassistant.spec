@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.5.7
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	User friendly TDE frontend for wireless network connection
 Summary(zh_CN.UTF-8): 无线网络连接管理程序
 Group:		Applications/Utilities
@@ -162,6 +162,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/hicolor || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.5.7-1.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.5.7-1.1
 - 为 Magic 3.0 重建
 

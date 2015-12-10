@@ -1,6 +1,6 @@
 Name:		perl-Declare-Constraints-Simple
 Version:	0.03
-Release:	22%{?dist}
+Release:	23%{?dist}
 Summary:	Declarative Validation of Data Structures
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Declare::Constraints::Simple::Result.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.03-23
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.03-22
 - 为 Magic 3.0 重建
 

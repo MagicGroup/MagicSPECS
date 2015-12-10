@@ -2,7 +2,7 @@ Summary: A dictionary of English words for the /usr/share/dict directory
 Summary(zh_CN.UTF-8): 英语的词典
 Name: words
 Version: 3.0
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: Public Domain
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dict/words
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.0-22
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.0-21
 - 为 Magic 3.0 重建
 

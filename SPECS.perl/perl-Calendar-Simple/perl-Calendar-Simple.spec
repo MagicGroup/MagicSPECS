@@ -2,7 +2,7 @@ Summary:	Perl extension to create simple calendars
 Summary(zh_CN.UTF-8): 创建简单日历的 Perl 扩展
 Name:		perl-Calendar-Simple
 Version:	1.21
-Release:	13%{?dist}
+Release:	14%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.21-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.21-13
 - 为 Magic 3.0 重建
 

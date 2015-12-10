@@ -4,7 +4,7 @@
 
 Name:          ocaml-facile
 Version:       1.1
-Release:       27%{?dist}
+Release:       29%{?dist}
 Summary:       OCaml library for constraint programming
 Summary(zh_CN.UTF-8): 约束程序的 OCaml 库
 License:       LGPLv2+
@@ -89,6 +89,12 @@ magic_rpm_clean.sh
 %{_libdir}/ocaml/facile/*.mli
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.1-29
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.1-28
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-27
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary: GeoHash encode/decode library for pure Ruby
 Name: rubygem-%{gem_name}
 Version: 1.0.0
-Release: 14%{?dist}
+Release: 15%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/masuidrive/%{gem_name}
@@ -76,6 +76,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.0-15
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.0-14
 - 为 Magic 3.0 重建
 

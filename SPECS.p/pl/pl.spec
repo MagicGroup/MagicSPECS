@@ -3,7 +3,7 @@
 
 Name:       pl
 Version:    7.2.3
-Release:    3%{?dist}
+Release:    4%{?dist}
 Summary:    SWI-Prolog - Edinburgh compatible Prolog compiler
 Group:      Development/Languages
 #library/dialect/iso/iso_predicates.pl  GPLv2+ with SWI-Prolog extra clause
@@ -414,6 +414,9 @@ find packages/jpl/examples -name ".cvsignore" | xargs rm -f
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 7.2.3-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 7.2.3-3
 - 为 Magic 3.0 重建
 

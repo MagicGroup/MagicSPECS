@@ -1,6 +1,6 @@
 Name:           libgudev
 Version:        230
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GObject-based wrapper library for libudev
 
 License:        LGPLv2+
@@ -65,6 +65,9 @@ rm %{buildroot}%{_libdir}/*.la
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 230-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 230-4
 - 为 Magic 3.0 重建
 

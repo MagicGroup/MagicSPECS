@@ -1,6 +1,6 @@
 Name:           perl-DBIx-Class-TimeStamp
 Version:        0.14
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        DBIx::Class extension to update and create date and time based fields
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ TEST_POD=1
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.14-21
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.14-20
 - 为 Magic 3.0 重建
 

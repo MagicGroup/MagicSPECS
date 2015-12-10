@@ -8,16 +8,14 @@ Summary(zh_CN.UTF-8): 通用的文件和文件名操作 OCaml 库
 
 License:        LGPLv2 with exceptions
 URL:            https://forge.ocamlcore.org/projects/ocaml-fileutils/
-Source0:        https://forge.ocamlcore.org/frs/download.php/1194/ocaml-fileutils-%{version}.tar.gz
+Source0:        https://forge.ocamlcore.org/frs/download.php/1531/ocaml-fileutils-%{version}.tar.gz
 ExcludeArch:    sparc64 s390 s390x
 
 BuildRequires:  ocaml >= 4.00.1
 BuildRequires:  ocaml-findlib-devel >= 1.3.3-3
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-camlp4-devel
-%if 0%{?fedora} || 0%{?rhel} <= 6
 BuildRequires:  ocaml-ounit-devel
-%endif
 
 
 %description
@@ -48,14 +46,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-
-# Disable the tests (RHEL 7 only) since they require ocaml-ounit.
-%if 0%{?rhel} >= 7
-rm test/test.ml
-touch test/test.ml
-mv setup.ml setup.ml.old
-sed '/oUnit/d' < setup.ml.old > setup.ml
-%endif
 
 ocaml setup.ml -configure --prefix %{_prefix} --destdir $RPM_BUILD_ROOT
 

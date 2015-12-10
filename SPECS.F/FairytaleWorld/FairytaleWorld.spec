@@ -2,7 +2,7 @@ Summary: MagicLinux FairytaleWorld Icon Set
 Summary(zh_CN.UTF-8): MagicLinux 童话世界图标
 Name: FairytaleWorld
 Version: 1.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Source0: %{name}.tar.gz
 Vendor: caihua
 Packager: KanKer <kanker@163.com>
@@ -36,6 +36,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/icons/FairytaleWorld/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0-7
 - 为 Magic 3.0 重建
 

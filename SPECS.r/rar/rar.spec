@@ -10,7 +10,7 @@ Summary: RAR archiver to create and manage RAR archives
 Summary(zh_CN.UTF-8): 建立和管理RAR档案
 Name: rar
 Version:	5.2.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: Shareware
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -62,6 +62,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.2.1-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.2.1-3
 - 为 Magic 3.0 重建
 

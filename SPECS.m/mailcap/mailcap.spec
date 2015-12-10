@@ -1,6 +1,6 @@
 Name:           mailcap
 Version: 2.1.45
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Helper application and MIME type associations for file types
 Summary(zh_CN.UTF-8): 文件类型关联的帮助程序
 
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.1.45-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1.45-2
 - 更新到 2.1.45
 

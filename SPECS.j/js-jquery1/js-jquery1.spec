@@ -3,7 +3,7 @@
 
 Name:           js-jquery1
 Version:        1.11.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        JavaScript DOM manipulation, event handling, and AJAX library
 BuildArch:      noarch
 
@@ -82,6 +82,9 @@ ln -s %{version} %{inslibdir}/%{ver_x}.%{ver_y}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.11.2-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.11.2-4
 - 为 Magic 3.0 重建
 

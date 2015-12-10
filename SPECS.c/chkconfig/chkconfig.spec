@@ -2,7 +2,7 @@ Summary: A system tool for maintaining the /etc/rc*.d hierarchy
 Summary(zh_CN.UTF-8): 处理 /etc/rc*.d 层次结构的系统工具
 Name: chkconfig
 Version: 1.3.62
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/ntsysv.8*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3.62-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3.62-2
 - 更新到 1.3.62
 

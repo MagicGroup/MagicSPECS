@@ -1,6 +1,6 @@
 Name:           libsexymm
 Version:        0.1.9
-Release:        10%{?dist}
+Release:        11%{?dist}
 
 Summary:        C++ wrapper for libsexy
 Summary(zh_CN.UTF-8):	libsexy 的 C++ 绑定
@@ -88,6 +88,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.1.9-11
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.1.9-10
 - 为 Magic 3.0 重建
 

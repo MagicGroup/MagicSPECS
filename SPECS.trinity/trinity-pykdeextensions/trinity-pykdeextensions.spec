@@ -27,7 +27,7 @@
 Name:		trinity-pytdeextensions
 Summary:	Python packages to support TDE applications (scripts) [Trinity]
 Version:	0.4.0
-Release:	5%{?dist}%{?_variant}
+Release:	6%{?dist}%{?_variant}
 
 License:	GPLv2+
 Group:		Applications/Utilities
@@ -205,5 +205,8 @@ done
 
 
 %Changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.4.0-6.opt
+- 为 Magic 3.0 重建
+
 * Tue Oct 02 2012 Francois Andriot <francois.andriot@free.fr> - 0.4.0-3
 - Initial release for TDE 3.5.13.1

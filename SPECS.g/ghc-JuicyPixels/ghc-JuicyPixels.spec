@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        3.2.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Picture loading and serialization
 
 License:        BSD
@@ -74,6 +74,9 @@ install -p -m 0644 docimages/* %{buildroot}%{ghcpkgdocdir}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.2.2-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.2.2-4
 - 为 Magic 3.0 重建
 

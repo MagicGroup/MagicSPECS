@@ -2,7 +2,7 @@ Summary: 	Calculate business hours in a time period
 Summary(zh_CN.UTF-8): 在一个时间周期内计算营业时间
 Name: 		perl-Business-Hours
 Version:	0.12
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.12-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.12-3
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Summary(zh_CN.UTF-8): libmpeg2 - 处理MPEG2视频格式
 Name: libmpeg2
 Epoch: 1
 Version: 0.5.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库 
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*1*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1:0.5.1-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1:0.5.1-8
 - 为 Magic 3.0 重建
 

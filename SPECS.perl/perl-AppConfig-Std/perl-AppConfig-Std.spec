@@ -1,7 +1,7 @@
 
 Name:       perl-AppConfig-Std 
 Version:	1.10
-Release:	2%{?dist}
+Release:	3%{?dist}
 # see lib/AppConfig/Std.pm
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.10-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.10-2
 - 更新到 1.10
 

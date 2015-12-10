@@ -1,0 +1,61 @@
+diff -up clementine-1.2.1/src/podcasts/gpoddersearchpage.h.mygpo-qt clementine-1.2.1/src/podcasts/gpoddersearchpage.h
+--- clementine-1.2.1/src/podcasts/gpoddersearchpage.h.mygpo-qt	2012-07-17 12:27:37.000000000 -0500
++++ clementine-1.2.1/src/podcasts/gpoddersearchpage.h	2014-01-03 10:40:37.672459609 -0600
+@@ -20,7 +20,7 @@
+ 
+ #include "addpodcastpage.h"
+ 
+-#include <ApiRequest.h>
++#include <mygpo-qt/ApiRequest.h>
+ 
+ class QNetworkAccessManager;
+ 
+diff -up clementine-1.2.1/src/podcasts/gpoddersync.cpp.mygpo-qt clementine-1.2.1/src/podcasts/gpoddersync.cpp
+diff -up clementine-1.2.1/src/podcasts/gpoddersync.h.mygpo-qt clementine-1.2.1/src/podcasts/gpoddersync.h
+--- clementine-1.2.1/src/podcasts/gpoddersync.h.mygpo-qt	2012-07-17 12:27:37.000000000 -0500
++++ clementine-1.2.1/src/podcasts/gpoddersync.h	2014-01-03 10:40:43.813394301 -0600
+@@ -27,7 +27,7 @@
+ #include <QSharedPointer>
+ #include <QUrl>
+ 
+-#include <ApiRequest.h>
++#include <mygpo-qt/ApiRequest.h>
+ 
+ class Application;
+ class Podcast;
+diff -up clementine-1.2.1/src/podcasts/gpoddertoptagsmodel.cpp.mygpo-qt clementine-1.2.1/src/podcasts/gpoddertoptagsmodel.cpp
+--- clementine-1.2.1/src/podcasts/gpoddertoptagsmodel.cpp.mygpo-qt	2012-07-17 12:27:37.000000000 -0500
++++ clementine-1.2.1/src/podcasts/gpoddertoptagsmodel.cpp	2014-01-03 10:40:13.074721207 -0600
+@@ -20,7 +20,7 @@
+ #include "podcast.h"
+ #include "core/closure.h"
+ 
+-#include <ApiRequest.h>
++#include <mygpo-qt/ApiRequest.h>
+ 
+ #include <QMessageBox>
+ 
+diff -up clementine-1.2.1/src/podcasts/gpoddertoptagspage.h.mygpo-qt clementine-1.2.1/src/podcasts/gpoddertoptagspage.h
+--- clementine-1.2.1/src/podcasts/gpoddertoptagspage.h.mygpo-qt	2012-07-17 12:27:37.000000000 -0500
++++ clementine-1.2.1/src/podcasts/gpoddertoptagspage.h	2014-01-03 10:40:48.849340744 -0600
+@@ -20,7 +20,7 @@
+ 
+ #include <QScopedPointer>
+ 
+-#include <ApiRequest.h>
++#include <mygpo-qt/ApiRequest.h>
+ 
+ #include "addpodcastpage.h"
+ 
+diff -up clementine-1.2.1/src/podcasts/podcast.cpp.mygpo-qt clementine-1.2.1/src/podcasts/podcast.cpp
+--- clementine-1.2.1/src/podcasts/podcast.cpp.mygpo-qt	2012-07-17 12:27:37.000000000 -0500
++++ clementine-1.2.1/src/podcasts/podcast.cpp	2014-01-03 10:44:12.865171582 -0600
+@@ -21,7 +21,7 @@
+ #include <QDataStream>
+ #include <QDateTime>
+ 
+-#include <Podcast.h>
++#include <mygpo-qt/Podcast.h>
+ 
+ const QStringList Podcast::kColumns = QStringList()
+     << "url" << "title" << "description" << "copyright" << "link"

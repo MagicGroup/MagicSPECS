@@ -2,7 +2,7 @@
 
 Name:           gupnp-igd
 Version:	0.2.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library to handle UPnP IGD port mapping        
 Summary(zh_CN.UTF-8): 处理 UPnP IGD 端口映射的库
 
@@ -97,6 +97,9 @@ magic_rpm_clean.sh
 %{_datadir}/gir-1.0/GUPnPIgd-1.0.gir
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.4-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.2.4-3
 - 更新到 0.2.4
 

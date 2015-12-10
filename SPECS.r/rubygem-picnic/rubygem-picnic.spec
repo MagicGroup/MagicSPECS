@@ -3,7 +3,7 @@
 Summary:	Easier distribution of Camping-based applications
 Name:		rubygem-%{gem_name}
 Version:	0.8.1
-Release:	12%{?dist}
+Release:	13%{?dist}
 Group:		Development/Languages
 License:	LGPLv3
 URL:		http://rubyforge.org/projects/picnic/
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.8.1-13
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.1-12
 - 为 Magic 3.0 重建
 

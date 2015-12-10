@@ -11,7 +11,7 @@ Summary: Library that implements an embeddable SQL database engine
 Summary(zh_CN.UTF-8): 实现嵌入式 SQL 数据库引擎的库
 Name: sqlite
 Version: 3.8.11.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: Public Domain
 Group: Applications/Databases
 Group(zh_CN.UTF-8): 应用程序/数据库
@@ -208,6 +208,9 @@ make test
 %endif
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.8.11.1-2
 - 更新到 3.9.2
 

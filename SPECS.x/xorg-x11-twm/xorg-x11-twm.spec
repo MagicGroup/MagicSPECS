@@ -4,7 +4,7 @@ Name: xorg-x11-twm
 # NOTE: Remove Epoch line if package gets renamed to something like "twm"
 Epoch: 1
 Version:	1.0.9
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -66,6 +66,9 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 %config %{_sysconfdir}/X11/twm/system.twmrc
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1:1.0.9-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1:1.0.9-3
 - 为 Magic 3.0 重建
 

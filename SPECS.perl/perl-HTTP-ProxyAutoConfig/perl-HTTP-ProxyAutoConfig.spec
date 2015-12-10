@@ -1,6 +1,6 @@
 Name:           perl-HTTP-ProxyAutoConfig
 Version:        0.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Use a .pac or wpad.dat file to get proxy information
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.3-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.3-6
 - 为 Magic 3.0 重建
 

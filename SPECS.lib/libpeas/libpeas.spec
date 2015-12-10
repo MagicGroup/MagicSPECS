@@ -1,14 +1,9 @@
-%if 0%{?rhel} == 0
-%global use_seed 1
-%global seed_option --enable-seed
-%else
 %global use_seed 0
 %global seed_option --disable-seed
-%endif
 
 Name:		libpeas
 Version:	1.16.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Plug-ins implementation convenience library
 Summary(zh_CN.UTF-8): 实现插件的简易库
 
@@ -16,7 +11,8 @@ Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	LGPLv2+
 URL:		http://ftp.acc.umu.se/pub/GNOME/sources/libpeas/
-Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/1.10/%{name}-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:	http://ftp.acc.umu.se/pub/GNOME/sources/%{name}/%{majorver}/%{name}-%{version}.tar.xz
 
 BuildRequires:	chrpath
 BuildRequires:	gtk3-devel >= 3.0.0
@@ -117,6 +113,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/glade/catalogs/libpeas-gtk.xml
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.16.0-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.16.0-5
 - 更新到 1.16.0
 

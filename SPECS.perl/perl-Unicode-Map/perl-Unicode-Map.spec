@@ -2,7 +2,7 @@
 
 Name:           perl-Unicode-Map
 Version:        0.112
-Release:        29%{?dist}
+Release:        30%{?dist}
 
 Summary:        Perl module for mapping charsets from and to utf16 unicode
 
@@ -70,6 +70,9 @@ make test
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.112-30
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.112-29
 - 为 Magic 3.0 重建
 

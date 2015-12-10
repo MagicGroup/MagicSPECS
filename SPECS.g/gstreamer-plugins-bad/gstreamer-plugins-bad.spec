@@ -10,7 +10,7 @@
 Summary: GStreamer streaming media framework "bad" plug-ins
 Name: gstreamer-plugins-bad
 Version: 0.10.23
-Release: 11%{?dist}
+Release: 12%{?dist}
 # The freeze and nfs plugins are LGPLv2 (only)
 License: LGPLv2+ and LGPLv2
 Group: Applications/Multimedia
@@ -372,6 +372,9 @@ sed -i 's/opencv <= 2.2.0/opencv <= 2.4.0/g' configure
 %doc %{_datadir}/gtk-doc/html/gst-plugins-bad-libs-%{majorminor}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.23-12
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.10.23-11
 - 为 Magic 3.0 重建
 

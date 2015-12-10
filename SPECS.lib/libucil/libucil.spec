@@ -2,7 +2,7 @@ Summary:	Library to render text and graphic overlays onto video images
 Summary(zh_CN.UTF-8): 在视频图像上渲染文本图形的库
 Name:		libucil
 Version:	0.9.10
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.9.10-7
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.10-6
 - 为 Magic 3.0 重建
 

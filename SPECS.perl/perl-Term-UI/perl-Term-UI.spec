@@ -1,6 +1,6 @@
 Name:           perl-Term-UI
 Version:	0.46
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Term::ReadLine user interface made easy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.46-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.46-2
 - 为 Magic 3.0 重建
 

@@ -9,7 +9,7 @@ Summary(zh_CN.UTF-8): JPEG-2000 标准，第 1 部分的实现
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Version: 1.900.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: JasPer License Version 2.0
 URL: http://www.ece.uvic.ca/~mdadams/jasper/
 Source0: http://www.ece.uvic.ca/~mdadams/jasper/software/%{name}-%{version}.zip
@@ -118,6 +118,9 @@ autoreconf -i
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.900.1-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.900.1-7
 - 为 Magic 3.0 重建
 

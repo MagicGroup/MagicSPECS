@@ -20,9 +20,6 @@ Source0:	nacl-gcc-%{version}-git%{gitver}.tar.bz2
 Patch0:		nacl-gcc-4.4.3-git0622fce-tex-fixes.patch
 Patch1:		nacl-gcc-4.4.3-gcc5-fixes.patch
 URL:		http://sourceware.org/gcc/
-%if 0%{?fedora} <= 21
-BuildRequires:	cloog-ppl-devel
-%endif
 BuildRequires:	gmp-devel, mpfr-devel
 BuildRequires:	ppl-pwl-devel, elfutils-devel
 BuildRequires:	nacl-binutils

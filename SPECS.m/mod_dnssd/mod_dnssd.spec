@@ -6,7 +6,7 @@
 
 Name:           mod_dnssd
 Version:        0.6
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        An Apache HTTPD module which adds Zeroconf support
 Summary(zh_CN.UTF-8): 为 Apache 添加零配置支持的 HTTPD 的模块
 
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/httpd/modules/mod_dnssd.so
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.6-15
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.6-14
 - 为 Magic 3.0 重建
 

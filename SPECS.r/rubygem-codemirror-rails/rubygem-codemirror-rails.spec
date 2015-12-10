@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 4.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Use CodeMirror with Rails 3
 Group: Development/Languages
 License: MIT
@@ -74,6 +74,9 @@ cp -a .%{gem_dir}/* \
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.2-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.2-4
 - 为 Magic 3.0 重建
 

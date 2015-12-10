@@ -1,6 +1,6 @@
 Name:           perl-CPAN-Checksums
 Version:	2.10
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Write a CHECKSUMS file for a directory as on CPAN
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf ./debugfiles.list ./debuglinks.list ./debugsources.list
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.10-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.10-2
 - 为 Magic 3.0 重建
 

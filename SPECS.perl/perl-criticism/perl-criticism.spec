@@ -1,6 +1,6 @@
 Name:           perl-criticism
 Version:        1.02
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl pragma to enforce coding standards and best-practices
 Summary(zh_CN.UTF-8):Perl的编译执行编码标准和最佳实践
 License:        GPL+ or Artistic
@@ -57,6 +57,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.02-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.02-13
 - 为 Magic 3.0 重建
 

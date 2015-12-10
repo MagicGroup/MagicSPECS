@@ -1,6 +1,6 @@
 Name:           perl-Test-Assertions
 Version:        1.054
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Simple set of building blocks for both unit and runtime testing
 License:        GPLv2
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.054-21
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.054-20
 - 为 Magic 3.0 重建
 

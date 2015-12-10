@@ -1,6 +1,6 @@
 Name:           perl-Graphics-ColorNames
 Version:        2.11
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Defines RGB values for common color names
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.11-22
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.11-21
 - 为 Magic 3.0 重建
 

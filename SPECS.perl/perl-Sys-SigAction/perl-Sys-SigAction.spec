@@ -1,6 +1,6 @@
 Name:           perl-Sys-SigAction
 Version:	0.21
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl extension for Consistent Signal Handling
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.21-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.21-2
 - 为 Magic 3.0 重建
 

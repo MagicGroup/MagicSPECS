@@ -11,7 +11,7 @@
 Summary: A Scintilla port to Qt
 Name:    qscintilla
 Version:	2.9.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License: GPLv3
 Url:     http://www.riverbankcomputing.com/software/qscintilla/
@@ -313,6 +313,9 @@ test -x %{buildroot}%{python2_sitearch}/PyQt4/Qsci.so
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.9.1-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.9.1-2
 - 更新到 2.9.1
 

@@ -2,7 +2,7 @@
 
 Name:           ocaml-mysql
 Version:	1.2.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        OCaml library for accessing MySQL databases
 Summary(zh_CN.UTF-8): 访问 MySQL 数据库的 OCaml 库
 License:        LGPLv2+ with exceptions
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.2.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.0-2
 - 更新到 1.2.0
 

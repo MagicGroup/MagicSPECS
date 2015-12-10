@@ -1,6 +1,6 @@
 Name:           uudeview
 Version:        0.5.20
-Release:        37%{?dist}
+Release:        38%{?dist}
 
 License:        GPLv2+
 Group:          Applications/File
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 %{_libdir}/*.a
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.5.20-38
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.5.20-37
 - 为 Magic 3.0 重建
 

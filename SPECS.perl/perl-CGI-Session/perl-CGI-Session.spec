@@ -1,6 +1,6 @@
 Name:           perl-CGI-Session
 Version:	4.48
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Persistent session data in CGI applications
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.48-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.48-2
 - 为 Magic 3.0 重建
 

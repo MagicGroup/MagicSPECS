@@ -1,6 +1,6 @@
 Name:           fros
 Version:        1.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Universal screencasting frontend with pluggable support for various backends
 
 %global commit 988d73aea77ad0da5731983f6d45385db440e568
@@ -72,6 +72,9 @@ CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
 %{python_sitelib}/pyfros/plugins/*gnome.*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0-7
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.0-6
 - 为 Magic 3.0 重建
 

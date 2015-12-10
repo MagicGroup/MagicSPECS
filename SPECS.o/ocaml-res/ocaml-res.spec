@@ -2,7 +2,7 @@
 
 Name:           ocaml-res
 Version: 4.0.7
-Release: 2%{?dist}
+Release: 4%{?dist}
 Summary:        OCaml library for resizing arrays and strings
 Summary(zh_CN.UTF-8): 调整数组和字符串大小的 OCaml 库
 License:        LGPLv2+ with exceptions
@@ -92,6 +92,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 4.0.7-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 4.0.7-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.0.7-2
 - 为 Magic 3.0 重建
 

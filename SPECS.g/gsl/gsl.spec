@@ -2,7 +2,7 @@ Summary: The GNU Scientific Library for numerical analysis
 Summary(zh_CN.UTF-8): 数值分析用的 GNU 科学库
 Name: gsl
 Version: 1.16
-Release: 14%{?dist}
+Release: 15%{?dist}
 URL: http://www.gnu.org/software/gsl/
 Source: ftp://ftp.gnu.org/gnu/gsl/%{name}-%{version}.tar.gz
 Patch0: gsl-1.10-lib64.patch
@@ -108,6 +108,9 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.16-15
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.16-14
 - 为 Magic 3.0 重建
 

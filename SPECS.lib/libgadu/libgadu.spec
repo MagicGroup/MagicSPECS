@@ -2,7 +2,7 @@
 
 Name:		libgadu
 Version: 1.12.1
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A Gadu-gadu protocol compatible communications library
 Summary(zh_CN.UTF-8): Gadu-gadu 协议兼容通信库
 License:	LGPLv2
@@ -92,6 +92,9 @@ make check
 %doc docs/protocol.html docs/html
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.12.1-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.12.1-4
 - 为 Magic 3.0 重建
 

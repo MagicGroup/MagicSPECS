@@ -1,6 +1,6 @@
 Name:           maven-parent
 Version:        27
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Apache Maven parent POM
 License:        ASL 2.0
 URL:            http://maven.apache.org
@@ -29,6 +29,9 @@ Apache Maven parent POM file used by other Maven projects.
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 27-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 24 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 27-1
 - Update to upstream version 27
 

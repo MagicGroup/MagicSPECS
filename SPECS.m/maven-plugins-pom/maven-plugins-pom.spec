@@ -2,7 +2,7 @@
 
 Name:           %{short_name}-pom
 Version:        28
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Maven Plugins POM
 BuildArch:      noarch
 Group:          Development/Libraries
@@ -35,6 +35,9 @@ Apache Maven plugins.
 %doc LICENSE NOTICE
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 28-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 12 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 28-1
 - Update to upstream version 28
 

@@ -2,7 +2,7 @@ Summary: A utility for setting up encrypted disks
 Summary(zh_CN.UTF-8): 设置加密磁盘的工具
 Name: cryptsetup
 Version: 1.6.8
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -142,6 +142,9 @@ install -d %{buildroot}/%{_libdir}/fipscheck
 %clean
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.6.8-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.6.8-4
 - 更新到 1.6.8
 

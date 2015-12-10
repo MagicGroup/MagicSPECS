@@ -1,7 +1,7 @@
 Name:           nautilus-sendto
 Epoch:          1
 Version:	3.8.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Nautilus context menu for sending files
 Summary(zh_CN.UTF-8): Nautilus 发送文件的右键菜单
 
@@ -53,6 +53,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/nautilus-sendto.1.gz
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:3.8.2-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:3.8.2-2
 - 为 Magic 3.0 重建
 

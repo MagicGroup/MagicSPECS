@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.8.10
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Support for parsing and rendering YAML documents
 
 License:        BSD
@@ -105,6 +105,12 @@ rm -r libyaml
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.8.10-6
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.8.10-5
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.8.10-4
 - 为 Magic 3.0 重建
 

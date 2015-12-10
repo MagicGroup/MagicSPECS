@@ -8,7 +8,7 @@
 Summary: The Cyrus SASL library
 Name: cyrus-sasl
 Version: 2.1.26
-Release: 17%{?dist}
+Release: 18%{?dist}
 License: BSD with advertising
 Group: System Environment/Libraries
 # Source0 originally comes from ftp://ftp.andrew.cmu.edu/pub/cyrus-mail/;
@@ -434,6 +434,9 @@ getent passwd %{username} >/dev/null || useradd -r -g %{username} -d %{homedir} 
 %{_sbindir}/sasl2-shared-mechlist
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.1.26-18
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1.26-17
 - 为 Magic 3.0 重建
 

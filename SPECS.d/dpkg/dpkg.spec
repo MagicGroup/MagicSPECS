@@ -3,7 +3,7 @@
 
 Name:           dpkg
 Version:	1.18.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Package maintenance system for Debian Linux
 Group:          System Environment/Base
 # The entire source code is GPLv2+ with exception of the following
@@ -315,6 +315,9 @@ create_logfile
 %{_datadir}/locale/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.18.3-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.18.3-2
 - 更新到 1.18.3
 

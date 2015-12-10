@@ -1,6 +1,6 @@
---- src/packaging/envmods/mpich.module.in	2013-01-30 14:45:08.000000000 -0500
-+++ src/packaging/envmods/mpich.module.in.new	2013-02-21 18:28:01.218528398 -0500
-@@ -3,12 +3,21 @@
+--- src/packaging/envmods/mpich.module.in	2015-02-20 15:48:13.000000000 -0500
++++ src/packaging/envmods/mpich.module.in.new	2015-08-27 15:27:43.667837212 -0400
+@@ -3,12 +3,23 @@
  #  MPICH module for use with 'environment-modules' package:
  # 
  
@@ -10,16 +10,18 @@
  # Define prefix so PATH and MANPATH can be updated.
 -setenv        prefix        @prefix@
 -setenv        exec_prefix   @exec_prefix@
-+setenv        MPI_BIN       @LIBDIR@/@MPILIBNAME@/bin
-+setenv        MPI_SYSCONFIG @sysconfdir@
++setenv        MPI_BIN       @LIBDIR@/bin
++setenv        MPI_SYSCONFIG @sysconfdir@/@MPINAME@-@ARCH@
 +setenv        MPI_FORTRAN_MOD_DIR @includedir@
 +setenv        MPI_INCLUDE   @includedir@
 +setenv        MPI_LIB       @libdir@
 +setenv        MPI_MAN       @mandir@
-+setenv        MPI_PYTHON_SITEARCH	@pysitearch@/@MPILIBNAME@
-+setenv        MPI_COMPILER  @MPILIBNAME@-@ARCH@
-+setenv        MPI_SUFFIX    _@MPILIBNAME@
-+setenv        MPI_HOME      @LIBDIR@/@MPILIBNAME@
++setenv        MPI_PYTHON_SITEARCH	@py2sitearch@/@MPINAME@
++setenv        MPI_PYTHON2_SITEARCH	@py2sitearch@/@MPINAME@
++setenv        MPI_PYTHON3_SITEARCH	@py3sitearch@/@MPINAME@
++setenv        MPI_COMPILER  @MPINAME@-@ARCH@
++setenv        MPI_SUFFIX    _@MPINAME@
++setenv        MPI_HOME      @LIBDIR@
  prepend-path  PATH          @bindir@
 +prepend-path  LD_LIBRARY_PATH @libdir@
  prepend-path  MANPATH       @mandir@
@@ -27,4 +29,4 @@
 -# Undefine prefix and exec_prefix which are too generic environment variables.
 -unsetenv      prefix
 -unsetenv      exec_prefix
-+prepend-path  PYTHONPATH    @pysitearch@/@MPILIBNAME@
++prepend-path  PKG_CONFIG_PATH @LIBDIR@/lib/pkgconfig

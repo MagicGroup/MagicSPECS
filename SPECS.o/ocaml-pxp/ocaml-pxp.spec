@@ -2,7 +2,7 @@
 
 Name:           ocaml-pxp
 Version:	1.2.7
-Release:	2%{?dist}
+Release:	4%{?dist}
 Summary:        Validating XML parser
 Summary(zh_CN.UTF-8): 检验 XML 解析器
 License:        BSD
@@ -106,6 +106,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.2.7-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.2.7-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.7-2
 - 为 Magic 3.0 重建
 

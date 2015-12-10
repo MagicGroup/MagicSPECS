@@ -1,6 +1,6 @@
 Name:           perl-POD2-Base
 Version:        0.043
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Base module for translations of Perl documentation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.043-16
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.043-15
 - 为 Magic 3.0 重建
 

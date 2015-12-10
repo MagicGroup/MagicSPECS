@@ -13,9 +13,6 @@ License: LGPLv2+ and GPLv2+
 URL: http://www.indilib.org
 Source0: http://downloads.sourceforge.net/indi/%{name}_%{version}.tar.gz
 Patch0: libindi-cmake.patch
-# https://sourceforge.net/p/indi/bugs/50/
-Patch1: libindi-mathplugin.patch
-Patch2: libindi-aarch64.patch
 
 BuildRequires: cmake cfitsio-devel zlib-devel libnova-devel libfli-devel
 BuildRequires: libusb-devel libjpeg-devel gsl-devel
@@ -41,10 +38,10 @@ Requires: %{name}%{?_isa} = %{version}-%{release}
 Static library needed to develop a %{name} application
 
 %prep
-%setup -q -n %{name}-%{wrongversion}
+%setup -q -n %{name}_%{version}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
+# For Magic we want to put udev rules in %{_udevrulesdir}
+sed -i 's|/lib/udev/rules.d|%{_udevrulesdir}|g' CMakeLists.txt
 chmod -x drivers/telescope/lx200fs2.h
 chmod -x drivers/telescope/lx200fs2.cpp
 
@@ -60,12 +57,13 @@ make install DESTDIR=%{buildroot}
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS ChangeLog COPYING.GPL COPYING.LGPL COPYRIGHT LICENSE NEWS README TODO
+%license COPYING.BSD COPYING.GPL COPYING.LGPL COPYRIGHT LICENSE
+%doc AUTHORS ChangeLog NEWS README TODO
 %{_bindir}/*
 %{_libdir}/*.so.*
 %{_libdir}/indi/MathPlugins
 %{_datadir}/indi
-/lib/udev/rules.d/99-gpusb.rules
+%{_udevrulesdir}/*.rules
 
 %files devel
 %{_includedir}/*

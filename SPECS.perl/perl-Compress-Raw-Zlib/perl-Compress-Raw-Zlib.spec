@@ -1,6 +1,6 @@
 Name:           perl-Compress-Raw-Zlib
 Version:	2.069
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Low-level interface to the zlib compression library
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/Compress::Raw::Zlib.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.069-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.069-2
 - 更新到 2.069
 

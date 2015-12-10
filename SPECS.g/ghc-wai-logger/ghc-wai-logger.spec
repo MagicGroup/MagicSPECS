@@ -9,7 +9,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        2.1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A logging system for WAI
 
 License:        BSD
@@ -85,6 +85,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1.1-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.1.1-3
 - 为 Magic 3.0 重建
 

@@ -8,7 +8,7 @@
 
 Name:           openjpeg2
 Version:        2.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        C-Library for JPEG 2000
 Summary(zh_CN.UTF-8): JPEG 2000 的 C 库
 
@@ -348,6 +348,9 @@ make test -C %{_target_platform}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.1.0-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1.0-5
 - 为 Magic 3.0 重建
 

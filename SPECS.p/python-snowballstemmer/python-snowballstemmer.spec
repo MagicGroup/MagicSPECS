@@ -4,7 +4,7 @@
 
 Name:           python-%{srcname}
 Version:	1.2.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        This package provides 16 stemmer algorithms
 Summary(zh_CN.UTF-8): 词干分析器算法
 
@@ -107,6 +107,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.2.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.2.0-2
 - 为 Magic 3.0 重建
 

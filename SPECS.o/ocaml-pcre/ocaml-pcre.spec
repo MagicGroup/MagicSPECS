@@ -2,7 +2,7 @@
 
 Name:           ocaml-pcre
 Version: 7.1.6
-Release: 2%{?dist}
+Release: 4%{?dist}
 Summary:        Perl compatibility regular expressions (PCRE) for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 Perl 兼容正则表达式库
 
@@ -92,6 +92,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 7.1.6-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 7.1.6-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 7.1.6-2
 - 更新到 7.1.6
 

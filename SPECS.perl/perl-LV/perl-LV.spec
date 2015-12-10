@@ -1,6 +1,6 @@
 Name:           perl-LV
 Version:        0.006
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Perl module to make lvalue subroutines easy and practical
 License:        GPL+ or Artistic
 
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/LV*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.006-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.006-6
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Signing utility for UEFI binaries
 Summary(zh_CN.UTF-8): UEFI 二进制签名工具
 Name: pesign
 Version: 0.108
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
 License: GPLv2
@@ -106,6 +106,9 @@ exit 0
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.108-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.108-5
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:           cheese
 Epoch:          2
 Version:	3.18.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Application for taking pictures and movies from a webcam
 Summary(zh_CN.UTF-8): 从网络摄像头中抓取图像和视频的程序
 
@@ -97,10 +97,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -f $RPM_BUILD_ROOT%{_libdir}/libcheese.{a,la}
 rm -f $RPM_BUILD_ROOT%{_libdir}/libcheese-gtk.{a,la}
 
-desktop-file-install --delete-original --vendor="" 	\
- 	--dir=$RPM_BUILD_ROOT%{_datadir}/applications 	\
-	--add-category X-AudioVideoImport		\
-	$RPM_BUILD_ROOT%{_datadir}/applications/cheese.desktop
 magic_rpm_clean.sh
 %find_lang %{name} --with-gnome
 
@@ -133,14 +129,14 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %files
 %doc AUTHORS COPYING README
 %{_bindir}/cheese
-%{_datadir}/applications/cheese.desktop
-%{_datadir}/appdata/cheese.appdata.xml
 %{_datadir}/icons/hicolor/*/apps/cheese.png
-#%{_datadir}/icons/hicolor/*/actions/*.png
-#%{_datadir}/icons/hicolor/scalable/actions/*.svg
-%{_mandir}/man1/cheese.1.gz
 # FIXME find-lang is supposed to pick these up
 %doc %{_datadir}/help/*/cheese
+%{_libexecdir}/gnome-camera-service
+%{_datadir}/appdata/org.gnome.Cheese.appdata.xml
+%{_datadir}/applications/org.gnome.Cheese.desktop
+%{_datadir}/dbus-1/services/org.gnome.*.service
+%{_datadir}/icons/hicolor/symbolic/apps/cheese-symbolic.svg
 
 %files -f %{name}.lang libs
 %{_libdir}/libcheese.so.*
@@ -149,7 +145,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/girepository-1.0/Cheese-3.0.typelib
 
 %files libs-devel
-%doc COPYING
+#%doc COPYING
 %{_libdir}/libcheese.so
 %{_libdir}/libcheese-gtk.so
 %{_includedir}/cheese/
@@ -159,6 +155,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/Cheese-3.0.gir
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2:3.18.1-4
 - 更新到 3.18.1
 

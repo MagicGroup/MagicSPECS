@@ -1,6 +1,6 @@
 Name: ding-libs
 Version: 0.5.0
-Release: 2%{?dist}
+Release: 27%{?dist}
 Summary: "Ding is not GLib" assorted utility libraries
 Group: Development/Libraries
 License: LGPLv3+
@@ -13,10 +13,10 @@ BuildRoot: %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 # allow clean upgrades!
 %global path_utils_version 0.2.1
 %global dhash_version 0.4.3
-%global collection_version 0.6.2
-%global ref_array_version 0.1.4
+%global collection_version 0.7.0
+%global ref_array_version 0.1.5
 %global basicobjects_version 0.1.1
-%global ini_config_version 1.1.0
+%global ini_config_version 1.2.0
 
 ### Patches ###
 
@@ -68,7 +68,7 @@ libdhash, libini_config, librefarray and libpath_utils.
 Summary: Filesystem Path Utilities
 Group: Development/Libraries
 License: LGPLv3+
-Version: 0.5.0
+Version: %{path_utils_version}
 
 %description -n libpath_utils
 Utility functions to manipulate filesystem pathnames
@@ -78,7 +78,7 @@ Summary: Development files for libpath_utils
 Group: Development/Libraries
 Requires: libpath_utils = %{path_utils_version}-%{release}
 License: LGPLv3+
-Version: 0.5.0
+Version: %{path_utils_version}
 
 %description -n libpath_utils-devel
 Utility functions to manipulate filesystem pathnames
@@ -106,7 +106,7 @@ Utility functions to manipulate filesystem pathnames
 Group: Development/Libraries
 Summary: Dynamic hash table
 License: LGPLv3+
-Version: 0.5.0
+Version: %{dhash_version}
 
 %description -n libdhash
 A hash table which will dynamically resize to achieve optimal storage & access
@@ -117,7 +117,7 @@ Summary: Development files for libdhash
 Group: Development/Libraries
 Requires: libdhash = %{dhash_version}-%{release}
 License: LGPLv3+
-Version: 0.5.0
+Version: %{dhash_version}
 
 %description -n libdhash-devel
 A hash table which will dynamically resize to achieve optimal storage & access
@@ -145,7 +145,7 @@ time properties
 Summary: Collection data-type for C
 Group: Development/Libraries
 License: LGPLv3+
-Version: 0.5.0
+Version: %{collection_version}
 
 %description -n libcollection
 A data-type to collect data in a hierarchical structure for easy iteration
@@ -156,7 +156,7 @@ Summary: Development files for libcollection
 Group: Development/Libraries
 License: LGPLv3+
 Requires: libcollection = %{collection_version}-%{release}
-Version: 0.5.0
+Version: %{collection_version}
 
 %description -n libcollection-devel
 A data-type to collect data in a hierarchical structure for easy iteration
@@ -189,7 +189,7 @@ and serialization
 Summary: A refcounted array for C
 Group: Development/Libraries
 License: LGPLv3+
-Version: 0.5.0
+Version: %{ref_array_version}
 
 %description -n libref_array
 A dynamically-growing, reference-counted array
@@ -199,7 +199,7 @@ Summary: Development files for libref_array
 Group: Development/Libraries
 Requires: libref_array = %{ref_array_version}-%{release}
 License: LGPLv3+
-Version: 0.5.0
+Version: %{ref_array_version}
 
 %description -n libref_array-devel
 A dynamically-growing, reference-counted array
@@ -228,7 +228,7 @@ A dynamically-growing, reference-counted array
 Summary: Basic object types for C
 Group: Development/Libraries
 License: GPLv3+
-Version: 0.5.0
+Version: %{basicobjects_version}
 
 %description -n libbasicobjects
 Basic object types
@@ -237,7 +237,7 @@ Basic object types
 Summary: Development files for libbasicobjects
 Group: Development/Libraries
 License: GPLv3+
-Version: 0.5.0
+Version: %{basicobjects_version}
 Requires: libbasicobjects = %{basicobjects_version}-%{release}
 
 %description -n libbasicobjects-devel
@@ -264,7 +264,7 @@ Basic object types
 Summary: INI file parser for C
 Group: Development/Libraries
 License: LGPLv3+
-Version: 0.5.0
+Version: %{ini_config_version}
 
 %description -n libini_config
 Library to process config files in INI format into a libcollection data
@@ -278,7 +278,7 @@ Requires: libini_config = %{ini_config_version}-%{release}
 Requires: libcollection-devel = %{collection_version}-%{release}
 Requires: libref_array-devel = %{ref_array_version}-%{release}
 Requires: libbasicobjects-devel = %{basicobjects_version}-%{release}
-Version: 0.5.0
+Version: %{ini_config_version}
 
 %description -n libini_config-devel
 Library to process config files in INI format into a libcollection data
@@ -297,6 +297,7 @@ structure
 %{_includedir}/ini_comment.h
 %{_includedir}/ini_configobj.h
 %{_includedir}/ini_valueobj.h
+%{_includedir}/ini_configmod.h
 %{_libdir}/libini_config.so
 %{_libdir}/pkgconfig/ini_config.pc
 %doc ini/doc/html/
@@ -337,6 +338,15 @@ rm -f \
 rm -f */doc/html/installdox
 
 %changelog
+* Mon Nov 30 2015 Liu Di <liudidi@gmail.com> - 0.5.0-27
+- 为 Magic 3.0 重建
+
+* Mon Nov 30 2015 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.5.0-2
 - 更新到 0.5.0
 

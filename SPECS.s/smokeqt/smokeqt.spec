@@ -1,6 +1,6 @@
 Name:    smokeqt
 Version: 4.14.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Bindings for Qt libraries
 
 License: LGPLv2+
@@ -71,6 +71,9 @@ magic_rpm_clean.sh
 %{_datadir}/smoke/*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.14.3-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.14.3-4
 - 为 Magic 3.0 重建
 

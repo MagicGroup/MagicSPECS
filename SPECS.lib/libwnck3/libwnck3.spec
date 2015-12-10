@@ -2,7 +2,7 @@ Summary: Window Navigator Construction Kit
 Summary(zh_CN.UTF-8): 窗口导航构建工具包
 Name: libwnck3
 Version:	3.14.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://download.gnome.org/sources/libwnck/
 #VCS: git:git://git.gnome.org/libwnck
 Source0: http://download.gnome.org/sources/libwnck/3.4/libwnck-%{version}.tar.xz
@@ -80,6 +80,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.14.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.14.0-2
 - 更新到 3.14.0
 

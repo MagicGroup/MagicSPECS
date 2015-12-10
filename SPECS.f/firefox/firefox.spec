@@ -86,7 +86,7 @@
 Summary:        Mozilla Firefox Web browser
 Name:           firefox
 Version:        41.0.1
-Release:        2%{?pre_tag}%{?dist}
+Release:        3%{?pre_tag}%{?dist}
 URL:            http://www.mozilla.org/projects/firefox/
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 Group:          Applications/Internet
@@ -769,6 +769,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 #---------------------------------------------------------------------
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 41.0.1-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 41.0.1-2
 - 为 Magic 3.0 重建
 

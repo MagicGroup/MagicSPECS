@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.3.2.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Twitter's Bootstrap, converted to Sass and ready to drop into Rails or Compass
 Group: Development/Languages
 # All source code has the same license as Twitter's Bootstrap
@@ -86,6 +86,9 @@ popd
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.3.2.2-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.3.2.2-6
 - 为 Magic 3.0 重建
 

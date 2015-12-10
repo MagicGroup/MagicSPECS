@@ -1,0 +1,15 @@
+diff -ur dia-0.97.3.orig/plug-ins/wmf/wmf.cpp dia-0.97.3/plug-ins/wmf/wmf.cpp
+--- dia-0.97.3.orig/plug-ins/wmf/wmf.cpp	2015-11-30 10:54:13.182678074 +0800
++++ dia-0.97.3/plug-ins/wmf/wmf.cpp	2015-11-30 10:55:11.251676586 +0800
+@@ -53,9 +53,11 @@
+ #include <pango/pangowin32.h>
+ 
+ #elif HAVE_LIBEMF
++#define STRICT
+   namespace W32 {
+ #  include <emf.h>
+   }
++#undef STRICT
+ #else
+ #  include "wmf_gdi.h"
+ #  define SAVE_EMF

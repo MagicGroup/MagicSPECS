@@ -2,7 +2,7 @@ Summary: Internationalized Domain Name support library
 Summary(zh_CN.UTF-8): 国际化域名支持库
 Name: libidn
 Version: 1.32
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://www.gnu.org/software/libidn/
 License: LGPLv2+ and GPLv3+ and GFDL
 Source0: http://ftp.gnu.org/gnu/libidn/libidn-%{version}.tar.gz
@@ -138,6 +138,9 @@ rm -rf %{buildroot}
 %{_emacs_sitelispdir}/%{name}
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.32-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.32-4
 - 更新到 1.32
 

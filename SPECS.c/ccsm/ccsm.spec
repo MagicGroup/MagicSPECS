@@ -2,7 +2,7 @@
 
 Name:           ccsm
 Version:        0.8.4
-Release:        16%{?dist}
+Release:        17%{?dist}
 Epoch:          1
 Summary:        Plugin and configuration tool - Compiz Fusion Project
 
@@ -94,6 +94,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.8.4-17
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.8.4-16
 - 为 Magic 3.0 重建
 

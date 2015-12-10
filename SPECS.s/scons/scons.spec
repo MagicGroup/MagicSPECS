@@ -2,7 +2,7 @@
 
 Name:		    scons
 Version:	2.4.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	    An Open Source software construction tool
 Summary(zh_CN.UTF-8): 开源软件的构建工具
 Group:		    Development/Tools
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man?/*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.4.0-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.4.0-2
 - 为 Magic 3.0 重建
 

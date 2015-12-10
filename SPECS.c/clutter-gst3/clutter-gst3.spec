@@ -1,6 +1,6 @@
 Name:           clutter-gst3
 Version:	3.0.14
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GStreamer integration library for Clutter
 Summary(zh_CN.UTF-8): Clutter 的 GStreamer 集成库
 
@@ -88,6 +88,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.0.14-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 3.0.14-4
 - 更新到 3.0.14
 

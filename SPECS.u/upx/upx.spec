@@ -1,6 +1,6 @@
 Name:           upx
 Version:        3.91
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Ultimate Packer for eXecutables
 Summary(zh_CN.UTF-8): 可执行文件压缩程序
 
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.91-9
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 3.91-8
 - 为 Magic 3.0 重建
 

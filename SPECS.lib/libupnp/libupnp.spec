@@ -2,7 +2,7 @@ Version: 1.6.19
 Summary: Universal Plug and Play (UPnP) SDK
 Summary(zh_CN.UTF-8): 通用即插即用 (UPnP) SDK
 Name: libupnp
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 rm -rf %{buildroot}
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.6.19-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.6.19-2
 - 为 Magic 3.0 重建
 

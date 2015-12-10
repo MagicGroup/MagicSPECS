@@ -2,8 +2,8 @@
 
 Summary: A library of handy utility functions
 Name: glib2
-Version:	2.47.1
-Release: 2%{?dist}
+Version:	2.47.3
+Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -164,11 +164,6 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_bindir}/gsettings
 %{_bindir}/gdbus
 %{_bindir}/gapplication
-%doc %{_mandir}/man1/gio-querymodules.1.gz
-%doc %{_mandir}/man1/glib-compile-schemas.1.gz
-%doc %{_mandir}/man1/gsettings.1.gz
-%doc %{_mandir}/man1/gdbus.1.gz
-%doc %{_mandir}/man1/gapplication.1.gz
 
 %files devel
 %{_libdir}/lib*.so
@@ -190,15 +185,6 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_bindir}/gresource
 %{_datadir}/glib-2.0/codegen
 %attr (0755, root, root) %{_bindir}/gtester-report
-%doc %{_mandir}/man1/glib-genmarshal.1.gz
-%doc %{_mandir}/man1/glib-gettextize.1.gz
-%doc %{_mandir}/man1/glib-mkenums.1.gz
-%doc %{_mandir}/man1/gobject-query.1.gz
-%doc %{_mandir}/man1/gtester-report.1.gz
-%doc %{_mandir}/man1/gtester.1.gz
-%doc %{_mandir}/man1/gdbus-codegen.1.gz
-%doc %{_mandir}/man1/glib-compile-resources.1.gz
-%doc %{_mandir}/man1/gresource.1.gz
 %{_datadir}/gdb/auto-load%{_libdir}/libglib-2.0.so.*-gdb.py*
 %{_datadir}/gdb/auto-load%{_libdir}/libgobject-2.0.so.*-gdb.py*
 %{_datadir}/systemtap/tapset/*.stp
@@ -221,6 +207,9 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_datadir}/installed-tests
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.47.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.47.1-2
 - 更新到 2.47.1
 

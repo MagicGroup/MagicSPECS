@@ -1,6 +1,6 @@
 Name:           kbd
 Version:        2.0.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Tools for configuring the console (keyboard, virtual terminals, etc.)
 Summary(zh_CN.UTF-8): 配置控制台的工具（键盘、虚拟终端等）
 
@@ -194,6 +194,9 @@ magic_rpm_clean.sh
 /lib/kbd/keymaps/legacy
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.0.1-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0.1-8
 - 更新到 2.0.3
 

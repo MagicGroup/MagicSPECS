@@ -2,7 +2,7 @@
 
 Name:           ocaml-cil
 Version:        1.7.3
-Release:        12%{?dist}
+Release:        15%{?dist}
 Summary:        CIL - Infrastructure for C Program Analysis and Transformation
 Summary(zh_CN.UTF-8): CIL - C 程序分析和转换的基础
 License:        BSD
@@ -199,6 +199,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.7.3-15
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.7.3-14
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.7.3-13
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.7.3-12
 - 为 Magic 3.0 重建
 

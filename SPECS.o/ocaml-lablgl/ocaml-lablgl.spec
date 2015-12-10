@@ -1,7 +1,7 @@
 Name:           ocaml-lablgl
 Epoch:          1
 Version:        1.05
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        LablGL is an OpenGL interface for Objective Caml
 Summary(zh_CN.UTF-8): OCaml 的 OpenGL 接口
 License:        BSD
@@ -139,6 +139,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1:1.05-7
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:1.05-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.05-5
 - 为 Magic 3.0 重建
 

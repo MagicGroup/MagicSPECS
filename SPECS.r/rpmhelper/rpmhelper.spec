@@ -5,7 +5,7 @@ Summary(zh_CN.UTF-8): 与 rpm 有关的一些脚本
 Name: rpmhelper
 URL: http://www.linuxfans.org
 Version: 0.03
-Release: 4%{?dist}
+Release: 5%{?dist}
 Source0: %{name}.tar.xz
 License: GPL
 Group: Application/Tools
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_bindir}/mb-fetch-fcpkg
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.03-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.03-4
 - 为 Magic 3.0 重建
 

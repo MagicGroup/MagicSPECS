@@ -1,6 +1,6 @@
 Name:           perl-Convert-UU
 Version:        0.5201
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl module for uuencode and uudecode
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.5201-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.5201-10
 - 为 Magic 3.0 重建
 

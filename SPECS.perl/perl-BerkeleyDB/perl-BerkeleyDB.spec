@@ -10,7 +10,7 @@
 
 Name:           perl-BerkeleyDB
 Version:	0.55
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Interface to Berkeley DB
 Summary(zh_CN.UTF-8): 伯克利 DB 的接口
 License:        GPL+ or Artistic
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/BerkeleyDB.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.55-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.55-3
 - 为 Magic 3.0 重建
 

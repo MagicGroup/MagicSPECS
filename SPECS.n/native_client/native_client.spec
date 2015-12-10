@@ -6,7 +6,7 @@ Summary:	Google Native Client Toolchain
 # We'll just resync this when Chromium changes. It's fun!
 Version:	46.0.2490.71
 Epoch:		1
-Release:	2%{?dist}
+Release:	3%{?dist}
 # Notes: https://sites.google.com/a/chromium.org/dev/nativeclient/pnacl/building-pnacl-components-for-distribution-packagers
 # New model for prepping source:
 # git branch and rev comes from 
@@ -169,6 +169,9 @@ touch %{buildroot}/usr/pnacl_translator/stamp.prep
 /usr/pnacl_translator
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1:46.0.2490.71-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 15 2015 Tom Callaway <spot@fedoraproject.org> 46.0.2490.71-1
 - update to 46.0.2490.71
 

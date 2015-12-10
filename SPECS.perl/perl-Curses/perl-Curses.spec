@@ -1,6 +1,6 @@
 Name:           perl-Curses
 Version:	1.32
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Perl bindings for ncurses
 
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.32-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.32-3
 - 更新到
 

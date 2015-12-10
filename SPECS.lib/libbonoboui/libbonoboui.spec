@@ -13,7 +13,7 @@
 Summary: Bonobo user interface components
 Name: libbonoboui
 Version: 2.24.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/libbonoboui
 Source0: http://download.gnome.org/sources/libbonoboui/2.24/%{name}-%{version}.tar.bz2
@@ -119,6 +119,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/libbonoboui
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.24.5-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.24.5-7
 - 为 Magic 3.0 重建
 

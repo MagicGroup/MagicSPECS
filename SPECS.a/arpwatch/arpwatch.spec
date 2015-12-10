@@ -3,7 +3,7 @@
 Name: arpwatch
 Epoch: 14
 Version: 2.1a15
-Release: 20%{?dist}
+Release: 21%{?dist}
 Summary: Network monitoring tools for tracking IP addresses on a network
 Summary(zh_CN.UTF-8): 在网络中跟踪IP地址的网络监视工具
 Group: Applications/System
@@ -160,6 +160,9 @@ fi
 %verify(not md5 size mtime) %config(noreplace) %{_vararpwatch}/ethercodes.dat
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 14:2.1a15-21
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 14:2.1a15-20
 - 为 Magic 3.0 重建
 

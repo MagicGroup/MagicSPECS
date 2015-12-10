@@ -1,6 +1,6 @@
 Name:           libtomcrypt
 Version:        1.17
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        A comprehensive, portable cryptographic toolkit
 Summary(zh_CN.UTF-8): 一个全面的，可移植的加密工具包
 
@@ -117,6 +117,9 @@ magic_rpm_clean.sh
 %doc LICENSE doc/crypt.pdf
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.17-24
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.17-23
 - 为 Magic 3.0 重建
 

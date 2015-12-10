@@ -5,7 +5,7 @@ Summary: A firewall daemon with D-Bus interface providing a dynamic firewall
 Summary(zh_CN.UTF-8): 使用 D-Bus 接口提供动态防火墙的防火墙服务
 Name: firewalld
 Version: 0.3.14.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 URL:     http://www.firewalld.org
 License: GPLv2+
 Source0: https://fedorahosted.org/released/firewalld/%{name}-%{version}.tar.bz2
@@ -467,6 +467,9 @@ fi
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.14.2-7
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.3.14.2-6
 - 为 Magic 3.0 重建
 

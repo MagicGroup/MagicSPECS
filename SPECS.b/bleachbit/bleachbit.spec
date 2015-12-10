@@ -1,6 +1,6 @@
 Name:           bleachbit
 Version:	1.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Remove unnecessary files, free space, and maintain privacy
 Summary(zh_CN): 清除不需要的文件，释放空间的软件
 License:        GPLv3+
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.2-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2-3
 - 更新到 1.2
 

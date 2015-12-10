@@ -51,7 +51,7 @@
 
 Name:           %{?scl_prefix}icu4j
 Version:        52.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        International Components for Unicode for Java
 License:        MIT and EPL 
@@ -200,6 +200,9 @@ cp %{pkg_name}-%{version}.pom $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{pkg_name}.pom
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:52.1-4
+- 为 Magic 3.0 重建
+
 * Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1:52.1-3
 - 为 Magic 3.0 重建
 

@@ -8,8 +8,8 @@
 Summary: Terminal emulator for GNOME
 Summary(zh_CN.UTF-8): GNOME 的终端模拟器
 Name: gnome-terminal
-Version:	3.19.1
-Release: 2%{?dist}
+Version:	3.18.2
+Release: 1%{?dist}
 License: GPLv3+ and GFDL
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
@@ -17,6 +17,13 @@ URL: http://www.gnome.org/
 #VCS: git:git://git.gnome.org/gnome-terminal
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0: http://download.gnome.org/sources/gnome-terminal/%{majorver}/gnome-terminal-%{version}.tar.xz
+Source1: org.gnome.Terminal.gschema.override
+
+Patch0: 0001-build-Don-t-treat-warnings-as-errors.patch
+# https://bugzilla.gnome.org/show_bug.cgi?id=755825
+Patch1: gnome-terminal-symbolic-new-tab-icon.patch
+
+Patch100: gnome-terminal-dark-transparency-notify.patch
 
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: GConf2-devel
@@ -43,22 +50,23 @@ GNOME 下的终端模拟器，支持多标签窗口和配置文件。
 
 %prep
 %setup -q
+%patch0 -p1 -b .warnings
+%patch1 -p1 -b .new-tab-icon
+%patch100 -p1 -b .dark-transparency-notify
 
 %build
-%configure --with-gtk=3.0
+autoreconf -f -i
+%configure --disable-static --disable-gterminal --disable-migration --with-gtk=3.0 --with-nautilus-extension
 
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
-desktop-file-install --vendor gnome --delete-original	\
-  --dir $RPM_BUILD_ROOT%{_datadir}/applications		\
-  --remove-category=Application				\
-  --add-category=System					\
-  $RPM_BUILD_ROOT%{_datadir}/applications/gnome-terminal.desktop
+rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.la
 
-rm -f %{buildroot}%{_libdir}/nautilus/extensions-3.0/libterminal-nautilus.{a,la}
+cp %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas
+
 magic_rpm_clean.sh
 %find_lang %{gettext_package} --with-gnome
 
@@ -85,8 +93,8 @@ fi
 %{_datadir}/gnome-shell/search-providers/gnome-terminal-search-provider.ini
 
 %changelog
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
-- 更新到 3.19.1
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.2-1
+- 更新到 3.18.2
 
 * Wed Apr 09 2014 Liu Di <liudidi@gmail.com> - 3.12.0-1
 - 更新到 3.12.0

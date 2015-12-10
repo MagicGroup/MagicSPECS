@@ -5,7 +5,7 @@ Summary: GNOME session manager
 Summary(zh_CN.UTF-8): GNOME 会话管理器
 Name: gnome-session
 Version:	3.18.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://www.gnome.org
 #VCS: git:git://git.gnome.org/gnome-session
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -145,7 +145,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %doc %dir %{_datadir}/doc/%{name}-%{version}/dbus
 %doc %{_datadir}/doc/%{name}-%{version}/dbus/*
 %doc %{_mandir}/man*/*
-#%{_datadir}/applications/gnome-session-properties.desktop
 %dir %{_datadir}/gnome-session
 %dir %{_datadir}/gnome-session/sessions
 %{_datadir}/gnome-session/sessions/gnome.session
@@ -155,7 +154,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/gnome-session-check-accelerated
 %{_libexecdir}/gnome-session-check-accelerated-helper
 %{_libexecdir}/gnome-session-failed
-#%{_datadir}/gnome-session/gsm-inhibit-dialog.ui
+%{_libexecdir}/gnome-session-binary
+%{_datadir}/icons/hicolor/symbolic/apps/session-properties-symbolic.svg
 %{_datadir}/gnome-session/session-properties.ui
 %{_datadir}/gnome-session/hardware-compatibility
 %{_datadir}/icons/hicolor/*/apps/session-properties.png
@@ -168,6 +168,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/wayland-sessions/gnome-wayland.desktop
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-2
 - 更新到 3.18.1
 

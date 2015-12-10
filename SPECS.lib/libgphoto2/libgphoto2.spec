@@ -1,8 +1,8 @@
 %global udevdir %(pkg-config --variable=udevdir udev)
 
 Name:           libgphoto2
-Version: 2.5.4
-Release:        8%{?dist}
+Version: 2.5.9
+Release:        2%{?dist}
 Summary:        Library for accessing digital cameras
 Summary(zh_CN.UTF-8): 访问数码相机的库
 Group:          Development/Libraries
@@ -116,8 +116,8 @@ rm -rf %{buildroot}%{_libdir}/libgphoto2_port/*/*a
 rm -rf %{buildroot}%{_libdir}/*.a
 rm -rf %{buildroot}%{_libdir}/*.la
 magic_rpm_clean.sh
-%find_lang %{name}-6
-%find_lang %{name}_port-10
+%find_lang %{name}-6 || :
+%find_lang %{name}_port-12 || :
 cat libgphoto2*.lang >> %{name}.lang
 
 # https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
@@ -152,6 +152,12 @@ rm -rf %{buildroot}%{_defaultdocdir}/%{name}
 %{_mandir}/man3/*
 
 %changelog
+* Tue Dec 08 2015 Liu Di <liudidi@gmail.com> - 2.5.9-2
+- 为 Magic 3.0 重建
+
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.5.4-9
+- 为 Magic 3.0 重建
+
 * Wed Jul 16 2014 Liu Di <liudidi@gmail.com> - 2.5.4-8
 - 更新到 2.5.4
 

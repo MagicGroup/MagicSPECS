@@ -6,7 +6,7 @@ Summary:        Firmware for several ALSA-supported sound cards
 Summary(zh_CN.UTF-8): ALSA 支持的几个声卡需要的固件
 Name:           alsa-firmware
 Version:	1.0.29
-Release:        3%{?dist}
+Release:        4%{?dist}
 # See later in the spec for a breakdown of licensing
 License:        GPL+ and BSD and GPLv2+ and GPLv2 and LGPLv2+
 Group:          Applications/Multimedia
@@ -216,6 +216,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.0.29-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.0.29-3
 - 为 Magic 3.0 重建
 

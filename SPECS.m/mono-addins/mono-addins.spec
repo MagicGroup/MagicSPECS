@@ -2,7 +2,7 @@
 
 Name:		mono-addins
 Version: 1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:	Addins for mono
 Summary(zh_CN.UTF-8): Mono 的附加组件
 Group:		Development/Languages
@@ -122,6 +122,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/mono-addins*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-2
 - 为 Magic 3.0 重建
 

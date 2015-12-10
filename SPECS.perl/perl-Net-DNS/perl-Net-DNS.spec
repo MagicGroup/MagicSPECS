@@ -1,6 +1,6 @@
 Name:          perl-Net-DNS
 Version:       0.68
-Release:       15%{?dist}
+Release:       16%{?dist}
 Summary:       DNS resolver modules for Perl
 License:       GPL+ or Artistic
 Group:         Development/Libraries
@@ -101,6 +101,9 @@ done
 %{_mandir}/man3/Net::DNS::Nameserver*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.68-16
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.68-15
 - 为 Magic 3.0 重建
 

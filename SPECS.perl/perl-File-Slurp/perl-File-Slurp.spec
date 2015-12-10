@@ -1,6 +1,6 @@
 Name: 		perl-File-Slurp
 Version: 	9999.19
-Release: 	10%{?dist}
+Release: 	11%{?dist}
 Summary: 	Efficient Reading/Writing of Complete Files
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -63,6 +63,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 9999.19-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 9999.19-10
 - 为 Magic 3.0 重建
 

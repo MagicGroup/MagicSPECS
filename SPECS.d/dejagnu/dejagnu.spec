@@ -2,7 +2,7 @@ Summary: A front end for testing other programs
 Summary(zh_CN.UTF-8): 测试其它程序的前端
 Name: dejagnu
 Version: 1.5.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 Epoch: 1
 License: GPLv3+
 Source: ftp://ftp.gnu.org/gnu/dejagnu/dejagnu-%{version}.tar.gz
@@ -14,7 +14,6 @@ Requires: expect
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch: noarch
 BuildRequires: expect screen texinfo
-Patch1: dejagnu-1.5-smp-1.patch
 Patch2: dejagnu-1.5-runtest.patch
 
 %description
@@ -31,7 +30,6 @@ into software development).
 
 %prep
 %setup -q
-%patch1 -p1
 %patch2 -p1
 
 %build
@@ -84,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/dejagnu*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:1.5.3-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.5.3-4
 - 更新到 1.5.3
 

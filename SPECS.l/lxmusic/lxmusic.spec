@@ -1,6 +1,6 @@
 Name:           lxmusic
 Version:        0.4.4
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Lightweight XMMS2 client with simple user interface
 Summary(zh_CN.UTF-8): 带有简单用户界面的轻量级 XMMS2 客户端
 
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.4.4-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.4-9
 - 为 Magic 3.0 重建
 

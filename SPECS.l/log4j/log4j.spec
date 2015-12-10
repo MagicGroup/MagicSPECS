@@ -1,6 +1,6 @@
 Name:           log4j
 Version:        2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Java logging package
 BuildArch:      noarch
 License:        ASL 2.0
@@ -210,6 +210,9 @@ fi
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.0-3
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.0-2
 - 为 Magic 3.0 重建
 

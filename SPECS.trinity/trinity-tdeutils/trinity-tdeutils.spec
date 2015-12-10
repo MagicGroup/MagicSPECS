@@ -46,7 +46,7 @@
 Name:		trinity-%{tde_pkg}
 Summary:	TDE Utilities
 Version:	%{tde_version}
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Group:		Applications/System
 URL:		http://www.trinitydesktop.org/
 
@@ -1164,6 +1164,9 @@ echo "OnlyShowIn=TDE;" >>"%{?buildroot}%{tde_tdeappdir}/Kjots.desktop"
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@ Summary(zh_CN.UTF-8): 简化用户构建过程的 GNU 工具
 Name: make
 Epoch: 1
 Version: 4.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -106,6 +106,9 @@ fi
 %{_includedir}/gnumake.h
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1:4.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:4.1-2
 - 更新到 4.1
 

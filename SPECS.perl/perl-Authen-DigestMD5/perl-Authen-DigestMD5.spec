@@ -2,7 +2,7 @@ Summary:	SASL DIGEST-MD5 authentication (RFC2831)
 Summary(zh_CN.UTF-8): SASL DIGEST-MD5 认证 (RFC2831)
 Name:		perl-Authen-DigestMD5
 Version:	0.04
-Release:	20%{?dist}
+Release:	21%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Authen::DigestMD5.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-21
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04-20
 - 为 Magic 3.0 重建
 

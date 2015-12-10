@@ -1,7 +1,7 @@
 Name:           perl-MooseX-Types-Common 
 Summary:        A library of commonly used type constraints 
 Version:	0.001013
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/E/ET/ETHER/MooseX-Types-Common-%{version}.tar.gz
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.001013-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.001013-2
 - 为 Magic 3.0 重建
 

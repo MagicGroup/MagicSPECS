@@ -10,7 +10,7 @@ Summary: Config used by apt-get
 Summary(zh_CN.UTF-8): apt-get 的配置文件
 Name: apt-config
 Version: 0.5.15lorg3.95
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -107,6 +107,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/apt/sources.list.d/
 %config(noreplace) %{_sysconfdir}/apt/sources.list.d/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5.15lorg3.95-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.5.15lorg3.95-2
 - 为 Magic 3.0 重建
 

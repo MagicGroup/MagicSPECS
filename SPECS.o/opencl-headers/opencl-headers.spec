@@ -2,7 +2,7 @@ Summary:  Khronos OpenCL development headers
 Summary(zh_CN.UTF-8): Khronos OpenCL 开发头文件
 Name:     opencl-headers
 Version:  1.2
-Release:  8%{?dist}
+Release:  9%{?dist}
 License:  MIT
 URL:      http://www.khronos.org/registry/cl/
 BuildArch: noarch
@@ -67,6 +67,9 @@ cp \
 %{_includedir}/CL/cl.hpp
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.2-9
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2-8
 - 为 Magic 3.0 重建
 

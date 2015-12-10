@@ -2,7 +2,7 @@
 
 Name:           tomcat-taglibs-standard
 Version:        1.2.5
-Release:        1%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Apache Standard Taglib
 License:        ASL 2.0
@@ -56,6 +56,15 @@ Javadoc for %{name}.
 %doc NOTICE
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.2.5-4
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.2.5-3
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.2.5-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 18 2015 Alexander Kurtakov <akurtako@redhat.com> 0:1.2.5-1
 - Update to upstream 1.2.5
 

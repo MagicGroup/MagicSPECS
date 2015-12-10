@@ -14,7 +14,7 @@
 
 Name:           marco
 Version: 1.11.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 #Release: 1%{?dist}
 Summary:        MATE Desktop window manager
 Summary(zh_CN.UTF-8): MATE 桌面窗口管理器
@@ -171,6 +171,9 @@ fi
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.11.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.1-2
 - 更新到 1.11.1
 

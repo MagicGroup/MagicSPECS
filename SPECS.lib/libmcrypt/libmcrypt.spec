@@ -1,6 +1,6 @@
 Name:		libmcrypt
 Version:	2.5.8
-Release:	14%{?dist}
+Release:	15%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Summary:	Encryption algorithms library
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/libmcrypt.m4
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.5.8-15
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.5.8-14
 - 为 Magic 3.0 重建
 

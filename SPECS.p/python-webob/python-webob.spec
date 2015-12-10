@@ -9,7 +9,7 @@ Name:           python-webob
 Summary:        WSGI request and response object
 Summary(zh_CN.UTF-8): WSGI 请求和回应对象
 Version:	1.5.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -116,6 +116,9 @@ popd
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.5.1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.5.1-2
 - 更新到 1.5.1
 

@@ -1,16 +1,18 @@
 Name: cfitsio
 Version: 3.370
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Library for manipulating FITS data files
 Group: Development/Libraries
 License: MIT
 URL: http://heasarc.gsfc.nasa.gov/fitsio/
-%define tarversion 3290
+%define tarversion %(echo %{version} | awk -F. '{print $1""$2}')
 Source0: ftp://heasarc.gsfc.nasa.gov/software/fitsio/c/cfitsio%{tarversion}.tar.gz
-Patch0: cfitsio.patch
-Patch1: makefile.patch
-Patch2: cfitsio-s390.patch
-Patch3: cfitsio-zlib.patch
+# Unbundles zlib
+Patch0: cfitsio-zlib.patch
+# Remove soname version check
+Patch1: cfitsio-noversioncheck.patch
+# Some rearrangements in pkg-config file
+Patch2: cfitsio-pkgconfig.patch
 
 BuildRequires:     gcc-gfortran zlib-devel
 Requires(post):    /sbin/ldconfig
@@ -78,25 +80,20 @@ compression algorithm.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-# Fixing cfitsio.pc.in
-sed -e 's|3.29|3.290|' -i cfitsio.pc.in 
-sed -e 's|Libs: -L${libdir} -lcfitsio @LIBS@|Libs: -L${libdir} -lcfitsio|' -i cfitsio.pc.in
-sed -e 's|Libs.private: -lm|Libs.private: @LIBS@ -lz -lm|' -i cfitsio.pc.in 
-sed -e 's|Cflags: -I${includedir}|Cflags: -D_REENTRANT -I${includedir}|' -i cfitsio.pc.in
 
-rm zlib.h zconf.h
+# remove bundled zlib
+# not all the files inside zlib belong to zlib
+pushd zlib
+rm adler32.c crc32.c deflate.c infback.c inffast.c inflate.c inflate.h \
+inftrees.c inftrees.h zlib.h deflate.h trees.c trees.h uncompr.c zconf.h \
+zutil.c zutil.h crc32.h  inffast.h  inffixed.h 
+popd
 
 %build
-FC=f95
-export FC
-export CC=gcc # fixes -O*, -g
-%configure --enable-reentrant
-make shared %{?_smp_mflags}
-ln -s libcfitsio.so.0 libcfitsio.so
+%configure --enable-reentrant --with-bzip2
+make shared %{?_smp_mflags} 
 make fpack %{?_smp_mflags}
 make funpack %{?_smp_mflags}
-unset FC
 
 %check
 make testprog
@@ -105,27 +102,29 @@ cmp -s testprog.lis testprog.out
 cmp -s testprog.fit testprog.std
 
 %install
-rm -rf %{buildroot}
-mkdir -p %{buildroot}
+mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_libdir}
 mkdir -p %{buildroot}%{_includedir}/%{name}
-make LIBDIR=%{_lib} INCLUDEDIR=include/%{name} CFITSIO_LIB=%{buildroot}%{_libdir} \
-     CFITSIO_INCLUDE=%{buildroot}%{_includedir}/%{name} install
-pushd %{buildroot}%{_libdir}
-ln -s libcfitsio.so.0 libcfitsio.so
-popd
-mkdir %{buildroot}%{_bindir}
-cp -p f{,un}pack %{buildroot}%{_bindir}/
+make LIBDIR=%{_libdir} INCLUDEDIR=%{_includedir}/%{name} \
+ CFITSIO_LIB=%{buildroot}%{_libdir} \
+ CFITSIO_INCLUDE=%{buildroot}%{_includedir}/%{name} \
+install
+cp -p f{,un}pack %{buildroot}%{_bindir}
+
+chmod 755 %{buildroot}%{_libdir}/libcfitsio.so.*
+chmod 755 %{buildroot}%{_bindir}/f{,un}pack
+
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%doc README License.txt changes.txt
+%doc README License.txt docs/changes.txt
 %{_libdir}/libcfitsio.so.*
 
 %files devel
+%doc cookbook.*
 %{_includedir}/%{name}
 %{_libdir}/libcfitsio.so
 %{_libdir}/pkgconfig/cfitsio.pc
@@ -135,10 +134,10 @@ cp -p f{,un}pack %{buildroot}%{_bindir}/
 %{_libdir}/libcfitsio.a
 
 %files docs
-%doc fitsio.doc fitsio.ps cfitsio.doc cfitsio.ps License.txt
+%doc docs/fitsio.doc docs/fitsio.pdf docs/cfitsio.doc docs/cfitsio.pdf License.txt
 
 %files -n fpack
-%doc fpackguide.pdf License.txt
+%doc docs/fpackguide.pdf License.txt
 %{_bindir}/fpack
 %{_bindir}/funpack
 

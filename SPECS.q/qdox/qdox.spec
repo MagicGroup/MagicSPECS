@@ -4,7 +4,7 @@ Summary:        Extract class/interface/method definitions from sources
 Summary(zh_CN.UTF-8): 从源码中提取类/接口/方法定义
 Name:           qdox
 Version:        2.0
-Release:        0.7.%{vertag}%{?dist}
+Release:        0.8.%{vertag}%{?dist}
 Epoch:          0
 License:        ASL 2.0
 URL:            https://github.com/paul-hammant/qdox
@@ -86,6 +86,9 @@ magic_rpm_clean.sh
 %doc LICENSE.txt
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0:2.0-0.8.M3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0:2.0-0.7.M3
 - 为 Magic 3.0 重建
 

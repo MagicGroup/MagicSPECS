@@ -5,7 +5,7 @@
 # More subpackages to come once licensing issues are fixed
 Name:		edk2
 Version:	%{vcsdate}svn%{SVNREV}
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	EFI Development Kit II
 Summary(zh_CN.UTF-8): EFI 开发工具包 II
 
@@ -187,6 +187,9 @@ magic_rpm_clean.sh
 %doc BaseTools/UserManuals/VolInfo_Utility_Man_Page.rtf
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 20151029svn14844-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20151029svn14844-7
 - 更新到 20151029 日期的仓库源码
 

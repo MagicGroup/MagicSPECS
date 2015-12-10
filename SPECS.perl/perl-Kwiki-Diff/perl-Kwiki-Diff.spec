@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-Diff
 Version:        0.03
-Release:        30%{?dist}
+Release:        31%{?dist}
 Summary:        Display differences between the current wiki page and older revisions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.03-31
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.03-30
 - 为 Magic 3.0 重建
 

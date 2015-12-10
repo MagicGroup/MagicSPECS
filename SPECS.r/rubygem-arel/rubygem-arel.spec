@@ -3,7 +3,7 @@
 Summary: Arel is a Relational Algebra for Ruby
 Name: rubygem-%{gem_name}
 Version: 6.0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/rails/%{gem_name}
@@ -71,6 +71,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 6.0.3-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.0.3-3
 - 为 Magic 3.0 重建
 

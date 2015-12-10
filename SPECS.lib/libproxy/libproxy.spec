@@ -15,7 +15,7 @@
 
 Name:           libproxy
 Version:        0.4.11
-Release:        3%{?svn}%{?dist}
+Release:        4%{?svn}%{?dist}
 Summary:        A library handling all the details of proxy configuration
 
 Group:          System Environment/Libraries
@@ -272,6 +272,9 @@ make test
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.4.11-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.11-3
 - 为 Magic 3.0 重建
 

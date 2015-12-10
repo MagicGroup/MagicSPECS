@@ -1,7 +1,7 @@
 Summary: Backends for the gio framework in GLib
 Name: gvfs
-Version:	1.26.1
-Release: 2%{?dist}
+Version:	1.26.2
+Release: 1%{?dist}
 License: GPLv3 and LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -240,9 +240,10 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_datadir}/gvfs/mounts/ftp.mount
 %{_datadir}/gvfs/mounts/ftps.mount
 %{_datadir}/gvfs/mounts/recent.mount
+%{_datadir}/gvfs/mounts/google.mount
 %{_datadir}/dbus-1/services/org.gtk.vfs.UDisks2VolumeMonitor.service
-%{_datadir}/dbus-1/services/gvfs-daemon.service
-%{_datadir}/dbus-1/services/gvfs-metadata.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.Daemon.service
+%{_datadir}/dbus-1/services/org.gtk.vfs.Metadata.service
 %{_datadir}/gvfs/remote-volume-monitors/udisks2.monitor
 %{_datadir}/GConf/gsettings/*.convert
 %{_datadir}/glib-2.0/schemas/*.xml
@@ -267,6 +268,7 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_libexecdir}/gvfsd-metadata
 %{_libexecdir}/gvfs-udisks2-volume-monitor
 %{_libexecdir}/gvfsd-recent
+%{_libexecdir}/gvfsd-google
 %{_bindir}/gvfs-cat
 %{_bindir}/gvfs-copy
 %{_bindir}/gvfs-info
@@ -285,6 +287,7 @@ killall -USR1 gvfsd >&/dev/null || :
 %{_bindir}/gvfs-trash
 %{_bindir}/gvfs-tree
 %{_bindir}/gvfs-set-attribute
+%{_userunitdir}/gvfs-*.service
 %doc %{_mandir}/man1/gvfs-*
 %doc %{_mandir}/man1/gvfsd.1.gz
 %doc %{_mandir}/man1/gvfsd-metadata.1.gz
@@ -356,6 +359,9 @@ killall -USR1 gvfsd >&/dev/null || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.26.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.26.1-2
 - 更新到 1.26.1
 

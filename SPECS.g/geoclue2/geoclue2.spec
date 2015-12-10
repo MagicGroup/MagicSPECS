@@ -1,6 +1,6 @@
 Name:           geoclue2
 Version:	2.4.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Geolocation service
 Summary(zh_CN.UTF-8): 地址位置服务
 
@@ -123,6 +123,9 @@ exit 0
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.4.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.4.0-3
 - 更新到 2.4.0
 

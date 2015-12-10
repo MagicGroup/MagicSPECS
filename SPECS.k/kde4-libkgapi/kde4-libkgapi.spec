@@ -3,7 +3,7 @@
 Name:		kde4-libkgapi
 Version:	5.0.0
 #Release:	1.20120530git%%{git_commit}%%{?dist}
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Library to access to Google services
 Summary(zh_CN.UTF-8): 访问谷歌服务的库
 Group:		Development/Libraries
@@ -90,6 +90,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.0.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.0.0-3
 - 更新到 5.0.0
 

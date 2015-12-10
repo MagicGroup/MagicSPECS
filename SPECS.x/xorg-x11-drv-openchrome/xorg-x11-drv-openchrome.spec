@@ -15,7 +15,7 @@ Summary:        Xorg X11 openchrome video driver
 Summary(zh_CN.UTF-8): Xorg X11 openchrome 显卡驱动
 Name:           xorg-x11-drv-openchrome
 Version:        0.3.3
-Release:        10%{?gver}%{?dist}
+Release:        11%{?gver}%{?dist}
 URL:            http://www.openchrome.org
 License:        MIT
 Group:          User Interface/X Hardware Support
@@ -142,6 +142,9 @@ fi
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 0.3.3-11
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.3.3-10
 - 为 Magic 3.0 重建
 

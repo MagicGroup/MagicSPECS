@@ -4,7 +4,7 @@
 Summary: Net::SSH: a pure-Ruby implementation of the SSH2 client protocol
 Name: rubygem-%{gem_name}
 Version: 2.9.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/net-ssh/net-ssh
@@ -75,6 +75,9 @@ popd
 %{gem_instdir}/net-ssh.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.9.1-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.9.1-3
 - 为 Magic 3.0 重建
 

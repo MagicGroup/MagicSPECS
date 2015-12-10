@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        4.2.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Utility libraries for the IRC bot Lambdabot
 
 License:        GPLv2
@@ -79,6 +79,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.2.2-11
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 4.2.2-10
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:       perl-Module-Util
 Version:	1.09
-Release:	2%{?dist}
+Release:	3%{?dist}
 # see lib/Module/Util.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -42,6 +42,9 @@ names to relative paths.
 %{_mandir}/man[13]/*.[13]*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.09-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.09-2
 - 为 Magic 3.0 重建
 

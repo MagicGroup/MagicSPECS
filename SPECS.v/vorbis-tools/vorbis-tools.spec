@@ -2,7 +2,7 @@ Summary:	The Vorbis General Audio Compression Codec tools
 Summary(zh_CN.UTF-8): Vorbis 通用音频压缩编码工具
 Name:		vorbis-tools
 Version:	1.4.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Epoch:		1
 Group:		Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -87,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/%{name}-%{version}/ogg123rc-example
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:1.4.0-8
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 1:1.4.0-7
 - 为 Magic 3.0 重建
 

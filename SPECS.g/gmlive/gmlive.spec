@@ -2,7 +2,7 @@ Name:		gmlive
 Group:		Applications/Internet
 Group(zh_CN.UTF-8):   应用程序/互联网
 Version:	0.22.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL
 Summary:	A P2P Stream program
 Summary(zh_CN.UTF-8): P2P流媒体程序
@@ -27,6 +27,8 @@ rm -rf $RPM_BUILD_ROOT
 %setup -q 
 
 %build
+export CFLAGS="$RPM_OPT_FLAGS -std=gnu++11" CXXFLAGS="$RPM_OPT_FLAGS -std=gnu++11"
+find . -name "config.cache" |xargs rm -f
 %configure
 %{__make} %{?_smp_mflags}
 
@@ -54,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/gmlive.png
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.22.3-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.22.3-3
 - 为 Magic 3.0 重建
 

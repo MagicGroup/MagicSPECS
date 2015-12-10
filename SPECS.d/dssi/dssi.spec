@@ -2,7 +2,7 @@ Summary:      Disposable Soft Synth Interface
 Summary(zh_CN.UTF-8): 一次性软合成器接口
 Name:         dssi
 Version:      1.1.1
-Release:      5%{?dist}
+Release:      6%{?dist}
 License:      MIT
 Group:        Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -113,6 +113,9 @@ tests/controller
 %{_libdir}/pkgconfig/dssi.pc
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.1.1-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.1-5
 - 为 Magic 3.0 重建
 

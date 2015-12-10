@@ -4,7 +4,7 @@ Summary: NFSv4 User and Group ID Mapping Library
 Summary(zh_CN.UTF-8): NFSv4 用户和组 ID 映射库
 Name: libnfsidmap
 Version: 0.25
-Release: 4%{?dist}
+Release: 5%{?dist}
 Provides: nfs-utils-lib
 Obsoletes: nfs-utils-lib
 URL: http://www.citi.umich.edu/projects/nfsv4/linux/
@@ -93,6 +93,9 @@ rm -rf %{buildroot}
 %{_root_libdir}/*.so
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.25-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.25-4
 - 为 Magic 3.0 重建
 

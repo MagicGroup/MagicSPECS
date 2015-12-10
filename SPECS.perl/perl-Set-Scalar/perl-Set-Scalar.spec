@@ -1,6 +1,6 @@
 Name:           perl-Set-Scalar
 Version:	1.29
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Basic set operations
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.29-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.29-2
 - 为 Magic 3.0 重建
 

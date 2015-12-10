@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.0.3
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Simple unicode collation as per RFC5051
 
 License:        BSD
@@ -72,6 +72,9 @@ ghc --make MkUnicodeData.hs
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.0.3-7
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.0.3-6
 - 为 Magic 3.0 重建
 

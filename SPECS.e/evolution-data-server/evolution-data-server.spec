@@ -24,7 +24,7 @@
 %define sqlite_version 3.5
 %define nss_version 3.14
 
-%define eds_base_version 3.18
+%define eds_base_version 3.20
 
 %define credential_modules_dir %{_libdir}/evolution-data-server/credential-modules
 %define camel_provider_dir %{_libdir}/evolution-data-server/camel-providers
@@ -35,8 +35,8 @@
 ### Abstract ###
 
 Name: evolution-data-server
-Version:	3.19.1
-Release: 2%{?dist}
+Version:	3.19.2
+Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Summary: Backend data server for Evolution
@@ -271,7 +271,7 @@ rm -f $RPM_BUILD_ROOT/%{modules_dir}/*.a
 # give the libraries some executable bits 
 find $RPM_BUILD_ROOT -name '*.so.*' -exec chmod +x {} \;
 magic_rpm_clean.sh
-%find_lang %{name}-%{eds_base_version} || %define no_lang 1
+%find_lang %{name}-%{eds_base_version} || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -287,11 +287,7 @@ fi
 %posttrans
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
-%if 0%{?no_lang}
-%files
-%else
 %files -f %{name}-%{eds_base_version}.lang
-%endif
 %defattr(-,root,root,-)
 %doc README COPYING ChangeLog NEWS
 %{_libdir}/libcamel-1.2.so.*
@@ -317,6 +313,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_libexecdir}/evolution-scan-gconf-tree-xml
 %{_libexecdir}/evolution-source-registry
 %{_libexecdir}/evolution-user-prompter
+
+%{_userunitdir}/evolution-*.service
 
 # GSettings schemas:
 %{_datadir}/GConf/gsettings/evolution-data-server.convert
@@ -430,6 +428,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/installed-tests
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.19.1-2
 - 更新到 3.19.1
 

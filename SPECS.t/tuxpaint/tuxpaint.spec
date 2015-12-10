@@ -1,6 +1,6 @@
 Name:           tuxpaint
 Version:	0.9.22
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Epoch:          1
 Summary:        Drawing program designed for young children
@@ -168,6 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/tuxpaint/
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:0.9.22-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1:0.9.22-2
 - 为 Magic 3.0 重建
 

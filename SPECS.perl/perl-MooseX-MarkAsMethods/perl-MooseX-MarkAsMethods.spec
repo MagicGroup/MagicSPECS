@@ -1,6 +1,6 @@
 Name:           perl-MooseX-MarkAsMethods
 Version:        0.15
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Mark overload code symbols as methods
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.15-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.15-6
 - 为 Magic 3.0 重建
 

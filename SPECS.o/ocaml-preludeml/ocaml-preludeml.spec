@@ -8,7 +8,7 @@
 
 Name:           ocaml-preludeml
 Version:        0.1
-Release:        0.29.%{gitdate}%{?dist}
+Release:        0.31.%{gitdate}%{?dist}
 Summary:        OCaml utility functions
 Summary(zh_CN.UTF-8): OCaml 工具函数
 License:        MIT
@@ -117,6 +117,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.1-0.31.20100314
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.1-0.30.20100314
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.1-0.29.20100314
 - 为 Magic 3.0 重建
 

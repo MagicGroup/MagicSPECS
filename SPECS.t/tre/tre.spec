@@ -2,7 +2,7 @@
 
 Name: tre
 Version: 0.8.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: BSD
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -132,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/agrep.1*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.8.0-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.0-8
 - 为 Magic 3.0 重建
 

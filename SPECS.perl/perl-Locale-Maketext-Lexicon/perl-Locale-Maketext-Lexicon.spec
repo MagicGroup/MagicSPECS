@@ -1,6 +1,6 @@
 Name: 		perl-Locale-Maketext-Lexicon
 Version:	1.00
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary: 	Extract translatable strings from source
 License:	MIT
 Group: 		Development/Libraries
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.00-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.00-2
 - 为 Magic 3.0 重建
 

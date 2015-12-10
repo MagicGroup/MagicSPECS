@@ -6,7 +6,7 @@ Summary: A document formatting system
 Summary(zh_CN.UTF-8): 一个文档格式化系统
 Name: groff
 Version: 1.22.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+ and GFDL and BSD and MIT
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -16,7 +16,6 @@ Source0: ftp://ftp.gnu.org/gnu/groff/groff-%{version}.tar.gz
 
 Patch1: groff-info-missing-x11.patch
 Patch6: groff-config-etc.patch
-Patch7: groff-cve-2009-5044_5080_5081.patch
 
 Requires: coreutils
 Requires: /sbin/install-info
@@ -27,6 +26,8 @@ BuildRequires: netpbm-progs psutils ghostscript
 Requires: groff-base = %{version}-%{release}
 Requires(post): info
 Requires(preun): info
+
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\([^.]*\\.pl\\)
 
 %description
 Groff is a document formatting system. Groff takes standard text and
@@ -371,6 +372,19 @@ fi
 %{_mandir}/man1/gneqn.*
 %{_mandir}/man1/gsoelim.*
 %{_mandir}/man1/zsoelim.*
+%{_bindir}/glilypond
+%{_bindir}/gperl
+%{_bindir}/gpinyin
+%{_libdir}/groff/glilypond/args.pl
+%{_libdir}/groff/glilypond/oop_fh.pl
+%{_libdir}/groff/glilypond/subs.pl
+%{_libdir}/groff/gpinyin/subs.pl
+%{_libdir}/groff/groff_opts_no_arg.txt
+%{_libdir}/groff/groff_opts_with_arg.txt
+%{_libdir}/groff/grog/subs.pl
+%{_mandir}/man1/glilypond.1.gz
+%{_mandir}/man1/gperl.1.gz
+%{_mandir}/man1/gpinyin.1.gz
 
 %files perl
 %defattr(-,root,root,-)
@@ -426,6 +440,9 @@ fi
 %doc %{_docdir}/%{name}-%{version}/pdf/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.22.3-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.22.3-2
 - 更新到 1.22.3
 

@@ -5,7 +5,7 @@
 
 Name:           fontforge
 Version:        20120731b
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Outline and bitmap font editor
 
 Group:          Applications/Publishing
@@ -151,6 +151,9 @@ fi
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 20120731b-10
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 20120731b-9
 - 为 Magic 3.0 重建
 

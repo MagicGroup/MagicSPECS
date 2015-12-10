@@ -20,7 +20,7 @@
 
 Name:           facter
 Version:        1.7.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Command and ruby library for gathering system information
 Summary(zh_CN.UTF-8): 收集系统信息的命令和 ruby 库
 
@@ -125,6 +125,9 @@ rspec spec
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.7.4-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.7.4-2
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.94.4
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Haskell PCRE binding
 
 License:        BSD
@@ -69,6 +69,12 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.94.4-14
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.94.4-13
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.94.4-12
 - 为 Magic 3.0 重建
 

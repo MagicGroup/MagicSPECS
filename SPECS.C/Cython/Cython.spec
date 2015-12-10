@@ -13,7 +13,7 @@
 Name:		Cython
 Version:	0.23.4
 ##Release:	4.b3%{?dist}
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A language for writing Python extension modules
 Summary(zh_CN.UTF-8): 编写 Python 扩展模块的语言
 
@@ -69,7 +69,7 @@ For more info, see:
     USAGE.txt	   for usage instructions
     Demos	   for usage examples
 
-%description -l zh_CN.UTF-8
+%description -n python3-Cython -l zh_CN.UTF-8
 编写 Python 扩展模块的语言。这是 Python3 的版本。
 %endif # with_python3
 
@@ -130,26 +130,24 @@ popd
 %defattr(-,root,root,-)
 %{_bindir}/cython
 %{_bindir}/cygdb
+%{_bindir}/cythonize
 %{python_sitearch}/Cython
 %{python_sitearch}/cython.py*
 %{python_sitearch}/pyximport
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 %{python_sitearch}/Cython*egg-info
-%endif
 %if 0%{?with_python3}
 %files -n python3-Cython
-%doc *.txt Demos Doc Tools
 %{python3_sitearch}/*
 %{_bindir}/cython3
 %{_bindir}/cygdb3
-%if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 %{python3_sitearch}/Cython*egg-info
-%endif
 %endif # with_python3
 %doc *.txt Demos Doc Tools
 
-
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.23.4-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.23.4-4
 - 更新到 0.23.4
 

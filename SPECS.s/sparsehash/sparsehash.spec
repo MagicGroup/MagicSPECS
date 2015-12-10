@@ -4,7 +4,7 @@
 
 Name:           sparsehash
 Version:	2.0.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Extremely memory-efficient C++ hash_map implementation
 Summary(zh_CN.UTF-8): 极节省内存的 hash_map C++ 实现
 
@@ -61,6 +61,9 @@ make check
 %{_libdir}/pkgconfig/libsparsehash.pc
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.3-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.3-2
 - 更新到 2.0.3
 

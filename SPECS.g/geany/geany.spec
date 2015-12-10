@@ -4,8 +4,8 @@
 %global  _python_bytecompile_errors_terminate_build 0
 
 Name:      geany
-Version:	1.25
-Release:   2%{?dist}
+Version:	1.26
+Release:   1%{?dist}
 Summary:   A fast and lightweight IDE using GTK2
 Summary(zh_CN.UTF-8): 一个使用 GTK2 开发的快速轻量级 IDE
  
@@ -117,6 +117,7 @@ magic_rpm_clean.sh
 
 # Remove static library *.la files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/geany/*.la
+rm -f  $RPM_BUILD_ROOT%{_libdir}/libgeany.la
 
 # Install tags files
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/%{name}/tags/
@@ -149,6 +150,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_bindir}/%{name}
 %{_datadir}/%{name}
 %{_libdir}/%{name}
+%{_libdir}/libgeany.so.*
 %{_datadir}/applications/magic-%{name}.desktop
 %{_datadir}/icons/*/*/*/*.svg
 %{_datadir}/icons/*/*/*/*.png
@@ -158,8 +160,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc HACKING TODO
 %{_includedir}/geany
 %{_libdir}/pkgconfig/geany.pc
+%{_libdir}/libgeany.so
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.25-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.25-2
 - 更新到 1.25
 

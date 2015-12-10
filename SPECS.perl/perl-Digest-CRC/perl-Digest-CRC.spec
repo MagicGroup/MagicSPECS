@@ -1,6 +1,6 @@
 Name:           perl-Digest-CRC
 Version:	0.21
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Generic CRC functions
 Group:          Development/Libraries
 License:        Public Domain
@@ -40,6 +40,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.21-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.21-2
 - 为 Magic 3.0 重建
 

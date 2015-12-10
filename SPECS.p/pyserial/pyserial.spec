@@ -2,7 +2,7 @@ Summary: Python serial port access library
 Summary(zh_CN.UTF-8): Python 的串口访问库
 Name: pyserial
 Version: 2.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 Source0: http://easynews.dl.sourceforge.net/sourceforge/%{name}/%{name}-%{version}.tar.gz
 License: Python
 Group: Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python3_sitelib}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.7-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.7-4
 - 为 Magic 3.0 重建
 

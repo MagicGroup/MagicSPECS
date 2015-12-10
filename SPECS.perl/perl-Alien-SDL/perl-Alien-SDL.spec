@@ -1,6 +1,6 @@
 Name:           perl-Alien-SDL
 Version:        1.446
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Building, finding and using SDL binaries
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -80,6 +80,9 @@ perl Build.PL installdirs=vendor --travis
 %{_bindir}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.446-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.446-5
 - 为 Magic 3.0 重建
 

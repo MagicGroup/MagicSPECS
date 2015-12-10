@@ -3,7 +3,7 @@
 Summary:        Tool to execute plain-text documents as functional tests
 Name:           rubygem-%{gem_name}
 Version:        1.3.18
-Release:        4%{?dist}
+Release:        5%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://cukes.info
@@ -77,6 +77,9 @@ find $RPM_BUILD_ROOT%{gem_docdir} -empty -delete
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.3.18-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.3.18-4
 - 为 Magic 3.0 重建
 

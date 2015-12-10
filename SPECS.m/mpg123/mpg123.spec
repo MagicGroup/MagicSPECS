@@ -4,7 +4,7 @@
 
 Name:           mpg123
 Version:	1.22.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        MPEG audio player
 Summary(zh_CN.UTF-8): MPEG 音频播放器
 Group:          Applications/Multimedia
@@ -196,6 +196,9 @@ fi
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.22.4-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.22.4-2
 - 更新到 1.22.4
 

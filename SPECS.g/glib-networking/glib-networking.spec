@@ -2,7 +2,7 @@
 
 Name:           glib-networking
 Version:	2.47.1
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Networking support for GLib
 Summary(zh_CN.UTF-8): GLib 的网络支持
 
@@ -66,9 +66,15 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_libdir}/gio/modules/libgiognutls.so
 %{_libexecdir}/glib-pacrunner
 %{_datadir}/dbus-1/services/org.gtk.GLib.PACRunner.service
-
+%{_userunitdir}/glib-pacrunner.service
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 2.47.1-4
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.47.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.47.1-2
 - 更新到 2.47.1
 

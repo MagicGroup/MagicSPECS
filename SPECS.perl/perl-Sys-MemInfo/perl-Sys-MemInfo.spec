@@ -1,6 +1,6 @@
 Name:           perl-Sys-MemInfo
 Version:	0.98
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Memory information as Perl module
 # README:       GPLv1+ or Artistic
 # MemInfo.pm    LGPLv2+
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.98-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.98-2
 - 为 Magic 3.0 重建
 

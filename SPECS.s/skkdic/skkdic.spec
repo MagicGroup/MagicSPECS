@@ -5,7 +5,7 @@ Summary:	Dictionaries for SKK (Simple Kana-Kanji conversion program)
 Summary(zh_CN.UTF-8): SKK (简单假名汉字转换) 字典
 Name:		skkdic
 Version:	%{cvsDATE}
-Release:	4.T%{cvsTIME}%{?dist}
+Release:	5.T%{cvsTIME}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -63,6 +63,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 20150508-5.T1030
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 20150508-4.T1030
 - 为 Magic 3.0 重建
 

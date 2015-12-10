@@ -1,0 +1,32 @@
+diff --git a/src/pyscanner.l b/src/pyscanner.l
+index 8332a36..8cbfc6c 100644
+--- a/src/pyscanner.l
++++ b/src/pyscanner.l
+@@ -963,7 +963,9 @@ STARTDOCSYMS      "##"
+ 			    {
+ 			      current->argList->getLast()->defval=g_defVal.stripWhiteSpace();
+ 			    }
+-       			    BEGIN(FunctionParams);
++			    if (*yytext == ')')
++			      current->args = argListToString(current->argList);
++			    BEGIN(FunctionParams);
+ 			  }
+ 			  else // continue
+ 			  {
+diff --git a/src/pyscanner.l b/src/pyscanner.l
+index 8332a36..f663837 100644
+--- a/src/pyscanner.l
++++ b/src/pyscanner.l
+@@ -1278,6 +1278,12 @@ STARTDOCSYMS      "##"
+ 			initTriSingleQuoteBlock();
+ 			BEGIN(TripleComment);
+                       }
++   "'"	              {
++       			g_stringContext=YY_START;
++			current->initializer+="'";
++			g_copyString=&current->initializer;
++                        BEGIN( SingleQuoteString );
++                      }
+    "\""	              {
+        			g_stringContext=YY_START;
+ 			current->initializer+="\"";

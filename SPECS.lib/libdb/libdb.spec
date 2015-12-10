@@ -6,7 +6,7 @@
 Summary: The Berkeley DB database library for C
 Name: libdb
 Version: 5.3.28
-Release: 10%{?dist}
+Release: 11%{?dist}
 Source0: http://download.oracle.com/berkeley-db/db-%{version}.tar.gz
 Source1: http://download.oracle.com/berkeley-db/db.1.85.tar.gz
 # For mt19937db.c
@@ -428,6 +428,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %endif
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.3.28-11
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 5.3.28-10
 - 为 Magic 3.0 重建
 

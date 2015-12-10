@@ -1,6 +1,6 @@
 Name:           perl-CPAN-Meta-Requirements
 Version:	2.133
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Set of version requirements for a CPAN dist
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -80,6 +80,9 @@ make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 %{_mandir}/man3/CPAN::Meta::Requirements.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.133-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.133-2
 - 为 Magic 3.0 重建
 

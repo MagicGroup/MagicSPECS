@@ -1,0 +1,13 @@
+diff --git a/Documents/brltty.1.in b/Documents/brltty.1.in
+index 7ed1db0..6dc0851 100644
+--- a/Documents/brltty.1.in
++++ b/Documents/brltty.1.in
+@@ -16,7 +16,7 @@
+ .\"
+ .\" This software is maintained by Dave Mielke <dave@mielke.cc>.
+ .\"
+-3TH "BRLTTY" "1" "2014-11-06" "brltty 5.2" "BRLTTY User's Manual"
++.TH "BRLTTY" "1" "2014-11-06" "brltty 5.2" "BRLTTY User's Manual"
+ .SH NAME
+ brltty \- refreshable braille display driver for Linux/Unix
+ .SH SYNOPSIS

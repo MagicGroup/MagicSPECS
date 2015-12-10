@@ -1,6 +1,6 @@
 Name:          beep-media-player
 Version:        0.9.7.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A GTK2 based media player similar to xmms
 Summary(zh_CN): 基于 GTK2 的类似 xmms 的媒体播放器
 
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/bmp.pc
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9.7.1-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.9.7.1-5
 - 为 Magic 3.0 重建
 

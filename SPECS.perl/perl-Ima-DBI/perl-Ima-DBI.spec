@@ -1,6 +1,6 @@
 Name:           perl-Ima-DBI
 Version:        0.35
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Database connection caching and organization
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.35-19
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.35-18
 - 为 Magic 3.0 重建
 

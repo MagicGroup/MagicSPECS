@@ -2,7 +2,7 @@ Summary: GNOME Structured File library
 Summary(zh_CN.UTF-8): GNOME 结构文件库
 Name: libgsf
 Version:	1.14.34
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2
@@ -84,6 +84,9 @@ rm -f $RPM_BUILD_ROOT%{python_sitearch}/gsf/*.la
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.14.34-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.14.34-4
 - 更新到 1.14.34
 

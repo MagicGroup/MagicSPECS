@@ -1,6 +1,6 @@
 Name:           perl-Tree-Simple-VisitorFactory
 Version:	0.12
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Factory object for dispensing Visitor objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.12-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.12-2
 - 为 Magic 3.0 重建
 

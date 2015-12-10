@@ -19,7 +19,7 @@ Summary: Qt5 - QtTool components
 Summary(zh_CN.UTF-8): Qt5 - QtTool 组件
 Name:    qt5-qttools
 Version: 5.5.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv3 or LGPLv2
 Url:     http://www.qt.io
@@ -476,6 +476,9 @@ fi
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.5.1-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.5.1-2
 - 更新到 5.5.1
 

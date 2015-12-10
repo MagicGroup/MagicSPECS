@@ -1,6 +1,6 @@
 Name:           perl-SVG-Graph
 Version:	0.04
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Visualize your data in Scalable Vector Graphics (SVG) format
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ find eg -type f -exec chmod -x {} 2>/dev/null ';'
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.04-2
 - 为 Magic 3.0 重建
 

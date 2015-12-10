@@ -2,7 +2,7 @@ Summary: Magic Linux IME Control Center Modules
 Summary(zh_CN.UTF-8): Magic Linux 输入法配置控制中心模块
 Name: kde4-kcm_mlimecfg
 Version: 1.5.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
 License: GPL v2+
@@ -65,6 +65,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_localedir}/zh_CN/LC_MESSAGES/kcm_mlimecfg.mo
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.5.0-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.5.0-4
 - 为 Magic 3.0 重建
 

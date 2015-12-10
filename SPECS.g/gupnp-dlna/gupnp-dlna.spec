@@ -1,6 +1,6 @@
 Name:          gupnp-dlna
 Version:	0.10.3
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       A collection of helpers for building UPnP AV applications
 Summary(zh_CN.UTF-8): 支持 dlna 的 UPnP 辅助程序
 
@@ -105,6 +105,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/%{name}-metadata
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.3-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.10.3-4
 - 更新到 0.10.3
 

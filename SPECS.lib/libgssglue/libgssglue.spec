@@ -4,7 +4,7 @@ Summary: Generic Security Services Application Programming Interface Library
 Summary(zh_CN.UTF-8): 通用安全服务应用程序编程接口库
 Name: libgssglue
 Version: 0.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://www.citi.umich.edu/projects/nfsv4/linux/
 License: GPL+
 Source0:http://www.citi.umich.edu/projects/nfsv4/linux/%{name}/%{name}-%{version}.tar.gz
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libgssglue.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.4-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4-2
 - 为 Magic 3.0 重建
 

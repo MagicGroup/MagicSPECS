@@ -2,7 +2,7 @@
 
 Name:           gnome-js-common
 Version:        %{major_ver}.2
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Common modules for GNOME JavaScript interpreters
 Summary(zh_CN.UTF-8): GNOME JavaScript 解释器的通用模块
 
@@ -71,6 +71,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.2-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.1.2-8
 - 为 Magic 3.0 重建
 

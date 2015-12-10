@@ -16,7 +16,7 @@
  
 Name:           lxappearance
 Version:        0.5.2
-Release:        5%{?git_version:.%{?git_version}}%{?dist}
+Release:        6%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Feature-rich GTK+ theme switcher for LXDE
 Summary(zh_CN.UTF-8): LXDE 下的具有丰富特性的 GTK+ 主题切换器
 
@@ -102,6 +102,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.5.2-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.5.2-5
 - 为 Magic 3.0 重建
 

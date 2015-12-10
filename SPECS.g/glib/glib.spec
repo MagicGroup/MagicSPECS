@@ -3,14 +3,14 @@ Summary(zh_CN.UTF-8): 方便的实用程序函数库
 Name:		glib
 Epoch:		1
 Version:	1.2.10
-Release:	40%{?dist}
+Release:	41%{?dist}
 License:	LGPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://www.gtk.org/
 Source:		ftp://ftp.gimp.org/pub/gtk/v1.2/glib-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
-BuildRequires:	automake14 autoconf213
+BuildRequires:	automake autoconf
 BuildRequires:	libtool
 
 # Suppress warnings about varargs macros for -pedantic
@@ -122,6 +122,9 @@ rm -rf %{buildroot}
 %{_datadir}/aclocal/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-41
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:1.2.10-40
 - 为 Magic 3.0 重建
 

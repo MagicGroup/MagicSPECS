@@ -3,7 +3,7 @@
 
 Name:           ocaml-curl
 Version:        0.5.3
-Release:        14%{?dist}
+Release:        17%{?dist}
 Summary:        OCaml Curl library (ocurl)
 Summary(zh_CN.UTF-8): OCaml Curl 库 (ocurl)
 License:        MIT
@@ -106,6 +106,15 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.5.3-17
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.5.3-16
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.5.3-15
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5.3-14
 - 为 Magic 3.0 重建
 

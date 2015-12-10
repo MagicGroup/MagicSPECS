@@ -47,7 +47,7 @@ Name:		trinity-%{tde_pkg}
 Summary:	Integrated Development Environment for C++/C
 Summary(zh_CN.UTF-8): C++/C 的集成开发环境
 Version:	%{tde_version}
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Group:		Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 URL:		http://www.trinitydesktop.org/
@@ -660,6 +660,9 @@ fi
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 14.0.1-1.opt.1
 - 为 Magic 3.0 重建
 

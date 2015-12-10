@@ -4,7 +4,7 @@ Summary: Basic networking tools
 Summary(zh_CN.UTF-8): 基本的网络工具
 Name: net-tools
 Version: 2.0
-Release: 0.31.%{checkout}%{?dist}
+Release: 0.32.%{checkout}%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -164,6 +164,9 @@ magic_rpm_clean.sh
 %attr(0644,root,root)   %{_unitdir}/arp-ethers.service
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.0-0.32.20141124git
+- 为 Magic 3.0 重建
+
 * Mon Nov 24 2014 Jiri Popelka <jpopelka@redhat.com> - 2.0-0.31.20141124git
 - latest upstream snapshot (#1162284)
 

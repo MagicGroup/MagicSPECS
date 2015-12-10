@@ -1,6 +1,6 @@
 Name:           cegui06
 Version:        0.6.2
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        CEGUI library 0.6 for apps which need this specific version
 Group:          System Environment/Libraries
 License:        MIT and LGPLv2+
@@ -155,6 +155,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.6.2-17
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.6.2-16
 - 为 Magic 3.0 重建
 

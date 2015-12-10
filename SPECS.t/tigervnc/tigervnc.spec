@@ -1,6 +1,6 @@
 Name:		tigervnc
 Version:	1.5.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	A TigerVNC remote display system
 
 %global _hardened_build 1
@@ -347,6 +347,9 @@ fi
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.5.0-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.5.0-5
 - 为 Magic 3.0 重建
 

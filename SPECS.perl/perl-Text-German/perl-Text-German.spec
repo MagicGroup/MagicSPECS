@@ -1,6 +1,6 @@
 Name:           perl-Text-German
 Version:        0.06
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        German grundform reduction
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,6 +40,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-15
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.06-14
 - 为 Magic 3.0 重建
 

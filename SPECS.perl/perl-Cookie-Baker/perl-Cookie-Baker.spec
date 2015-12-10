@@ -1,7 +1,7 @@
 Name:           perl-Cookie-Baker
 Summary:        Cookie string generator / parser  
 Version:	0.06
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/K/KA/KAZEBURO/Cookie-Baker-%{version}.tar.gz
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-3
 - 为 Magic 3.0 重建
 

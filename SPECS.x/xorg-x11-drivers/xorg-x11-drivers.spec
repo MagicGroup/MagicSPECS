@@ -2,7 +2,7 @@ Summary: X.Org X11 driver installation package
 Summary(zh_CN.UTF-8): X.Org X11 驱动安装包
 Name: xorg-x11-drivers
 Version: 7.7
-Release: 12%{?dist}
+Release: 13%{?dist}
 License: MIT
 Group: User Interface/X Hardware Support
 Group(zh_CN.UTF-8): 用户界面/X 硬件支持
@@ -115,6 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 7.7-13
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 7.7-12
 - 为 Magic 3.0 重建
 

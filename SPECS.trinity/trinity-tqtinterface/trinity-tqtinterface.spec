@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.2.0
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
 Summary:	The Trinity Qt Interface Libraries
 Summary(zh_CN.UTF-8): Trinity Qt 接口库
 Group: System Environment/Libraries
@@ -227,6 +227,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:4.2.0-1.opt.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:4.2.0-1.opt.1
 - 为 Magic 3.0 重建
 

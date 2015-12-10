@@ -1,6 +1,6 @@
 Name:           perl-Term-Size-Any
 Version:        0.002
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Retrieve terminal size
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.002-17
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.002-16
 - 为 Magic 3.0 重建
 

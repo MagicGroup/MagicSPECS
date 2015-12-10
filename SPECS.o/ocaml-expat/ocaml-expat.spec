@@ -2,7 +2,7 @@
 
 Name:           ocaml-expat
 Version:        0.9.1
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        OCaml wrapper for the Expat XML parsing library
 Summary(zh_CN.UTF-8): Expat XML 解析库的 OCaml 绑定
 License:        MIT
@@ -84,6 +84,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.9.1-32
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.1-31
 - 为 Magic 3.0 重建
 

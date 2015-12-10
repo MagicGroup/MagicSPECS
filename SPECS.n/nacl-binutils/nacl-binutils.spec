@@ -24,7 +24,7 @@ ExclusiveArch: i686 x86_64
 Summary: A GNU collection of binary utilities
 Name: nacl-binutils%{?_with_debug:-debug}
 Version: 2.24
-Release: 3.git%{gitver}%{?dist}
+Release: 4.git%{gitver}%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -427,6 +427,9 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Tue Nov 24 2015 Liu Di <liudidi@gmail.com> - 2.24-4.git1d8592c
+- 为 Magic 3.0 重建
+
 * Thu Oct  1 2015 Tom Callaway <spot@fedoraproject.org> - 2.24-3.git1d8592c
 - rebuild for all targets, no code change
 

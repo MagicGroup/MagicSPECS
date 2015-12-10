@@ -1,6 +1,6 @@
 Name:           os-prober
 Version: 1.70
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Probes disks on the system for installed operating systems
 Summary(zh_CN.UTF-8): 在驱动器上探测其它操作系统的工具
 
@@ -75,6 +75,9 @@ fi
 %{_var}/lib/%{name}
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.70-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.70-2
 - 更新到 1.70
 

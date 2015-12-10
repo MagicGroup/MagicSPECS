@@ -6,7 +6,7 @@
 
 Name: python-mako
 Version:	1.0.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary: Mako template library for Python
 Summary(zh_CN.UTF-8): Python 的 Mako 模板库
 
@@ -136,6 +136,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0.2-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 08 2015 Liu Di <liudidi@gmail.com> - 1.0.2-1
 - 更新到 1.0.2
 

@@ -2,7 +2,7 @@ Summary:      Virtual MIDI keyboard
 Summary(zh_CN.UTF-8): 虚拟 MIDI 键盘
 Name:         vkeybd
 Version:      0.1.18d
-Release:      9%{?dist}
+Release:      10%{?dist}
 License:      GPLv2+
 Group:        Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -73,6 +73,9 @@ touch --no-create %{_datadir}/icons/hicolor || :
 %{_datadir}/icons/hicolor/64x64/apps/vkeybd.png
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.1.18d-10
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.1.18d-9
 - 为 Magic 3.0 重建
 

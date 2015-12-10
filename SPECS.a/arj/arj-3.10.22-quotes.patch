@@ -1,0 +1,22 @@
+Patch by Milos Jakubicek <xjakub@fi.muni.cz> for arj <= 3.10.22 to fix FTBFS
+
+--- arj-3.10.22/makefile			2004-06-18 18:19:36.000000000 +0200
++++ arj-3.10.22/makefile.quotes			2013-10-20 00:49:07.000000000 +0200
+@@ -1633,6 +1633,7 @@
+  $(CC) $(ARJ_COPT)
+ $(BASEDIR)\fmsg_arj.c $(BASEDIR)\imsg_arj.c $(BASEDIR)\nmsg_arj.c: $(BASEDIR)\tools\$(MSGBIND) $(RESFILE)
+  $(BASEDIR)\tools\msgbind $(RESFILE) msg_arj $(OS_ID) $(PACKAGE) $(LOCALE) $(BASEDIR)
++ sed -e 's|_""|\\""|' -i $(BASEDIR)/fmsg_arj.c
+ 
+ #
+ # REARJ utility
+--- arj-3.10.22/gnu/makefile.in			2013-10-20 00:47:38.000000000 +0200
++++ arj-3.10.22/gnu/makefile.in.quotes		2013-10-20 00:50:20.000000000 +0200
+@@ -376,6 +376,7 @@
+ $(BASEDIR)/fmsg_arj.c $(BASEDIR)/imsg_arj.c $(BASEDIR)/nmsg_arj.c \
+ $(BASEDIR)/msg_arj.h: $(TOOLS_DIR)/msgbind$x $(RESFILE)
+ 	$(TOOLS_DIR)/msgbind $(RESFILE) msg_arj $(OS_ID) $(PACKAGE) $(LOCALE) $(BASEDIR)
++	sed -e 's|_""|\\""|' -i $(BASEDIR)/fmsg_arj.c
+ 
+ #
+ # REARJ utility

@@ -1,6 +1,6 @@
 Name:           jbigkit
 Version:        2.0
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        JBIG1 lossless image compression tools
 
 Group:          Development/Libraries
@@ -94,6 +94,9 @@ make test
 %{_includedir}/jbig*.h
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.0-14
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.0-13
 - 为 Magic 3.0 重建
 

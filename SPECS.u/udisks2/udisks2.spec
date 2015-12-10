@@ -9,7 +9,7 @@ Summary: Disk Manager
 Summary(zh_CN.UTF-8): 磁盘管理程序
 Name: udisks2
 Version:	2.1.6
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -169,6 +169,9 @@ magic_rpm_clean.sh
 
 # Note: please don't forget the %{?dist} in the changelog. Thanks
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2.1.6-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.1.6-2
 - 为 Magic 3.0 重建
 

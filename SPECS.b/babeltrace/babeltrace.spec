@@ -1,6 +1,6 @@
 Name:           babeltrace
-Version:	1.3.0
-Release:	2%{?dist}
+Version:	1.3.1
+Release:	1%{?dist}
 Summary:        Trace Viewer and Converter, mainly for the Common Trace Format
 License:        MIT and GPLv2
 URL:            http://www.efficios.com/babeltrace
@@ -113,12 +113,15 @@ rm -f %{buildroot}/%{_pkgdocdir}/std-ext-lib.txt
 %{_libdir}/pkgconfig/babeltrace-ctf.pc
 
 %files -n python3-%{name}
-%{python3_sitelib}/babeltrace.py
-%{python3_sitelib}/__pycache__/*
+#{python3_sitelib}/babeltrace.py
+#{python3_sitelib}/__pycache__/*
 %{python3_sitearch}/
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.3.0-2
 - 更新到 1.3.0
 

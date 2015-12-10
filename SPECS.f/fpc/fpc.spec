@@ -1,7 +1,7 @@
 %define buildpdf 0
 Name:           fpc
 Version:        2.6.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Free Pascal Compiler
 Summary(zh_CN.UTF-8): 自由的 Pascal 编译器
 
@@ -200,6 +200,9 @@ rm -rf %{buildroot}
 %{_datadir}/fpcsrc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.6.4-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.6.4-2
 - 为 Magic 3.0 重建
 

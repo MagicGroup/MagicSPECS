@@ -2,7 +2,7 @@ Summary: A utility for unpacking zip files
 Summary(zh_CN.UTF-8): 解压缩 zip 文件的工具
 Name: unzip
 Version: 6.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: BSD
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -96,6 +96,9 @@ magic_rpm_clean.sh
 %{_mandir}/*/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 6.0-9
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 6.0-8
 - 为 Magic 3.0 重建
 

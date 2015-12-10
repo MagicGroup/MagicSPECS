@@ -4,7 +4,7 @@
 
 Name:           %{far}02
 Version:	0.2.7
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Libraries for videoconferencing
 Summary(zh_CN.UTF-8): 视频会议库
 
@@ -104,6 +104,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.7-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.7-5
 - 为 Magic 3.0 重建
 

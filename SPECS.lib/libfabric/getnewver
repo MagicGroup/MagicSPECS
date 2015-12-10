@@ -1,0 +1,16 @@
+#!/bin/bash
+url="http://ofiwg.github.io/libfabric/"
+new1="libfabric-"
+new2=".tar.bz2"
+downcommand="wget -q" 
+pushd $(dirname $0) > /dev/null
+rm -f index.html && $downcommand $url -O index.html
+if [ -f index.html ];then
+	newver=`grep "$new1.*$new2" index.html|head -n 1| sed "s/.*$new1//" | sed "s/$new2.*//" | sed 's/^[ ]\{1,\}//;s/[ ]\{1,\}$//g'`
+	echo $newver
+else
+	echo "不能正常取得新版本号"
+	exit 1
+fi
+rm -f index.html
+popd > /dev/null

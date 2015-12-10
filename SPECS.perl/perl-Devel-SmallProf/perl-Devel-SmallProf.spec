@@ -1,6 +1,6 @@
 Name:           perl-Devel-SmallProf
 Version:        2.02
-Release:        23%{?dist}
+Release:        24%{?dist}
 Summary:        Per-line Perl profiler
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.02-24
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.02-23
 - 为 Magic 3.0 重建
 

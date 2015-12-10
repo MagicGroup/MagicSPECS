@@ -1,6 +1,6 @@
 Name:           jsch-agent-proxy
 Version:        0.0.7
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Proxy to ssh-agent and Pageant in Java
 License:        BSD
 URL:            http://www.jcraft.com/jsch-agent-proxy/
@@ -117,6 +117,9 @@ This package provides %{summary}.
 %doc LICENSE.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.0.7-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.0.7-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Perl-MinimumVersion
 Version:	1.38
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:        Find a minimum required version of perl for Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.38-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.38-10
 - 为 Magic 3.0 重建
 

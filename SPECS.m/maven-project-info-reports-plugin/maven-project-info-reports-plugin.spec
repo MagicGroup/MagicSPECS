@@ -1,6 +1,6 @@
 Name:           maven-project-info-reports-plugin
 Version:        2.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Maven Project Info Reports Plugin
 License:        ASL 2.0
 URL:            http://maven.apache.org/plugins/maven-project-info-reports-plugin/
@@ -86,6 +86,9 @@ mv %{name}-%{version}/* .
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.7-7
+- 为 Magic 3.0 重建
+
 * Mon Aug  4 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 2.7-6
 - Port to Doxia 1.6
 

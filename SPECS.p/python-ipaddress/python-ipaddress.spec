@@ -2,7 +2,7 @@
 
 Name:           python-%{pyname}
 Version:	1.0.14
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Port of the python 3.3+ ipaddress module to 2.6+
 Summary(zh_CN.UTF-8): 移植 Python 3.3+ 的 ip 地址模块到 2.6+
 
@@ -44,6 +44,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0.14-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.0.14-2
 - 为 Magic 3.0 重建
 

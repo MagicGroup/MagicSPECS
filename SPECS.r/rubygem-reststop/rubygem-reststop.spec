@@ -3,7 +3,7 @@
 Summary:	Convenient RESTfulness for all your Camping controller needs
 Name:		rubygem-%{gem_name}
 Version:	0.4.0
-Release:	12%{?dist}
+Release:	13%{?dist}
 Group:		Development/Languages
 License:	LGPLv3
 URL:		http://rubyforge.org/projects/reststop/
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.4.0-13
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.4.0-12
 - 为 Magic 3.0 重建
 

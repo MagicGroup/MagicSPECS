@@ -1,7 +1,7 @@
 # Generated from prawn-0.12.0.gem by gem2rpm -*- rpm-spec -*-
 %global gem_name prawn
 %global mainver 1.0.0
-%global release 4
+%global release 5
 %{?prever:
 %global gem_instdir %{gem_dir}/gems/%{gem_name}-%{mainver}%{?prever}
 %global gem_docdir %{gem_dir}/doc/%{gem_name}-%{mainver}%{?prever}
@@ -123,6 +123,9 @@ popd
 %{gem_instdir}/data/*.txt
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.2-1
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.2-1
 - 为 Magic 3.0 重建
 

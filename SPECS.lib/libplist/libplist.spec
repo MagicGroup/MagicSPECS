@@ -2,7 +2,7 @@
 
 Name:          libplist
 Version: 1.12
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Library for manipulating Apple Binary and XML Property Lists
 Summary(zh_CN.UTF-8): 处理 Apple 二进制和 XML 属性列表的库
 
@@ -87,6 +87,9 @@ find $RPM_BUILD_ROOT -type f -name "*.la" -delete
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.12-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.12-4
 - 更新到 1.12
 

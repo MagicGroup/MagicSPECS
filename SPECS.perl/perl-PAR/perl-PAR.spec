@@ -1,6 +1,6 @@
 Name:           perl-PAR
 Version:	1.010
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl Archive Toolkit
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.010-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.010-2
 - 为 Magic 3.0 重建
 

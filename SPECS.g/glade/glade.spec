@@ -1,6 +1,6 @@
 Name:           glade
 Version:	3.19.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        User Interface Designer for GTK+ and GNOME
 Summary(zh_CN.UTF-8): GTK+ 和 GNOME 的用户界面设计器
 
@@ -133,6 +133,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/appdata/glade.appdata.xml
 %{_mandir}/man1/glade-previewer.1*
 %{_mandir}/man1/glade.1*
+%{_datadir}/icons/hicolor/scalable/apps/glade-symbolic.svg
 
 %files devel
 %{_includedir}/libgladeui-2.0/
@@ -142,6 +143,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc %{_datadir}/gtk-doc/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.19.0-3
 - 更新到 3.19.0
 

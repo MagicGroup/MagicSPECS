@@ -2,7 +2,7 @@ Summary: Library providing the FAM File Alteration Monitor API
 Summary(zh_CN.UTF-8): 提供了文件更改监视器 (FAM) API 的库 
 Name: gamin
 Version: 0.1.10
-Release: 15%{?dist}
+Release: 17%{?dist}
 License: LGPLv2
 #some of the files (server/inotify-kernel.c) are GPLv2
 #so https://fedoraproject.org/wiki/Licensing#GPL_Compatibility_Matrix
@@ -139,6 +139,12 @@ rm -fr %{buildroot}
 %doc doc/python.html
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.10-17
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.10-16
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.1.10-15
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:         Utilities for infrared communication between devices
 Summary(zh_CN.UTF-8): 在设备间红外通信的工具
 Name:            irda-utils
 Version:         0.9.18
-Release:         17%{?dist}
+Release:         18%{?dist}
 Url:             http://irda.sourceforge.net
 License:         GPLv2+
 Group:           Applications/System
@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.9.18-18
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.9.18-17
 - 为 Magic 3.0 重建
 

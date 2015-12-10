@@ -34,11 +34,6 @@
 # rpmbuild -ta @PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz --without georeplication
 %{?_without_georeplication:%global _without_georeplication --disable-georeplication}
 
-# Disable geo-replication on EL5, as its default Python is too old
-%if ( 0%{?rhel} && 0%{?rhel} < 6 )
-%global _without_georeplication --disable-georeplication
-%endif
-
 # if you wish to compile an rpm without the OCF resource agents...
 # rpmbuild -ta @PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz --without ocf
 %{?_without_ocf:%global _without_ocf --without-ocf}
@@ -51,43 +46,24 @@
 # Fedora deprecated syslog, see
 #  https://fedoraproject.org/wiki/Changes/NoDefaultSyslog
 # (And what about RHEL7?)
-%if ( 0%{?fedora} && 0%{?fedora} >= 20 ) || ( 0%{?rhel} && 0%{?rhel} <= 6 )
 %global _without_syslog --disable-syslog
-%endif
 
 # if you wish to compile an rpm without the BD map support...
 # rpmbuild -ta @PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz --without bd
 %{?_without_bd:%global _without_bd --disable-bd-xlator}
 
-%if ( 0%{?rhel} && 0%{?rhel} < 6 || 0%{?sles_version} )
-%define _without_bd --disable-bd-xlator
-%endif
-
 # if you wish to compile an rpm without the qemu-block support...
 # rpmbuild -ta @PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz --without qemu-block
 %{?_without_qemu_block:%global _without_qemu_block --disable-qemu-block}
 
-%if ( 0%{?rhel} && 0%{?rhel} < 6 )
-# xlators/features/qemu-block fails to build on RHEL5, disable it
-%define _without_qemu_block --disable-qemu-block
-%endif
-
-# Disable data-tiering on EL5, sqlite is too old
-%if ( 0%{?rhel} && 0%{?rhel} < 6 )
-%global _without_tiering --disable-tiering
-%endif
 
 ##-----------------------------------------------------------------------------
 ## All %%global definitions should be placed here and keep them sorted
 ##
 
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} > 6 )
 %global _with_systemd true
-%endif
 
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} > 6 )
 %global _with_firewalld --enable-firewalld
-%endif
 
 %if 0%{?_tmpfilesdir:1}
 %define _with_tmpfilesdir --with-tmpfilesdir=%{_tmpfilesdir}
@@ -98,11 +74,6 @@
 # there is no systemtap support! Perhaps some day there will be
 %global _without_systemtap --enable-systemtap=no
 
-# From https://fedoraproject.org/wiki/Packaging:Python#Macros
-%if ( 0%{?rhel} && 0%{?rhel} <= 5 )
-%{!?python_sitelib: %global python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%{!?python_sitearch: %global python_sitearch %(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%endif
 
 %if ( 0%{?_with_systemd:1} )
 %if ( 0%{_for_fedora_koji_builds} )
@@ -140,26 +111,14 @@
 
 %{!?_pkgdocdir: %global _pkgdocdir %{_docdir}/%{name}-%{version}}
 
-%if ( 0%{?rhel} && 0%{?rhel} < 6 )
-   # _sharedstatedir is not provided by RHEL5
-   %define _sharedstatedir /var/lib
-%endif
-
 # We do not want to generate useless provides and requires for xlator
 # .so files to be set for glusterfs packages.
 # Filter all generated:
 #
 # TODO: RHEL5 does not have a convenient solution
-%if ( 0%{?rhel} == 6 )
-    # filter_setup exists in RHEL6 only
-    %filter_provides_in %{_libdir}/glusterfs/%{version}/
-    %global __filter_from_req %{?__filter_from_req} | grep -v -P '^(?!lib).*\.so.*$'
-    %filter_setup
-%else
-    # modern rpm and current Fedora do not generate requires when the
-    # provides are filtered
-    %global __provides_exclude_from ^%{_libdir}/glusterfs/%{version}/.*$
-%endif
+# modern rpm and current Fedora do not generate requires when the
+# provides are filtered
+%global __provides_exclude_from ^%{_libdir}/glusterfs/%{version}/.*$
 
 
 ##-----------------------------------------------------------------------------
@@ -193,9 +152,6 @@ Source0:          @PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz
 
 BuildRoot:        %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-%if ( 0%{?rhel} && 0%{?rhel} <= 5 )
-BuildRequires:    python-simplejson
-%endif
 %if ( 0%{_for_fedora_koji_builds} )
 %if ( 0%{?_with_systemd:1} )
 %global glusterfsd_service %{S:%{SOURCE7}}
@@ -213,11 +169,7 @@ BuildRequires:    libaio-devel libacl-devel
 BuildRequires:    python-devel
 BuildRequires:    python-ctypes
 BuildRequires:    userspace-rcu-devel >= 0.7
-%if ( 0%{?rhel} && 0%{?rhel} <= 5 )
-BuildRequires:    e2fsprogs-devel
-%else
 BuildRequires:    libuuid-devel
-%endif
 %if ( 0%{?_with_cmocka:1} )
 BuildRequires:    libcmocka-devel >= 1.0.1
 %endif
@@ -437,12 +389,7 @@ This package provides support to geo-replication.
 Summary:          GlusterFS common libraries
 Group:            Applications/File
 %if ( 0%{!?_without_syslog:1} )
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} > 6 )
 Requires:         rsyslog-mmjsonparse
-%endif
-%if ( 0%{?rhel} && 0%{?rhel} == 6 )
-Requires:         rsyslog-mmcount
-%endif
 %endif
 
 %description libs
@@ -460,10 +407,7 @@ This package provides the base GlusterFS libraries
 Summary:          GlusterFS python library
 Group:            Development/Tools
 License:          GPLv3+
-%if ( ! ( 0%{?rhel} && 0%{?rhel} < 6 || 0%{?sles_version} ) )
-# EL5 does not support noarch sub-packages
 BuildArch:        noarch
-%endif
 Requires:         python
 
 %description -n python-gluster
@@ -521,16 +465,9 @@ regression testing of Gluster.
 %package resource-agents
 Summary:          OCF Resource Agents for GlusterFS
 License:          GPLv3+
-%if ( ! ( 0%{?rhel} && 0%{?rhel} < 6 || 0%{?sles_version} ) )
-# EL5 does not support noarch sub-packages
 BuildArch:        noarch
-%endif
 # this Group handling comes from the Fedora resource-agents package
-%if ( 0%{?fedora} || 0%{?centos_version} || 0%{?rhel} )
 Group:            System Environment/Base
-%else
-Group:            Productivity/Clustering/HA
-%endif
 # for glusterd
 Requires:         %{name}-server
 # depending on the distribution, we need pacemaker or resource-agents
@@ -575,17 +512,7 @@ Requires(preun):  /sbin/service
 Requires(preun):  /sbin/chkconfig
 Requires(postun): /sbin/service
 %endif
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} >= 6 )
 Requires:         rpcbind
-%else
-Requires:         portmap
-%endif
-%if ( 0%{?rhel} && 0%{?rhel} < 6 )
-Obsoletes:        %{name}-geo-replication = %{version}-%{release}
-%endif
-%if ( 0%{?rhel} && 0%{?rhel} <= 6 )
-Requires:         python-argparse
-%endif
 Requires:         pyxattr
 
 %description server
@@ -672,13 +599,6 @@ install -D -p -m 0644 extras/glusterd-sysconfig \
     %{buildroot}%{_sysconfdir}/sysconfig/glusterd
 %endif
 
-%if ( 0%{_for_fedora_koji_builds} )
-%if ( 0%{?rhel} && 0%{?rhel} <= 5 )
-install -D -p -m 0755 %{SOURCE6} \
-    %{buildroot}%{_sysconfdir}/sysconfig/modules/glusterfs-fuse.modules
-%endif
-%endif
-
 mkdir -p %{buildroot}%{_localstatedir}/log/glusterd
 mkdir -p %{buildroot}%{_localstatedir}/log/glusterfs
 mkdir -p %{buildroot}%{_localstatedir}/log/glusterfsd
@@ -693,12 +613,7 @@ find %{buildroot}%{_libdir} -name '*.la' -delete
 # Remove installed docs, the ones we want are included by %%doc, in
 # /usr/share/doc/glusterfs or /usr/share/doc/glusterfs-x.y.z depending
 # on the distribution
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} > 6 )
 rm -rf %{buildroot}%{_pkgdocdir}/*
-%else
-rm -rf %{buildroot}%{_defaultdocdir}/%{name}
-mkdir -p %{buildroot}%{_pkgdocdir}
-%endif
 head -50 ChangeLog > ChangeLog.head && mv ChangeLog.head ChangeLog
 cat << EOM >> ChangeLog
 
@@ -707,17 +622,11 @@ https://forge.gluster.org/glusterfs-core/glusterfs/commits/v%{version}%{?prerelt
 EOM
 
 # Remove benchmarking and other unpackaged files
-%if ( 0%{?rhel} && 0%{?rhel} < 6 )
-rm -rf %{buildroot}/benchmarking
-rm -f %{buildroot}/glusterfs-mode.el
-rm -f %{buildroot}/glusterfs.vim
-%else
 # make install always puts these in %%{_defaultdocdir}/%%{name} so don't
 # use %%{_pkgdocdir}; that will be wrong on later Fedora distributions
 rm -rf %{buildroot}%{_defaultdocdir}/%{name}/benchmarking
 rm -f %{buildroot}%{_defaultdocdir}/%{name}/glusterfs-mode.el
 rm -f %{buildroot}%{_defaultdocdir}/%{name}/glusterfs.vim
-%endif
 
 # Create working directory
 mkdir -p %{buildroot}%{_sharedstatedir}/glusterd
@@ -743,20 +652,11 @@ install -D -p -m 0644 extras/glusterfs-georep-logrotate \
 %endif
 
 %if ( 0%{!?_without_syslog:1} )
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} > 6 )
 install -D -p -m 0644 extras/gluster-rsyslog-7.2.conf \
     %{buildroot}%{_sysconfdir}/rsyslog.d/gluster.conf.example
-%endif
 
-%if ( 0%{?rhel} && 0%{?rhel} == 6 )
-install -D -p -m 0644 extras/gluster-rsyslog-5.8.conf \
-    %{buildroot}%{_sysconfdir}/rsyslog.d/gluster.conf.example
-%endif
-
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} >= 6 )
 install -D -p -m 0644 extras/logger.conf.example \
     %{buildroot}%{_sysconfdir}/glusterfs/logger.conf.example
-%endif
 %endif
 
 # the rest of the ghosts
@@ -843,9 +743,6 @@ rm -rf %{buildroot}
 /sbin/ldconfig
 
 %post fuse
-%if ( 0%{?rhel} == 5 )
-modprobe fuse
-%endif
 
 %if ( 0%{!?_without_georeplication:1} )
 %post geo-replication
@@ -985,9 +882,7 @@ fi
 %license COPYING-GPLV2 COPYING-LGPLV3
 %doc ChangeLog INSTALL README.md THANKS
 %if ( 0%{!?_without_syslog:1} )
-%if ( 0%{?fedora} ) || ( 0%{?rhel} && 0%{?rhel} >= 6 )
 %{_sysconfdir}/rsyslog.d/gluster.conf.example
-%endif
 %endif
 %{_mandir}/man8/*gluster*.8*
 %exclude %{_mandir}/man8/gluster.8*
@@ -1008,10 +903,8 @@ fi
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/debug/error-gen.so
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/debug/io-stats.so
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/debug/trace.so
-%if ( ! ( 0%{?rhel} && 0%{?rhel} < 6 ) )
 # RHEL-5 based distributions have a too old openssl
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/encryption/crypt.so
-%endif
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/features/access-control.so
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/features/barrier.so
 %{_libdir}/glusterfs/%{version}%{?prereltag}/xlator/features/cdc.so
@@ -1088,9 +981,7 @@ fi
 # Glupy Python files
 %{python_sitelib}/gluster/glupy/*
 # Don't expect a .egg-info file on EL5
-%if ( ! ( 0%{?rhel} && 0%{?rhel} < 6 ) )
 %{python_sitelib}/glusterfs_glupy*.egg-info
-%endif
 
 %files fuse
 # glusterfs is a symlink to glusterfsd, -server depends on -fuse.
@@ -1101,11 +992,6 @@ fi
 /sbin/mount.glusterfs
 %if ( 0%{!?_without_fusermount:1} )
 %{_bindir}/fusermount-glusterfs
-%endif
-%if ( 0%{_for_fedora_koji_builds} )
-%if ( 0%{?rhel} && 0%{?rhel} <= 5 )
-%{_sysconfdir}/sysconfig/modules/glusterfs-fuse.modules
-%endif
 %endif
 
 %files ganesha

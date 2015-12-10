@@ -6,7 +6,7 @@
 
 Name:           %{?scl_prefix}%{project}-gogo-runtime
 Version:        0.12.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Community OSGi R4 Service Platform Implementation - Basic Commands
 License:        ASL 2.0
 URL:            http://felix.apache.org/site/apache-felix-gogo.html
@@ -78,6 +78,9 @@ This package contains the API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.12.1-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.12.1-3
 - 为 Magic 3.0 重建
 

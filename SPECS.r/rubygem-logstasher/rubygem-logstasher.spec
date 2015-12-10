@@ -9,7 +9,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        0.6.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Awesome rails logs
 
 Group:          Development/Languages
@@ -111,6 +111,9 @@ rm -rf spec/
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.6.5-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.6.5-4
 - 为 Magic 3.0 重建
 

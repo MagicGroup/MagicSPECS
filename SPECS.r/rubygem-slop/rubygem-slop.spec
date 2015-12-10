@@ -4,7 +4,7 @@
 Summary: Option gathering made easy
 Name: rubygem-%{gem_name}
 Version: 3.5.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/injekt/slop
@@ -65,6 +65,9 @@ popd
 %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.5.0-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.5.0-4
 - 为 Magic 3.0 重建
 

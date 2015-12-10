@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.4.1
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Simple interface to build .dot graph files
 
 License:        BSD
@@ -64,6 +64,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.1-13
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.4.1-12
 - 为 Magic 3.0 重建
 

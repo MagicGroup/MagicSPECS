@@ -1,6 +1,6 @@
 Name:           libinput
 Version: 1.1.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Input device library
 Summary(zh_CN.UTF-8): 输入设备库
 
@@ -69,6 +69,9 @@ find $RPM_BUILD_ROOT -name '*.la' -delete
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.1.0-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.1.0-3
 - 更新到 1.1.0
 

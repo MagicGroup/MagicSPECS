@@ -1,6 +1,6 @@
 Name:		xcb-util-wm
 Version:	0.4.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Client and window-manager helper library on top of libxcb
 Summary(zh_CN.UTF-8): 基于 libxcb 的客户端和窗口管理器辅助库
 Group:		System Environment/Libraries
@@ -68,6 +68,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.4.1-6
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.4.1-5
 - 为 Magic 3.0 重建
 

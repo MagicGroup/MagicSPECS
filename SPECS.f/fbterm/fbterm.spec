@@ -1,6 +1,6 @@
 Name:       fbterm
 Version:    1.7
-Release:    3%{?dist}
+Release:    4%{?dist}
 License:    GPLv2+
 Group:      Applications/System
 Group(zh_CN.UTF-8):	应用程序/系统
@@ -69,6 +69,9 @@ setcap 'cap_sys_tty_config+ep' %{_bindir}/%{name}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.7-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.7-3
 - 为 Magic 3.0 重建
 

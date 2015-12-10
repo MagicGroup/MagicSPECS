@@ -2,7 +2,7 @@ Summary: The lrz and lsz modem communications programs
 Summary(zh_CN.UTF-8): lrz 和 lsz 通信程序
 Name: lrzsz
 Version: 0.12.20
-Release: 33%{?dist}
+Release: 34%{?dist}
 License: GPLv2+
 Group: Applications/Communications
 Group(zh_CN.UTF-8): 应用程序/通信
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.12.20-34
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.12.20-33
 - 为 Magic 3.0 重建
 

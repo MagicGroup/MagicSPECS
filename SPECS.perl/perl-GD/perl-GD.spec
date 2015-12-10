@@ -1,6 +1,6 @@
 Name:           perl-GD
 Version:	2.56
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl interface to the GD graphics library
 
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm %{buildroot}%{_bindir}/bdftogd
 %{_mandir}/man3/GD::Simple.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.56-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.56-2
 - 为 Magic 3.0 重建
 

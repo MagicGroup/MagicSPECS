@@ -1,14 +1,10 @@
-%if 0%{?rhel}
-%define with_private_llvm 1
-%define with_wayland 0
-%else
+%{!?_licensedir:%global license %%doc}
+
 %define with_private_llvm 0
 %define with_wayland 1
-%endif
 
 # S390 doesn't have video cards, but we need swrast for xserver's GLX
 # llvm (and thus llvmpipe) doesn't actually work on ppc32
-# llvm support for ppc64le is supposed to come in llvm-3.5
 %ifnarch s390 ppc
 %define with_llvm 1
 %endif
@@ -21,13 +17,13 @@
 %ifarch s390 s390x ppc
 %define with_hardware 0
 %define base_drivers swrast
-%endif
-%ifnarch s390 s390x ppc
+%else
 %define with_hardware 1
 %define with_vdpau 1
 %define with_vaapi 1
 %define with_nine 1
 %define base_drivers swrast,nouveau,radeon,r200
+%endif
 %ifarch %{ix86} x86_64
 %define platform_drivers ,i915,i965
 %define with_ilo    1
@@ -42,20 +38,19 @@
 %define with_xa        1
 %define with_omx       1
 %endif
-%endif
 
 %define dri_drivers --with-dri-drivers=%{?base_drivers}%{?platform_drivers}
 
 %define _default_patch_fuzz 2
 
-%define gitdate 20150729
-#% define githash 5a55f68
+%define gitdate 20151122
+#% define githash 21ccdbd
 %define git %{?githash:%{githash}}%{!?githash:%{gitdate}}
 
 Summary: Mesa graphics libraries
 Name: mesa
-Version: 10.6.3
-Release: 3.%{git}%{?dist}
+Version: 11.0.6
+Release: 1.%{git}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -70,15 +65,9 @@ Source3: vl_mpeg12_decoder.c
 # Fedora opts to ignore the optional part of clause 2 and treat that code as 2 clause BSD.
 Source4: Mesa-MLAA-License-Clarification-Email.txt
 
-Patch1: mesa-10.0-nv50-fix-build.patch
-Patch9: mesa-8.0-llvmpipe-shmget.patch
-Patch12: mesa-8.0.1-fix-16bpp.patch
 Patch15: mesa-9.2-hardware-float.patch
 Patch20: mesa-10.2-evergreen-big-endian.patch
 Patch30: mesa-10.3-bigendian-assert.patch
-
-# https://bugs.freedesktop.org/show_bug.cgi?id=73512
-Patch99: 0001-opencl-use-versioned-.so-in-mesa.icd.patch
 
 # To have sha info in glxinfo
 BuildRequires: git
@@ -106,7 +95,7 @@ BuildRequires: gettext
 %if 0%{?with_private_llvm}
 BuildRequires: mesa-private-llvm-devel
 %else
-BuildRequires: llvm-devel >= 3.4-7
+BuildRequires: llvm-devel >= 3.7
 %if 0%{?with_opencl}
 BuildRequires: clang-devel >= 3.0
 %endif
@@ -348,26 +337,10 @@ Mesa Direct3D9 state tracker development package
 #setup -q -n Mesa-%{version}%{?snapshot}
 %setup -q -n mesa-%{git}
 grep -q ^/ src/gallium/auxiliary/vl/vl_decoder.c && exit 1
-%patch1 -p1 -b .nv50rtti
-
-# this fastpath is:
-# - broken with swrast classic
-# - broken on 24bpp
-# - not a huge win anyway
-# - ABI-broken wrt upstream
-# - eventually obsoleted by vgem
-#
-# dear ajax: fix this one way or the other
-#patch9 -p1 -b .shmget
-#patch12 -p1 -b .16bpp
 
 %patch15 -p1 -b .hwfloat
 %patch20 -p1 -b .egbe
 %patch30 -p1 -b .beassert
-
-%if 0%{?with_opencl}
-%patch99 -p1 -b .icd
-%endif
 
 %if 0%{with_private_llvm}
 sed -i 's/llvm-config/mesa-private-llvm-config-%{__isa_bits}/g' configure.ac
@@ -420,13 +393,7 @@ export CXXFLAGS="$RPM_OPT_FLAGS %{?with_opencl:-frtti -fexceptions} %{!?with_ope
 %else
     --with-gallium-drivers=%{?with_llvm:swrast} \
 %endif
-%if 0%{?fedora} < 21
-    --disable-dri3 \
-%endif
     %{?dri_drivers}
-
-# this seems to be neccessary for s390
-make -C src/mesa/drivers/dri/common/xmlpool/
 
 make %{?_smp_mflags} MKDEP=/bin/true
 
@@ -434,11 +401,6 @@ make %{?_smp_mflags} MKDEP=/bin/true
 rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
-
-%if 0%{?rhel}
-# remove pre-DX9 drivers
-rm -f $RPM_BUILD_ROOT%{_libdir}/dri/{radeon,r200,nouveau_vieux}_dri.*
-%endif
 
 %if !%{with_hardware}
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/drirc
@@ -451,7 +413,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/vdpau/*.so
 rm -f $RPM_BUILD_ROOT%{_includedir}/GL/w*.h
 
 # remove .la files
-find $RPM_BUILD_ROOT -name \*.la | xargs rm -f
+find $RPM_BUILD_ROOT -name '*.la' -delete
 
 # this keeps breaking, check it early.  note that the exit from eu-ftr is odd.
 pushd $RPM_BUILD_ROOT%{_libdir}
@@ -713,6 +675,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Nov 26 2015 Liu Di <liudidi@gmail.com> - 10.6.3-5.20150729
+- 为 Magic 3.0 重建
+
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 10.6.3-4.20150729
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 10.6.3-3.20150729
 - 为 Magic 3.0 重建
 

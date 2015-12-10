@@ -1,8 +1,8 @@
 Summary:	An OpenGL to PostScript printing library
 Summary(pl):	Biblioteka drukowania z OpenGL-a do PostScriptu
 Name:		gl2ps
-Version:	1.3.8
-Release:	4%{?dist}
+Version:	1.3.9
+Release:	1%{?dist}
 License:	LGPLv2+ or GL2PS
 Group:		System Environment/Libraries
 Source0:	http://www.geuz.org/gl2ps/src/%{name}-%{version}.tgz
@@ -87,11 +87,14 @@ rm -rf %{buildroot}
 
 %files devel
 %defattr(644,root,root,755)
-%doc gl2ps.pdf TODO.txt gl2psTest*.c
+%doc gl2ps.pdf
 %{_libdir}/libgl2ps.so
 %{_includedir}/gl2ps.h
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3.8-5
+- 为 Magic 3.0 重建
+
 * Wed Apr 30 2014 Liu Di <liudidi@gmail.com> - 1.3.8-4
 - 为 Magic 3.0 重建
 

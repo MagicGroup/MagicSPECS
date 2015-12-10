@@ -1,6 +1,6 @@
 Name: 		aiksaurus
 Version: 	1.2.1
-Release: 	25%{?dist}
+Release: 	27%{?dist}
 Summary: 	An English-language thesaurus library
 Summary(zh_CN.UTF-8): 英语同义词库
 
@@ -13,6 +13,8 @@ Source0: 	http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}.png
 Source2: 	%{name}.desktop
 Patch0:		%{name}-1.2.1-gcc43.patch
+Patch1:         %{name}-security.patch
+
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: 	gtk2-devel
@@ -78,6 +80,7 @@ gtk includes and definitions for developing with aiksaurus.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %configure
@@ -153,6 +156,12 @@ update-desktop-database &> /dev/null ||:
 
 
 %changelog
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.2.1-27
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:1.2.1-26
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:1.2.1-25
 - 为 Magic 3.0 重建
 

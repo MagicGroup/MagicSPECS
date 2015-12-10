@@ -1,11 +1,13 @@
 #先使用内置的依赖库
-%define use_external_dependence 0
+#define use_external_dependence 0
 
 %define _unpackaged_files_terminate_build	0
 
+#undefine _hardened_build
+
 Name:           clementine
 Version:	1.2.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A music player and library organiser
 Summary(zh_CN.UTF-8):	一个音乐播放器和曲库管理工具
 
@@ -14,10 +16,25 @@ Group(zh_CN.UTF-8):	应用程序/多媒体
 License:        GPLv3 and GPLv2+
 URL:            http://www.clementine-player.org/
 Source0:        https://github.com/clementine-player/Clementine/archive/%{version}.tar.gz
-Patch0:		clementine-0.3-no3rd.patch
-Patch1:		clementine-1.2.2-fixcompile.patch
-Patch2:     	clementine-1.2.2-FIX-sha2.patch
-Patch3: 	clementine-moodbar_flags.patch
+
+# fix libmygpo-qt header references
+Patch0:         clementine-mygpo.patch
+# desktop file fixes:
+# * categories (+Audio)
+# * non-compliant groups, https://code.google.com/p/clementine-player/issues/detail?id=2690
+Patch3:         clementine-desktop.patch
+Patch4:         clementine-udisks-headers.patch
+
+# Use bundled sha2 library
+# https://github.com/clementine-player/Clementine/issues/4217
+Patch5:         clementine-do-not-use-system-sha2.patch
+# fix compiler flag handling in gst/moodbar, upstreamable --rex
+Patch6:         clementine-moodbar_flags.patch
+
+Patch7: 	fix_gcc5_ftbfs.patch
+Patch8:		freebsd_isnt_kfreebsd.patch
+Patch9:		hide_boost_includes_from_q_moc.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  desktop-file-utils
@@ -34,7 +51,7 @@ BuildRequires:  protobuf-devel
 BuildRequires:  protobuf-compiler
 BuildRequires:  qt4-linguist
 
-%if %{use_external_dependence}
+%if 0%{?use_external_dependence}
 BuildRequires:  qtsingleapplication-devel
 BuildRequires:  libqxt-devel
 BuildRequires:  gtest-devel
@@ -51,49 +68,68 @@ Amarok 1.4 的一个移植版，捎带一些特性的重写以便得益于Qt4。
 
 %prep
 %setup -q -n Clementine-%{version}
-#%patch0 -p1 -R -b .no3rd
-#%patch0 -p1 -b .no-external-lib
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
+%patch0 -p1 -b .mygpo
+%patch3 -p1 -b .desktop
+%patch4 -p1 -b .udisks-headers
+%patch5 -p1 -b .do-not-use-system-sha2
+%patch6 -p1 -b .moodbar_flags
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
 
-%if %{use_external_dependence}
-# We already don't use these but just to make sure
-rm -fr 3rdparty
-%endif
+# Remove most 3rdparty libraries
+mv 3rdparty/{gmock,qocoa,qsqlite,sha2}/ .
+rm -fr 3rdparty/*
+mv {gmock,qocoa,qsqlite,sha2}/ 3rdparty/
 
-# Don't build tests. They require gmock which is not available on MagicLinux
-sed -i '/tests/d' CMakeLists.txt
-
-# Fix cannot find header file
-sed -i 's/<ApiRequest.h>/<mygpo-qt\/ApiRequest.h>/g' `grep "#include <ApiRequest.h>" * -rl`
-sed -i 's/<Podcast.h>/<mygpo-qt\/Podcast.h>/g' `grep "#include <Podcast.h>" * -rl`
-
+# Can't run all the unit tests
+#   songloader requires internet connection
+for test in songloader; do
+    sed -i -e "/${test}_test/d" tests/CMakeLists.txt
+done
 
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
-%{cmake} -DBUILD_WERROR:BOOL=OFF \
+%{cmake} \
+  -DBUILD_WERROR:BOOL=OFF \
   -DCMAKE_BUILD_TYPE:STRING=Release \
-  -DENABLE_DEVICEKIT:BOOL=OFF \
+  -DUSE_SYSTEM_QTSINGLEAPPLICATION=1 \
+  -DUSE_SYSTEM_PROJECTM=1 \
+  -DUSE_SYSTEM_QXT=1 \
   ..
-#  -DUSE_SYSTEM_QTSINGLEAPPLICATION=1 \
-#  -DUSE_SYSTEM_PROJECTM=1 \
-#  -DUSE_SYSTEM_QXT=1 \
-#  ..
-make #%{?_smp_mflags}
 popd
 
+make %{?_smp_mflags} -C %{_target_platform}
+
+
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} -C %{_target_platform}
 
+
 %check
-desktop-file-validate \
-    %{buildroot}%{_datadir}/applications/%{name}.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/clementine.desktop
+pushd %{_target_platform}
+# Run a fake X session since some tests check for X, tests still fail sometimes
+xvfb-run -a dbus-launch --exit-with-session make test ||:
+popd
 
 %clean
 rm -rf %{buildroot}
+
+%post
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+  touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+  gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+  update-desktop-database &> /dev/null || :
+fi
+
+%posttrans
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+update-desktop-database &> /dev/null || :
 
 %files
 %defattr(-,root,root,-)
@@ -101,11 +137,14 @@ rm -rf %{buildroot}
 %{_bindir}/clementine
 %{_datadir}/applications/clementine.desktop
 %{_datadir}/icons/hicolor/*/apps/application-x-clementine.*
-%{_datadir}/clementine/projectm-presets/*
+#%{_datadir}/clementine/projectm-presets/*
 %{_bindir}/clementine-tagreader
 %{kde4_servicesdir}/clementine-*.protocol
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.2.3-9
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.3-8
 - 为 Magic 3.0 重建
 

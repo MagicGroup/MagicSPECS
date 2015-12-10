@@ -4,7 +4,7 @@
 
 Name:           %{pkg_name}
 Version:        1.18.9
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        A liberalised C pre-processor for Haskell
 
 License:        GPL+ and LGPLv2+ or BSD
@@ -91,6 +91,12 @@ install -D -p -m 0644 docs/cpphs.1 %{buildroot}%{_mandir}/man1/%{name}.1
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 1.18.9-6
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.18.9-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.18.9-4
 - 为 Magic 3.0 重建
 

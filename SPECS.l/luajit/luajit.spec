@@ -1,6 +1,6 @@
 Name:           luajit
 Version:        2.0.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Just-In-Time Compiler for Lua
 Summary(zh_CN.UTF-8): Lua 的即时编译环境
 License:        MIT
@@ -85,6 +85,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.0.4-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.0.4-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name: ninja
 Version: 1.5.8.1
-Release: 19
+Release: 20
 License: GPLv2+
 Summary: Text based Internet Relay Chat (IRC) client
 Summary(zh_CN.UTF-8): 文本界面的 IRC 客户端
@@ -65,6 +65,9 @@ magic_rpm_clean.sh
 %doc README ChangeLog BUGS+TODO COPYING
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.5.8.1-20
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.8.1-19
 - 为 Magic 3.0 重建
 

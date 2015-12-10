@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Efficient union and equivalence testing of sets
 
 License:        BSD
@@ -71,6 +71,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2-8
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.2-7
 - 为 Magic 3.0 重建
 

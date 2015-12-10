@@ -22,7 +22,7 @@ Name: trinity-lrcShow-II
 Summary: lrcShow-II amarok script
 Summary(zh_CN.UTF-8): lrcShow-II amarok 动态歌词显示脚本
 Version:	 0.9.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 License:	 GPL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -65,6 +65,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{tde_datadir}/apps/amarok/scripts/lrcShow-II
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.9.2-6
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.9.2-5
 - 为 Magic 3.0 重建
 

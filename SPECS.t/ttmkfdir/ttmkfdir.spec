@@ -2,7 +2,7 @@ Summary: Utility to create fonts.scale files for truetype fonts
 Summary(zh_CN.UTF-8): 为 truetype 字体创建 fonts.scale 文件的工具
 Name: ttmkfdir
 Version: 3.0.9
-Release: 47%{?dist}
+Release: 48%{?dist}
 # Only licensing attribution is in README, no version.
 License: LGPLv2+
 Group: Applications/System
@@ -65,6 +65,9 @@ cp -p %{SOURCE10} %{buildroot}%{_mandir}/man1/
 %{_mandir}/man1/ttmkfdir.1.gz
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.0.9-48
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.0.9-47
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name: glassfish-jaxb
 Version: 2.2.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: JAXB Reference Implementation
 
 Group: Development/Libraries
@@ -204,6 +204,9 @@ cp -rp apidocs/* %{buildroot}%{_javadocdir}/%{name}/.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.2.5-7
+- 为 Magic 3.0 重建
+
 * Thu Aug 14 2014 Liu Di <liudidi@gmail.com> - 2.2.5-6
 - 为 Magic 3.0 重建
 

@@ -1,17 +1,15 @@
-%global vertag v20140518
+%global vertag v20150114
 
 Name:           aether
 Epoch:          1
-Version:        1.0.0
-Release:        3%{?dist}
+Version:        1.0.2
+Release:        5%{?dist}
 Summary:        Library to resolve, install and deploy artifacts the Maven way
 License:        EPL
 URL:            http://eclipse.org/aether
 BuildArch:      noarch
 
 Source0:        http://git.eclipse.org/c/%{name}/%{name}-core.git/snapshot/%{name}-%{version}.%{vertag}.tar.bz2
-
-Patch1:         0001-Revert-Bug-433953-Remove-support-for-Plexus-IoC-fram.patch
 
 BuildRequires:  maven-local
 BuildRequires:  mvn(com.google.inject:guice::no_aop:)
@@ -128,7 +126,6 @@ for Aether.
 
 %prep
 %setup -q -n %{name}-%{version}.%{vertag}
-%patch1 -p1
 
 # Remove clirr plugin
 %pom_remove_plugin :clirr-maven-plugin
@@ -182,6 +179,27 @@ rm -rf aether-transport-http/src/test
 %doc epl-v10.html notice.html
 
 %changelog
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.2-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.2-4
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.2-3
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.2-2
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-6
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-5
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:1.0.0-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 1:1.0.0-3
 - 为 Magic 3.0 重建
 

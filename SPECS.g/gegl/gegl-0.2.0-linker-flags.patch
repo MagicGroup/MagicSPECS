@@ -1,0 +1,36 @@
+diff -urNp gegl-0.2.0.orig/bin/Makefile.in gegl-0.2.0/bin/Makefile.in
+--- gegl-0.2.0.orig/bin/Makefile.in	2015-05-07 15:06:23.716649233 +0200
++++ gegl-0.2.0/bin/Makefile.in	2015-05-07 15:08:38.104260506 +0200
+@@ -363,7 +363,7 @@ AM_CFLAGS = \
+ 
+ AM_LDFLAGS = \
+ 	$(no_undefined) ../gegl/libgegl-$(GEGL_API_VERSION).la \
+-	$(DEP_LIBS) $(BABL_LIBS) $(PNG_LIBS) $(LIBSPIRO)
++	$(DEP_LIBS) $(BABL_LIBS) $(PNG_LIBS) $(LIBSPIRO) -lm
+ 
+ gegl_SOURCES = gegl.c gegl-options.c gegl-options.h gegl-path-smooth.c \
+ 	gegl-path-smooth.h $(am__append_1)
+diff -urNp gegl-0.2.0.orig/examples/Makefile.in gegl-0.2.0/examples/Makefile.in
+--- gegl-0.2.0.orig/examples/Makefile.in	2015-05-07 15:06:23.674649046 +0200
++++ gegl-0.2.0/examples/Makefile.in	2015-05-07 16:13:36.057203261 +0200
+@@ -376,7 +376,7 @@ AM_CPPFLAGS = \
+ AM_CFLAGS = $(DEP_CFLAGS) $(GTK_CFLAGS) $(BABL_CFLAGS) $(PNG_CFLAGS)
+ AM_LDFLAGS = \
+ 	$(top_builddir)/gegl/libgegl-$(GEGL_API_VERSION).la \
+-	$(DEP_LIBS) $(GTK_LIBS) $(BABL_LIBS) $(PNG_LIBS)
++	$(DEP_LIBS) $(GTK_LIBS) $(BABL_LIBS) $(PNG_LIBS) -lm
+ 
+ all: all-recursive
+ 
+diff -urNp gegl-0.2.0.orig/tools/Makefile.in gegl-0.2.0/tools/Makefile.in
+--- gegl-0.2.0.orig/tools/Makefile.in	2015-05-07 15:06:23.716649233 +0200
++++ gegl-0.2.0/tools/Makefile.in	2015-05-07 15:31:43.643298848 +0200
+@@ -394,7 +394,7 @@ AM_CPPFLAGS = \
+ AM_CFLAGS = $(DEP_CFLAGS) $(BABL_CFLAGS)
+ AM_LDFLAGS = \
+ 	$(top_builddir)/gegl/libgegl-$(GEGL_API_VERSION).la \
+-	$(DEP_LIBS) $(BABL_LIBS)
++	$(DEP_LIBS) $(BABL_LIBS) -lm
+ 
+ @HAVE_EXIV2_TRUE@exp_combine_SOURCES = exp_combine.cpp
+ @HAVE_EXIV2_TRUE@exp_combine_LDADD = $(EXIV2_LIBS) 

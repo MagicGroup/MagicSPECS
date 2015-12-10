@@ -3,7 +3,7 @@
 
 Name:           libsecret
 Version:	0.18
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Library for storing and retrieving passwords and other secrets
 Summary(zh_CN.UTF-8): 存储和检索密码和其它秘密信息的库 
 
@@ -90,6 +90,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.18-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.18-2
 - 为 Magic 3.0 重建
 

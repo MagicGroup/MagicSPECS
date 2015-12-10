@@ -6,7 +6,7 @@ Summary:       A graphics library for quick creation of PNG or JPEG images
 Summary(zh_CN.UTF-8): 快速创建 PNG 或 JPEG 图像的图形库
 Name:          gd
 Version:	2.1.1
-Release:       5%{?prever}%{?short}%{?dist}
+Release:       6%{?prever}%{?short}%{?dist}
 Group:         System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:       MIT
@@ -18,8 +18,13 @@ Source0:       libgd-%{version}-%{commit}.tgz
 %else
 Source0:       https://bitbucket.org/libgd/gd-libgd/downloads/libgd-%{version}%{?prever:-%{prever}}.tar.xz
 %endif
+
+# Missing in official archive, need for autoreconf
+Source2:       getver.pl
+
 Patch1:        gd-2.1.0-multilib.patch
-Patch2:        gd-fixautoconf.patch
+Patch2:        gd-2.1.1-libvpx.patch
+
 
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
@@ -87,13 +92,12 @@ files for gd, a graphics library for creating PNG and JPEG graphics.
 %prep
 %setup -q -n libgd-%{version}%{?prever:-%{prever}}
 %patch1 -p1 -b .mlib
-%patch2 -p1 -b .automake
+%patch2 -p1 -b .vpx
 
-# https://bitbucket.org/libgd/gd-libgd/issue/77
-sed -e '/GD_VERSION_STRING/s/-alpha//' \
-    -e '/GD_EXTRA_VERSION/s/alpha//' \
-    -i src/gd.h
-grep VERSION src/gd.h
+# Workaround for missing file
+cp %{SOURCE2} config/getver.pl
+
+: $(perl config/getver.pl)
 
 : regenerate autotool stuff
 if [ -f configure ]; then
@@ -102,7 +106,6 @@ if [ -f configure ]; then
 else
    ./bootstrap.sh
 fi
-
 
 %build
 # Provide a correct default font search path
@@ -152,6 +155,9 @@ make check
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1.1-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.1.1-5
 - 更新到 2.1.1
 

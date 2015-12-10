@@ -3,7 +3,7 @@
 
 Name: vsftpd
 Version: 3.0.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Very Secure Ftp Daemon
 Summary(zh_CN.UTF-8): 非常安全的 Ftp 服务
 
@@ -173,6 +173,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_var}/ftp
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.0.3-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 3.0.3-3
 - 为 Magic 3.0 重建
 

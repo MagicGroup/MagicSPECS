@@ -1,6 +1,6 @@
 Name:           perl-File-chdir
 Version:	0.1010
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A more sensible way to change directories
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ chmod -R u+rwX,go+rX,go-w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.1010-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.1010-2
 - 为 Magic 3.0 重建
 

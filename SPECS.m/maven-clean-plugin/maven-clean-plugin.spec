@@ -1,6 +1,6 @@
 Name:           maven-clean-plugin
 Version:        2.5
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Maven Clean Plugin
 
 License:        ASL 2.0
@@ -50,6 +50,9 @@ API documentation for %{name}.
 %doc LICENSE NOTICE
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.5-13
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.5-12
 - 为 Magic 3.0 重建
 

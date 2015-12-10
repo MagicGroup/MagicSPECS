@@ -2,7 +2,7 @@ Name:           extra-cmake-modules
 Summary:        Additional modules for CMake build system
 Summary(zh_CN.UTF-8): CMake 构建系统的附加模块
 Version:	5.15.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License:        BSD
 URL:            https://projects.kde.org/projects/kdesupport/extra-cmake-modules
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %{_mandir}/man7/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 5.15.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 5.15.0-2
 - 更新到 5.15.0
 

@@ -2,7 +2,7 @@ Summary: Utility for converting FIG files (made by xfig) to other formats
 Summary(zh_CN.UTF-8): 转换 FIG 文件（由 xfig 生成）到其它格式的工具
 Name: transfig
 Version: 3.2.5d
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 1
 License: MIT
 URL: http://www.xfig.org/
@@ -89,6 +89,9 @@ rm -rf %{buildroot}
 %{_datadir}/fig2dev
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:3.2.5d-7
+- 为 Magic 3.0 重建
+
 * Sun Oct 04 2015 Liu Di <liudidi@gmail.com> - 1:3.2.5d-6
 - 为 Magic 3.0 重建
 

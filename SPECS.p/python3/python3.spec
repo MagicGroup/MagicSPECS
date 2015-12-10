@@ -143,7 +143,7 @@
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
 Version:	3.4.3
-Release:	9%{?dist}
+Release:	10%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -1923,6 +1923,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.4.3-10
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.4.3-9
 - 为 Magic 3.0 重建
 

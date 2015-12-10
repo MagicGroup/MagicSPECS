@@ -4,7 +4,7 @@
 
 Name:           python-%{srcname}
 Version:        0.1.10
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Simple module to parse ISO 8601 dates
 Summary(zh_CN.UTF-8): 解析 ISO 8601 日期的简单模块
 
@@ -83,6 +83,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.1.10-9
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.1.10-8
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ Name: 	%{name}
 Summary: 	Portable Musepack decoder library
 Summary(zh_CN.UTF-8): 可移植 Musepack 解码器库
 Version: 	%{version}
-Release: 	9%{?dist}
+Release: 	10%{?dist}
 
 Source:	http://files.musepack.net/source/%{name}-%{version}.tar.bz2
 URL:		http://www.musepack.net
@@ -73,6 +73,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2.6-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.6-9
 - 为 Magic 3.0 重建
 

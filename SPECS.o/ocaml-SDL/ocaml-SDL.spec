@@ -2,7 +2,7 @@
 
 Name:           ocaml-SDL
 Version:        0.9.1
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        OCaml bindings for SDL
 Summary(zh_CN.UTF-8): SDL 的 OCaml 绑定
 License:        LGPLv2+
@@ -80,6 +80,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.9.1-7
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.9.1-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.1-5
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           python-%{srcname}
 Version:        2.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Internationalized Domain Names in Applications (IDNA)
 Summary(zh_CN.UTF-8): 应用程序中的国际域名（IDNA）
 
@@ -111,6 +111,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0-4
 - 为 Magic 3.0 重建
 

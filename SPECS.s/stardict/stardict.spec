@@ -7,7 +7,7 @@ Name:		%{name}
 Summary: 	A powerful dictionary platform written in GTK+2
 Summary(zh_CN.UTF-8): GTK2 写成的强大的词典平台
 Version:	%{version}
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group: 		Applications/System
 Group(zh_CN.UTF-8):	应用程序/系统
 License: 	GPL
@@ -114,6 +114,9 @@ if which scrollkeeper-update>/dev/null 2>&1; then scrollkeeper-update; fi
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.0.6-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 3.0.6-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 5.0.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: jQuery UI packaged for the Rails asset pipeline
 Group: Development/Languages
 License: MIT
@@ -66,6 +66,9 @@ cp -a .%{gem_dir}/* \
 %{gem_instdir}/Gemfile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 5.0.0-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.0.0-5
 - 为 Magic 3.0 重建
 

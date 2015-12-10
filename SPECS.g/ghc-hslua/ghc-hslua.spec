@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.13
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Lua language interpreter embedding in Haskell
 
 License:        MIT
@@ -70,6 +70,9 @@ rm src/*.c src/*.h
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.13-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.13-3
 - 为 Magic 3.0 重建
 

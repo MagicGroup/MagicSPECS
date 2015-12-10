@@ -1,6 +1,6 @@
 Name:    liblogging
 Version: 1.0.4
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: An easy to use logging library
 Summary(zh_CN.UTF-8): 简便使用 logging 库
 License: BSD
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/stdlog.3.gz
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.4-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.4-7
 - 为 Magic 3.0 重建
 

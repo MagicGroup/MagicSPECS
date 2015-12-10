@@ -7,7 +7,7 @@ Summary: Fast C metadata and tag reader for all common audio file formats
 Summary(zh_CN.UTF-8): 快速的 C 编写的所有通用音频文件格式的元数据和标记读取程序
 Name: perl-Audio-Scan
 Version: 0.93
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{perl_vendorarch}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.93-12
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.93-11
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           915resolution
 Version:        0.5.3
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Intel video BIOS hack to support certain resolutions 
 Summary(zh_CN.UTF-8): Intel视频BIOS改进以支持特定分辨率
 
@@ -122,6 +122,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.5.3-9
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.5.3-8
 - 为 Magic 3.0 重建
 

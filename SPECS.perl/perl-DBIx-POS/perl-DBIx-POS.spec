@@ -1,6 +1,6 @@
 Name:           perl-DBIx-POS
 Version:        0.03
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Define a dictionary of SQL statements in a POD dialect (POS)
 # There was some code that was taken from Class::Singleton, which was Artistic only at the time.
 # That code has since been relicensed to GPL+ or Artistic.
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.03-21
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.03-20
 - 为 Magic 3.0 重建
 

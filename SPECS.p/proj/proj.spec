@@ -1,6 +1,6 @@
 Name:           proj
 Version:	4.9.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Cartographic projection software (PROJ.4)
 Summary(zh_CN.UTF-8): 制图投影软件
 
@@ -170,6 +170,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0644,root,root) %{_datadir}/%{name}/epsg
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.9.2-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.9.2-2
 - 更新到 4.9.2
 

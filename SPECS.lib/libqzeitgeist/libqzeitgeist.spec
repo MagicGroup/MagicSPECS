@@ -3,7 +3,7 @@ Name:    libqzeitgeist
 Summary: Qt Zeitgeist Library
 Summary(zh_CN.UTF-8): Qt Zeitgest 库
 Version: 0.8.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 License: LGPLv2+
 URL:     http://projects.kde.org/projects/kdesupport/libqzeitgeist 
@@ -85,6 +85,9 @@ test "$(pkg-config --modversion QZeitgeist)" = "%{version}"
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.8.0-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.8.0-8
 - 为 Magic 3.0 重建
 

@@ -38,7 +38,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	1.3.2.1
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.1
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
 Summary:	Icollection manager for books, videos, music [Trinity]
 Summary(zh_CN.UTF-8): 书箱、视频、音乐的管理工具
 Group:		Applications/Utilities
@@ -258,6 +258,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:1.3.2.1-1.2
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:1.3.2.1-1.1
 - 为 Magic 3.0 重建
 

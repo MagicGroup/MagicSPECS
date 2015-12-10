@@ -3,7 +3,7 @@
 
 Name:		perl-Package-Stash
 Version:	0.37
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Routines for manipulating stashes
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -77,6 +77,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/package-stash-conflicts.1*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.37-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.37-3
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.1
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Convert a Netlist AST to VHDL
 
 License:        BSD
@@ -63,6 +63,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.1-14
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.1-13
 - 为 Magic 3.0 重建
 

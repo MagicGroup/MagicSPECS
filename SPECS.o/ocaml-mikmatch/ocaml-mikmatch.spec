@@ -3,7 +3,7 @@
 
 Name:           ocaml-mikmatch
 Version:	1.0.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        OCaml extension for pattern matching with regexps
 Summary(zh_CN.UTF-8): 使用正则表达式模式匹配的 OCaml 扩展
 License:        BSD
@@ -110,6 +110,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.0.7-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.7-2
 - 为 Magic 3.0 重建
 

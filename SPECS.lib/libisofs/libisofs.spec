@@ -2,7 +2,7 @@ Summary:	Library to create ISO 9660 disk images
 Summary(zh_CN.UTF-8): 创建 ISO 9660 光盘镜像的库
 Name:		libisofs
 Version: 1.4.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPLv2
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/%{name}-%{version}/html/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.4.0-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.0-3
 - 更新到 1.4.0
 

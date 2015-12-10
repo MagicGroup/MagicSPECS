@@ -1,6 +1,6 @@
 Name:           clutter-gst2
 Version:	2.0.16
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GStreamer integration for Clutter
 
 License:        LGPLv2+
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/gtk-doc/
 #doc #{_datadir}/gtk-doc/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0.16-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.16-2
 - 为 Magic 3.0 重建
 

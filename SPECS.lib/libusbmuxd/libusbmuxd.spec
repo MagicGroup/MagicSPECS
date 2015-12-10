@@ -1,6 +1,6 @@
 Name:          libusbmuxd
 Version: 1.0.10
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Client library USB multiplex daemon for Apple's iOS devices
 Summary(zh_CN.UTF-8): 使用苹果 iOS 设备的 USB 复用服务客户端库
 
@@ -87,6 +87,9 @@ make check
 %{_libdir}/libusbmuxd.so
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.10-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.10-4
 - 更新到 1.0.10
 

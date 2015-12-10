@@ -1,6 +1,6 @@
 Name:           perl-PadWalker
 Version:	2.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Play with other peoples' lexical variables
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.2-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2-2
 - 更新到 2.2
 

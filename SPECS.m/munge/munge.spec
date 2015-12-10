@@ -1,6 +1,6 @@
 Name:           munge
 Version:        0.5.11
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Enables uid & gid authentication across a host cluster
 Summary(zh_CN.UTF-8): 通过主机 cluster 启用 uid 和 gid 认证
 
@@ -179,6 +179,9 @@ exit 0
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.5.11-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5.11-5
 - 为 Magic 3.0 重建
 

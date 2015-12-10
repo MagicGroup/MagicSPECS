@@ -1,0 +1,27 @@
+From de9bd9043e8878fc472ced1669bc7d49b07c2062 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ren=C3=A9=20J=2EV=2E=20Bertin?= <rjvbertin@gmail.com>
+Date: Mon, 3 Nov 2014 16:56:56 +0100
+Subject: [PATCH 10/30] prevent starting a QTimer with a negative interval
+ Review: 120800
+
+---
+ server/src/collectionscheduler.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/server/src/collectionscheduler.cpp b/server/src/collectionscheduler.cpp
+index 8d4cd5c..9ba632f 100644
+--- a/server/src/collectionscheduler.cpp
++++ b/server/src/collectionscheduler.cpp
+@@ -82,7 +82,8 @@ class PauseableTimer : public QTimer
+         return;
+       }
+ 
+-      start( interval() - ( mStarted.secsTo( mPaused ) * 1000 ) );
++      const int remainder = interval() - ( mStarted.secsTo( mPaused ) * 1000 );
++      start( qMax( 0, remainder ) );
+       mPaused = QDateTime();
+       // Update mStarted so that pause() can be called repeatedly
+       mStarted = QDateTime::currentDateTime();
+-- 
+2.1.0
+

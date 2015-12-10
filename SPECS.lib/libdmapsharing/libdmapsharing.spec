@@ -1,6 +1,6 @@
 Name: libdmapsharing
 Version: 2.9.24
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+
 Source: http://www.flyn.org/projects/libdmapsharing/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.9.24-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.9.24-2
 - 为 Magic 3.0 重建
 

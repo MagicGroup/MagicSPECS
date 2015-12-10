@@ -1,6 +1,6 @@
 Name:           libevdev
 Version: 1.4.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Kernel Evdev Device Wrapper Library
 Summary(zh_CN.UTF-8): 内核 Evdev 设备接口库
 
@@ -64,6 +64,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/libevdev.3*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.4.4-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.4-2
 - 更新到 1.4.4
 

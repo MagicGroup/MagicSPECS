@@ -33,7 +33,7 @@
 
 Name:           plexus-digest
 Version:        1.1
-Release:        17%{?dist}
+Release:        18%{?dist}
 Epoch:          0
 Summary:        Plexus Digest / Hashcode Components
 License:        ASL 2.0
@@ -97,6 +97,9 @@ Javadoc for %{name}.
 %files javadoc -f .mfiles-javadoc
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0:1.1-18
+- 为 Magic 3.0 重建
+
 * Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 0:1.1-17
 - 为 Magic 3.0 重建
 

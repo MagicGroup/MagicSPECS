@@ -2,7 +2,7 @@ Summary: Fortran 77 subroutines for solving large scale eigenvalue problems
 Summary(zh_CN.UTF-8): 求解大规模特征值问题的 Fortran 77 例程
 Name: arpack
 Version: 3.1.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: BSD
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -129,6 +129,9 @@ rm -rf %{buildroot}
 %{_libdir}/libarpack.a
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.1.5-4
+- 为 Magic 3.0 重建
+
 * Fri Feb 28 2014 Liu Di <liudidi@gmail.com> - 3.1.5-2
 - 更新到 3.1.5
 

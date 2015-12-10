@@ -1,6 +1,6 @@
 Name:          libgrss
 Version:       0.7.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Library for easy management of RSS/Atom/Pie feeds
 Summary(zh_CN.UTF-8): 方便管理 RSS/Atom/Pie 种子的库
 
@@ -63,6 +63,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/%{name}/
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.7.0-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.0-3
 - 为 Magic 3.0 重建
 

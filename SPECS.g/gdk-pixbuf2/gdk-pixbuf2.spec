@@ -2,7 +2,7 @@
 
 Name:           gdk-pixbuf2
 Version:	2.33.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        An image loading library
 Summary(zh_CN.UTF-8): 图像装载库
 
@@ -148,6 +148,9 @@ fi
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.33.1-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.33.1-2
 - 更新到 2.33.1
 

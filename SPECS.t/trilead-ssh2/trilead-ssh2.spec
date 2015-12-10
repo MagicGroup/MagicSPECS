@@ -2,7 +2,7 @@
 
 Name:           trilead-ssh2
 Version:        217
-Release:        6.jenkins%{patchlvl}%{?dist}
+Release:        7.jenkins%{patchlvl}%{?dist}
 Summary:        SSH-2 protocol implementation in pure Java
 
 # project is under BSD, but some parts are MIT licensed
@@ -53,6 +53,9 @@ API documentation for %{name}.
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 217-7.jenkins4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 217-6.jenkins4
 - 为 Magic 3.0 重建
 

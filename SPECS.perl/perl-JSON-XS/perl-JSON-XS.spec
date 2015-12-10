@@ -2,7 +2,7 @@ Name:           perl-JSON-XS
 Summary:        JSON serializing/deserializing, done correctly and fast
 Epoch:          1
 Version:        3.01
-Release:        10%{?dist}
+Release:        11%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/JSON-XS/
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man[13]/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:3.01-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1:3.01-10
 - 为 Magic 3.0 重建
 

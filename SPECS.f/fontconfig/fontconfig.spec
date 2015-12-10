@@ -4,7 +4,7 @@ Summary:	Font configuration and customization library
 Summary(zh_CN.UTF-8): 字体设置和定制库
 Name:		fontconfig
 Version:	2.11.94
-Release:	4%{?dist}
+Release:	5%{?dist}
 # src/ftglue.[ch] is in Public Domain
 # src/fccache.c contains Public Domain code
 # fc-case/CaseFolding.txt is in the UCD
@@ -157,6 +157,9 @@ fi
 %doc fontconfig-devel.txt fontconfig-devel
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.11.94-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.11.94-4
 - 更新到 2.11.94
 

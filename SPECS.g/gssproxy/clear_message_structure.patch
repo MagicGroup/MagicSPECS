@@ -1,0 +1,28 @@
+From 4382a40e5edc631957542790f9d691a38814d0de Mon Sep 17 00:00:00 2001
+From: Robbie Harwood <rharwood@redhat.com>
+Date: Wed, 21 Oct 2015 12:46:29 -0400
+Subject: [PATCH] Clear message structure before decoding into it
+
+This resolves a segfault appearing on ARM.
+
+Ticket: https://bugzilla.redhat.com/show_bug.cgi?id=1235902
+Signed-off-by: Robbie Harwood <rharwood@redhat.com>
+---
+ proxy/src/client/gpm_common.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/proxy/src/client/gpm_common.c b/proxy/src/client/gpm_common.c
+index 6d626e8..93d6c24 100644
+--- a/proxy/src/client/gpm_common.c
++++ b/proxy/src/client/gpm_common.c
+@@ -454,6 +454,7 @@ int gpm_make_call(int proc, union gp_rpc_arg *arg, union gp_rpc_res *res)
+     sockgrab = false;
+ 
+     /* decode header */
++    memset(&msg, 0, sizeof(gp_rpc_msg));
+     xdrok = xdr_gp_rpc_msg(&xdr_reply_ctx, &msg);
+     if (!xdrok) {
+         ret = EINVAL;
+-- 
+2.6.1
+

@@ -1,6 +1,6 @@
 Name:           menu-cache
 Version: 0.7.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Caching mechanism for freedesktop.org compliant menus
 Summary(zh_CN.UTF-8): freedesktop.org 兼容菜单的缓存机制
 
@@ -84,6 +84,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.7.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.7.0-2
 - 更新到 0.7.0
 

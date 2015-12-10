@@ -12,7 +12,7 @@ Name: kde4-%{real_name}
 Name: %{real_name}
 %endif
 Version: 2.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -69,6 +69,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 /root/*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.1-11
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.1-10
 - 为 Magic 3.0 重建
 

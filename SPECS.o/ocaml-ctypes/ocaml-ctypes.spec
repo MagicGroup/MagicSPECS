@@ -2,7 +2,7 @@
 Summary:	Library for binding to C libraries using pure OCaml
 Name:		ocaml-%{module}
 Version:	0.4.1
-Release:	2
+Release:	3
 License:	MIT
 Group:		Libraries
 Source0:	https://github.com/ocamllabs/ocaml-ctypes/archive/%{version}/%{module}-%{version}.tar.gz
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT
 #{_examplesdir}/%{name}-%{version}
 
 %changelog
+* Thu Nov 26 2015 Liu Di <liudidi@gmail.com> - 0.4.1-3
+- 为 Magic 3.0 重建
+
 * Sat Jul 25 2015 PLD Linux Team <feedback@pld-linux.org>
 - For complete changelog see: http://git.pld-linux.org/?p=packages/ocaml-ctypes.git;a=log;h=master
 

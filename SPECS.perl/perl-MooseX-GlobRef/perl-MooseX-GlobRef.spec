@@ -1,6 +1,6 @@
 Name:           perl-MooseX-GlobRef
 Version:        0.0701
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Store a Moose object in glob reference
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.0701-17
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0701-16
 - 为 Magic 3.0 重建
 

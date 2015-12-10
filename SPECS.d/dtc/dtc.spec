@@ -1,6 +1,6 @@
 Name:           dtc
 Version:        1.3.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Device Tree Compiler
 Summary(zh_CN.UTF-8): 设备树编译器
 Group:          Development/Tools
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/ldconfig
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.3.0-7
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3.0-6
 - 为 Magic 3.0 重建
 

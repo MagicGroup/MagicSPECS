@@ -2,7 +2,7 @@ Summary: Networking manager tools
 Summary(zh_CN.UTF-8): 一个网络设置工具
 Name: magic_first_wizard
 Version: 0.0.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPL+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/magic_first_wizard.png
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.0.2-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.0.2-6
 - 为 Magic 3.0 重建
 

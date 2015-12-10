@@ -1,6 +1,6 @@
 Name:           perl-Compress-Bzip2
 Version:	2.22
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Interface to Bzip2 compression library
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.22-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.22-2
 - 为 Magic 3.0 重建
 

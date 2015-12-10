@@ -2,7 +2,7 @@ Summary: An enhanced version of csh, the C shell
 Summary(zh_CN.UTF-8): csh (C Shell) 的增强版本
 Name: tcsh
 Version: 6.19.00
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: BSD
 Group: System Environment/Shells
 Group(zh_CN.UTF-8): 系统环境/Shells
@@ -137,6 +137,9 @@ fi
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 6.19.00-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 6.19.00-5
 - 为 Magic 3.0 重建
 

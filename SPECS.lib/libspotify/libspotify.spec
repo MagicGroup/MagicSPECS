@@ -1,6 +1,6 @@
 Name:		libspotify
 Version:	12.1.51
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Official Spotify API
 Summary(zh_CN.UTF-8): 官方的 Spotify API
 Group:		Development/Libraries
@@ -105,6 +105,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 12.1.51-6
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 12.1.51-5
 - 为 Magic 3.0 重建
 

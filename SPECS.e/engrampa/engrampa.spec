@@ -14,7 +14,7 @@
 
 Name:          engrampa
 Version: 1.11.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 #Release: 1%{?dist}
 Summary:       MATE Desktop file archiver
 Summary(zh_CN.UTF-8): MATE 桌面的文件归档管理器
@@ -100,16 +100,21 @@ fi
 %doc README COPYING NEWS AUTHORS
 %{_mandir}/man1/*
 %{_bindir}/engrampa
-%{_libexecdir}/engrampa
+%{_libexecdir}/engrampa*
 %{_datadir}/engrampa
 %{_datadir}/applications/engrampa.desktop
 %{_datadir}/icons/hicolor/*/apps/*.png
 %{_datadir}/icons/hicolor/scalable/apps/*.svg
 %{_datadir}/glib-2.0/schemas/org.mate.engrampa.gschema.xml
 %{_libdir}/caja/extensions-2.0/libcaja-engrampa.so
-
+%{_datadir}/appdata/engrampa.appdata.xml
+%{_datadir}/caja/extensions/libcaja-engrampa.caja-extension
+%{_datadir}/dbus-1/services/org.mate.Engrampa.service
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

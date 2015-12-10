@@ -2,7 +2,7 @@
 
 Name:           rubygem-%{gem_name}
 Version:        4.3.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        OCCI toolkit
 
 Group:          Development/Languages
@@ -100,6 +100,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.3.2-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.3.2-4
 - 为 Magic 3.0 重建
 

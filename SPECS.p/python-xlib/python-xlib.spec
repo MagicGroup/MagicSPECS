@@ -3,7 +3,7 @@
 %define pre_release rc1 
 Name:           python-xlib
 Version:        0.15
-Release:        0.9.%{pre_release}%{?dist}
+Release:        0.10.%{pre_release}%{?dist}
 Summary:        X client library for Python
 Summary(zh_CN.UTF-8): Python 下的 X 客户端库
 
@@ -91,6 +91,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.15-0.10.rc1
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.15-0.9.rc1
 - 为 Magic 3.0 重建
 

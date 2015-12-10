@@ -2,32 +2,24 @@ Summary: An API for Run-time Code Generation
 License: LGPLv2+
 Name: dyninst
 Group: Development/Libraries
-Release: 8%{?dist}
+Release: 1%{?dist}
 URL: http://www.dyninst.org
-Version: 8.1.2
+Version: 9.0.3
 Exclusiveos: linux
-#Right now dyninst does not know about the following architectures
-ExcludeArch: s390 s390x %{arm}
+#dyninst only knows the following architectures
+ExclusiveArch: %{ix86} x86_64 ppc ppc64
 
-# The source for this package was pulled from upstream's vcs.  Use the
-# following commands to generate the tarball:
-#  git clone http://git.dyninst.org/dyninst.git; cd dyninst
-#  git archive --format=tar.gz --prefix=dyninst/ v8.1.2 > dyninst-8.1.2.tar.gz
-#  git clone http://git.dyninst.org/docs.git; cd docs
-#  git archive --format=tar.gz v8.1.1 > dyninst-docs-8.1.1.tar.gz
-# Verify the commit ids with:
-#  gunzip -c dyninst-8.1.2.tar.gz | git get-tar-commit-id
-#  gunzip -c dyninst-docs-8.1.1.tar.gz | git get-tar-commit-id
-Source0: %{name}-%{version}.tar.gz
-Source1: %{name}-docs-8.1.1.tar.gz
-Patch1: dyninst-rpm-build-flags.patch
-Patch2: dyninst-install-testsuite.patch
-Patch3: dyninst-pokeuser.patch
-Patch4: dyninst-Werror-format-security.patch
-Patch5: dyninst-8.1.2-testsuite-opt.patch
+Source0: http://www.paradyn.org/release%{version}/DyninstAPI-%{version}.tgz
+Source1: http://www.paradyn.org/release%{version}/Testsuite-%{version}.tgz
+
+%global dyninst_base DyninstAPI-%{version}
+%global testsuite_base Testsuite-9.0.0
+
 BuildRequires: libdwarf-devel >= 20111030
 BuildRequires: elfutils-libelf-devel
 BuildRequires: boost-devel
+BuildRequires: binutils-devel
+BuildRequires: cmake
 
 # Extra requires just for the testsuite
 BuildRequires: gcc-gfortran glibc-static libstdc++-static nasm
@@ -60,6 +52,7 @@ Summary: Header files for the compiling programs with Dyninst
 Group: Development/System
 Requires: dyninst = %{version}-%{release}
 Requires: boost-devel
+
 %description devel
 dyninst-devel includes the C header files that specify the Dyninst user-space
 libraries and interfaces. This is required for rebuilding any program
@@ -76,7 +69,10 @@ the dyninst user-space libraries and interfaces.
 %package testsuite
 Summary: Programs for testing Dyninst
 Group: Development/System
+Requires: dyninst = %{version}-%{release}
 Requires: dyninst-devel = %{version}-%{release}
+Requires: dyninst-static = %{version}-%{release}
+Requires: glibc-static
 %description testsuite
 dyninst-testsuite includes the test harness and target programs for
 making sure that dyninst works properly.
@@ -85,41 +81,53 @@ making sure that dyninst works properly.
 %setup -q -n %{name}-%{version} -c
 %setup -q -T -D -a 1
 
-pushd dyninst
-%patch1 -p1 -b .buildflags
-%patch2 -p1 -b .testsuite
-%patch3 -p1 -b .pokeuser
-%patch4 -p1 -d testsuite -b .format-security
-%patch5 -p1 -b .testsuite-opt
-popd
-
-
 %build
 
-cd dyninst
+cd %{dyninst_base}
 
-%configure --includedir=%{_includedir}/dyninst --libdir=%{_libdir}/dyninst
-make %{?_smp_mflags} VERBOSE_COMPILATION=1
+%cmake \
+ -DENABLE_STATIC_LIBS=1 \
+ -DINSTALL_LIB_DIR:PATH=%{_libdir}/dyninst \
+ -DINSTALL_INCLUDE_DIR:PATH=%{_includedir}/dyninst \
+ -DINSTALL_CMAKE_DIR:PATH=%{_libdir}/cmake/Dyninst \
+ -DCMAKE_BUILD_TYPE=None \
+ -DCMAKE_SKIP_RPATH:BOOL=YES
+%make_build
+
+# Hack to install dyninst nearby, so the testsuite can use it
+make DESTDIR=../install install
+find ../install -name '*.cmake' -execdir \
+  sed -i -e 's!%{_prefix}!../install&!' '{}' '+'
+
+cd ../%{testsuite_base}
+%cmake \
+ -DDyninst_DIR:PATH=$PWD/../install%{_libdir}/cmake/Dyninst \
+ -DINSTALL_DIR:PATH=%{_libdir}/dyninst/testsuite \
+ -DCMAKE_BUILD_TYPE:STRING=Debug \
+ -DCMAKE_SKIP_RPATH:BOOL=YES
+%make_build
 
 %install
 
-cd dyninst
-make DESTDIR=%{buildroot} install
+cd %{dyninst_base}
+%make_install
+
+# It doesn't install docs the way we want, so remove them.
+# We'll just grab the pdfs later, directly from the build dir.
+rm -v %{buildroot}%{_docdir}/*-%{version}.pdf
+
+cd ../%{testsuite_base}
+%make_install
 
 mkdir -p %{buildroot}/etc/ld.so.conf.d
 echo "%{_libdir}/dyninst" > %{buildroot}/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 
-# Ugly hack to fix permissions
-chmod 644 %{buildroot}%{_includedir}/dyninst/*
-chmod 644 %{buildroot}%{_libdir}/dyninst/*.a
-
-# Uglier hack to mask testsuite files from debuginfo extraction.  Running the
+# Ugly hack to mask testsuite files from debuginfo extraction.  Running the
 # testsuite requires debuginfo, so extraction is useless.  However, debuginfo
 # extraction is still nice for the main libraries, so we don't want to disable
 # it package-wide.  The permissions are restored by attr(755,-,-) in files.
-chmod 644 %{buildroot}%{_libdir}/dyninst/testsuite/*
-
-magic_rpm_clean.sh
+find %{buildroot}%{_libdir}/dyninst/testsuite/ \
+  -type f '!' -name '*.a' -execdir chmod 644 '{}' '+'
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -130,26 +138,28 @@ magic_rpm_clean.sh
 %dir %{_libdir}/dyninst
 %{_libdir}/dyninst/*.so.*
 
-%doc dyninst/COPYRIGHT
-%doc dyninst/LGPL
+%doc %{dyninst_base}/COPYRIGHT
+%doc %{dyninst_base}/LGPL
 
 %config(noreplace) /etc/ld.so.conf.d/*
 
 %files doc
 %defattr(-,root,root,-)
-%doc dynC_API.pdf
-%doc DyninstAPI.pdf
-%doc InstructionAPI.pdf
-%doc ParseAPI.pdf
-%doc PatchAPI.pdf
-%doc ProcControlAPI.pdf
-%doc StackwalkerAPI.pdf
-%doc SymtabAPI.pdf
+%doc %{dyninst_base}/dynC_API/doc/dynC_API.pdf
+%doc %{dyninst_base}/dyninstAPI/doc/dyninstAPI.pdf
+%doc %{dyninst_base}/instructionAPI/doc/instructionAPI.pdf
+%doc %{dyninst_base}/parseAPI/doc/parseAPI.pdf
+%doc %{dyninst_base}/patchAPI/doc/patchAPI.pdf
+%doc %{dyninst_base}/proccontrol/doc/proccontrol.pdf
+%doc %{dyninst_base}/stackwalk/doc/stackwalk.pdf
+%doc %{dyninst_base}/symtabAPI/doc/symtabAPI.pdf
 
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/dyninst
 %{_libdir}/dyninst/*.so
+%dir %{_libdir}/cmake
+%{_libdir}/cmake/Dyninst
 
 %files static
 %defattr(-,root,root,-)
@@ -157,12 +167,16 @@ magic_rpm_clean.sh
 
 %files testsuite
 %defattr(-,root,root,-)
-%{_bindir}/parseThat
+#{_bindir}/parseThat
 %dir %{_libdir}/dyninst/testsuite/
 # Restore the permissions that were hacked out above, during install.
 %attr(755,root,root) %{_libdir}/dyninst/testsuite/*
+%attr(644,root,root) %{_libdir}/dyninst/testsuite/*.a
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 8.1.2-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 8.1.2-8
 - 为 Magic 3.0 重建
 

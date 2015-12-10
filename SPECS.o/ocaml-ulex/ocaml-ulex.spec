@@ -3,7 +3,7 @@
 
 Name:           ocaml-ulex
 Version:        1.1
-Release:        22%{?dist}
+Release:        24%{?dist}
 Summary:        OCaml lexer generator for Unicode
 Summary(zh_CN.UTF-8): OCaml 支持 Unicode 的 lexer 生成器
 License:        MIT
@@ -83,6 +83,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.1-24
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.1-23
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-22
 - 为 Magic 3.0 重建
 

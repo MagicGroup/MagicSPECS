@@ -4,7 +4,7 @@ Summary(zh_CN.UTF-8): phonon 的 gstreamer 后端
 Name:    phonon-backend-gstreamer
 Epoch:   2
 Version:	4.8.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 License: LGPLv2+
 URL:     http://phonon.kde.org/
@@ -116,6 +116,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null ||:
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2:4.8.2-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2:4.8.2-2
 - 为 Magic 3.0 重建
 

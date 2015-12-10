@@ -3,7 +3,7 @@
 
 Name:         jboss-el-2.2-api
 Version:      1.0.2
-Release:      4%{?dist}
+Release:      5%{?dist}
 Summary:      Expression Language 2.2 API
 License:      CDDL or GPLv2 with exceptions
 URL:          http://www.jboss.org
@@ -48,6 +48,9 @@ This package contains the API documentation for %{name}.
 %doc README
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.2-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.2-4
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:           ghc-srpm-macros
 Version:        1.4.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        RPM macros for building Haskell source packages
 
 License:        GPLv2+
@@ -35,6 +35,9 @@ install -p -D -m 0644 %{SOURCE0} %{buildroot}/%{macros_dir}/macros.ghc-srpm
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.4.2-5
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.4.2-4
 - 为 Magic 3.0 重建
 

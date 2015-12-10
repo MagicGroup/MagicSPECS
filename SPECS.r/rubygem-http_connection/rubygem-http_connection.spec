@@ -3,7 +3,7 @@
 Summary: RightScale's robust HTTP/S connection module
 Name: rubygem-%{gem_name}
 Version: 1.4.1
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/appoxy/http_connection
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.4.1-13
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.4.1-12
 - 为 Magic 3.0 重建
 

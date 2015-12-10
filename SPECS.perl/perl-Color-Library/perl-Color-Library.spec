@@ -1,6 +1,6 @@
 Name:           perl-Color-Library
 Version:	0.021
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Easy-to-use and comprehensive named-color library
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.021-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.021-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:       python-sphinx
 Version:	1.3.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:    Python documentation generator
 Summary(zh_CN.UTF-8): Python 文档生成器
 
@@ -278,6 +278,9 @@ popd
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.1-2
 - 为 Magic 3.0 重建
 

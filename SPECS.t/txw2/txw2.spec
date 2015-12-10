@@ -1,6 +1,6 @@
 Name: txw2
 Version: 20110809
-Release: 13%{?dist}
+Release: 14%{?dist}
 Summary: Typed XML writer for Java
 Group: Development/Libraries
 License: CDDL and GPLv2 with exceptions
@@ -104,6 +104,9 @@ cp -rp target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 20110809-14
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 20110809-13
 - 为 Magic 3.0 重建
 

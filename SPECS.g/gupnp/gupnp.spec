@@ -1,6 +1,6 @@
 Name:          gupnp
 Version:	0.20.14
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       A framework for creating UPnP devices & control points
 Summary(zh_CN.UTF-8): 创建 UPnP 设备和控制点的框架
 
@@ -98,6 +98,9 @@ magic_rpm_clean.sh
 %doc %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.20.14-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.20.14-2
 - 为 Magic 3.0 重建
 

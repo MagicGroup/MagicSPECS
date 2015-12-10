@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 5.0.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Sass adapter for the Rails asset pipeline
 Group: Development/Languages
 License: MIT
@@ -76,6 +76,9 @@ popd
 %doc %{gem_instdir}/README.md
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 5.0.4-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.0.4-2
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.6
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        'Show' instances for Lambdabot
 
 # SimpleReflect is BSD and show.cabal says GPL
@@ -67,6 +67,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.6-8
 - 为 Magic 3.0 重建
 

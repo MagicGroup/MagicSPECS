@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		3.1.2
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.4
 Summary: Magic Control Center Modules
 Summary(zh_CN.UTF-8): Magic 控制中心模块
 Group:			Applications/Utilities
@@ -174,6 +174,9 @@ gtk-update-icon-cache --quiet %{tde_datadir}/icons/crystalsvg || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:3.1.2-1.4
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:3.1.2-1.3
 - 为 Magic 3.0 重建
 

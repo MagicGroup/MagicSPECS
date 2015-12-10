@@ -1,7 +1,7 @@
 Summary:        Test case module for Perl
 Name:           perl-Test-Manifest
 Version:	2.02
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Manifest/
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Manifest.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.02-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.02-2
 - 为 Magic 3.0 重建
 

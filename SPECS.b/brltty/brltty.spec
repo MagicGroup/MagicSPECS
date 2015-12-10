@@ -1,5 +1,5 @@
-%define pkg_version 5.1
-%define api_version 0.6.2
+%define pkg_version 5.2
+%define api_version 0.6.3
 
 %global with_python3 1
 
@@ -11,13 +11,18 @@
 %{!?tcl_sitearch: %global tcl_sitearch %{_prefix}/%{_lib}/tcl%{tcl_version}}
 
 # with speech dispatcher iff on Fedora:
-%define with_speech_dispatcher 0%{?fedora}
+%define with_speech_dispatcher 1
 
 %global with_ocaml 1
 
+# Filter private libraries
+%global _privatelibs libbrltty.+\.so.*
+%global __provides_exclude ^(%{_privatelibs})$
+%global __requires_exclude ^(%{_privatelibs})$
+
 Name: brltty
 Version: %{pkg_version}
-Release: 8%{?dist}
+Release: 11%{?dist}
 License: GPLv2+
 Group: System Environment/Daemons
 URL: http://mielke.cc/brltty/
@@ -26,9 +31,10 @@ Source1: brltty.service
 Patch4: brltty-loadLibrary.patch
 # libspeechd.h moved in latest speech-dispatch (NOT sent upstream)
 Patch5: brltty-5.0-libspeechd.patch
+Patch6: brltty-5.2-man-fix.patch
 Summary: Braille display driver for Linux/Unix
 BuildRequires: byacc glibc-kernheaders bluez-libs-devel
-BuildRequires: systemd gettext
+BuildRequires: gettext, at-spi2-core-devel, espeak-devel
 # work around a bug in the install process:
 Requires(post): coreutils
 Requires(post): systemd
@@ -73,14 +79,13 @@ Requires: %{name} = %{pkg_version}-%{release}
 %description xw
 This package provides the XWindow driver for BRLTTY.
 
-%package at-spi
+%package at-spi2
 Summary: AtSpi driver for BRLTTY
 Group: System Environment/Daemons
 # The data files are licensed under LGPLv2+, see the README file.
 License: GPLv2+ and LGPLv2+
-BuildRequires: at-spi-devel
 Requires: %{name} = %{pkg_version}-%{release}
-%description at-spi
+%description at-spi2
 This package provides the AtSpi driver for BRLTTY.
 
 %package -n brlapi
@@ -182,6 +187,7 @@ This package provides the OCaml binding for BrlAPI.
 %setup -q
 %patch4 -p1 -b .loadLibrary
 %patch5 -p1
+%patch6 -p1 -b .man-fix
 
 %if 0%{?with_python3}
 # Make a copy of the source tree for building the Python 3 module
@@ -345,8 +351,8 @@ fi
 %doc Drivers/Braille/XWindow/README
 %{_libdir}/brltty/libbrlttybxw.so
 
-%files at-spi
-%{_libdir}/brltty/libbrlttyxas.so
+%files at-spi2
+%{_libdir}/brltty/libbrlttyxa2.so
 
 %files -n brlapi
 %{_bindir}/vstp
@@ -392,6 +398,15 @@ fi
 %endif
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 5.1-11
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 5.1-10
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 5.1-9
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.1-8
 - 为 Magic 3.0 重建
 

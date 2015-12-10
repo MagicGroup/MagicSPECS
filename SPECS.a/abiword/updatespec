@@ -10,4 +10,5 @@ MICRO=`echo $1|cut -f3 -d"."`
 sed -i "s/%define majorversion.*/%define majorversion $MAJOR/g" abiword.spec
 sed -i "s/%define minorversion.*/%define minorversion $MINOR/g" abiword.spec
 sed -i "s/%define microversion.*/%define microversion $MICRO/g" abiword.spec
+sed -i "s/Release:.*/Release: 0%{?dist}/g" abiword.spec
 popd

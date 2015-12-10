@@ -1,6 +1,6 @@
 Name: docbook-style-xsl
-Version: 1.78.1
-Release: 4%{?dist}
+Version: 1.79.0
+Release: 3%{?dist}
 Group: Applications/Text
 
 Summary: Norman Walsh's XSL stylesheets for DocBook XML
@@ -126,6 +126,18 @@ if [ "$1" = 0 ]; then
 fi
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.79.0-3
+- 为 Magic 3.0 重建
+
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.79.0-2
+- 为 Magic 3.0 重建
+
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.78.1-6
+- 为 Magic 3.0 重建
+
+* Thu Nov 26 2015 Liu Di <liudidi@gmail.com> - 1.78.1-5
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.78.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

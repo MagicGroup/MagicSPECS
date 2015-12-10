@@ -1,7 +1,7 @@
 Summary:	Various mail-related perl modules
 Name:		perl-MailTools
 Version:	2.14
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/MailTools/
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Mail::Util.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.14-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.14-2
 - 为 Magic 3.0 重建
 

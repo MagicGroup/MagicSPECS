@@ -1,6 +1,6 @@
 Name:           perl-Array-Compare
 Version:	2.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Perl extension for comparing arrays
 Summary(zh_CN.UTF-8): 比较数组的 Perl 扩展
 
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.11-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.11-3
 - 为 Magic 3.0 重建
 

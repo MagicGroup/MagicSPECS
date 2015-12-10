@@ -5,7 +5,7 @@ Summary:   BBS client based on Qt library in Linux
 Summary(zh_CN.UTF-8): Linux下基于Qt库的BBS客户端
 Name:      qterm-qt
 Version:   0.5.12
-Release:   3%{?dist}
+Release:   4%{?dist}
 License: GPL
 URL:       http://qterm.sourceforge.net
 Packager:  yourfeng<yourfeng@eyou.com>
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT/*
 %{_datadir}/applications/%{realname}.desktop
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.5.12-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.5.12-3
 - 为 Magic 3.0 重建
 

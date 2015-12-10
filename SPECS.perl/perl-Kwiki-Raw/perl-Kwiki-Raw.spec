@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-Raw
 Version:        0.02
-Release:        32%{?dist}
+Release:        33%{?dist}
 Summary:        Provide an action to retrieve the raw wikitext of a page
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.02-33
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.02-32
 - 为 Magic 3.0 重建
 

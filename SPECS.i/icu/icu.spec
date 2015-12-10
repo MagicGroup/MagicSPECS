@@ -1,6 +1,6 @@
 Name:      icu
 Version:	0.23.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:   International Components for Unicode
 Summary(zh_CN.UTF-8): Unicode 的国际化组件
 Group:     Development/Tools
@@ -192,6 +192,9 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{name}/html/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.23.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.23.1-2
 - 更新到 0.23.1
 

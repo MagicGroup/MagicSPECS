@@ -9,7 +9,7 @@
 
 Name:           javapackages-tools
 Version:        4.6.0
-Release:        11%{?dist}
+Release:        14%{?dist}
 
 Summary:        Macros and scripts for Java packaging support
 
@@ -41,6 +41,8 @@ Requires:       python3-javapackages = %{version}-%{release}
 Requires:       python3
 
 Provides:       jpackage-utils = %{version}-%{release}
+#Provides:	mvn(com.sun:tools)
+#Provides:	mvn(sun.jdk:jconsole)
 
 %description
 This package provides macros and scripts to support Java packaging.
@@ -177,6 +179,15 @@ popd
 %license LICENSE
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 4.6.0-14
+- 为 Magic 3.0 重建
+
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 4.6.0-13
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 4.6.0-12
+- 为 Magic 3.0 重建
+
 * Wed Nov 11 2015 Kalev Lember <klember@redhat.com> - 4.6.0-11
 - Disable bootstrap
 

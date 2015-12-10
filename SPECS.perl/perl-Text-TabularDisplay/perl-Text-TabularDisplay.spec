@@ -1,6 +1,6 @@
 Name:           perl-Text-TabularDisplay
 Version:	1.38
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Display text in formatted table output
 # see TabularDisplay.pm's header
 License:        GPLv2
@@ -39,6 +39,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.38-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.38-2
 - 为 Magic 3.0 重建
 

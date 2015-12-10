@@ -1,7 +1,7 @@
 #global checkout 20130722git65169c9
 Name:           x2goserver
 Version:        4.0.1.19
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        X2Go Server
 Summary(zh_CN.UTF-8): X2Go 服务器
 
@@ -321,6 +321,9 @@ exit 0
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 4.0.1.19-6
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.0.1.19-5
 - 为 Magic 3.0 重建
 

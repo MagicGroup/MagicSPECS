@@ -457,6 +457,8 @@ if [ $AUTOBUMP = "1" ]; then
 		else     
 			autobumpspec $1
 		fi
+	elif  [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
+		echo "暂不更新 release"
 	else
 		autobumpspec $1
 	fi

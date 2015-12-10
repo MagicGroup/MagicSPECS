@@ -2,7 +2,7 @@
 
 Name:		vpnc
 Version:	0.5.3
-Release:	24%{snapshot}%{?dist}
+Release:	25%{snapshot}%{?dist}
 
 Summary:	IPSec VPN client compatible with Cisco equipment
 Summary(zh_CN.UTF-8): Cisco 兼容的 IPSec VPN 客户端
@@ -133,6 +133,9 @@ magic_rpm_clean.sh
 %config(noreplace) %{_sysconfdir}/vpnc/vpnc-script
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.5.3-25.svn550
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 0.5.3-24.svn550
 - 为 Magic 3.0 重建
 

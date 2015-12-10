@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-FromCGI
 Version:        1.00
-Release:        27%{?dist}
+Release:        28%{?dist}
 Summary:        Update Class::DBI data using CGI::Untaint
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,6 +40,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.00-28
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.00-27
 - 为 Magic 3.0 重建
 

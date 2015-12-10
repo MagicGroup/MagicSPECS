@@ -8,7 +8,7 @@
 Summary:	Ruby binding of GObjectIntrospection
 Name:		rubygem-%{gem_name}
 Version:	2.2.5
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 Group:		Development/Languages
 # lib/gobject-introspection.rb and so on
@@ -152,6 +152,9 @@ popd
 %exclude	%{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.2.5-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.2.5-5
 - 为 Magic 3.0 重建
 

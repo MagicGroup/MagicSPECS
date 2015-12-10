@@ -1,6 +1,6 @@
 Name:           perl-Devel-PPPort
 Version:        3.31
-Release:        348%{?dist}
+Release:        349%{?dist}
 Summary:        Perl Pollution Portability header generator
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.31-349
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.31-348
 - 为 Magic 3.0 重建
 

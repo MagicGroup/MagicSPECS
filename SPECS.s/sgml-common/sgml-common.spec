@@ -1,6 +1,6 @@
 Name: sgml-common
 Version: 0.6.3
-Release: 39%{?dist}
+Release: 40%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 Summary: Common SGML catalog and DTD files
@@ -28,7 +28,7 @@ Patch1: sgml-common-xmldir.patch
 Patch2: sgml-common-quotes.patch
 
 BuildRequires: libxml2
-BuildRequires: automake14
+BuildRequires: automake
 Requires: /bin/basename
 
 %description
@@ -60,9 +60,10 @@ but that don't need to be included in main package.
 %patch2 -p1 -b .quotes
 
 # replace bogus links with files
+automakedir=`ls -1d /usr/share/automake* | head -n +1`
 for file in COPYING INSTALL install-sh missing mkinstalldirs; do
    rm $file
-   cp -p /usr/share/automake-1.4/$file .
+   cp -p $automakedir/$file .
 done
 
 %build
@@ -146,6 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/xml
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.6.3-40
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.6.3-39
 - 为 Magic 3.0 重建
 

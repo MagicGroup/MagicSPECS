@@ -1,6 +1,6 @@
 Name:           perl-HTML-FormFu
 Version:	2.01
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        HTML Form Creation, Rendering and Validation Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -107,6 +107,9 @@ rm -rf $RPM_BUILD_ROOT/blib
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.01-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.01-2
 - 为 Magic 3.0 重建
 

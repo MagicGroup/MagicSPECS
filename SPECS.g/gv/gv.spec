@@ -2,7 +2,7 @@ Summary: A X front-end for the Ghostscript PostScript(TM) interpreter
 Summary(zh_CN.UTF-8): Ghostscripts PostScript(TM) 解释器的 X 前端
 Name: gv
 Version: 3.7.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv3+
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -115,6 +115,9 @@ fi
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.7.4-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.7.4-4
 - 为 Magic 3.0 重建
 

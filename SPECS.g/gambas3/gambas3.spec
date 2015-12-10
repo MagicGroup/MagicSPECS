@@ -1,14 +1,11 @@
-# test
-%global enablejit 0
-
 # The MCJIT in llvm 3.6 is incompatible with gb.jit
 # http://permalink.gmane.org/gmane.comp.lang.gambas.user/32019
 %global enablejit 0
 
 Name:		gambas3
 Summary:	IDE based on a basic interpreter with object extensions
-Version:	3.8.1
-Release:	3%{?dist}
+Version:	3.8.3
+Release:	5%{?dist}
 License:	GPL+
 Group:		Development/Tools
 URL:		http://gambas.sourceforge.net/
@@ -1057,6 +1054,7 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_bindir}/gbx3
 %{_datadir}/pixmaps/%{name}.png
 %{_datadir}/applications/*.desktop
+%{_datadir}/%{name}/template/
 %dir %{_datadir}/%{name}/
 %dir %{_datadir}/%{name}/info/
 %{_datadir}/%{name}/info/gb.debug.*
@@ -1463,8 +1461,6 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_libdir}/%{name}/gb.sdl2.so
 %{_libdir}/%{name}/gb.sdl2.so.*
 %{_libdir}/%{name}/gb.sdl2.la
-%{_datadir}/%{name}/info/gb.sdl2.info
-%{_datadir}/%{name}/info/gb.sdl2.list
 
 %files gb-sdl2-audio
 %{_libdir}/%{name}/gb.sdl2.audio.component
@@ -1530,6 +1526,12 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datadir}/%{name}/info/gb.xml.xslt.*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.8.1-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.8.1-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.8.1-3
 - 为 Magic 3.0 重建
 

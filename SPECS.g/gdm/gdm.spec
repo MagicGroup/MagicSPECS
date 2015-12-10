@@ -11,8 +11,8 @@
 Summary: The GNOME Display Manager
 Summary(zh_CN.UTF-8): GNOME 的登录管理器
 Name: gdm
-Version:	3.18.0
-Release: 2%{?dist}
+Version:	3.18.2
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: User Interface/X
@@ -120,10 +120,12 @@ intltoolize -f
 
 %configure --with-pam-prefix=%{_sysconfdir} \
            --with-run-dir=/run/gdm \
-           --enable-split-authentication \
+           --with-default-path=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin \
+	   --enable-split-authentication \
            --enable-profiling      \
            --enable-console-helper \
            --with-plymouth \
+	   --with-default-pam-config=redhat \
            --without-selinux
 
 # drop unneeded direct library deps with --as-needed
@@ -151,8 +153,6 @@ rm -rf $RPM_BUILD_ROOT/%{_prefix}/doc
 # create log dir
 mkdir -p $RPM_BUILD_ROOT/var/log/gdm
 
-# remove the gdm Xsession as we're using the xdm one
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gdm/Xsession
 (cd $RPM_BUILD_ROOT%{_sysconfdir}/gdm; ln -sf ../X11/xinit/Xsession .)
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.a
@@ -165,9 +165,6 @@ mkdir -p $RPM_BUILD_ROOT/run/gdm
 find $RPM_BUILD_ROOT -name '*.a' -delete
 find $RPM_BUILD_ROOT -name '*.la' -delete
 
-# don't install fallback greeter
-rm $RPM_BUILD_ROOT%{_datadir}/gdm/greeter/applications/gdm-simple-greeter.desktop
-rm $RPM_BUILD_ROOT%{_datadir}/gdm/greeter/applications/polkit-gnome-authentication-agent-1.desktop
 magic_rpm_clean.sh
 %find_lang gdm --with-gnome
 
@@ -270,13 +267,14 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %dir %{_sysconfdir}/gdm/PreSession
 %dir %{_sysconfdir}/gdm/PostSession
 %dir %{_sysconfdir}/gdm/PostLogin
-%{_datadir}/gnome-session/sessions/gdm-shell.session
 %{_datadir}/pixmaps/*.png
 %{_datadir}/glib-2.0/schemas/org.gnome.login-screen.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.login-screen.gschema.override
 %{_libexecdir}/gdm-host-chooser
 %{_libexecdir}/gdm-session-worker
 %{_libexecdir}/gdm-simple-chooser
+%{_libexecdir}/gdm-wayland-session
+%{_libexecdir}/gdm-x-session
 %{_sbindir}/gdm
 %{_bindir}/gdmflexiserver
 %{_bindir}/gdm-screenshot
@@ -307,6 +305,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:3.18.0-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:3.18.0-2
 - 更新到 3.18.0
 

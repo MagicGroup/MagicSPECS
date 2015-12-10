@@ -1,6 +1,6 @@
 Name:		perl-GPS-OID
 Version:	0.07
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	Package for PRN - Object ID conversions
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.07-12
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.07-11
 - 为 Magic 3.0 重建
 

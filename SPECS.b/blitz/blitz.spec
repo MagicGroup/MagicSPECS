@@ -2,7 +2,7 @@ Summary: C++ library for scientific computing
 Summary(zh_CN.UTF-8): 科学计算的 C++ 库
 Name: blitz
 Version: 0.10
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License: GPL
@@ -120,6 +120,9 @@ fi
 %doc examples
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.10-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.10-3
 - 为 Magic 3.0 重建
 

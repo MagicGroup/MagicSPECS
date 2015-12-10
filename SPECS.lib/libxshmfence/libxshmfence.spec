@@ -1,6 +1,6 @@
 Name:           libxshmfence
 Version:        1.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        X11 shared memory fences
 Summary(zh_CN.UTF-8): X11 共享内存库
 
@@ -58,6 +58,9 @@ magic_rpm_clean.sh
 %{_libdir}/*.so
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.2-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2-4
 - 为 Magic 3.0 重建
 

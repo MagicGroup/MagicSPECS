@@ -2,7 +2,7 @@ Summary: Command-line tools and library for transforming PDF files
 Summary(zh_CN.UTF-8): 转换 PDF 文件的命令行工具和库
 Name:    qpdf
 Version:	5.1.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 # MIT: e.g. libqpdf/sha2.c
 License: Artistic 2.0 and MIT
 URL:     http://qpdf.sourceforge.net/
@@ -126,6 +126,9 @@ make check
 %doc __doc/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.1.3-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 5.1.3-2
 - 为 Magic 3.0 重建
 

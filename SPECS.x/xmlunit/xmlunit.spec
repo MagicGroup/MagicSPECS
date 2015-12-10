@@ -30,7 +30,7 @@
 
 Name:           xmlunit
 Version:        1.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        Provides classes to do asserts on xml
 License:        BSD
@@ -123,6 +123,9 @@ end
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0:1.5-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 24 2015 Liu Di <liudidi@gmail.com> - 0:1.5-4
 - 为 Magic 3.0 重建
 

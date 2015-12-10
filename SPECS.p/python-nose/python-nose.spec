@@ -10,7 +10,7 @@
 
 Name:           python-nose
 Version:	1.3.7
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Discovery-based unittest extension for Python
 Summary(zh_CN.UTF-8): Python 的单元测试扩展
 
@@ -193,6 +193,9 @@ rm -rf %{buildroot}
 %endif # with_docs
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.7-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.3.7-2
 - 为 Magic 3.0 重建
 

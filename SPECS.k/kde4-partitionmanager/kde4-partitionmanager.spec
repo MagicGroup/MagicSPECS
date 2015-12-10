@@ -9,9 +9,9 @@
 Name: 			kde4-%{realname}
 Version:		1.0.60
 %if 0%{?git}
-Release:		0.git%{vcsdate}%{dist}.5
+Release:		0.git%{vcsdate}%{dist}.6
 %else
-Release:		12%{?dist}
+Release:		13%{?dist}
 %endif
 License:		GPL
 Summary:		Easily manage disks, partitions and file systems on your KDE Desktop
@@ -85,6 +85,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20151030.6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20151030.5
 - 更新到 20151030 日期的仓库源码
 

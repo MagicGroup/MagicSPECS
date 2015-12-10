@@ -1,6 +1,6 @@
 Name:       perl-MooseX-ConfigFromFile 
 Version:	0.14
-Release:	2%{?dist}
+Release:	3%{?dist}
 # see lib/MooseX/ConfigFromFile.pm
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -55,6 +55,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.14-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.14-2
 - 为 Magic 3.0 重建
 

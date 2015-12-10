@@ -1,6 +1,6 @@
 Name:		perl-Test-LongString
 Version:	0.17
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Perl module to test long strings
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.17-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.17-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           ode
 Version:	0.13.1
-Release:	2%{?dist}
+Release:	4%{?dist}
 Summary:        High performance library for simulating rigid body dynamics
 Summary(zh_CN.UTF-8): 模拟刚体动力学的高性能库
 Group:          System Environment/Libraries
@@ -119,6 +119,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.13.1-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.13.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.13.1-2
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 Summary: A Ruby library for accessing memcached
 Name: rubygem-%{gem_name}
 Version: 1.8.5
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Development/Languages
 License: BSD
 URL: http://github.com/mperham/memcache-client
@@ -60,6 +60,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.8.5-13
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.8.5-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           qrencode
 Version:	3.4.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Generate QR 2D barcodes
 Summary(zh_CN.UTF-8): 生成 QR 2D 条形码
 
@@ -83,6 +83,9 @@ sh test_all.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.4.4-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.4.4-2
 - 为 Magic 3.0 重建
 

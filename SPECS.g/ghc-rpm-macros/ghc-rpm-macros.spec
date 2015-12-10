@@ -7,7 +7,7 @@
 
 Name:           ghc-rpm-macros
 Version:        1.4.15
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        RPM macros for building packages for GHC
 
 License:        GPLv3+
@@ -111,6 +111,9 @@ install -p -D -m 0755 %{SOURCE5} %{buildroot}/%{_bindir}/cabal-tweak-flag
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.4.15-6
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 1.4.15-5
 - 为 Magic 3.0 重建
 

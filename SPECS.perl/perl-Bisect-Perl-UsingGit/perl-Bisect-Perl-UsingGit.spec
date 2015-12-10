@@ -1,6 +1,6 @@
 Name:           perl-Bisect-Perl-UsingGit
 Version:        0.33
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Help you to bisect Perl
 Summary(zh_CN.UTF-8): 帮助你平分 Perl 
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.33-13
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.33-12
 - 为 Magic 3.0 重建
 

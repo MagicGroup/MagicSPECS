@@ -1,6 +1,6 @@
 Name:           perl-Language-Functional
 Version:        0.05
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Module which makes Perl slightly more functional
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.05-8
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.05-7
 - 为 Magic 3.0 重建
 

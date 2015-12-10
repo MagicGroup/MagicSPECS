@@ -5,7 +5,7 @@
 
 Name:           wxPython
 Version:        3.0.2.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 
 Summary:        GUI toolkit for the Python programming language
 Summary(zh_CN.UTF-8): Python 程序语言的图形开发工具包
@@ -122,6 +122,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 3.0.2.0-10
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.0.2.0-9
 - 为 Magic 3.0 重建
 

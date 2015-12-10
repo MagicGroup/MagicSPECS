@@ -1,7 +1,7 @@
 Summary:	Create bubble-babble fingerprints
 Name:		perl-Digest-BubbleBabble
 Version:	0.02
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Digest-BubbleBabble/
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Digest::BubbleBabble.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.02-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.02-10
 - 为 Magic 3.0 重建
 

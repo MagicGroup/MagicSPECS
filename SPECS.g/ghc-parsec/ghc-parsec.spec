@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        3.1.5
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Monadic parser combinators
 
 License:        BSD
@@ -68,6 +68,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.1.5-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 3.1.5-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name:		libnjb
 Version:	2.2.7
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	A software library for talking to the Creative Nomad Jukeboxes and Dell DJs
 Summary(zh_CN.UTF-8): 与创新 Nomad Jukeboxes 和 Dell DJs 通信的库
 URL:		http://libnjb.sourceforge.net/
@@ -116,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.2.7-7
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.2.7-6
 - 为 Magic 3.0 重建
 

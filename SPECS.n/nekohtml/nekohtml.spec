@@ -30,7 +30,7 @@
 
 Name:           nekohtml
 Version:        1.9.21
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          0
 Summary:        HTML scanner and tag balancer
 License:        ASL 2.0
@@ -133,6 +133,9 @@ export CLASSPATH=$(build-classpath bcel xerces-j2)
 %files demo -f .mfiles-demo
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0:1.9.21-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0:1.9.21-4
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 Summary: Infiniband/iWARP Kernel Module Initializer
 Name: rdma
 Version: 2.0
-Release: 18%{?dist}
+Release: 19%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: rdma.conf
@@ -81,6 +81,9 @@ rm -rf %{buildroot}
 %{dracutlibdir}/modules.d/05rdma/module-setup.sh
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0-19
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0-18
 - 为 Magic 3.0 重建
 

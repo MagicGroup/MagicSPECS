@@ -1,6 +1,6 @@
 Name:           perl-Const-Fast
 Version:	0.014
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Facility for creating read-only scalars, arrays, and hashes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.014-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.014-2
 - 为 Magic 3.0 重建
 

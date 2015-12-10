@@ -4,7 +4,7 @@
 
 Name:		qoauth
 Version:	1.0.1
-Release:	7%{?posttag}%{?dist}
+Release:	8%{?posttag}%{?dist}
 Summary:	Qt-based C++ library for OAuth authorization scheme
 Summary(zh_CN.UTF-8): OAuth 认证方案的基于 QT 的 C++ 库
 Group:		System Environment/Libraries
@@ -85,6 +85,9 @@ rm -rf %{buildroot}
 %{_includedir}/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0.1-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-7
 - 为 Magic 3.0 重建
 

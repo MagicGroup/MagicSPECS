@@ -1,14 +1,14 @@
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 
 Name:           ocaml-ssl
-Version:	0.5.1
-Release:	2%{?dist}
+Version:	0.5.2
+Release:	1%{?dist}
 Summary:        SSL bindings for OCaml
 Summary(zh_CN.UTF-8): OCaml 的 SSL 绑定
 
 License:        LGPLv2+ with exceptions
 URL:            http://savonet.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/savonet/ocaml-ssl-%{version}.tar.gz
+Source0:        https://github.com/savonet/ocaml-ssl/archive/%{version}.tar.gz
 ExcludeArch:    sparc64 s390 s390x
 
 BuildRequires:  ocaml >= 3.12.1-3
@@ -44,13 +44,14 @@ developing applications that use %{name}.
 
 
 %build
+./bootstrap
 %configure --libdir=%{_libdir}
 # Parallel builds don't work.
 unset MAKEFLAGS
-%if %opt
-export OCAMLC="ocamlc.opt -g"
-export OCAMLOPT="ocamlopt.opt -g"
-%endif
+#if %opt
+#export OCAMLC="ocamlc.opt -g"
+#export OCAMLOPT="ocamlopt.opt -g"
+#endif
 make
 
 
@@ -67,7 +68,7 @@ cp examples/*.ml $RPM_BUILD_ROOT%{_docdir}/%{name}-devel/examples
 magic_rpm_clean.sh
 
 %files
-%doc CHANGES COPYING README
+%doc CHANGES COPYING 
 %{_libdir}/ocaml/ssl
 %if %opt
 %exclude %{_libdir}/ocaml/ssl/*.a
@@ -88,6 +89,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.5.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.5.1-2
 - 更新到 0.5.1
 

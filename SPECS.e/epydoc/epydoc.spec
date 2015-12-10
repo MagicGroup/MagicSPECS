@@ -4,7 +4,7 @@ Summary: Automatic API documentation generation tool for Python
 Summary(zh_CN.UTF-8): Python 下的自动 API 文档生成工具
 Name: epydoc
 Version: 3.0.1
-Release: 14%{?dist}
+Release: 15%{?dist}
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 License: MIT
@@ -81,6 +81,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.0.1-15
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.0.1-14
 - 为 Magic 3.0 重建
 

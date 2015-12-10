@@ -2,7 +2,7 @@
 
 Name:           ocaml-findlib
 Version: 1.5.6
-Release: 2%{?dist}
+Release: 4%{?dist}
 Summary:        Objective CAML package manager and build helper
 Summary(zh_CN.UTF-8): OCaml 包管理器和构建帮助程序
 License:        BSD
@@ -107,6 +107,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.5.6-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.5.6-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.5.6-2
 - 更新到 1.5.6
 

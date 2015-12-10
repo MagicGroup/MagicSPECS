@@ -1,13 +1,14 @@
-# Noarch subpackages available from Fedora 10, RHEL6
-%global noarch_subpkgs 0%{?fedora} > 9 || 0%{?rhel} > 5
+%global noarch_subpkgs 1
 
 %global _hardened_build 1
 
 Name:		geoipupdate
 Version:	2.2.1
-Release:	3%{?dist}
+Release:	6%{?dist}
 Summary:	Update GeoIP2 and GeoIP Legacy binary databases from MaxMind
+Summary(zh_CN.UTF-8): 从 MaxMind 更新 GeoIP2 和 GeoIP 过时的二进制数据库
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 License:	GPLv2
 URL:		http://dev.maxmind.com/geoip/geoipupdate/
 Source0:	http://github.com/maxmind/geoipupdate/releases/download/v%{version}/geoipupdate-%{version}.tar.gz
@@ -29,9 +30,14 @@ BuildRequires:	perl(strict)
 The GeoIP Update program performs automatic updates of GeoIP2 and GeoIP
 Legacy binary databases.
 
+%description -l zh_CN.UTF-8
+从 MaxMind 更新 GeoIP2 和 GeoIP 过时的二进制数据库。
+
 %package cron
 Summary:	Cron job to do weekly updates of GeoIP databases
+Summary(zh_CN.UTF-8): 更新 GeoIP 数据库的任务计划
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 %if %{noarch_subpkgs}
 BuildArch:	noarch
 %endif
@@ -43,9 +49,14 @@ Provides:	GeoIP-update = 1.6.0
 %description cron
 Cron job for weekly updates to GeoIP Legacy database from MaxMind.
 
+%description cron -l zh_CN.UTF-8
+更新 GeoIP 数据库的任务计划。
+
 %package cron6
 Summary:	Cron job to do weekly updates of GeoIP IPv6 databases
+Summary(zh_CN.UTF-8): 更新 GeoIP IPv6 数据库的计划任务
 Group:		Development/Tools
+Group(zh_CN.UTF-8): 开发/工具
 %if %{noarch_subpkgs}
 BuildArch:	noarch
 %endif
@@ -57,6 +68,9 @@ Provides:	GeoIP-update6 = 1.6.0
 
 %description cron6
 Cron job for weekly updates to GeoIP IPv6 Legacy database from MaxMind.
+
+%description cron6 -l zh_CN.UTF-8
+更新 GeoIP IPv6 数据库的计划任务。
 
 %prep
 %setup -q
@@ -94,6 +108,7 @@ mkdir -p %{buildroot}%{_datadir}/GeoIP/download/
 : > %{buildroot}%{_datadir}/GeoIP/download/GeoIPv6.dat.gz
 : > %{buildroot}%{_datadir}/GeoIP/download/GeoLiteCityv6.dat.gz
 : > %{buildroot}%{_datadir}/GeoIP/download/GeoIPASNumv6.dat.gz
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -122,6 +137,15 @@ rm -rf %{buildroot}
 %ghost %{_datadir}/GeoIP/download/GeoIPASNumv6.dat.gz
 
 %changelog
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.2.1-6
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.2.1-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 2.2.1-4
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

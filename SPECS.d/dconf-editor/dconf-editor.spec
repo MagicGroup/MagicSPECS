@@ -1,16 +1,18 @@
 Name:           dconf-editor
 Version:        3.19.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Configuration editor for dconf
+Summary(zh_CN.UTF-8): dconf 的配置编辑器
 
 License:        LGPLv2+
 URL:            https://wiki.gnome.org/Projects/dconf
-Source0:        https://download.gnome.org/sources/dconf-editor/3.19/dconf-editor-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        https://download.gnome.org/sources/dconf-editor/%{majorver}/dconf-editor-%{version}.tar.xz
 
 BuildRequires:  /usr/bin/appstream-util
 BuildRequires:  desktop-file-utils
 BuildRequires:  intltool
-BuildRequires:  pkgconfig(dconf)
+BuildRequires:  pkgconfig(dconf) > 0.23
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gmodule-2.0)
 BuildRequires:  pkgconfig(gtk+-3.0)
@@ -19,6 +21,9 @@ BuildRequires:  vala
 
 %description
 Graphical tool for editing the dconf configuration database.
+
+%description -l zh_CN.UTF-8
+编辑 dconf 配置数据库的图形工具。
 
 %prep
 %setup -q
@@ -29,8 +34,8 @@ make %{?_smp_mflags}
 
 %install
 %make_install
-
-%find_lang dconf
+magic_rpm_clean.sh
+%find_lang dconf || :
 
 %check
 appstream-util validate-relax --nonet $RPM_BUILD_ROOT%{_datadir}/appdata/ca.desrt.dconf-editor.appdata.xml
@@ -62,6 +67,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_mandir}/man1/dconf-editor.1*
 
 %changelog
+* Mon Nov 30 2015 Liu Di <liudidi@gmail.com> - 3.19.2-2
+- 为 Magic 3.0 重建
+
 * Tue Nov 24 2015 Kalev Lember <klember@redhat.com> - 3.19.2-1
 - Update to 3.19.2
 

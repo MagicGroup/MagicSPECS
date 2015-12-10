@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.0.0.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Fast base64 encoding and decoding for ByteStrings
 
 License:        BSD
@@ -80,6 +80,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.0.1-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.0.0.1-8
 - 为 Magic 3.0 重建
 

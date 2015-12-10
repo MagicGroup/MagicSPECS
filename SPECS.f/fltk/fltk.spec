@@ -9,7 +9,7 @@
 Summary:	C++ user interface toolkit
 Name:		fltk
 Version:	1.3.3
-Release:	7%{?dist}
+Release:	8%{?dist}
 
 # see COPYING (or http://www.fltk.org/COPYING.php ) for exceptions details
 License:	LGPLv2+ with exceptions	
@@ -198,6 +198,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3.3-8
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.3.3-7
 - 为 Magic 3.0 重建
 

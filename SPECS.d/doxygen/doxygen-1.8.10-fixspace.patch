@@ -1,0 +1,27 @@
+diff --git a/src/htmlgen.cpp b/src/htmlgen.cpp
+index a2dd473..dadbb4f 100644
+--- a/src/htmlgen.cpp
++++ b/src/htmlgen.cpp
+@@ -1952,11 +1952,6 @@ static void endQuickIndexItem(FTextStream &t,const char *l)
+   t << "</li>\n";
+ }
+ 
+-static QCString fixSpaces(const QCString &s)
+-{
+-  return substitute(s," ","&#160;");
+-}
+-
+ static bool quickLinkVisible(LayoutNavEntry::Kind kind)
+ {
+   static bool showFiles = Config_getBool("SHOW_FILES");
+diff --git a/src/index.h b/src/index.h
+index 150d23f..ace3614 100644
+--- a/src/index.h
++++ b/src/index.h
+@@ -284,5 +284,6 @@ void initNamespaceMemberIndices();
+ void addClassMemberNameToIndex(MemberDef *md);
+ void addFileMemberNameToIndex(MemberDef *md);
+ void addNamespaceMemberNameToIndex(MemberDef *md);
++QCString fixSpaces(const QCString &s);
+ 
+ #endif

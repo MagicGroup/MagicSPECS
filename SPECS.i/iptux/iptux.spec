@@ -1,6 +1,6 @@
 Name:           iptux
 Version:	0.6.3
-Release: 	4%{?dist}
+Release: 	5%{?dist}
 Source0:        https://github.com/iptux-src/iptux/archive/v%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 BuildRequires:  gtk2-devel
@@ -37,6 +37,9 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_datadir}/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6.3-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.6.3-4
 - 更新到 0.6.3
 

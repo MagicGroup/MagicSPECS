@@ -7,7 +7,7 @@ Summary: Web-flow and rendering framework putting the VC in MVC
 Name: rubygem-%{gem_name}
 Epoch: 1
 Version: 4.2.4
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.rubyonrails.org
@@ -122,6 +122,9 @@ popd
 %{gem_instdir}/test/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1:4.2.4-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:4.2.4-4
 - 为 Magic 3.0 重建
 

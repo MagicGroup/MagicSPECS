@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.2
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        CSV loader and dumper
 
 License:        MIT
@@ -66,6 +66,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.2-25
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.2-24
 - 为 Magic 3.0 重建
 

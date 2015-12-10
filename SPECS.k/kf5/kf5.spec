@@ -1,6 +1,6 @@
 Name:           kf5
 Version:        5.13.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Filesystem and RPM macros for KDE Frameworks 5
 Summary(zh_CN.UTF-8): KDE 框架 5 使用的文件系统和 RPM 宏
 License:        BSD
@@ -61,6 +61,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.13.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.13.0-3
 - 为 Magic 3.0 重建
 

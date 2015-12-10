@@ -1,6 +1,6 @@
 Name:           pkcs11-helper
 Version:        1.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        A library for using PKCS#11 providers
 Summary(zh_CN.UTF-8): 使用 PKCS#11 的库
 
@@ -83,6 +83,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.10-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.10-4
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ Summary: Base libraries for GGZ gaming zone
 Summary(zh_CN.UTF-8): GGZ 游戏的基本库
 Name:    ggz-base-libs
 Version: 0.99.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 License: LGPLv2+ and GPLv2+
 Group:   System Environment/Libraries
@@ -104,8 +104,8 @@ mkdir -p %{buildroot}%{_libdir}/ggz
 # RPM macros
 install -D -m644 -p %{SOURCE2} %{buildroot}%{_sysconfdir}/rpm/macros.ggz
 magic_rpm_clean.sh
-%find_lang ggzcore_snapshot-%{version}
-%find_lang ggz-config
+%find_lang ggzcore_snapshot-%{version} || :
+%find_lang ggz-config || :
 cat ggz*.lang >> all.lang
 
 # unpackaged files
@@ -162,6 +162,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.99.5-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.99.5-8
 - 为 Magic 3.0 重建
 

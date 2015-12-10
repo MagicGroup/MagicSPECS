@@ -1,6 +1,6 @@
 Name:           perl-File-pushd
 Version:	1.009
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Change directory temporarily for a limited scope
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.009-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.009-2
 - 为 Magic 3.0 重建
 

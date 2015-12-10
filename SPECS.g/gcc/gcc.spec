@@ -6,7 +6,7 @@
 %global gcc_release 4
 %global _unpackaged_files_terminate_build 0
 %global _performance_build 1
-%global multilib_64_archs sparc64 ppc64 ppc64p7 s390x x86_64
+%global multilib_64_archs sparc64 ppc64 ppc64p7 s390x x86_64 mips64el
 %ifarch %{ix86} x86_64 ia64 ppc ppc64 ppc64p7 alpha %{arm} aarch64
 %global build_ada 1
 %else
@@ -47,7 +47,7 @@
 %else
 %global build_libcilkrts 0
 %endif
-%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64 mips64el mipsel
 %global build_libatomic 1
 %else
 %global build_libatomic 0
@@ -64,7 +64,7 @@
 %endif
 %global build_isl 1
 %global build_libstdcxx_docs 1
-%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le ppc64p7 s390 s390x %{arm} aarch64 mips64el mipsel
 %global attr_ifunc 1
 %else
 %global attr_ifunc 0
@@ -80,6 +80,9 @@
 %endif
 %ifarch x86_64
 %global multilib_32_arch i686
+%endif
+%ifarch mips64el
+%global multilib_32_arch mipsel
 %endif
 Summary: Various compilers (C, C++, Objective-C, Java, ...)
 Name: gcc
@@ -206,6 +209,8 @@ Patch13: gcc5-aarch64-async-unw-tables.patch
 Patch14: gcc5-libsanitize-aarch64-va42.patch
 Patch15: gcc5-pr65689.patch
 Patch16: gcc5-pr65956.patch
+# Magic 
+Patch17: gcc-5.1.1-fixmipsn32.patch
 
 # On ARM EABI systems, we do want -gnueabi to be part of the
 # target triple.
@@ -774,6 +779,7 @@ rm -f libgo/go/crypto/elliptic/p224{,_test}.go
 %patch14 -p0 -b .libsanitize-aarch64-va42~
 %patch15 -p0 -b .pr65689~
 %patch16 -p0 -b .pr65956~
+%patch17 -p1
 %ifarch %{arm}
 # Workaround PR65956, undo the overalignment optimization
 # on ARM because it has broken backend.
@@ -925,6 +931,7 @@ CC=gcc
 CXX=g++
 OPT_FLAGS=`echo %{optflags}|sed -e 's/\(-Wp,\)\?-D_FORTIFY_SOURCE=[12]//g'`
 OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-m64//g;s/-m32//g;s/-m31//g'`
+OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-mabi=64//g;s/-mabi=32//g;s/-mabi=n32//g;s/-mabi=o64//g'`
 OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/-mfpmath=sse/-mfpmath=sse -msse2/g'`
 OPT_FLAGS=`echo $OPT_FLAGS|sed -e 's/ -pipe / /g'`
 %ifarch sparc
@@ -958,12 +965,13 @@ CONFIGURE_OPTS="\
 	--enable-multilib \
 %endif
 	--with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions \
-	--enable-gnu-unique-object --enable-linker-build-id --with-linker-hash-style=gnu \
+	--enable-gnu-unique-object --enable-linker-build-id \
+%ifnarch mips64el mipsel
+	--with-linker-hash-style=gnu \
+%endif
 	--enable-plugin --enable-initfini-array \
 	--disable-libgcj \
-%if 0%{fedora} >= 21 && 0%{fedora} <= 22
 	--with-default-libstdcxx-abi=c++98 \
-%endif
 %if %{build_isl}
 	--with-isl \
 %else
@@ -974,10 +982,8 @@ CONFIGURE_OPTS="\
 %else
 	--disable-libmpx \
 %endif
-%if 0%{?fedora} >= 21 || 0%{?rhel} >= 7
 %if %{attr_ifunc}
 	--enable-gnu-indirect-function \
-%endif
 %endif
 %ifarch %{arm}
 	--disable-sjlj-exceptions \
@@ -998,20 +1004,10 @@ CONFIGURE_OPTS="\
 	--host=%{gcc_target_platform} --build=%{gcc_target_platform} --target=%{gcc_target_platform} --with-cpu=v7
 %endif
 %ifarch ppc ppc64 ppc64p7
-%if 0%{?rhel} >= 7
 	--with-cpu-32=power7 --with-tune-32=power7 --with-cpu-64=power7 --with-tune-64=power7 \
 %endif
-%if 0%{?rhel} == 6
-	--with-cpu-32=power4 --with-tune-32=power6 --with-cpu-64=power4 --with-tune-64=power6 \
-%endif
-%endif
 %ifarch ppc64le
-%if 0%{?rhel} >= 7
-	--with-cpu-32=power8 --with-tune-32=power8 --with-cpu-64=power8 --with-tune-64=power8 \
-%endif
-%if 0%{?fedora} > 21 && 0%{?fedora} < 24
 	--with-cpu-32=power7 --with-tune-32=power8 --with-cpu-64=power7 --with-tune-64=power8 \
-%endif
 %endif
 %ifarch ppc
 	--build=%{gcc_target_platform} --target=%{gcc_target_platform} --with-cpu=default32
@@ -1019,20 +1015,17 @@ CONFIGURE_OPTS="\
 %ifarch %{ix86} x86_64
 	--with-tune=generic \
 %endif
-%if 0%{?rhel} >= 7
-%ifarch %{ix86}
-	--with-arch=x86-64 \
-%endif
-%ifarch x86_64
-	--with-arch_32=x86-64 \
-%endif
-%else
 %ifarch %{ix86}
 	--with-arch=i686 \
 %endif
 %ifarch x86_64
 	--with-arch_32=i686 \
 %endif
+%ifarch mips64el
+	--with-arch=mips3 --with-abi=64 --with-arch_32=mips3 --enable-targets=o32,n64 \
+%endif
+%ifarch mipsel
+	--with-arch=mips3 --with-abi=32 --disable-multilib \
 %endif
 %ifarch s390 s390x
 %if 0%{?rhel} >= 7

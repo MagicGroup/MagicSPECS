@@ -1,6 +1,6 @@
 Name:           perl-App-Daemon
 Version:	0.22
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:        Start an Application as a Daemon
 Summary(zh_CN.UTF-8): 以守护程序的方式启动应用程序
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.22-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.22-4
 - 为 Magic 3.0 重建
 

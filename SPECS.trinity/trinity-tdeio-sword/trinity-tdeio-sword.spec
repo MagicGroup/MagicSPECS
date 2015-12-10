@@ -37,7 +37,7 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	0.3
-Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.2
+Release:	%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}.3
 Summary:	Tdeio-slave for the Sword Bible tool
 Summary(zh_CN.UTF-8): Sword 圣经工具的 TDEIO
 Group:		Productivity/Networking/Ftp/Clients
@@ -151,6 +151,9 @@ done
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.3-1.3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:0.3-1.2
 - 为 Magic 3.0 重建
 

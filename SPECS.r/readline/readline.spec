@@ -2,7 +2,7 @@ Summary: A library for editing typed command lines
 Summary(zh_CN.UTF-8): 编辑命令行输入的库
 Name: readline
 Version:	6.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 License: GPLv3+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -147,6 +147,9 @@ fi
 %{_libdir}/lib*.a
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 6.3-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.3-3
 - 为 Magic 3.0 重建
 

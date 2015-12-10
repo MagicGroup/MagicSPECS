@@ -1,7 +1,7 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 Name:		libftdi
 Version:	1.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Library to program and control the FTDI USB controller
 Summary(zh_CN.UTF-8): 编程和控制 FTDI USB 控制器的库
 
@@ -170,6 +170,9 @@ exit 0
 %postun c++ -p /sbin/ldconfig
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.2-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2-2
 - 更新到 1.2
 

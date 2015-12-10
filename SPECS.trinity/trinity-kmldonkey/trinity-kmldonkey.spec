@@ -38,7 +38,7 @@
 Name:			trinity-%{tde_pkg}
 Epoch:			%{tde_epoch}
 Version:		0.11
-Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.2
+Release:		%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}%{?_variant}.3
 Summary:        Advanced GUI frontend for the MLDonkey P2P core.
 Summary(zh_CN): MLDonkey P2P 核心的高级界面前端。
 Group:          Applications/Internet
@@ -168,6 +168,9 @@ magic_rpm_clean.sh
 %{tde_mandir}/man1/*.1*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.11-1.3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2:0.11-1.2
 - 为 Magic 3.0 重建
 

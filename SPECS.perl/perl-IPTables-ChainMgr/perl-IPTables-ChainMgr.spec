@@ -1,6 +1,6 @@
 Name:           perl-IPTables-ChainMgr
 Version:        0.9
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Perl extension for manipulating iptables policies
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.9-16
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.9-15
 - 为 Magic 3.0 重建
 

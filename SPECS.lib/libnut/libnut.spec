@@ -2,7 +2,7 @@ Summary: Library for creating and demuxing NUT files
 Summary(zh_CN.UTF-8): 创建和重编码 NUT 文件的库
 Name: libnut
 Version: 0.0.0
-Release: 5_r661%{?dist}
+Release: 6_r661%{?dist}
 License: distributable
 Group: FIXME
 URL: http://www.nut-container.org/
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_bindir}/nut*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.0.0-6_r661
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.0.0-5_r661
 - 为 Magic 3.0 重建
 

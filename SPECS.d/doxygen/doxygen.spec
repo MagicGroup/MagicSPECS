@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): C/C++ 的文档系统
 Name:    doxygen
 Epoch:   1
 Version: 1.8.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # No version is specified.
 License: GPL+
@@ -13,9 +13,17 @@ Source0: ftp://ftp.stack.nl/pub/users/dimitri/%{name}-%{version}.src.tar.gz
 Source1: doxywizard.png
 Source2: doxywizard.desktop
 
-Patch1: doxygen-1.8.6-config.patch
-Patch2: doxygen-1.8.5-html_timestamp_default_false.patch 
-Patch3: doxygen-1.8.3-multilib.patch
+Patch1: doxygen-1.8.10-install.patch
+
+# upstream fixes
+Patch100: doxygen-1.8.10-drop-qt-arch-x86-64-definition.patch
+Patch101: doxygen-1.8.10-angle-bracket.patch
+Patch102: doxygen-1.8.10-SOURCE_DATE_EPOCH.patch
+Patch103: doxygen-1.8.10-bibtex.patch
+Patch104: doxygen-1.8.10-fixspace.patch
+Patch105: doxygen-1.8.10-xml.patch
+Patch106: doxygen-1.8.10-latex.patch
+Patch107: doxygen-1.8.10-timestamp-latex.patch
 
 BuildRequires: perl
 BuildRequires: tex(dvips)
@@ -74,8 +82,14 @@ Requires: texlive-epstopdf-bin
 %setup -q
 
 %patch1 -p1 -b .config
-%patch2 -p1 -b .html_timestamp_default_false
-%patch3 -p1 -b .multilib
+%patch100 -p1
+%patch101 -p1 -b .angle-bracket
+%patch102 -p1 -b .SOURCE_DATE_EPOCH
+%patch103 -p1 -b .bibtex
+%patch104 -p1 -b .fixspace
+%patch105 -p1 -b .xml
+%patch106 -p1 -b .latex
+%patch107 -p1 -b .latex-timestamps
 
 # convert into utf-8
 iconv --from=ISO-8859-1 --to=UTF-8 LANGUAGE.HOWTO > LANGUAGE.HOWTO.new
@@ -84,41 +98,41 @@ mv LANGUAGE.HOWTO.new LANGUAGE.HOWT
 
 
 %build
-unset QTDIR
+mkdir -p %{_target_platform}
+pushd %{_target_platform}
+%cmake \
+		-Dbuild_doc=ON \
+		-Dbuild_wizard=ON \
+		-Dbuild_xmlparser=ON \
+		-DMAN_INSTALL_DIR=%{_mandir}/man1 \
+		-DDOC_INSTALL_DIR=%{_docdir}/doxygen \
+		-DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \
+		-DBUILD_SHARED_LIBS=OFF \
+		..
+popd
 
-# not autoconf-based, can't use %%configure macro
-./configure \
-   --prefix %{_prefix} \
-   --shared \
-   --with-doxywizard \
-   --release
-
-# workaround for "Error: operand out of range", language.cpp needs to be splitted
-%ifarch ppc64
-make -C src Makefile.libdoxygen
-sed -i -e "s|-o ../objects/language.o|-fno-merge-constants -fsection-anchors -o ../objects/language.o|" src/Makefile.libdoxygen
-%endif
-
-make %{?_smp_mflags} all
-make docs
+make %{?_smp_mflags} -C %{_target_platform}
+make docs -C %{_target_platform}
 
 
 %install
-make install DESTDIR=%{buildroot}
-make doxywizard_install DESTDIR=%{buildroot}
+make install \
+	DESTDIR=%{buildroot} \
+	-C %{_target_platform}
+
+mv %{buildroot}%{_docdir}/doxygen .
 
 install -m644 -p -D %{SOURCE1} %{buildroot}%{_datadir}/pixmaps/doxywizard.png
-install -m644 -p doc/doxywizard.1 %{buildroot}%{_mandir}/man1/
 
 desktop-file-install \
    --dir=%{buildroot}%{_datadir}/applications %{SOURCE2}
 
-
 %files
-%doc LANGUAGE.HOWTO README.md examples
-%doc html
+%doc LANGUAGE.HOWTO README.md doxygen
 %{_bindir}/doxygen
 %{_mandir}/man1/doxygen.1*
+%{_mandir}/man1/doxyindexer.1.gz
+%{_mandir}/man1/doxysearch.1.gz
 
 %files doxywizard
 %{_bindir}/doxywizard
@@ -129,8 +143,10 @@ desktop-file-install \
 %files latex
 # intentionally left blank
 
-
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:1.8.10-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:1.8.10-2
 - 更新到 1.8.10
 

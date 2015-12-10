@@ -1,7 +1,7 @@
-From 4072cbf56bba989f87783f285952d7227ba5898d Mon Sep 17 00:00:00 2001
+From 341e1f0892d1c7d39057e733b035fce54568d28b Mon Sep 17 00:00:00 2001
 From: Xavier Leroy <xavier.leroy@inria.fr>
 Date: Wed, 27 Aug 2014 09:58:33 +0000
-Subject: [PATCH 13/15] PR#6517: use ISO C99 types {,u}int{32,64}_t in
+Subject: [PATCH 13/19] PR#6517: use ISO C99 types {,u}int{32,64}_t in
  preference to our homegrown types {,u}int{32,64}.
 
 git-svn-id: http://caml.inria.fr/svn/ocaml/trunk@15131 f963ae5c-01c2-4b8c-9fe0-0dff7051ff02
@@ -17,31 +17,31 @@ See also:
 http://caml.inria.fr/mantis/view.php?id=6517
 ---
  asmrun/backtrace.c                  |   6 +-
- byterun/alloc.h                     |   4 +-
  byterun/backtrace.c                 |   2 +-
- byterun/config.h                    |  35 +++++++----
- byterun/debugger.h                  |  28 ++++-----
- byterun/exec.h                      |   4 +-
+ byterun/caml/alloc.h                |   4 +-
+ byterun/caml/config.h               |  35 +++++++----
+ byterun/caml/debugger.h             |  28 ++++-----
+ byterun/caml/exec.h                 |   4 +-
+ byterun/caml/hash.h                 |  12 ++--
+ byterun/caml/int64_emul.h           | 114 ++++++++++++++++++------------------
+ byterun/caml/int64_format.h         |   4 +-
+ byterun/caml/int64_native.h         |  20 +++----
+ byterun/caml/intext.h               |  12 ++--
+ byterun/caml/io.h                   |   6 +-
+ byterun/caml/md5.h                  |   6 +-
+ byterun/caml/mlvalues.h             |  12 ++--
+ byterun/caml/startup.h              |   4 +-
  byterun/extern.c                    |   4 +-
  byterun/fix_code.c                  |   8 +--
  byterun/floats.c                    |   6 +-
  byterun/globroots.c                 |   4 +-
  byterun/hash.c                      |  44 +++++++-------
- byterun/hash.h                      |  12 ++--
- byterun/int64_emul.h                | 114 ++++++++++++++++++------------------
- byterun/int64_format.h              |   4 +-
- byterun/int64_native.h              |  20 +++----
  byterun/intern.c                    |  20 +++----
  byterun/interp.c                    |   2 +-
- byterun/intext.h                    |  12 ++--
  byterun/ints.c                      | 112 +++++++++++++++++------------------
  byterun/io.c                        |   6 +-
- byterun/io.h                        |   6 +-
  byterun/md5.c                       |  26 ++++----
- byterun/md5.h                       |   6 +-
- byterun/mlvalues.h                  |  12 ++--
  byterun/startup.c                   |  10 ++--
- byterun/startup.h                   |   4 +-
  byterun/str.c                       |  20 +++----
  config/auto-aux/int64align.c        |  14 ++---
  config/s-nt.h                       |   3 +
@@ -53,11 +53,11 @@ http://caml.inria.fr/mantis/view.php?id=6517
  34 files changed, 319 insertions(+), 320 deletions(-)
 
 diff --git a/asmrun/backtrace.c b/asmrun/backtrace.c
-index 05e0d6b..5eb8600 100644
+index fafe13a..498c91a 100644
 --- a/asmrun/backtrace.c
 +++ b/asmrun/backtrace.c
-@@ -217,7 +217,7 @@ static void extract_location_info(frame_descr * d,
-                                   /*out*/ struct loc_info * li)
+@@ -208,7 +208,7 @@ CAMLexport void extract_location_info(frame_descr * d,
+                                   /*out*/ struct caml_loc_info * li)
  {
    uintnat infoptr;
 -  uint32 info1, info2;
@@ -65,7 +65,7 @@ index 05e0d6b..5eb8600 100644
  
    /* If no debugging information available, print nothing.
       When everything is compiled with -g, this corresponds to
-@@ -232,8 +232,8 @@ static void extract_location_info(frame_descr * d,
+@@ -223,8 +223,8 @@ CAMLexport void extract_location_info(frame_descr * d,
               sizeof(char *) + sizeof(short) + sizeof(short) +
               sizeof(short) * d->num_live + sizeof(frame_descr *) - 1)
              & -sizeof(frame_descr *);
@@ -76,23 +76,8 @@ index 05e0d6b..5eb8600 100644
    /* Format of the two info words:
         llllllllllllllllllll aaaaaaaa bbbbbbbbbb nnnnnnnnnnnnnnnnnnnnnnnn kk
                            44       36         26                       2  0
-diff --git a/byterun/alloc.h b/byterun/alloc.h
-index f00a7ef..2a640eb 100644
---- a/byterun/alloc.h
-+++ b/byterun/alloc.h
-@@ -32,8 +32,8 @@ CAMLextern value caml_alloc_string (mlsize_t);  /* size in bytes */
- CAMLextern value caml_copy_string (char const *);
- CAMLextern value caml_copy_string_array (char const **);
- CAMLextern value caml_copy_double (double);
--CAMLextern value caml_copy_int32 (int32);       /* defined in [ints.c] */
--CAMLextern value caml_copy_int64 (int64);       /* defined in [ints.c] */
-+CAMLextern value caml_copy_int32 (int32_t);       /* defined in [ints.c] */
-+CAMLextern value caml_copy_int64 (int64_t);       /* defined in [ints.c] */
- CAMLextern value caml_copy_nativeint (intnat);  /* defined in [ints.c] */
- CAMLextern value caml_alloc_array (value (*funct) (char const *),
-                                    char const ** array);
 diff --git a/byterun/backtrace.c b/byterun/backtrace.c
-index 76e3ddf..6ed56c8 100644
+index 008b199..b5672fe 100644
 --- a/byterun/backtrace.c
 +++ b/byterun/backtrace.c
 @@ -229,7 +229,7 @@ static void read_debug_info(void)
@@ -104,10 +89,25 @@ index 76e3ddf..6ed56c8 100644
    intnat j;
    value evl, l, ev_start;
  
-diff --git a/byterun/config.h b/byterun/config.h
-index f775988..6c86d16 100644
---- a/byterun/config.h
-+++ b/byterun/config.h
+diff --git a/byterun/caml/alloc.h b/byterun/caml/alloc.h
+index f00a7ef..2a640eb 100644
+--- a/byterun/caml/alloc.h
++++ b/byterun/caml/alloc.h
+@@ -32,8 +32,8 @@ CAMLextern value caml_alloc_string (mlsize_t);  /* size in bytes */
+ CAMLextern value caml_copy_string (char const *);
+ CAMLextern value caml_copy_string_array (char const **);
+ CAMLextern value caml_copy_double (double);
+-CAMLextern value caml_copy_int32 (int32);       /* defined in [ints.c] */
+-CAMLextern value caml_copy_int64 (int64);       /* defined in [ints.c] */
++CAMLextern value caml_copy_int32 (int32_t);       /* defined in [ints.c] */
++CAMLextern value caml_copy_int64 (int64_t);       /* defined in [ints.c] */
+ CAMLextern value caml_copy_nativeint (intnat);  /* defined in [ints.c] */
+ CAMLextern value caml_alloc_array (value (*funct) (char const *),
+                                    char const ** array);
+diff --git a/byterun/caml/config.h b/byterun/caml/config.h
+index 6f60836..cbe1999 100644
+--- a/byterun/caml/config.h
++++ b/byterun/caml/config.h
 @@ -25,24 +25,30 @@
  #include "compatibility.h"
  #endif
@@ -175,10 +175,10 @@ index f775988..6c86d16 100644
  #define ARCH_INTNAT_PRINTF_FORMAT ARCH_INT64_PRINTF_FORMAT
  #else
  #error "No integer type available to represent pointers"
-diff --git a/byterun/debugger.h b/byterun/debugger.h
+diff --git a/byterun/caml/debugger.h b/byterun/caml/debugger.h
 index b5079eb..e68ef75 100644
---- a/byterun/debugger.h
-+++ b/byterun/debugger.h
+--- a/byterun/caml/debugger.h
++++ b/byterun/caml/debugger.h
 @@ -37,17 +37,17 @@ void caml_debugger_cleanup_fork (void);
  /* Requests from the debugger to the runtime system */
  
@@ -250,10 +250,10 @@ index b5079eb..e68ef75 100644
     - the value of the event counter
     - the position of the stack
     - the current pc. */
-diff --git a/byterun/exec.h b/byterun/exec.h
+diff --git a/byterun/caml/exec.h b/byterun/caml/exec.h
 index a58bcf8..7e084ac 100644
---- a/byterun/exec.h
-+++ b/byterun/exec.h
+--- a/byterun/caml/exec.h
++++ b/byterun/caml/exec.h
 @@ -39,13 +39,13 @@
  
  struct section_descriptor {
@@ -270,244 +270,13 @@ index a58bcf8..7e084ac 100644
    char magic[12];               /* The magic number */
    struct section_descriptor * section; /* Not part of file */
  };
-diff --git a/byterun/extern.c b/byterun/extern.c
-index 33fa89a..e67d7a3 100644
---- a/byterun/extern.c
-+++ b/byterun/extern.c
-@@ -720,7 +720,7 @@ CAMLexport void caml_serialize_int_2(int i)
-   extern_ptr += 2;
- }
- 
--CAMLexport void caml_serialize_int_4(int32 i)
-+CAMLexport void caml_serialize_int_4(int32_t i)
- {
-   if (extern_ptr + 4 > extern_limit) grow_extern_output(4);
-   extern_ptr[0] = i >> 24;
-@@ -730,7 +730,7 @@ CAMLexport void caml_serialize_int_4(int32 i)
-   extern_ptr += 4;
- }
- 
--CAMLexport void caml_serialize_int_8(int64 i)
-+CAMLexport void caml_serialize_int_8(int64_t i)
- {
-   caml_serialize_block_8(&i, 1);
- }
-diff --git a/byterun/fix_code.c b/byterun/fix_code.c
-index 3380dc9..4fa0275 100644
---- a/byterun/fix_code.c
-+++ b/byterun/fix_code.c
-@@ -134,12 +134,12 @@ void caml_thread_code (code_t code, asize_t len)
-     }
-     *p++ = (opcode_t)(caml_instr_table[instr] - caml_instr_base);
-     if (instr == SWITCH) {
--      uint32 sizes = *p++;
--      uint32 const_size = sizes & 0xFFFF;
--      uint32 block_size = sizes >> 16;
-+      uint32_t sizes = *p++;
-+      uint32_t const_size = sizes & 0xFFFF;
-+      uint32_t block_size = sizes >> 16;
-       p += const_size + block_size;
-     } else if (instr == CLOSUREREC) {
--      uint32 nfuncs = *p++;
-+      uint32_t nfuncs = *p++;
-       p++;                      /* skip nvars */
-       p += nfuncs;
-     } else {
-diff --git a/byterun/floats.c b/byterun/floats.c
-index 7ff6d89..d8fdd05 100644
---- a/byterun/floats.c
-+++ b/byterun/floats.c
-@@ -378,9 +378,9 @@ CAMLprim value caml_log1p_float(value f)
- union double_as_two_int32 {
-     double d;
- #if defined(ARCH_BIG_ENDIAN) || (defined(__arm__) && !defined(__ARM_EABI__))
--    struct { uint32 h; uint32 l; } i;
-+    struct { uint32_t h; uint32_t l; } i;
- #else
--    struct { uint32 l; uint32 h; } i;
-+    struct { uint32_t l; uint32_t h; } i;
+diff --git a/byterun/caml/hash.h b/byterun/caml/hash.h
+index 452a092..ee82a4c 100644
+--- a/byterun/caml/hash.h
++++ b/byterun/caml/hash.h
+@@ -22,12 +22,12 @@
+ extern "C" {
  #endif
- };
- 
-@@ -467,7 +467,7 @@ CAMLprim value caml_classify_float(value vd)
-   }
- #else
-   union double_as_two_int32 u;
--  uint32 h, l;
-+  uint32_t h, l;
- 
-   u.d = Double_val(vd);
-   h = u.i.h;  l = u.i.l;
-diff --git a/byterun/globroots.c b/byterun/globroots.c
-index ded393e..d9111ee 100644
---- a/byterun/globroots.c
-+++ b/byterun/globroots.c
-@@ -43,11 +43,11 @@ struct global_root_list {
-    (i.e. 2 * (NUM_LEVELS - 1)).  Moreover, the congruential PRNG
-    is faster and guaranteed to be deterministic (to reproduce bugs). */
- 
--static uint32 random_seed = 0;
-+static uint32_t random_seed = 0;
- 
- static int random_level(void)
- {
--  uint32 r;
-+  uint32_t r;
-   int level = 0;
- 
-   /* Linear congruence with modulus = 2^32, multiplier = 69069
-diff --git a/byterun/hash.c b/byterun/hash.c
-index f896426..12912d3 100644
---- a/byterun/hash.c
-+++ b/byterun/hash.c
-@@ -41,7 +41,7 @@
-   h *= 0xc2b2ae35; \
-   h ^= h >> 16;
- 
--CAMLexport uint32 caml_hash_mix_uint32(uint32 h, uint32 d)
-+CAMLexport uint32_t caml_hash_mix_uint32(uint32_t h, uint32_t d)
- {
-   MIX(h, d);
-   return h;
-@@ -49,17 +49,17 @@ CAMLexport uint32 caml_hash_mix_uint32(uint32 h, uint32 d)
- 
- /* Mix a platform-native integer. */
- 
--CAMLexport uint32 caml_hash_mix_intnat(uint32 h, intnat d)
-+CAMLexport uint32_t caml_hash_mix_intnat(uint32_t h, intnat d)
- {
--  uint32 n;
-+  uint32_t n;
- #ifdef ARCH_SIXTYFOUR
-   /* Mix the low 32 bits and the high 32 bits, in a way that preserves
--     32/64 compatibility: we want n = (uint32) d
-+     32/64 compatibility: we want n = (uint32_t) d
-      if d is in the range [-2^31, 2^31-1]. */
-   n = (d >> 32) ^ (d >> 63) ^ d;
-   /* If 0 <= d < 2^31:   d >> 32 = 0     d >> 63 = 0
-      If -2^31 <= d < 0:  d >> 32 = -1    d >> 63 = -1
--     In both cases, n = (uint32) d.  */
-+     In both cases, n = (uint32_t) d.  */
- #else
-   n = d;
- #endif
-@@ -69,9 +69,9 @@ CAMLexport uint32 caml_hash_mix_intnat(uint32 h, intnat d)
- 
- /* Mix a 64-bit integer. */
- 
--CAMLexport uint32 caml_hash_mix_int64(uint32 h, int64 d)
-+CAMLexport uint32_t caml_hash_mix_int64(uint32_t h, int64_t d)
- {
--  uint32 hi = (uint32) (d >> 32), lo = (uint32) d;
-+  uint32_t hi = (uint32_t) (d >> 32), lo = (uint32_t) d;
-   MIX(h, lo);
-   MIX(h, hi);
-   return h;
-@@ -82,17 +82,17 @@ CAMLexport uint32 caml_hash_mix_int64(uint32 h, int64 d)
-    Treats all NaNs identically.
- */
- 
--CAMLexport uint32 caml_hash_mix_double(uint32 hash, double d)
-+CAMLexport uint32_t caml_hash_mix_double(uint32_t hash, double d)
- {
-   union {
-     double d;
- #if defined(ARCH_BIG_ENDIAN) || (defined(__arm__) && !defined(__ARM_EABI__))
--    struct { uint32 h; uint32 l; } i;
-+    struct { uint32_t h; uint32_t l; } i;
- #else
--    struct { uint32 l; uint32 h; } i;
-+    struct { uint32_t l; uint32_t h; } i;
- #endif
-   } u;
--  uint32 h, l;
-+  uint32_t h, l;
-   /* Convert to two 32-bit halves */
-   u.d = d;
-   h = u.i.h; l = u.i.l;
-@@ -115,14 +115,14 @@ CAMLexport uint32 caml_hash_mix_double(uint32 hash, double d)
-    Treats all NaNs identically.
- */
- 
--CAMLexport uint32 caml_hash_mix_float(uint32 hash, float d)
-+CAMLexport uint32_t caml_hash_mix_float(uint32_t hash, float d)
- {
-   union {
-     float f;
--    uint32 i;
-+    uint32_t i;
-   } u;
--  uint32 n;
--  /* Convert to int32 */
-+  uint32_t n;
-+  /* Convert to int32_t */
-   u.f = d;  n = u.i;
-   /* Normalize NaNs */
-   if ((n & 0x7F800000) == 0x7F800000 && (n & 0x007FFFFF) != 0) {
-@@ -138,11 +138,11 @@ CAMLexport uint32 caml_hash_mix_float(uint32 hash, float d)
- 
- /* Mix an OCaml string */
- 
--CAMLexport uint32 caml_hash_mix_string(uint32 h, value s)
-+CAMLexport uint32_t caml_hash_mix_string(uint32_t h, value s)
- {
-   mlsize_t len = caml_string_length(s);
-   mlsize_t i;
--  uint32 w;
-+  uint32_t w;
- 
-   /* Mix by 32-bit blocks (little-endian) */
-   for (i = 0; i + 4 <= len; i += 4) {
-@@ -152,7 +152,7 @@ CAMLexport uint32 caml_hash_mix_string(uint32 h, value s)
-         | (Byte_u(s, i+2) << 16)
-         | (Byte_u(s, i+3) << 24);
- #else
--    w = *((uint32 *) &Byte_u(s, i));
-+    w = *((uint32_t *) &Byte_u(s, i));
- #endif
-     MIX(h, w);
-   }
-@@ -166,7 +166,7 @@ CAMLexport uint32 caml_hash_mix_string(uint32 h, value s)
-   default: /*skip*/;     /* len & 3 == 0, no extra bytes, do nothing */
-   }
-   /* Finally, mix in the length.  Ignore the upper 32 bits, generally 0. */
--  h ^= (uint32) len;
-+  h ^= (uint32_t) len;
-   return h;
- }
- 
-@@ -184,7 +184,7 @@ CAMLprim value caml_hash(value count, value limit, value seed, value obj)
-   intnat wr;                    /* One past position of last value in queue */
-   intnat sz;                    /* Max number of values to put in queue */
-   intnat num;                   /* Max number of meaningful values to see */
--  uint32 h;                     /* Rolling hash */
-+  uint32_t h;                     /* Rolling hash */
-   value v;
-   mlsize_t i, len;
- 
-@@ -245,7 +245,7 @@ CAMLprim value caml_hash(value count, value limit, value seed, value obj)
-         /* If no hashing function provided, do nothing. */
-         /* Only use low 32 bits of custom hash, for 32/64 compatibility */
-         if (Custom_ops_val(v)->hash != NULL) {
--          uint32 n = (uint32) Custom_ops_val(v)->hash(v);
-+          uint32_t n = (uint32_t) Custom_ops_val(v)->hash(v);
-           h = caml_hash_mix_uint32(h, n);
-           num--;
-         }
-@@ -408,5 +408,5 @@ CAMLexport value caml_hash_variant(char const * tag)
- #endif
-   /* Force sign extension of bit 31 for compatibility between 32 and 64-bit
-      platforms */
--  return (int32) accu;
-+  return (int32_t) accu;
- }
-diff --git a/byterun/hash.h b/byterun/hash.h
-index 436a8bb..6561397 100644
---- a/byterun/hash.h
-+++ b/byterun/hash.h
-@@ -18,12 +18,12 @@
- 
- #include "mlvalues.h"
  
 -CAMLextern uint32 caml_hash_mix_uint32(uint32 h, uint32 d);
 -CAMLextern uint32 caml_hash_mix_intnat(uint32 h, intnat d);
@@ -522,12 +291,12 @@ index 436a8bb..6561397 100644
 +CAMLextern uint32_t caml_hash_mix_float(uint32_t h, float d);
 +CAMLextern uint32_t caml_hash_mix_string(uint32_t h, value s);
  
- 
- #endif
-diff --git a/byterun/int64_emul.h b/byterun/int64_emul.h
+ #ifdef __cplusplus
+ }
+diff --git a/byterun/caml/int64_emul.h b/byterun/caml/int64_emul.h
 index ba7904a..2554df1 100644
---- a/byterun/int64_emul.h
-+++ b/byterun/int64_emul.h
+--- a/byterun/caml/int64_emul.h
++++ b/byterun/caml/int64_emul.h
 @@ -28,7 +28,7 @@
  #define I64_split(x,hi,lo) (hi = (x).h, lo = (x).l)
  
@@ -809,10 +578,10 @@ index ba7904a..2554df1 100644
    res.h = (((x.l & 0x000000FF) << 24) |
             ((x.l & 0x0000FF00) << 8) |
             ((x.l & 0x00FF0000) >> 8) |
-diff --git a/byterun/int64_format.h b/byterun/int64_format.h
+diff --git a/byterun/caml/int64_format.h b/byterun/caml/int64_format.h
 index b0de527..aa8f1ab 100644
---- a/byterun/int64_format.h
-+++ b/byterun/int64_format.h
+--- a/byterun/caml/int64_format.h
++++ b/byterun/caml/int64_format.h
 @@ -17,7 +17,7 @@
  #ifndef CAML_INT64_FORMAT_H
  #define CAML_INT64_FORMAT_H
@@ -831,10 +600,10 @@ index b0de527..aa8f1ab 100644
  
    /* Parsing of format */
    justify = '+';
-diff --git a/byterun/int64_native.h b/byterun/int64_native.h
+diff --git a/byterun/caml/int64_native.h b/byterun/caml/int64_native.h
 index e9ffe67..b6716ad 100644
---- a/byterun/int64_native.h
-+++ b/byterun/int64_native.h
+--- a/byterun/caml/int64_native.h
++++ b/byterun/caml/int64_native.h
 @@ -18,36 +18,36 @@
  #ifndef CAML_INT64_NATIVE_H
  #define CAML_INT64_NATIVE_H
@@ -882,8 +651,377 @@ index e9ffe67..b6716ad 100644
  
  #define I64_bswap(x) ((((x) & 0x00000000000000FFULL) << 56) | \
                        (((x) & 0x000000000000FF00ULL) << 40) | \
+diff --git a/byterun/caml/intext.h b/byterun/caml/intext.h
+index f7aa655..2c108a4 100644
+--- a/byterun/caml/intext.h
++++ b/byterun/caml/intext.h
+@@ -119,8 +119,8 @@ CAMLextern value caml_input_value_from_block(char * data, intnat len);
+ 
+ CAMLextern void caml_serialize_int_1(int i);
+ CAMLextern void caml_serialize_int_2(int i);
+-CAMLextern void caml_serialize_int_4(int32 i);
+-CAMLextern void caml_serialize_int_8(int64 i);
++CAMLextern void caml_serialize_int_4(int32_t i);
++CAMLextern void caml_serialize_int_8(int64_t i);
+ CAMLextern void caml_serialize_float_4(float f);
+ CAMLextern void caml_serialize_float_8(double f);
+ CAMLextern void caml_serialize_block_1(void * data, intnat len);
+@@ -133,10 +133,10 @@ CAMLextern int caml_deserialize_uint_1(void);
+ CAMLextern int caml_deserialize_sint_1(void);
+ CAMLextern int caml_deserialize_uint_2(void);
+ CAMLextern int caml_deserialize_sint_2(void);
+-CAMLextern uint32 caml_deserialize_uint_4(void);
+-CAMLextern int32 caml_deserialize_sint_4(void);
+-CAMLextern uint64 caml_deserialize_uint_8(void);
+-CAMLextern int64 caml_deserialize_sint_8(void);
++CAMLextern uint32_t caml_deserialize_uint_4(void);
++CAMLextern int32_t caml_deserialize_sint_4(void);
++CAMLextern uint64_t caml_deserialize_uint_8(void);
++CAMLextern int64_t caml_deserialize_sint_8(void);
+ CAMLextern float caml_deserialize_float_4(void);
+ CAMLextern double caml_deserialize_float_8(void);
+ CAMLextern void caml_deserialize_block_1(void * data, intnat len);
+diff --git a/byterun/caml/io.h b/byterun/caml/io.h
+index 64a8bf5..5a9c037 100644
+--- a/byterun/caml/io.h
++++ b/byterun/caml/io.h
+@@ -78,12 +78,12 @@ CAMLextern value caml_alloc_channel(struct channel *chan);
+ 
+ CAMLextern int caml_flush_partial (struct channel *);
+ CAMLextern void caml_flush (struct channel *);
+-CAMLextern void caml_putword (struct channel *, uint32);
++CAMLextern void caml_putword (struct channel *, uint32_t);
+ CAMLextern int caml_putblock (struct channel *, char *, intnat);
+ CAMLextern void caml_really_putblock (struct channel *, char *, intnat);
+ 
+ CAMLextern unsigned char caml_refill (struct channel *);
+-CAMLextern uint32 caml_getword (struct channel *);
++CAMLextern uint32_t caml_getword (struct channel *);
+ CAMLextern int caml_getblock (struct channel *, char *, intnat);
+ CAMLextern int caml_really_getblock (struct channel *, char *, intnat);
+ 
+@@ -107,7 +107,7 @@ CAMLextern struct channel * caml_all_opened_channels;
+ #define Unlock_exn() \
+   if (caml_channel_mutex_unlock_exn != NULL) (*caml_channel_mutex_unlock_exn)()
+ 
+-/* Conversion between file_offset and int64 */
++/* Conversion between file_offset and int64_t */
+ 
+ #define Val_file_offset(fofs) caml_copy_int64(fofs)
+ #define File_offset_val(v) ((file_offset) Int64_val(v))
+diff --git a/byterun/caml/md5.h b/byterun/caml/md5.h
+index d8aff09..f63667d 100644
+--- a/byterun/caml/md5.h
++++ b/byterun/caml/md5.h
+@@ -26,8 +26,8 @@ CAMLextern void caml_md5_block(unsigned char digest[16],
+                                void * data, uintnat len);
+ 
+ struct MD5Context {
+-        uint32 buf[4];
+-        uint32 bits[2];
++        uint32_t buf[4];
++        uint32_t bits[2];
+         unsigned char in[64];
+ };
+ 
+@@ -35,7 +35,7 @@ CAMLextern void caml_MD5Init (struct MD5Context *context);
+ CAMLextern void caml_MD5Update (struct MD5Context *context, unsigned char *buf,
+                                 uintnat len);
+ CAMLextern void caml_MD5Final (unsigned char *digest, struct MD5Context *ctx);
+-CAMLextern void caml_MD5Transform (uint32 *buf, uint32 *in);
++CAMLextern void caml_MD5Transform (uint32_t *buf, uint32_t *in);
+ 
+ 
+ #endif /* CAML_MD5_H */
+diff --git a/byterun/caml/mlvalues.h b/byterun/caml/mlvalues.h
+index fe4a8f0..0735692 100644
+--- a/byterun/caml/mlvalues.h
++++ b/byterun/caml/mlvalues.h
+@@ -38,8 +38,8 @@ extern "C" {
+   bp: Pointer to the first byte of a block.  (a char *)
+   op: Pointer to the first field of a block.  (a value *)
+   hp: Pointer to the header of a block.  (a char *)
+-  int32: Four bytes on all architectures.
+-  int64: Eight bytes on all architectures.
++  int32_t: Four bytes on all architectures.
++  int64_t: Eight bytes on all architectures.
+ 
+   Remark: A block size is always a multiple of the word size, and at least
+           one word plus the header.
+@@ -161,7 +161,7 @@ bits  63    10 9     8 7   0
+ /* Fields are numbered from 0. */
+ #define Field(x, i) (((value *)(x)) [i])           /* Also an l-value. */
+ 
+-typedef int32 opcode_t;
++typedef int32_t opcode_t;
+ typedef opcode_t * code_t;
+ 
+ /* NOTE: [Forward_tag] and [Infix_tag] must be just under
+@@ -262,12 +262,12 @@ struct custom_operations;       /* defined in [custom.h] */
+ 
+ /* Int32.t, Int64.t and Nativeint.t are represented as custom blocks. */
+ 
+-#define Int32_val(v) (*((int32 *) Data_custom_val(v)))
++#define Int32_val(v) (*((int32_t *) Data_custom_val(v)))
+ #define Nativeint_val(v) (*((intnat *) Data_custom_val(v)))
+ #ifndef ARCH_ALIGN_INT64
+-#define Int64_val(v) (*((int64 *) Data_custom_val(v)))
++#define Int64_val(v) (*((int64_t *) Data_custom_val(v)))
+ #else
+-CAMLextern int64 caml_Int64_val(value v);
++CAMLextern int64_t caml_Int64_val(value v);
+ #define Int64_val(v) caml_Int64_val(v)
+ #endif
+ 
+diff --git a/byterun/caml/startup.h b/byterun/caml/startup.h
+index 3dda64b..3268d88 100644
+--- a/byterun/caml/startup.h
++++ b/byterun/caml/startup.h
+@@ -30,9 +30,9 @@ enum { FILE_NOT_FOUND = -1, BAD_BYTECODE  = -2 };
+ extern int caml_attempt_open(char **name, struct exec_trailer *trail,
+                              int do_open_script);
+ extern void caml_read_section_descriptors(int fd, struct exec_trailer *trail);
+-extern int32 caml_seek_optional_section(int fd, struct exec_trailer *trail,
++extern int32_t caml_seek_optional_section(int fd, struct exec_trailer *trail,
+                                         char *name);
+-extern int32 caml_seek_section(int fd, struct exec_trailer *trail, char *name);
++extern int32_t caml_seek_section(int fd, struct exec_trailer *trail, char *name);
+ 
+ 
+ #endif /* CAML_STARTUP_H */
+diff --git a/byterun/extern.c b/byterun/extern.c
+index 5965b8d..9b47d44 100644
+--- a/byterun/extern.c
++++ b/byterun/extern.c
+@@ -720,7 +720,7 @@ CAMLexport void caml_serialize_int_2(int i)
+   extern_ptr += 2;
+ }
+ 
+-CAMLexport void caml_serialize_int_4(int32 i)
++CAMLexport void caml_serialize_int_4(int32_t i)
+ {
+   if (extern_ptr + 4 > extern_limit) grow_extern_output(4);
+   extern_ptr[0] = i >> 24;
+@@ -730,7 +730,7 @@ CAMLexport void caml_serialize_int_4(int32 i)
+   extern_ptr += 4;
+ }
+ 
+-CAMLexport void caml_serialize_int_8(int64 i)
++CAMLexport void caml_serialize_int_8(int64_t i)
+ {
+   caml_serialize_block_8(&i, 1);
+ }
+diff --git a/byterun/fix_code.c b/byterun/fix_code.c
+index 95a7591..e605290 100644
+--- a/byterun/fix_code.c
++++ b/byterun/fix_code.c
+@@ -145,12 +145,12 @@ void caml_thread_code (code_t code, asize_t len)
+     }
+     *p++ = (opcode_t)(caml_instr_table[instr] - caml_instr_base);
+     if (instr == SWITCH) {
+-      uint32 sizes = *p++;
+-      uint32 const_size = sizes & 0xFFFF;
+-      uint32 block_size = sizes >> 16;
++      uint32_t sizes = *p++;
++      uint32_t const_size = sizes & 0xFFFF;
++      uint32_t block_size = sizes >> 16;
+       p += const_size + block_size;
+     } else if (instr == CLOSUREREC) {
+-      uint32 nfuncs = *p++;
++      uint32_t nfuncs = *p++;
+       p++;                      /* skip nvars */
+       p += nfuncs;
+     } else {
+diff --git a/byterun/floats.c b/byterun/floats.c
+index de18c33..544dc06 100644
+--- a/byterun/floats.c
++++ b/byterun/floats.c
+@@ -379,9 +379,9 @@ CAMLprim value caml_log1p_float(value f)
+ union double_as_two_int32 {
+     double d;
+ #if defined(ARCH_BIG_ENDIAN) || (defined(__arm__) && !defined(__ARM_EABI__))
+-    struct { uint32 h; uint32 l; } i;
++    struct { uint32_t h; uint32_t l; } i;
+ #else
+-    struct { uint32 l; uint32 h; } i;
++    struct { uint32_t l; uint32_t h; } i;
+ #endif
+ };
+ 
+@@ -469,7 +469,7 @@ CAMLprim value caml_classify_float(value vd)
+   }
+ #else
+   union double_as_two_int32 u;
+-  uint32 h, l;
++  uint32_t h, l;
+ 
+   u.d = Double_val(vd);
+   h = u.i.h;  l = u.i.l;
+diff --git a/byterun/globroots.c b/byterun/globroots.c
+index d3dd925..b2770e3 100644
+--- a/byterun/globroots.c
++++ b/byterun/globroots.c
+@@ -43,11 +43,11 @@ struct global_root_list {
+    (i.e. 2 * (NUM_LEVELS - 1)).  Moreover, the congruential PRNG
+    is faster and guaranteed to be deterministic (to reproduce bugs). */
+ 
+-static uint32 random_seed = 0;
++static uint32_t random_seed = 0;
+ 
+ static int random_level(void)
+ {
+-  uint32 r;
++  uint32_t r;
+   int level = 0;
+ 
+   /* Linear congruence with modulus = 2^32, multiplier = 69069
+diff --git a/byterun/hash.c b/byterun/hash.c
+index 8663a3d..e6be1ae 100644
+--- a/byterun/hash.c
++++ b/byterun/hash.c
+@@ -41,7 +41,7 @@
+   h *= 0xc2b2ae35; \
+   h ^= h >> 16;
+ 
+-CAMLexport uint32 caml_hash_mix_uint32(uint32 h, uint32 d)
++CAMLexport uint32_t caml_hash_mix_uint32(uint32_t h, uint32_t d)
+ {
+   MIX(h, d);
+   return h;
+@@ -49,17 +49,17 @@ CAMLexport uint32 caml_hash_mix_uint32(uint32 h, uint32 d)
+ 
+ /* Mix a platform-native integer. */
+ 
+-CAMLexport uint32 caml_hash_mix_intnat(uint32 h, intnat d)
++CAMLexport uint32_t caml_hash_mix_intnat(uint32_t h, intnat d)
+ {
+-  uint32 n;
++  uint32_t n;
+ #ifdef ARCH_SIXTYFOUR
+   /* Mix the low 32 bits and the high 32 bits, in a way that preserves
+-     32/64 compatibility: we want n = (uint32) d
++     32/64 compatibility: we want n = (uint32_t) d
+      if d is in the range [-2^31, 2^31-1]. */
+   n = (d >> 32) ^ (d >> 63) ^ d;
+   /* If 0 <= d < 2^31:   d >> 32 = 0     d >> 63 = 0
+      If -2^31 <= d < 0:  d >> 32 = -1    d >> 63 = -1
+-     In both cases, n = (uint32) d.  */
++     In both cases, n = (uint32_t) d.  */
+ #else
+   n = d;
+ #endif
+@@ -69,9 +69,9 @@ CAMLexport uint32 caml_hash_mix_intnat(uint32 h, intnat d)
+ 
+ /* Mix a 64-bit integer. */
+ 
+-CAMLexport uint32 caml_hash_mix_int64(uint32 h, int64 d)
++CAMLexport uint32_t caml_hash_mix_int64(uint32_t h, int64_t d)
+ {
+-  uint32 hi = (uint32) (d >> 32), lo = (uint32) d;
++  uint32_t hi = (uint32_t) (d >> 32), lo = (uint32_t) d;
+   MIX(h, lo);
+   MIX(h, hi);
+   return h;
+@@ -82,17 +82,17 @@ CAMLexport uint32 caml_hash_mix_int64(uint32 h, int64 d)
+    Treats all NaNs identically.
+ */
+ 
+-CAMLexport uint32 caml_hash_mix_double(uint32 hash, double d)
++CAMLexport uint32_t caml_hash_mix_double(uint32_t hash, double d)
+ {
+   union {
+     double d;
+ #if defined(ARCH_BIG_ENDIAN) || (defined(__arm__) && !defined(__ARM_EABI__))
+-    struct { uint32 h; uint32 l; } i;
++    struct { uint32_t h; uint32_t l; } i;
+ #else
+-    struct { uint32 l; uint32 h; } i;
++    struct { uint32_t l; uint32_t h; } i;
+ #endif
+   } u;
+-  uint32 h, l;
++  uint32_t h, l;
+   /* Convert to two 32-bit halves */
+   u.d = d;
+   h = u.i.h; l = u.i.l;
+@@ -115,14 +115,14 @@ CAMLexport uint32 caml_hash_mix_double(uint32 hash, double d)
+    Treats all NaNs identically.
+ */
+ 
+-CAMLexport uint32 caml_hash_mix_float(uint32 hash, float d)
++CAMLexport uint32_t caml_hash_mix_float(uint32_t hash, float d)
+ {
+   union {
+     float f;
+-    uint32 i;
++    uint32_t i;
+   } u;
+-  uint32 n;
+-  /* Convert to int32 */
++  uint32_t n;
++  /* Convert to int32_t */
+   u.f = d;  n = u.i;
+   /* Normalize NaNs */
+   if ((n & 0x7F800000) == 0x7F800000 && (n & 0x007FFFFF) != 0) {
+@@ -138,11 +138,11 @@ CAMLexport uint32 caml_hash_mix_float(uint32 hash, float d)
+ 
+ /* Mix an OCaml string */
+ 
+-CAMLexport uint32 caml_hash_mix_string(uint32 h, value s)
++CAMLexport uint32_t caml_hash_mix_string(uint32_t h, value s)
+ {
+   mlsize_t len = caml_string_length(s);
+   mlsize_t i;
+-  uint32 w;
++  uint32_t w;
+ 
+   /* Mix by 32-bit blocks (little-endian) */
+   for (i = 0; i + 4 <= len; i += 4) {
+@@ -152,7 +152,7 @@ CAMLexport uint32 caml_hash_mix_string(uint32 h, value s)
+         | (Byte_u(s, i+2) << 16)
+         | (Byte_u(s, i+3) << 24);
+ #else
+-    w = *((uint32 *) &Byte_u(s, i));
++    w = *((uint32_t *) &Byte_u(s, i));
+ #endif
+     MIX(h, w);
+   }
+@@ -166,7 +166,7 @@ CAMLexport uint32 caml_hash_mix_string(uint32 h, value s)
+   default: /*skip*/;     /* len & 3 == 0, no extra bytes, do nothing */
+   }
+   /* Finally, mix in the length.  Ignore the upper 32 bits, generally 0. */
+-  h ^= (uint32) len;
++  h ^= (uint32_t) len;
+   return h;
+ }
+ 
+@@ -184,7 +184,7 @@ CAMLprim value caml_hash(value count, value limit, value seed, value obj)
+   intnat wr;                    /* One past position of last value in queue */
+   intnat sz;                    /* Max number of values to put in queue */
+   intnat num;                   /* Max number of meaningful values to see */
+-  uint32 h;                     /* Rolling hash */
++  uint32_t h;                     /* Rolling hash */
+   value v;
+   mlsize_t i, len;
+ 
+@@ -245,7 +245,7 @@ CAMLprim value caml_hash(value count, value limit, value seed, value obj)
+         /* If no hashing function provided, do nothing. */
+         /* Only use low 32 bits of custom hash, for 32/64 compatibility */
+         if (Custom_ops_val(v)->hash != NULL) {
+-          uint32 n = (uint32) Custom_ops_val(v)->hash(v);
++          uint32_t n = (uint32_t) Custom_ops_val(v)->hash(v);
+           h = caml_hash_mix_uint32(h, n);
+           num--;
+         }
+@@ -408,5 +408,5 @@ CAMLexport value caml_hash_variant(char const * tag)
+ #endif
+   /* Force sign extension of bit 31 for compatibility between 32 and 64-bit
+      platforms */
+-  return (int32) accu;
++  return (int32_t) accu;
+ }
 diff --git a/byterun/intern.c b/byterun/intern.c
-index e0fcc5d..638ff72 100644
+index d2943af..6f2d49f 100644
 --- a/byterun/intern.c
 +++ b/byterun/intern.c
 @@ -553,7 +553,7 @@ static void intern_add_to_heap(mlsize_t whsize)
@@ -956,7 +1094,7 @@ index e0fcc5d..638ff72 100644
    return i;
  }
 diff --git a/byterun/interp.c b/byterun/interp.c
-index 9b682ba..e22b28b 100644
+index fd4740b..094eb50 100644
 --- a/byterun/interp.c
 +++ b/byterun/interp.c
 @@ -793,7 +793,7 @@ value caml_interprete(code_t prog, asize_t prog_size)
@@ -968,38 +1106,8 @@ index 9b682ba..e22b28b 100644
        if (Is_block(accu)) {
          intnat index = Tag_val(accu);
          Assert ((uintnat) index < (sizes >> 16));
-diff --git a/byterun/intext.h b/byterun/intext.h
-index f7aa655..2c108a4 100644
---- a/byterun/intext.h
-+++ b/byterun/intext.h
-@@ -119,8 +119,8 @@ CAMLextern value caml_input_value_from_block(char * data, intnat len);
- 
- CAMLextern void caml_serialize_int_1(int i);
- CAMLextern void caml_serialize_int_2(int i);
--CAMLextern void caml_serialize_int_4(int32 i);
--CAMLextern void caml_serialize_int_8(int64 i);
-+CAMLextern void caml_serialize_int_4(int32_t i);
-+CAMLextern void caml_serialize_int_8(int64_t i);
- CAMLextern void caml_serialize_float_4(float f);
- CAMLextern void caml_serialize_float_8(double f);
- CAMLextern void caml_serialize_block_1(void * data, intnat len);
-@@ -133,10 +133,10 @@ CAMLextern int caml_deserialize_uint_1(void);
- CAMLextern int caml_deserialize_sint_1(void);
- CAMLextern int caml_deserialize_uint_2(void);
- CAMLextern int caml_deserialize_sint_2(void);
--CAMLextern uint32 caml_deserialize_uint_4(void);
--CAMLextern int32 caml_deserialize_sint_4(void);
--CAMLextern uint64 caml_deserialize_uint_8(void);
--CAMLextern int64 caml_deserialize_sint_8(void);
-+CAMLextern uint32_t caml_deserialize_uint_4(void);
-+CAMLextern int32_t caml_deserialize_sint_4(void);
-+CAMLextern uint64_t caml_deserialize_uint_8(void);
-+CAMLextern int64_t caml_deserialize_sint_8(void);
- CAMLextern float caml_deserialize_float_4(void);
- CAMLextern double caml_deserialize_float_8(void);
- CAMLextern void caml_deserialize_block_1(void * data, intnat len);
 diff --git a/byterun/ints.c b/byterun/ints.c
-index d762c76..056e82a 100644
+index 4a73276..621aa54 100644
 --- a/byterun/ints.c
 +++ b/byterun/ints.c
 @@ -172,8 +172,8 @@ CAMLprim value caml_format_int(value fmt, value arg)
@@ -1334,7 +1442,7 @@ index d762c76..056e82a 100644
      caml_serialize_int_1(2);
      caml_serialize_int_8(l);
 diff --git a/byterun/io.c b/byterun/io.c
-index 5f04a96..bedc0f0 100644
+index 11f941d..77f308c 100644
 --- a/byterun/io.c
 +++ b/byterun/io.c
 @@ -207,7 +207,7 @@ CAMLexport void caml_flush(struct channel *channel)
@@ -1359,39 +1467,11 @@ index 5f04a96..bedc0f0 100644
  
    if (! caml_channel_binary_mode(channel))
      caml_failwith("input_binary_int: not a binary channel");
-diff --git a/byterun/io.h b/byterun/io.h
-index 64a8bf5..5a9c037 100644
---- a/byterun/io.h
-+++ b/byterun/io.h
-@@ -78,12 +78,12 @@ CAMLextern value caml_alloc_channel(struct channel *chan);
- 
- CAMLextern int caml_flush_partial (struct channel *);
- CAMLextern void caml_flush (struct channel *);
--CAMLextern void caml_putword (struct channel *, uint32);
-+CAMLextern void caml_putword (struct channel *, uint32_t);
- CAMLextern int caml_putblock (struct channel *, char *, intnat);
- CAMLextern void caml_really_putblock (struct channel *, char *, intnat);
- 
- CAMLextern unsigned char caml_refill (struct channel *);
--CAMLextern uint32 caml_getword (struct channel *);
-+CAMLextern uint32_t caml_getword (struct channel *);
- CAMLextern int caml_getblock (struct channel *, char *, intnat);
- CAMLextern int caml_really_getblock (struct channel *, char *, intnat);
- 
-@@ -107,7 +107,7 @@ CAMLextern struct channel * caml_all_opened_channels;
- #define Unlock_exn() \
-   if (caml_channel_mutex_unlock_exn != NULL) (*caml_channel_mutex_unlock_exn)()
- 
--/* Conversion between file_offset and int64 */
-+/* Conversion between file_offset and int64_t */
- 
- #define Val_file_offset(fofs) caml_copy_int64(fofs)
- #define File_offset_val(v) ((file_offset) Int64_val(v))
 diff --git a/byterun/md5.c b/byterun/md5.c
-index 10ac76a..2dc90a2 100644
+index 5d748c1..7a996b6 100644
 --- a/byterun/md5.c
 +++ b/byterun/md5.c
-@@ -97,11 +97,11 @@ CAMLexport void caml_md5_block(unsigned char digest[16],
+@@ -101,11 +101,11 @@ CAMLexport void caml_md5_block(unsigned char digest[16],
  #else
  static void byteReverse(unsigned char * buf, unsigned longs)
  {
@@ -1406,7 +1486,7 @@ index 10ac76a..2dc90a2 100644
          buf += 4;
      } while (--longs);
  }
-@@ -129,12 +129,12 @@ CAMLexport void caml_MD5Init(struct MD5Context *ctx)
+@@ -133,12 +133,12 @@ CAMLexport void caml_MD5Init(struct MD5Context *ctx)
  CAMLexport void caml_MD5Update(struct MD5Context *ctx, unsigned char *buf,
                                 uintnat len)
  {
@@ -1421,7 +1501,7 @@ index 10ac76a..2dc90a2 100644
          ctx->bits[1]++;         /* Carry from low to high */
      ctx->bits[1] += len >> 29;
  
-@@ -152,7 +152,7 @@ CAMLexport void caml_MD5Update(struct MD5Context *ctx, unsigned char *buf,
+@@ -156,7 +156,7 @@ CAMLexport void caml_MD5Update(struct MD5Context *ctx, unsigned char *buf,
          }
          memcpy(p, buf, t);
          byteReverse(ctx->in, 16);
@@ -1430,7 +1510,7 @@ index 10ac76a..2dc90a2 100644
          buf += t;
          len -= t;
      }
-@@ -161,7 +161,7 @@ CAMLexport void caml_MD5Update(struct MD5Context *ctx, unsigned char *buf,
+@@ -165,7 +165,7 @@ CAMLexport void caml_MD5Update(struct MD5Context *ctx, unsigned char *buf,
      while (len >= 64) {
          memcpy(ctx->in, buf, 64);
          byteReverse(ctx->in, 16);
@@ -1439,7 +1519,7 @@ index 10ac76a..2dc90a2 100644
          buf += 64;
          len -= 64;
      }
-@@ -196,7 +196,7 @@ CAMLexport void caml_MD5Final(unsigned char *digest, struct MD5Context *ctx)
+@@ -200,7 +200,7 @@ CAMLexport void caml_MD5Final(unsigned char *digest, struct MD5Context *ctx)
          /* Two lots of padding:  Pad the first block to 64 bytes */
          memset(p, 0, count);
          byteReverse(ctx->in, 16);
@@ -1448,7 +1528,7 @@ index 10ac76a..2dc90a2 100644
  
          /* Now fill the next block with 56 bytes */
          memset(ctx->in, 0, 56);
-@@ -207,10 +207,10 @@ CAMLexport void caml_MD5Final(unsigned char *digest, struct MD5Context *ctx)
+@@ -211,10 +211,10 @@ CAMLexport void caml_MD5Final(unsigned char *digest, struct MD5Context *ctx)
      byteReverse(ctx->in, 14);
  
      /* Append length in bits and transform */
@@ -1462,7 +1542,7 @@ index 10ac76a..2dc90a2 100644
      byteReverse((unsigned char *) ctx->buf, 4);
      memcpy(digest, ctx->buf, 16);
      memset(ctx, 0, sizeof(*ctx));        /* In case it's sensitive */
-@@ -233,9 +233,9 @@ CAMLexport void caml_MD5Final(unsigned char *digest, struct MD5Context *ctx)
+@@ -237,9 +237,9 @@ CAMLexport void caml_MD5Final(unsigned char *digest, struct MD5Context *ctx)
   * reflect the addition of 16 longwords of new data.  caml_MD5Update blocks
   * the data and converts bytes into longwords for this routine.
   */
@@ -1474,72 +1554,8 @@ index 10ac76a..2dc90a2 100644
  
      a = buf[0];
      b = buf[1];
-diff --git a/byterun/md5.h b/byterun/md5.h
-index d8aff09..f63667d 100644
---- a/byterun/md5.h
-+++ b/byterun/md5.h
-@@ -26,8 +26,8 @@ CAMLextern void caml_md5_block(unsigned char digest[16],
-                                void * data, uintnat len);
- 
- struct MD5Context {
--        uint32 buf[4];
--        uint32 bits[2];
-+        uint32_t buf[4];
-+        uint32_t bits[2];
-         unsigned char in[64];
- };
- 
-@@ -35,7 +35,7 @@ CAMLextern void caml_MD5Init (struct MD5Context *context);
- CAMLextern void caml_MD5Update (struct MD5Context *context, unsigned char *buf,
-                                 uintnat len);
- CAMLextern void caml_MD5Final (unsigned char *digest, struct MD5Context *ctx);
--CAMLextern void caml_MD5Transform (uint32 *buf, uint32 *in);
-+CAMLextern void caml_MD5Transform (uint32_t *buf, uint32_t *in);
- 
- 
- #endif /* CAML_MD5_H */
-diff --git a/byterun/mlvalues.h b/byterun/mlvalues.h
-index 268bcfe..a08948e 100644
---- a/byterun/mlvalues.h
-+++ b/byterun/mlvalues.h
-@@ -38,8 +38,8 @@ extern "C" {
-   bp: Pointer to the first byte of a block.  (a char *)
-   op: Pointer to the first field of a block.  (a value *)
-   hp: Pointer to the header of a block.  (a char *)
--  int32: Four bytes on all architectures.
--  int64: Eight bytes on all architectures.
-+  int32_t: Four bytes on all architectures.
-+  int64_t: Eight bytes on all architectures.
- 
-   Remark: A block size is always a multiple of the word size, and at least
-           one word plus the header.
-@@ -161,7 +161,7 @@ bits  63    10 9     8 7   0
- /* Fields are numbered from 0. */
- #define Field(x, i) (((value *)(x)) [i])           /* Also an l-value. */
- 
--typedef int32 opcode_t;
-+typedef int32_t opcode_t;
- typedef opcode_t * code_t;
- 
- /* NOTE: [Forward_tag] and [Infix_tag] must be just under
-@@ -262,12 +262,12 @@ struct custom_operations;       /* defined in [custom.h] */
- 
- /* Int32.t, Int64.t and Nativeint.t are represented as custom blocks. */
- 
--#define Int32_val(v) (*((int32 *) Data_custom_val(v)))
-+#define Int32_val(v) (*((int32_t *) Data_custom_val(v)))
- #define Nativeint_val(v) (*((intnat *) Data_custom_val(v)))
- #ifndef ARCH_ALIGN_INT64
--#define Int64_val(v) (*((int64 *) Data_custom_val(v)))
-+#define Int64_val(v) (*((int64_t *) Data_custom_val(v)))
- #else
--CAMLextern int64 caml_Int64_val(value v);
-+CAMLextern int64_t caml_Int64_val(value v);
- #define Int64_val(v) caml_Int64_val(v)
- #endif
- 
 diff --git a/byterun/startup.c b/byterun/startup.c
-index 3697220..ab926ef 100644
+index fb6e777..541aacd 100644
 --- a/byterun/startup.c
 +++ b/byterun/startup.c
 @@ -79,7 +79,7 @@ static void init_atoms(void)
@@ -1581,24 +1597,8 @@ index 3697220..ab926ef 100644
    char * data;
  
    len = caml_seek_optional_section(fd, trail, name);
-diff --git a/byterun/startup.h b/byterun/startup.h
-index 3dda64b..3268d88 100644
---- a/byterun/startup.h
-+++ b/byterun/startup.h
-@@ -30,9 +30,9 @@ enum { FILE_NOT_FOUND = -1, BAD_BYTECODE  = -2 };
- extern int caml_attempt_open(char **name, struct exec_trailer *trail,
-                              int do_open_script);
- extern void caml_read_section_descriptors(int fd, struct exec_trailer *trail);
--extern int32 caml_seek_optional_section(int fd, struct exec_trailer *trail,
-+extern int32_t caml_seek_optional_section(int fd, struct exec_trailer *trail,
-                                         char *name);
--extern int32 caml_seek_section(int fd, struct exec_trailer *trail, char *name);
-+extern int32_t caml_seek_section(int fd, struct exec_trailer *trail, char *name);
- 
- 
- #endif /* CAML_STARTUP_H */
 diff --git a/byterun/str.c b/byterun/str.c
-index 6effa91..9c7baa1 100644
+index a72b34c..d88c3d2 100644
 --- a/byterun/str.c
 +++ b/byterun/str.c
 @@ -101,7 +101,7 @@ CAMLprim value caml_string_get32(value str, value index)
@@ -1697,10 +1697,10 @@ index e8aa878..ccf1bf4 100644
  #define HAS_STRERROR
  #define HAS_SOCKETS
 diff --git a/configure b/configure
-index c04272c..092d467 100755
+index 6157157..1440baa 100755
 --- a/configure
 +++ b/configure
-@@ -619,26 +619,6 @@ case "$target" in
+@@ -648,26 +648,6 @@ case "$target" in
      esac
  esac
  
@@ -1727,7 +1727,7 @@ index c04272c..092d467 100755
  # Shared library support
  
  shared_libraries_supported=false
-@@ -1097,6 +1077,11 @@ if sh ./hasgot -i sys/types.h -i sys/socket.h -i netinet/in.h \
+@@ -1129,6 +1109,11 @@ if sh ./hasgot -i sys/types.h -i sys/socket.h -i netinet/in.h \
    echo "#define HAS_IPV6" >> s.h
  fi
  
@@ -1740,7 +1740,7 @@ index c04272c..092d467 100755
    inf "unistd.h found."
    echo "#define HAS_UNISTD" >> s.h
 diff --git a/otherlibs/bigarray/bigarray_stubs.c b/otherlibs/bigarray/bigarray_stubs.c
-index 7e63cbf..f2ccb92 100644
+index c98a92f..4638655 100644
 --- a/otherlibs/bigarray/bigarray_stubs.c
 +++ b/otherlibs/bigarray/bigarray_stubs.c
 @@ -279,9 +279,9 @@ value caml_ba_get_N(value vb, value * vind, int nind)
@@ -1877,7 +1877,7 @@ index 7e63cbf..f2ccb92 100644
      break;
    }
 diff --git a/otherlibs/num/nat_stubs.c b/otherlibs/num/nat_stubs.c
-index 9a62759..d718a05 100644
+index ae109ac..22614e1 100644
 --- a/otherlibs/num/nat_stubs.c
 +++ b/otherlibs/num/nat_stubs.c
 @@ -347,9 +347,9 @@ static void serialize_nat(value nat,
@@ -1933,7 +1933,7 @@ index 9a62759..d718a05 100644
      h = caml_hash_mix_uint32(h, d);
  #endif
 diff --git a/otherlibs/unix/addrofstr.c b/otherlibs/unix/addrofstr.c
-index e17841f..a2830ba 100644
+index c4bd2e7..207e1cd 100644
 --- a/otherlibs/unix/addrofstr.c
 +++ b/otherlibs/unix/addrofstr.c
 @@ -73,7 +73,7 @@ CAMLprim value unix_inet_addr_of_string(value s)
@@ -1946,7 +1946,7 @@ index e17841f..a2830ba 100644
  #endif
  }
 diff --git a/stdlib/header.c b/stdlib/header.c
-index cb3d995..93cdfeb 100644
+index b8d02ea..6f3dc54 100644
 --- a/stdlib/header.c
 +++ b/stdlib/header.c
 @@ -133,7 +133,7 @@ static char * read_runtime_path(int fd)
@@ -1959,5 +1959,5 @@ index cb3d995..93cdfeb 100644
  
    lseek(fd, (long) -TRAILER_SIZE, SEEK_END);
 -- 
-2.1.0
+2.4.3
 

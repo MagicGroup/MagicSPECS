@@ -1,6 +1,6 @@
 Name:           portaudio
 Version:        19
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Free, cross platform, open-source, audio I/O library
 Summary(zh_CN.UTF-8): 自由，跨平台，开源的音频 I/O 库
 Group:          System Environment/Libraries
@@ -89,6 +89,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 19-20
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 19-19
 - 为 Magic 3.0 重建
 

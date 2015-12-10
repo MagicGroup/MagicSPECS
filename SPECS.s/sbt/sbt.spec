@@ -49,7 +49,7 @@
 
 Name:		sbt
 Version:	%{sbt_version}
-Release:	%{pkg_rel}%{?dist}.1
+Release:	%{pkg_rel}%{?dist}.2
 Summary:	The simple build tool for Scala and Java projects
 
 BuildArch:	noarch
@@ -720,6 +720,9 @@ done
 %doc README.md LICENSE NOTICE
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.13.1-5.2
+- 为 Magic 3.0 重建
+
 * Wed Aug 13 2014 Liu Di <liudidi@gmail.com> - 0.13.1-5.1
 - 为 Magic 3.0 重建
 

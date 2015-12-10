@@ -3,7 +3,7 @@
 Summary: A parser, schema validator, and data-binding tool for YAML and JSON
 Name: rubygem-%{gem_name}
 Version: 0.7.2
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://www.kuwata-lab.com/kwalify
@@ -60,6 +60,9 @@ gem install --bindir %{buildroot}/%{_bindir} --local --install-dir %{buildroot}%
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.2-13
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.2-12
 - 为 Magic 3.0 重建
 

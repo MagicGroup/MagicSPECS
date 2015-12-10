@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Proxy
 Version:	0.304
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A pure Perl HTTP proxy
 
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.304-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.304-2
 - 为 Magic 3.0 重建
 

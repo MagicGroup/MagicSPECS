@@ -14,7 +14,7 @@ Summary: A Ruby interface for the the Kerberos library
 Name: %{?scl_prefix}rubygem-%{gem_name}
 
 Version: 0.1.3
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group: Development/Languages
 License: Artistic 2.0
 URL: http://github.com/domcleal/rkerberos
@@ -130,6 +130,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.1.3-11
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.1.3-10
 - 为 Magic 3.0 重建
 

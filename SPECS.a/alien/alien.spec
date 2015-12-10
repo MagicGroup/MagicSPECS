@@ -1,20 +1,13 @@
-
-%define name alien
-%define version 8.92
-%define release 2%{?dist}
-
-
 Summary:	Install Debian and Slackware Packages with RPM
 Summary(zh_CN.UTF-8):	用 RPM 安装 Debian 和 Slackware 的包
-Name:		%{name}
-Version:	8.94
-Release:	1%{?dist}
+Name:		alien
+Version:	8.95
+Release:	3%{?dist}
 URL:		http://joeyh.name/code/alien/
-Source:		http://ftp.debian.org/debian/pool/main/a/alien/alien_%version.tar.gz
+Source:		http://ftp.debian.org/debian/pool/main/a/alien/alien_%version.tar.xz
 License:	GPL
 Group: 		Applications/Archiving
 Group(zh_CN.UTF-8): 	应用程序/归档
-Buildroot:	%{_tmppath}/%{name}-%{version}-root
 
 Requires:       dpkg, debhelper, rpm-build
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -59,9 +52,24 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %{perl_vendorlib}/*
 %{_mandir}/man?/*
-%{_localstatedir}/lib/alien
+#%%{_localstatedir}/lib/alien
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 8.95-3
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 8.95-2
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 8.95-1
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 8.94-2
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 8.94-1
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 8.94-1
 - 更新到 8.92
 

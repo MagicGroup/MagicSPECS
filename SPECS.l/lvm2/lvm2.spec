@@ -40,7 +40,7 @@
 Summary: Userland logical volume management tools 
 Name: lvm2
 Version: 2.02.107
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/lvm2
@@ -627,6 +627,9 @@ the device-mapper event library.
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.02.107-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.02.107-3
 - 为 Magic 3.0 重建
 

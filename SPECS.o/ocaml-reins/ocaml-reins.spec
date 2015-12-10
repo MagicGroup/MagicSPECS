@@ -3,7 +3,7 @@
 
 Name:           ocaml-reins
 Version:        0.1a
-Release:        21%{?dist}
+Release:        23%{?dist}
 Summary:        Library of OCaml persistent data structures
 Summary(zh_CN.UTF-8): 持续性数据结构的 OCaml 库
 License:        LGPLv2 with exceptions
@@ -125,6 +125,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 0.1a-23
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.1a-22
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.1a-21
 - 为 Magic 3.0 重建
 

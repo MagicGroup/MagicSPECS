@@ -5,7 +5,7 @@
 
 Name:           ocaml-biniou
 Version:        1.0.9
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Safe and fast binary data format
 Summary(zh_CN.UTF-8): 安全快速的二进制数据格式
 
@@ -109,6 +109,12 @@ make test
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.0.9-8
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.0.9-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.9-6
 - 为 Magic 3.0 重建
 

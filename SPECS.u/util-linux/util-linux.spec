@@ -3,7 +3,7 @@ Summary: A collection of basic system utilities
 Summary(zh_CN.UTF-8): 基本的系统工具程序集合
 Name: util-linux
 Version: 2.27
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2 and GPLv2+ and LGPLv2+ and BSD with advertising and Public Domain
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -887,6 +887,9 @@ exit 0
 %{_libdir}/python*/site-packages/libmount/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2.27-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 17 2015 Liu Di <liudidi@gmail.com> - 2.27-2
 - 为 Magic 3.0 重建
 

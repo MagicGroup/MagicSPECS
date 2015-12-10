@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Speed up your Sass compilation by making @import only import each file once
 Group: Development/Languages
 License: MIT
@@ -81,6 +81,9 @@ popd
 %doc %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.5-8
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.5-7
 - 为 Magic 3.0 重建
 

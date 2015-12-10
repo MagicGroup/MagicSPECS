@@ -2,7 +2,7 @@
 
 Name:           ocaml-csv
 Version: 1.3.3
-Release: 2%{?dist}
+Release: 5%{?dist}
 Summary:        OCaml library for reading and writing CSV files
 Summary(zh_CN.UTF-8): 读写 CSV 文件的 OCaml 库
 License:        LGPLv2+
@@ -94,6 +94,15 @@ make test
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.3.3-5
+- 为 Magic 3.0 重建
+
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1.3.3-4
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1.3.3-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.3.3-2
 - 为 Magic 3.0 重建
 

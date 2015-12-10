@@ -3,7 +3,7 @@
 %global majorversion 1
 Name:          hsqldb1
 Version:       1.8.1.3
-Release:       8%{?dist}
+Release:       9%{?dist}
 Summary:       HyperSQL Database Engine
 License:       BSD
 URL:           http://hsqldb.sourceforge.net/
@@ -89,6 +89,9 @@ cp -r doc/src/* %{buildroot}%{_javadocdir}/%{name}
 %license doc/hsqldb_lic.txt
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 1.8.1.3-9
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.1.3-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

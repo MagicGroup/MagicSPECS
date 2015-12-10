@@ -1,7 +1,7 @@
 Summary: Xt / Motif OpenGL widgets
 Name: mesa-libGLw
 Version: 8.0.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/GL/GLwMDrawAP.h
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 8.0.0-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 8.0.0-2
 - 为 Magic 3.0 重建
 

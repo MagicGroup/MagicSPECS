@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.4.11
-Release: 9%{?dist}
+Release: 10%{?dist}
 Summary: Send your application errors to our hosted service and reclaim your inbox
 Group: Development/Languages
 License: MIT 
@@ -77,6 +77,9 @@ cp -pa .%{gem_dir}/* \
 %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.4.11-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.4.11-9
 - 为 Magic 3.0 重建
 

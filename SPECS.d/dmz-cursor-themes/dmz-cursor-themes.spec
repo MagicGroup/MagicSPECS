@@ -1,6 +1,6 @@
 Name:           dmz-cursor-themes
 Version:        0.4
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        X cursors themes
 Summary(zh_CN.UTF-8): X 光标主题
 
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_datadir}/icons/dmz-aa/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.4-12
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.4-11
 - 为 Magic 3.0 重建
 

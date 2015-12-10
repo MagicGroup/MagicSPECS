@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.3.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Citation Style Language library
 
 License:        BSD
@@ -84,6 +84,9 @@ rm %{buildroot}%{ghc_pkgdocdir}/LICENSE
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.3.9-9
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.3.9-8
 - 为 Magic 3.0 重建
 

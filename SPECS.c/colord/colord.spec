@@ -18,8 +18,8 @@
 
 Summary:   Color daemon
 Name:      colord
-Version:	1.2.12
-Release:   2%{?dist}
+Version:	1.3.1
+Release:   1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/colord/
 Source0:   http://www.freedesktop.org/software/colord/releases/%{name}-%{version}.tar.xz
@@ -197,6 +197,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 /usr/lib/udev/rules.d/*.rules
 %{_libdir}/colord-sensors
 %{_libdir}/colord-plugins
+%{_userunitdir}/colord-session.service
+/usr/lib/tmpfiles.d/colord.conf
+
 %ghost %attr(-,colord,colord) %{_localstatedir}/lib/colord/*.db
 /usr/lib/systemd/system/colord.service
 
@@ -280,6 +283,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gtk-doc/html/colord/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.2.12-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.2.12-2
 - 更新到 1.2.12
 

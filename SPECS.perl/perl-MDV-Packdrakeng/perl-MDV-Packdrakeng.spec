@@ -1,6 +1,6 @@
 Name:           perl-MDV-Packdrakeng
 Version:        1.13
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Simple Archive Extractor/Builder
 License:        GPLv2+
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.13-9
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.13-8
 - 为 Magic 3.0 重建
 

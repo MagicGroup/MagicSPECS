@@ -1,6 +1,6 @@
 Name:           libsidplayfp
 Version: 1.8.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        SID chip music module playing library
 Group:          System Environment/Libraries
 License:        GPLv2+
@@ -93,6 +93,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.8.2-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.8.2-2
 - 更新到 1.8.2
 

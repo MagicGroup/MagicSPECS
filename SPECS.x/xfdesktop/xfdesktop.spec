@@ -1,7 +1,7 @@
 
 Name:           xfdesktop
 Version:	4.12.3
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Desktop manager for the Xfce Desktop Environment
 Summary(zh_CN.UTF-8): Xfce 桌面环境的桌面管理器
 
@@ -94,6 +94,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 4.12.3-8
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 4.12.3-7
 - 为 Magic 3.0 重建
 

@@ -11,12 +11,12 @@ Summary: Archive manager
 Summary(zh_CN.UTF-8): 归档管理器
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
-Version: 4.14.3
-Release: 3%{?dist}
+Version: 15.04.3
+Release: 4%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi
 %define rversion %version
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{version}.tar.xz
+Source0: http://download.kde.org/stable/applications/%{rversion}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: gettext
 BuildRequires: cmake >= 2.6.2
@@ -24,7 +24,7 @@ BuildRequires: gettext
 BuildRequires: libkdelibs4-devel >= 4.0.82
 BuildRequires: bzip2-devel
 BuildRequires: desktop-file-utils
-BuildRequires: kdebase4-devel >= %{version}
+BuildRequires: kdebase4-devel >= 4.14
 BuildRequires: pkgconfig(libarchive)
 BuildRequires: pkgconfig(liblzma) 
 BuildRequires: zlib-devel
@@ -95,6 +95,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_datadir}/appdata/ark.appdata.xml
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.14.3-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           gavl
 Version:        1.4.0
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        A library for handling uncompressed audio and video data
 Summary(zh_CN.UTF-8): 处理未压缩的音频和视频数据的库
 
@@ -106,6 +106,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.4.0-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.4.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.4.0-3
 - 为 Magic 3.0 重建
 

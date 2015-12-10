@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        2.4.2
-Release:        30%{?dist}
+Release:        32%{?dist}
 Summary:        Software Transactional Memory
 
 License:        BSD
@@ -63,6 +63,12 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 2.4.2-32
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.4.2-31
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.4.2-30
 - 为 Magic 3.0 重建
 

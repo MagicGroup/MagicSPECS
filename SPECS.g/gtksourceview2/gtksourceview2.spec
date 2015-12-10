@@ -6,7 +6,7 @@
 Summary: A library for viewing source files
 Name: gtksourceview2
 Version: 2.11.2
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: LGPLv2+ and GPLv2+
 # the library itself is LGPL, some .lang files are GPL
 Group: System Environment/Libraries
@@ -83,6 +83,9 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/gtksourceview-2.0/language-specs/convert.py
 %{_datadir}/gir-1.0/GtkSource-2.0.gir
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.11.2-10
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.11.2-9
 - 为 Magic 3.0 重建
 

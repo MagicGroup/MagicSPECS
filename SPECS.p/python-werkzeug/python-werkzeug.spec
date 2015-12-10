@@ -4,7 +4,7 @@
 
 Name:           python-werkzeug
 Version:	0.10.4
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        The Swiss Army knife of Python web development 
 Summary(zh_CN.UTF-8): Python 网页开发使用的瑞士军刀
 
@@ -170,6 +170,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.10.4-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.10.4-2
 - 为 Magic 3.0 重建
 

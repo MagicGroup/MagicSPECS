@@ -4,7 +4,7 @@
 Summary: CLI Steps for Cucumber, hand-crafted for you in Aruba
 Name: rubygem-%{gem_name}
 Version: 0.6.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 # aruba itself is MIT
 # icons in templates/images are CC-BY
@@ -90,6 +90,9 @@ popd
 %{gem_instdir}/templates
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.6.2-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.6.2-4
 - 为 Magic 3.0 重建
 

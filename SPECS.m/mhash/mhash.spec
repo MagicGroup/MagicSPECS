@@ -5,7 +5,7 @@ Summary: Thread-safe hash algorithms library
 Summary(zh_CN.UTF-8): 线程安全的哈希算法库
 Name: mhash
 Version: 0.9.9.9
-Release: 7%{?dist}
+Release: 8%{?dist}
 URL: http://mhash.sourceforge.net/
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -132,6 +132,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.9.9.9-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.9.9.9-7
 - 为 Magic 3.0 重建
 

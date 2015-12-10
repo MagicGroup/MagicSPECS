@@ -1,6 +1,6 @@
 Name:          libmx
 Version:       1.4.7
-Release:       9%{?dist}
+Release:       10%{?dist}
 Summary:       A clutter widget toolkit
 Summary(zh_CN.UTF-8): clutter 部件工具集
 
@@ -104,6 +104,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/mx-gtk
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.4.7-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.7-9
 - 为 Magic 3.0 重建
 

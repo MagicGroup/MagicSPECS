@@ -1,6 +1,6 @@
 Name:           perl-Devel-FindRef
 Version:	1.44
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Where is that reference to my variable hiding?
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.44-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.44-2
 - 为 Magic 3.0 重建
 

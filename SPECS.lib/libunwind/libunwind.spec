@@ -5,7 +5,7 @@ Summary: An unwinding library
 Summary(zh_CN.UTF-8): 一个展开库
 Name: libunwind
 Version: 1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: BSD
 Group: Development/Debuggers
 Group(zh_CN.UTF-8): 开发/调试器
@@ -97,6 +97,9 @@ echo ====================TESTSUITE DISABLED=========================
 %{_includedir}/libunwind*.h
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1-2
 - 更新到 1.1
 

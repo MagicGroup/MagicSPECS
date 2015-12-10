@@ -1,6 +1,6 @@
 Name: libteam
 Version: 1.11
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Library for controlling team network device
 Group: System Environment/Libraries
 License: LGPLv2+
@@ -135,6 +135,9 @@ python ./setup.py install --root $RPM_BUILD_ROOT -O1
 %{python_sitearch}/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.11-4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.11-3
 - 为 Magic 3.0 重建
 

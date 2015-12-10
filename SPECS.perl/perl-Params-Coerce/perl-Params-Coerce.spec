@@ -1,6 +1,6 @@
 Name:		perl-Params-Coerce
 Version:	0.14
-Release:	17%{?dist}
+Release:	18%{?dist}
 Summary:	Allows your classes to do coercion of parameters
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Params::Coerce.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.14-18
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.14-17
 - 为 Magic 3.0 重建
 

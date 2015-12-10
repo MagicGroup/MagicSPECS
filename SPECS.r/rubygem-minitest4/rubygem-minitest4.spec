@@ -7,7 +7,7 @@ Summary:	Small and fast replacement for ruby's huge and slow test/unit
 Name:		rubygem-%{gem_name}4
 # With 4.7.5, some test fails, so for now use 4.7.0
 Version:	4.7.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 
 License:	MIT
 URL:		https://github.com/seattlerb/minitest
@@ -91,6 +91,9 @@ done
 %doc	%{gem_docdir}/
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.7.0-8
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.7.0-7
 - 为 Magic 3.0 重建
 

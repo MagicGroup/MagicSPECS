@@ -6,7 +6,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.4.2.1
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Reading, writing and manipulating ".tar" archive files
 
 License:        BSD
@@ -84,6 +84,12 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.4.2.1-4
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.2.1-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.4.2.1-2
 - 为 Magic 3.0 重建
 

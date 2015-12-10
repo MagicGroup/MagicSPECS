@@ -3,7 +3,7 @@
 Summary:        Automatic reloading version of the rackup command
 Name:           rubygem-%{gem_name}
 Version:        0.9
-Release:        11%{?dist}
+Release:        12%{?dist}
 Group:          Development/Languages
 License:        MIT
 URL:            http://github.com/rtomayko/shotgun/
@@ -97,6 +97,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.9-12
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.9-11
 - 为 Magic 3.0 重建
 

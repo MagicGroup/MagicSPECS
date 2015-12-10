@@ -2,7 +2,7 @@ Summary: A program for faxing using a Class 1, 2 or 2.0 fax modem
 Summary(zh_CN.UTF-8): 使用 Class 1, 2 或 2.0 传真猫进行传真的程序
 Name: efax
 Version: 0.9a
-Release: 12.001114%{?dist}
+Release: 13.001114%{?dist}
 License: GPLv2+
 Group: Applications/Communications
 Group(zh_CN.UTF-8): 应用程序/通信
@@ -19,6 +19,9 @@ Patch7: efax-0.9-viewcmd.patch
 Patch8: efax-0.9-quote.patch
 Patch9: efax-0.9-msg-va_list.patch
 Patch10: efax-0.9a-001114-crash.patch
+Patch11: efax-0.9-pdf.patch
+Patch12: efax-0.9a-001114-format-security.patch
+
 
 ExcludeArch: s390 s390x
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -48,6 +51,8 @@ Class 1, 2 or 2.0 fax modem.
 %patch8 -p1 -b .quote
 %patch9 -p1 -b .msg-va_list
 %patch10 -p1 -b .crash
+%patch11 -p0 -b .pdf
+%patch12 -p1 -b .format-security
 
 %build
 make %{?_smp_mflags} RPM_OPT_FLAGS="-ansi $RPM_OPT_FLAGS"
@@ -78,6 +83,9 @@ rm -rf %{buildroot}
 %dir %{_localstatedir}/log/fax
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9a-13.001114
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9a-12.001114
 - 为 Magic 3.0 重建
 

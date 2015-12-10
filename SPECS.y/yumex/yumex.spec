@@ -2,7 +2,7 @@
 
 Name:     yumex
 Version: 3.0.17
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary:  Yum Extender graphical package management tool
 Summary(zh_CN.UTF-8): Yum 扩展的图形包管理工具
 
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/polkit-1/rules.d/50-dk.yumex.backend.pkexec.run.rules
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 3.0.17-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 3.0.17-3
 - 为 Magic 3.0 重建
 

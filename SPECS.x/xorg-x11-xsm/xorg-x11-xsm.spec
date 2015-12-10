@@ -6,7 +6,7 @@ Name: xorg-x11-%{pkgname}
 # NOTE: The Version field should be the version of the xsm tarball.
 Version: 1.0.2
 # Bump the release on rebuilds/bugfixes/etc.
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -113,6 +113,9 @@ done
 %config %{_sysconfdir}/X11/xsm/system.xsm
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.0.2-22
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.0.2-21
 - 为 Magic 3.0 重建
 

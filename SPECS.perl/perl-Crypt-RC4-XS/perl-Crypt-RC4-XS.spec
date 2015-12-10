@@ -1,6 +1,6 @@
 Name:           perl-Crypt-RC4-XS
 Version:        0.02
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl implementation of the RC4 encryption algorithm
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Crypt-RC4-XS/
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Crypt::RC4::XS.3pm.gz
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.02-10
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.02-9
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,4 @@
-%if 0%{?rhel}
-%bcond_with workshop
-%else
 %bcond_without workshop
-%endif
 
 # skip all tests
 %global skip_all_checks 1
@@ -17,7 +13,7 @@ Summary:    A graph based image processing framework
 Summary(zh_CN.UTF-8): 基于图形的图像处理框架
 Name:       gegl
 Version:    0.2.0
-Release:    12%{?dist}
+Release:    13%{?dist}
 
 # Compute some version related macros
 # Ugly hack, you need to get your quoting backslashes/percent signs straight
@@ -36,6 +32,8 @@ Patch0:     gegl-0.2.0-lua-5.2.patch
 Patch1:     gegl-0.2.0-CVE-2012-4433.patch
 Patch2:     gegl-0.2.0-remove-src-over-op.patch
 Patch3:	    0001-matting-levin-Fix-the-build-with-recent-suitesparse-.patch
+Patch4:     gegl-0.2.0-linker-flags.patch
+
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  asciidoc
 BuildRequires:  babl-devel >= 0.1.10
@@ -116,6 +114,7 @@ developing with %{name}.
 %patch1 -p1 -b .CVE-2012-4433
 %patch2 -p1 -b .remove-src-over-op
 %patch3 -p1
+%patch4 -p1
 
 %build
 # use hardening compiler/linker flags because gegl is likely to deal with
@@ -243,6 +242,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/%{name}-%{apiver}.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.2.0-13
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.2.0-12
 - 为 Magic 3.0 重建
 

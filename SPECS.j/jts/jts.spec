@@ -1,6 +1,6 @@
 Name:          jts
 Version:       1.13
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Java Topology Suite
 License:       LGPLv2+
 URL:           http://sourceforge.net/projects/jts-topo-suite
@@ -57,6 +57,9 @@ sed -i 's/\r//' doc/LICENSE.txt
 %doc doc/LICENSE.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.13-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.13-4
 - 为 Magic 3.0 重建
 

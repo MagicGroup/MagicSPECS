@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	6.0.2
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 Summary:	Ruby 2.0 fast debugger - base + CLI
 License:	BSD
@@ -121,6 +121,9 @@ popd
 %doc	%{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 6.0.2-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.0.2-3
 - 为 Magic 3.0 重建
 

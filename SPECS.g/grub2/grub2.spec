@@ -1,3 +1,5 @@
+%undefine _hardened_build
+
 # Modules always contain just 32-bit code
 %define _libdir %{_exec_prefix}/lib
 
@@ -32,12 +34,8 @@
 %global grubeficdname gcdaa64.efi
 %endif
 
-%if 0%{?rhel}
-%global efidir redhat
-%endif
-%if 0%{?fedora}
-%global efidir fedora
-%endif
+# Figure out the right file path to use
+%global efidir %(eval echo $(grep ^ID= /etc/os-release | sed -e 's/^ID=//' -e 's/rhel/redhat/'))
 
 %endif
 
@@ -47,7 +45,7 @@
 Name:           grub2
 Epoch:          1
 Version:        2.02
-Release:        0.10%{?dist}
+Release:        0.11%{?dist}
 Summary:        Bootloader with support for Linux, Multiboot and more
 Summary(zh_CN.UTF-8): 支持 Linux，多重启动和更多功能启动引导程序
 
@@ -60,120 +58,98 @@ Source0:        ftp://alpha.gnu.org/gnu/grub/grub-%{tarversion}.tar.xz
 #Source0:	ftp://ftp.gnu.org/gnu/grub/grub-%{tarversion}.tar.xz
 Source4:	http://unifoundry.com/unifont-5.1.20080820.pcf.gz
 Source5:	theme.tar.bz2
-#Source6:	grub-cd.cfg
+Source6:	gitignore
 
-Patch0001: 0001-fix-EFI-detection-on-Windows.patch
-Patch0002: 0002-grub-core-kern-arm-cache_armv6.S-Remove-.arch-direct.patch
-Patch0003: 0003-NEWS-First-draft-of-2.02-entry.patch
-Patch0004: 0004-remove-unused-error.h-from-kern-emu-misc.c.patch
-Patch0005: 0005-Don-t-abort-on-unavailable-coreboot-tables-if-not-ru.patch
-Patch0006: 0006-NEWS-Add-few-missing-entries.-Correct-existing-ones.patch
-Patch0007: 0007-strip-.eh_frame-section-from-arm64-efi-kernel.patch
-Patch0008: 0008-use-grub-boot-aa64.efi-for-boot-images-on-AArch64.patch
-Patch0009: 0009-fix-32-bit-compilation-on-MinGW-w64.patch
-Patch0010: 0010-Change-grub-mkrescue-to-use-bootaa64.efi-too.patch
-Patch0011: 0011-arm64-set-correct-length-of-device-path-end-entry.patch
-Patch0012: 0012-Makefile.util.def-grub-macbless-Change-mansection-to.patch
-Patch0013: 0013-add-part_apple-to-EFI-rescue-image-to-fix-missing-pr.patch
-Patch0014: 0014-freebsd-hostdisk.c-is-only-ever-compiled-on-FreeBSD.patch
-Patch0015: 0015-Prefer-more-portable-test-1-constructs.patch
-Patch0016: 0016-NEWS-Add-few-missing-entries.patch
-Patch0017: 0017-grub-core-kern-efi-efi.c-Ensure-that-the-result-star.patch
-Patch0018: 0018-util-grub-mount.c-Extend-GCC-warning-workaround-to-g.patch
-Patch0019: 0019-reintroduce-BUILD_LDFLAGS-for-the-cross-compile-case.patch
-Patch0020: 0020-grub-core-term-terminfo.c-Recognize-keys-F1-F12.patch
-Patch0021: 0021-Fix-ChangeLog-date.patch
-Patch0022: 0022-Use-_W64-to-detect-MinGW-W64-32-instead-of-_FILE_OFF.patch
-Patch0023: 0023-add-BUILD_EXEEXT-support-to-fix-make-clean-on-Window.patch
-Patch0024: 0024-fix-include-loop-on-MinGW-due-to-libintl.h-pulling-s.patch
-Patch0025: 0025-grub-core-commands-macbless.c-Rename-FILE-and-DIR-to.patch
-Patch0026: 0026-Makefile.util.def-Link-grub-ofpathname-with-zfs-libs.patch
-Patch0027: 0027-Makefile.am-default_payload.elf-Add-modules.patch
-Patch0028: 0028-fix-removal-of-cpu-machine-links-on-mingw-msys.patch
-Patch0029: 0029-grub-core-normal-main.c-read_config_file-Buffer-conf.patch
-Patch0030: 0030-util-grub-install.c-Fix-a-typo.patch
-Patch0031: 0031-use-MODULE_FILES-for-genemuinit-instead-of-MOD_FILES.patch
-Patch0032: 0032-Ignore-EPERM-when-modifying-kern.geom.debugflags.patch
-Patch0033: 0033-change-stop-condition-to-avoid-infinite-loops.patch
-Patch0034: 0034-increase-network-try-interval-gradually.patch
-Patch0035: 0035-look-for-DejaVu-also-in-usr-share-fonts-truetype.patch
-Patch0036: 0036-Show-detected-path-to-DejaVuSans-in-configure-summar.patch
-Patch0037: 0037-add-GRUB_WINDOWS_EXTRA_DIST-to-allow-shipping-runtim.patch
-Patch0038: 0038-util-grub-install.c-write_to_disk-Add-an-info-messag.patch
-Patch0039: 0039-util-grub-install.c-List-available-targets.patch
-Patch0040: 0040-Fix-several-translatable-strings.patch
-Patch0041: 0041-do-not-set-default-prefix-in-grub-mkimage.patch
-Patch0042: 0042-fix-Mingw-W64-32-cross-compile-failure-due-to-printf.patch
-Patch0043: 0043-grub-core-term-serial.c-grub_serial_register-Fix-inv.patch
-Patch0044: 0044-grub-install-support-for-partitioned-partx-loop-devi.patch
-Patch0045: 0045-grub-core-term-at_keyboard.c-Tolerate-missing-keyboa.patch
-Patch0046: 0046-grub-core-disk-ahci.c-Do-not-enable-I-O-decoding-and.patch
-Patch0047: 0047-grub-core-disk-ahci.c-Allocate-and-clean-space-for-a.patch
-Patch0048: 0048-grub-core-disk-ahci.c-Add-safety-cleanups.patch
-Patch0049: 0049-grub-core-disk-ahci.c-Properly-handle-transactions-w.patch
-Patch0050: 0050-grub-core-disk-ahci.c-Increase-timeout.-Some-SSDs-ta.patch
-Patch0051: 0051-util-grub-mkfont.c-Build-fix-for-argp.h-with-older-g.patch
-Patch0052: 0052-util-grub-mkrescue.c-Build-fix-for-argp.h-with-older.patch
-Patch0053: 0053-add-grub_env_set_net_property-function.patch
-Patch0054: 0054-add-bootpath-parser-for-open-firmware.patch
-Patch0055: 0055-grub-core-disk-ahci.c-Ignore-NPORTS-field-and-rely-o.patch
-Patch0056: 0056-grub-core-kern-i386-coreboot-mmap.c-Filter-out-0xa00.patch
-Patch0057: 0057-grub-core-loader-i386-multiboot_mbi.c-grub_multiboot.patch
-Patch0058: 0058-grub-core-mmap-i386-uppermem.c-lower_hook-COREBOOT-I.patch
-Patch0059: 0059-grub-core-kern-i386-pc-mmap.c-Fallback-to-EISA-memor.patch
-Patch0060: 0060-include-grub-i386-openbsd_bootarg.h-Add-addr-and-fre.patch
-Patch0061: 0061-Migrate-PPC-from-Yaboot-to-Grub2.patch
-Patch0062: 0062-Add-fw_path-variable-revised.patch
-Patch0063: 0063-Add-support-for-linuxefi.patch
-Patch0064: 0064-Use-linuxefi-and-initrdefi-where-appropriate.patch
-Patch0065: 0065-Don-t-allow-insmod-when-secure-boot-is-enabled.patch
-Patch0066: 0066-Pass-x-hex-hex-straight-through-unmolested.patch
-Patch0067: 0067-Fix-crash-on-http.patch
-Patch0068: 0068-IBM-client-architecture-CAS-reboot-support.patch
-Patch0069: 0069-Add-vlan-tag-support.patch
-Patch0070: 0070-Add-X-option-to-printf-functions.patch
-Patch0071: 0071-DHCP-client-ID-and-UUID-options-added.patch
-Patch0072: 0072-Search-for-specific-config-file-for-netboot.patch
-Patch0073: 0073-blscfg-add-blscfg-module-to-parse-Boot-Loader-Specif.patch
-Patch0074: 0074-Move-bash-completion-script-922997.patch
-Patch0075: 0075-for-ppc-reset-console-display-attr-when-clear-screen.patch
-Patch0076: 0076-Don-t-write-messages-to-the-screen.patch
-Patch0077: 0077-Don-t-print-GNU-GRUB-header.patch
-Patch0078: 0078-Don-t-add-to-highlighted-row.patch
-Patch0079: 0079-Don-t-add-to-highlighted-row.patch
-Patch0080: 0080-Message-string-cleanups.patch
-Patch0081: 0081-Fix-border-spacing-now-that-we-aren-t-displaying-it.patch
-Patch0082: 0082-Use-the-correct-indentation-for-the-term-help-text.patch
-Patch0083: 0083-Indent-menu-entries.patch
-Patch0084: 0084-Fix-margins.patch
-Patch0085: 0085-Add-support-for-UEFI-operating-systems-returned-by-o.patch
-Patch0086: 0086-Disable-GRUB-video-support-for-IBM-power-machines.patch
-Patch0087: 0087-Use-2-instead-of-1-for-our-right-hand-margin-so-line.patch
-Patch0088: 0088-Use-linux16-when-appropriate-880840.patch
-Patch0089: 0089-Enable-pager-by-default.-985860.patch
-Patch0090: 0090-F10-doesn-t-work-on-serial-so-don-t-tell-the-user-to.patch
-Patch0091: 0091-Don-t-say-GNU-Linux-in-generated-menus.patch
-Patch0092: 0092-Don-t-draw-a-border-around-the-menu.patch
-Patch0093: 0093-Use-the-standard-margin-for-the-timeout-string.patch
-Patch0094: 0094-Fix-grub_script_execute_sourcecode-usage-on-ppc.patch
-Patch0095: 0095-Add-.eh_frame-to-list-of-relocations-stripped.patch
-Patch0096: 0096-Make-10_linux-work-with-our-changes-for-linux16-and-.patch
-Patch0097: 0097-Don-t-print-during-fdt-loading-method.patch
-Patch0098: 0098-Honor-a-symlink-when-generating-configuration-by-gru.patch
-Patch0099: 0099-Don-t-require-a-password-to-boot-entries-generated-b.patch
-Patch0100: 0100-Don-t-emit-Booting-.-message.patch
-Patch0101: 0101-Make-CTRL-and-ALT-keys-work-as-expected-on-EFI-syste.patch
-Patch0102: 0102-May-as-well-try-it.patch
-Patch0103: 0103-use-fw_path-prefix-when-fallback-searching-for-grub-.patch
-Patch0104: 0104-Try-mac-guid-etc-before-grub.cfg-on-tftp-config-file.patch
-Patch0105: 0105-trim-arp-packets-with-abnormal-size.patch
-Patch0106: 0106-Fix-convert-function-to-support-NVMe-devices.patch
-Patch0107: 0107-Fix-bad-test-on-GRUB_DISABLE_SUBMENU.patch
-Patch0108: 0108-Switch-to-use-APM-Mustang-device-tree-for-hardware-t.patch
-Patch0109: 0109-Use-the-default-device-tree-from-the-grub-default-fi.patch
-Patch0110: 0110-reopen-SNP-protocol-for-exclusive-use-by-grub.patch
-Patch0111: 0111-Reduce-timer-event-frequency-by-10.patch
-Patch0112: 0112-always-return-error-to-UEFI.patch
+# generate with:
+# git diff grub-2.02-beta2..origin/master
+Patch0000: grub-2.02-beta2-to-origin-master.patch
+
+# generate all the patches after this with:
+# git format-patch fedora-diff-from-here..fedora-23
+Patch0001: 0001-Migrate-PPC-from-Yaboot-to-Grub2.patch
+Patch0002: 0002-Add-fw_path-variable-revised.patch
+Patch0003: 0003-Add-support-for-linuxefi.patch
+Patch0004: 0004-Use-linuxefi-and-initrdefi-where-appropriate.patch
+Patch0005: 0005-Don-t-allow-insmod-when-secure-boot-is-enabled.patch
+Patch0006: 0006-Pass-x-hex-hex-straight-through-unmolested.patch
+Patch0007: 0007-Fix-crash-on-http.patch
+Patch0008: 0008-IBM-client-architecture-CAS-reboot-support.patch
+Patch0009: 0009-Add-vlan-tag-support.patch
+Patch0010: 0010-Add-X-option-to-printf-functions.patch
+Patch0011: 0011-DHCP-client-ID-and-UUID-options-added.patch
+Patch0012: 0012-Search-for-specific-config-file-for-netboot.patch
+Patch0013: 0013-blscfg-add-blscfg-module-to-parse-Boot-Loader-Specif.patch
+Patch0014: 0014-Move-bash-completion-script-922997.patch
+Patch0015: 0015-for-ppc-reset-console-display-attr-when-clear-screen.patch
+Patch0016: 0016-Don-t-write-messages-to-the-screen.patch
+Patch0017: 0017-Don-t-print-GNU-GRUB-header.patch
+Patch0018: 0018-Don-t-add-to-highlighted-row.patch
+Patch0019: 0019-Message-string-cleanups.patch
+Patch0020: 0020-Fix-border-spacing-now-that-we-aren-t-displaying-it.patch
+Patch0021: 0021-Use-the-correct-indentation-for-the-term-help-text.patch
+Patch0022: 0022-Indent-menu-entries.patch
+Patch0023: 0023-Fix-margins.patch
+Patch0024: 0024-Add-support-for-UEFI-operating-systems-returned-by-o.patch
+Patch0025: 0025-Disable-GRUB-video-support-for-IBM-power-machines.patch
+Patch0026: 0026-Use-2-instead-of-1-for-our-right-hand-margin-so-line.patch
+Patch0027: 0027-Use-linux16-when-appropriate-880840.patch
+Patch0028: 0028-Enable-pager-by-default.-985860.patch
+Patch0029: 0029-F10-doesn-t-work-on-serial-so-don-t-tell-the-user-to.patch
+Patch0030: 0030-Don-t-say-GNU-Linux-in-generated-menus.patch
+Patch0031: 0031-Don-t-draw-a-border-around-the-menu.patch
+Patch0032: 0032-Use-the-standard-margin-for-the-timeout-string.patch
+Patch0033: 0033-Fix-grub_script_execute_sourcecode-usage-on-ppc.patch
+Patch0034: 0034-Add-.eh_frame-to-list-of-relocations-stripped.patch
+Patch0035: 0035-Make-10_linux-work-with-our-changes-for-linux16-and-.patch
+Patch0036: 0036-Don-t-print-during-fdt-loading-method.patch
+Patch0037: 0037-Honor-a-symlink-when-generating-configuration-by-gru.patch
+Patch0038: 0038-Don-t-munge-raw-spaces-when-we-re-doing-our-cmdline-.patch
+Patch0039: 0039-Don-t-require-a-password-to-boot-entries-generated-b.patch
+Patch0040: 0040-Don-t-emit-Booting-.-message.patch
+Patch0041: 0041-Make-CTRL-and-ALT-keys-work-as-expected-on-EFI-syste.patch
+Patch0042: 0042-May-as-well-try-it.patch
+Patch0043: 0043-use-fw_path-prefix-when-fallback-searching-for-grub-.patch
+Patch0044: 0044-Try-mac-guid-etc-before-grub.cfg-on-tftp-config-file.patch
+Patch0045: 0045-trim-arp-packets-with-abnormal-size.patch
+Patch0046: 0046-Fix-convert-function-to-support-NVMe-devices.patch
+Patch0047: 0047-Fix-bad-test-on-GRUB_DISABLE_SUBMENU.patch
+Patch0048: 0048-Switch-to-use-APM-Mustang-device-tree-for-hardware-t.patch
+Patch0049: 0049-Use-the-default-device-tree-from-the-grub-default-fi.patch
+Patch0050: 0050-reopen-SNP-protocol-for-exclusive-use-by-grub.patch
+Patch0051: 0051-Reduce-timer-event-frequency-by-10.patch
+Patch0052: 0052-always-return-error-to-UEFI.patch
+Patch0053: 0053-Suport-for-bi-endianess-in-elf-file.patch
+Patch0054: 0054-Add-grub_util_readlink.patch
+Patch0055: 0055-Make-editenv-chase-symlinks-including-those-across-d.patch
+Patch0056: 0056-Generate-OS-and-CLASS-in-10_linux-from-etc-os-releas.patch
+Patch0057: 0057-Fix-GRUB_DISABLE_SUBMENU-one-more-time.patch
+Patch0058: 0058-Minimize-the-sort-ordering-for-.debug-and-rescue-ker.patch
+Patch0059: 0059-Add-GRUB_DISABLE_UUID.patch
+Patch0060: 0060-Allow-fallback-to-include-entries-by-title-not-just-.patch
+Patch0061: 0061-Load-arm-with-SB-enabled.patch
+Patch0062: 0062-Try-prefix-if-fw_path-doesn-t-work.patch
+Patch0063: 0063-Try-to-emit-linux16-initrd16-and-linuxefi-initrdefi-.patch
+Patch0064: 0064-Update-to-minilzo-2.08.patch
+Patch0065: 0065-Make-grub2-mkconfig-construct-titles-that-look-like-.patch
+Patch0066: 0066-Make-rescue-and-debug-entries-sort-right-again-in-gr.patch
+Patch0067: 0067-Make-.gitignore-suck-way-less.patch
+Patch0068: 0068-Update-info-with-grub.cfg-netboot-selection-order-11.patch
+Patch0069: 0069-Use-Distribution-Package-Sort-for-grub2-mkconfig-112.patch
+Patch0070: 0070-Add-friendly-grub2-password-config-tool-985962.patch
+Patch0071: 0071-Make-exit-take-a-return-code.patch
+Patch0072: 0072-Add-some-__unused__-where-gcc-5.x-is-more-picky-abou.patch
+Patch0073: 0073-Fix-race-in-EFI-validation.patch
+Patch0074: 0074-Mark-po-exclude.pot-as-binary-so-git-won-t-try-to-di.patch
+
+# And these are:
+# git checkout debuginfo
+# git format-patch fedora-23..
+Patch10001: 10001-Put-the-correct-.file-directives-in-our-.S-files.patch
+Patch10002: 10002-Make-efi-machines-load-an-env-block-from-a-variable.patch
+Patch10003: 10003-Make-it-possible-to-enabled-build-id-sha1.patch
+#Patch10004: 10004-Don-t-tell-the-compiler-to-do-annoying-things-with-f.patch
+Patch10005: 10005-Add-grub_qdprintf-grub_dprintf-without-the-file-line.patch
+Patch10006: 10006-Make-a-gdb-dprintf-that-tells-us-load-addresses.patch
 
 BuildRequires:  flex bison binutils python
 BuildRequires:  ncurses-devel xz-devel bzip2-devel
@@ -292,12 +268,18 @@ GRUB2 的样例主题。
 cd grub-%{tarversion}
 # place unifont in the '.' from which configure is run
 cp %{SOURCE4} unifont.pcf.gz
+cp %{SOURCE6} .gitignore
 git init
-git config user.email "grub2-owner@fedoraproject.org"
-git config user.name "Fedora Ninjas"
+echo '![[:digit:]][[:digit:]]_*.in' > util/grub.d/.gitignore
+echo '!*.[[:digit:]]' > util/.gitignore
+git config user.email "%{name}-owner@magiclinux.org"
+git config user.name "Magic Group"
+git config gc.auto 0
 git add .
 git commit -a -q -m "%{tarversion} baseline."
-git am %{patches}
+git am %{patches} </dev/null
+git config --unset user.email
+git config --unset user.name
 cd ..
 mv grub-%{tarversion} grub-efi-%{tarversion}
 %endif
@@ -309,12 +291,18 @@ ln -s grub-efi-%{tarversion} grub-%{tarversion}
 cd grub-%{tarversion}
 # place unifont in the '.' from which configure is run
 cp %{SOURCE4} unifont.pcf.gz
+cp %{SOURCE6} .gitignore
 git init
-git config user.email "grub2-owner@fedoraproject.org"
-git config user.name "Fedora Ninjas"
+echo '![[:digit:]][[:digit:]]_*.in' > util/grub.d/.gitignore
+echo '!*.[[:digit:]]' > util/.gitignore
+git config user.email "%{name}-owner@magiclinux.org"
+git config user.name "Magic Group"
+git config gc.auto 0
 git add .
 git commit -a -q -m "%{tarversion} baseline."
-git am %{patches}
+git am %{patches} </dev/null
+git config --unset user.email
+git config --unset user.name
 %endif
 
 %build
@@ -322,9 +310,10 @@ git am %{patches}
 cd grub-efi-%{tarversion}
 ./autogen.sh
 %configure							\
-	CFLAGS="$(echo $RPM_OPT_FLAGS -fno-stack-protector | sed			\
+	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
 		-e 's/-O.//g'					\
 		-e 's/-fstack-protector[[:alpha:]-]\+//g'	\
+		-e 's/-Wp,-D_FORTIFY_SOURCE=[[:digit:]]\+//g'	\
 		-e 's/--param=ssp-buffer-size=4//g'		\
 		-e 's/-mregparm=3/-mregparm=4/g'		\
 		-e 's/-fexceptions//g'				\
@@ -336,26 +325,30 @@ cd grub-efi-%{tarversion}
         --program-transform-name=s,grub,%{name},		\
 	--disable-grub-mount					\
 	--disable-werror
-
 make %{?_smp_mflags}
-GRUB_MODULES="	all_video boot btrfs cat chain configfile echo efifwsetup \
-		efinet ext2 fat font gfxmenu gfxterm gzio halt hfsplus iso9660 \
-		jpeg lvm mdraid09 mdraid1x minicmd normal part_apple \
-		part_msdos part_gpt password_pbkdf2 png reboot search \
-		search_fs_uuid search_fs_file search_label sleep test tftp \
-		video xfs mdraid09 mdraid1x"
+
+GRUB_MODULES="	all_video boot btrfs cat chain configfile echo \
+		efifwsetup efinet ext2 fat font gfxmenu gfxterm gzio halt \
+		hfsplus iso9660 jpeg loadenv loopback lvm mdraid09 mdraid1x \
+		minicmd normal part_apple part_msdos part_gpt \
+		password_pbkdf2 png \
+		reboot search search_fs_uuid search_fs_file search_label \
+		serial sleep syslinuxcfg test tftp video xfs"
 %ifarch aarch64
-GRUB_MODULES="${GRUB_MODULES} linux"
+GRUB_MODULES+=" linux "
 %else
-GRUB_MODULES+="${GRUB_MODULES} linuxefi multiboot2 multiboot"
+GRUB_MODULES+=" backtrace usb usbserial_common "
+GRUB_MODULES+=" usbserial_pl2303 usbserial_ftdi usbserial_usbdebug "
+GRUB_MODULES+=" linuxefi"
 %endif
 ./grub-mkimage -O %{grubefiarch} -o %{grubefiname}.orig -p /EFI/%{efidir} \
 		-d grub-core ${GRUB_MODULES}
-%ifarch aarch64
-mv %{grubefiname}.orig %{grubefiname}
-%else
 ./grub-mkimage -O %{grubefiarch} -o %{grubeficdname}.orig -p /EFI/BOOT \
 		-d grub-core ${GRUB_MODULES}
+%ifarch aarch64
+mv %{grubefiname}.orig %{grubefiname}
+mv %{grubeficdname}.orig %{grubeficdname}
+%else
 %pesign -s -i %{grubeficdname}.orig -o %{grubeficdname}
 %pesign -s -i %{grubefiname}.orig -o %{grubefiname}
 %endif
@@ -367,15 +360,16 @@ cd grub-%{tarversion}
 ./autogen.sh
 # -static is needed so that autoconf script is able to link
 # test that looks for _start symbol on 64 bit platforms
-%ifarch %{sparc} ppc ppc64
+%ifarch %{sparc} ppc ppc64 ppc64le
 %define platform ieee1275
 %else
 %define platform pc
 %endif
 %configure							\
-	CFLAGS="$(echo $RPM_OPT_FLAGS -fno-stack-protector | sed			\
+	CFLAGS="$(echo $RPM_OPT_FLAGS | sed			\
 		-e 's/-O.//g'					\
 		-e 's/-fstack-protector[[:alpha:]-]\+//g'	\
+		-e 's/-Wp,-D_FORTIFY_SOURCE=[[:digit:]]\+//g'	\
 		-e 's/--param=ssp-buffer-size=4//g'		\
 		-e 's/-mregparm=3/-mregparm=4/g'		\
 		-e 's/-fexceptions//g'				\
@@ -421,23 +415,8 @@ install -m 755 -d $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/
 touch $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/grub.cfg
 ln -s ../boot/efi/EFI/%{efidir}/grub.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{name}-efi.cfg
 
-# Install ELF files modules and images were created from into
-# the shadow root, where debuginfo generator will grab them from
-find $RPM_BUILD_ROOT -name '*.mod' -o -name '*.img' |
-while read MODULE
-do
-        BASE=$(echo $MODULE |sed -r "s,.*/([^/]*)\.(mod|img),\1,")
-        # Symbols from .img files are in .exec files, while .mod
-        # modules store symbols in .elf. This is just because we
-        # have both boot.img and boot.mod ...
-        EXT=$(echo $MODULE |grep -q '.mod' && echo '.elf' || echo '.exec')
-        TGT=$(echo $MODULE |sed "s,$RPM_BUILD_ROOT,.debugroot,")
-#        install -m 755 -D $BASE$EXT $TGT
-done
 install -m 755 %{grubefiname} $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/%{grubefiname}
-%ifnarch aarch64
 install -m 755 %{grubeficdname} $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/%{grubeficdname}
-%endif
 install -D -m 644 unicode.pf2 $RPM_BUILD_ROOT/boot/efi/EFI/%{efidir}/fonts/unicode.pf2
 cd ..
 %endif
@@ -453,20 +432,6 @@ ln -s ../boot/%{name}/grub.cfg $RPM_BUILD_ROOT%{_sysconfdir}/%{name}.cfg
 %endif
 
 cp -a $RPM_BUILD_ROOT%{_datarootdir}/locale/en\@quot $RPM_BUILD_ROOT%{_datarootdir}/locale/en
-
-# Install ELF files modules and images were created from into
-# the shadow root, where debuginfo generator will grab them from
-find $RPM_BUILD_ROOT -name '*.mod' -o -name '*.img' |
-while read MODULE
-do
-        BASE=$(echo $MODULE |sed -r "s,.*/([^/]*)\.(mod|img),\1,")
-        # Symbols from .img files are in .exec files, while .mod
-        # modules store symbols in .elf. This is just because we
-        # have both boot.img and boot.mod ...
-        EXT=$(echo $MODULE |grep -q '.mod' && echo '.elf' || echo '.exec')
-        TGT=$(echo $MODULE |sed "s,$RPM_BUILD_ROOT,.debugroot,")
-#        install -m 755 -D $BASE$EXT $TGT
-done
 
 mv $RPM_BUILD_ROOT%{_infodir}/grub.info $RPM_BUILD_ROOT%{_infodir}/%{name}.info
 mv $RPM_BUILD_ROOT%{_infodir}/grub-dev.info $RPM_BUILD_ROOT%{_infodir}/%{name}-dev.info
@@ -502,10 +467,31 @@ cat << EOF > ${RPM_BUILD_ROOT}%{_sysconfdir}/prelink.conf.d/grub2.conf
 -b /usr/sbin/grub2-sparc64-setup
 EOF
 
+%ifarch %{efiarchs}
+mkdir -p boot/efi/EFI/%{efidir}/
+touch boot/efi/EFI/%{efidir}/grubenv
+ln -s /boot/efi/EFI/%{efidir}/grubenv boot/grub2/grubenv
+%endif
+
+# Don't run debuginfo on all the grub modules and whatnot; it just
+# rejects them, complains, and slows down extraction.
+%global finddebugroot "%{_builddir}/%{?buildsubdir}/debug"
+mkdir -p %{finddebugroot}/usr
+cp -a ${RPM_BUILD_ROOT}/usr/bin %{finddebugroot}/usr/bin
+cp -a ${RPM_BUILD_ROOT}/usr/sbin %{finddebugroot}/usr/sbin
+
+%global dip RPM_BUILD_ROOT=%{finddebugroot} %{__debug_install_post}
+%define __debug_install_post ( %{dip}					\
+	install -m 0755 -d %{buildroot}/usr/lib/ %{buildroot}/usr/src/	\
+	cp -al %{finddebugroot}/usr/lib/debug/				\\\
+		%{buildroot}/usr/lib/debug/				\
+	cp -al %{finddebugroot}/usr/src/debug/				\\\
+		%{buildroot}/usr/src/debug/ )
+
 %clean    
 rm -rf $RPM_BUILD_ROOT
 
-%post
+%post tools
 if [ "$1" = 1 ]; then
 	/sbin/install-info --info-dir=%{_infodir} %{_infodir}/%{name}.info.gz || :
 	/sbin/install-info --info-dir=%{_infodir} %{_infodir}/%{name}-dev.info.gz || :
@@ -536,7 +522,7 @@ mv -f /boot/grub2.tmp/*.mod \
       /boot/grub2/ &&
 rm -r /boot/grub2.tmp/ || :
 
-%preun
+%preun tools
 if [ "$1" = 0 ]; then
 	/sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/%{name}.info.gz || :
 	/sbin/install-info --delete --info-dir=%{_infodir} %{_infodir}/%{name}-dev.info.gz || :
@@ -549,6 +535,7 @@ fi
 %config(noreplace) %{_sysconfdir}/%{name}.cfg
 %ghost %config(noreplace) /boot/%{name}/grub.cfg
 %doc grub-%{tarversion}/COPYING
+%config(noreplace) %ghost /boot/grub2/grubenv
 %endif
 
 %ifarch %{efiarchs}
@@ -559,6 +546,10 @@ fi
 %attr(0755,root,root)/boot/efi/EFI/%{efidir}/fonts
 %ghost %config(noreplace) /boot/efi/EFI/%{efidir}/grub.cfg
 %doc grub-%{tarversion}/COPYING
+/boot/grub2/grubenv
+# I know 0700 seems strange, but it lives on FAT so that's what it'll
+# get no matter what we do.
+%config(noreplace) %ghost %attr(0700,root,root)/boot/efi/EFI/%{efidir}/grubenv
 
 %files efi-modules
 %defattr(-,root,root,-)
@@ -578,7 +569,9 @@ fi
 %{_sbindir}/%{name}-ofpathname
 %{_sbindir}/%{name}-probe
 %{_sbindir}/%{name}-reboot
+%{_sbindir}/%{name}-rpm-sort
 %{_sbindir}/%{name}-set-default
+%{_sbindir}/%{name}-setpassword
 %{_sbindir}/%{name}-sparc64-setup
 %{_bindir}/%{name}-editenv
 %{_bindir}/%{name}-file
@@ -612,7 +605,7 @@ fi
 %exclude /boot/%{name}/themes/system/*
 %exclude %{_datarootdir}/grub/themes/
 %{_infodir}/%{name}*
-%exclude %{_mandir}
+%{_datadir}/man/man?/*
 %doc grub-%{tarversion}/COPYING grub-%{tarversion}/INSTALL
 %doc grub-%{tarversion}/NEWS grub-%{tarversion}/README
 %doc grub-%{tarversion}/THANKS grub-%{tarversion}/TODO
@@ -622,12 +615,14 @@ fi
 
 %files starfield-theme
 %dir /boot/%{name}/themes/
+/boot/%{name}/themes/system
 %dir %{_datarootdir}/grub/themes
-%dir %{_datarootdir}/grub/themes/starfield
-/boot/%{name}/themes/
-%{_datarootdir}/grub/themes/
+%{_datarootdir}/grub/themes/starfield
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:2.02-0.11
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:2.02-0.10
 - 为 Magic 3.0 重建
 

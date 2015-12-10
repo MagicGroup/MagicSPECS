@@ -18,7 +18,7 @@
 %global bzrmajor 2.6
 %global bzrminor .0
 #global bzrrc b6
-%global release 3
+%global release 4
 
 Name:           bzr
 Version:        %{bzrmajor}%{?bzrminor}
@@ -167,6 +167,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{_pkgdocdir}/contrib/
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.6.0-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.6.0-3
 - 为 Magic 3.0 重建
 

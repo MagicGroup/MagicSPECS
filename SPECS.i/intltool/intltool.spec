@@ -5,7 +5,7 @@ Name: intltool
 Summary: Utility for internationalizing various kinds of data files
 Summary(zh_CN.UTF-8): 国际化多种类型的数据文件的工具
 Version:	0.51.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 License: GPLv2 with exceptions
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -58,6 +58,9 @@ make check
 %{_mandir}/man*/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.51.0-9
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.51.0-8
 - 更新到 0.51.0
 

@@ -1,6 +1,6 @@
 Name:           perl-Package-New
 Version:        0.07
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple base package from which to inherit
 License:        BSD
 URL:            http://search.cpan.org/dist/Package-New/
@@ -37,6 +37,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.07-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.07-5
 - 为 Magic 3.0 重建
 

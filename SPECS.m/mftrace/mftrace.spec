@@ -1,6 +1,6 @@
 Name:		mftrace
 Version:	1.2.18
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Utility for converting TeX bitmap fonts to Type 1 or TrueType fonts
 Summary(zh_CN.UTF-8): 转换 TeX 位图字体到 Type1 或 TrueType 字体的工具
 
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.2.18-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.2.18-4
 - 为 Magic 3.0 重建
 

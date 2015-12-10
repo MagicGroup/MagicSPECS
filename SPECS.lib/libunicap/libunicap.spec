@@ -8,7 +8,7 @@ Summary:	Library to access different kinds of (video) capture devices
 Summary(zh_CN.UTF-8): 访问不同类型的视频捕捉设备的库
 Name:		libunicap
 Version:	0.9.12
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPLv2+
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc/html/%{name}
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.9.12-10
+- 为 Magic 3.0 重建
+
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.12-9
 - 为 Magic 3.0 重建
 

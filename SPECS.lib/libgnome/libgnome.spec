@@ -27,7 +27,7 @@ Summary: GNOME base library
 Summary(zh_CN.UTF-8): GNOME 基本库
 Name: libgnome
 Version: 2.32.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 URL: http://www.gnome.org
 Source0: http://download.gnome.org/sources/libgnome/2.32/%{name}-%{version}.tar.bz2
 Source1: desktop_gnome_peripherals_monitor.schemas
@@ -180,6 +180,9 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.32.1-10
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.32.1-9
 - 为 Magic 3.0 重建
 

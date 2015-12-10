@@ -1,7 +1,7 @@
-From 8d86aba4983a254f36f2f1758079b3099ba5fc07 Mon Sep 17 00:00:00 2001
+From 5abd39f1a1e4f7c4dd0c1b1252f98e7ee5a95e27 Mon Sep 17 00:00:00 2001
 From: "Richard W.M. Jones" <rjones@redhat.com>
 Date: Fri, 24 Oct 2014 12:59:23 +0200
-Subject: [PATCH 09/15] ppc64le: Update for OCaml 4.02.0.
+Subject: [PATCH 09/19] ppc64le: Update for OCaml 4.02.0.
 
 These are based on the power (ppc32) branch and some guesswork.  In
 particular, I'm not convinced that my changes to floating point
@@ -200,5 +200,5 @@ index b7bba9b..b582b6a 100644
    | Iintop(Imod) -> 40 (* assuming full stall *)
    | Iintop(Icomp _) -> 4
 -- 
-2.1.0
+2.4.3
 

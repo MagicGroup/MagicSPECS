@@ -10,7 +10,7 @@ Summary: Next generation package handling tool
 Summary(zh_CN.UTF-8): 下一代包处理工具
 Name: smart
 Version: 1.4.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -252,6 +252,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.4.1-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.4.1-3
 - 为 Magic 3.0 重建
 

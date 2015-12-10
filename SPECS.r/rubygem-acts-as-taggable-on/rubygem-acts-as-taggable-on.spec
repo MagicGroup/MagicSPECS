@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.5.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Advanced tagging for Rails
 Group: Development/Languages
 License: MIT
@@ -101,6 +101,9 @@ popd
 %exclude %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.5.0-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.5.0-4
 - 为 Magic 3.0 重建
 

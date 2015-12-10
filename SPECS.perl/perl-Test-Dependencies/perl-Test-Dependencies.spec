@@ -1,6 +1,6 @@
 Name:       perl-Test-Dependencies 
 Version:    0.12
-Release:    13%{?dist}
+Release:    14%{?dist}
 # see lib/Test/Dependencies.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -76,6 +76,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.12-14
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.12-13
 - 为 Magic 3.0 重建
 

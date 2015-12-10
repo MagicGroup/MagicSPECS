@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Attributes on Steroids for Plain Old Ruby Objects
 Group: Development/Languages
 License: MIT
@@ -105,6 +105,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.5-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.0.5-3
 - 为 Magic 3.0 重建
 

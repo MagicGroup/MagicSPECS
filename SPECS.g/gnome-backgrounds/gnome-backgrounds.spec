@@ -2,7 +2,7 @@ Summary: Desktop backgrounds packaged with the GNOME desktop
 Summary(zh_CN.UTF-8): GNOME 桌面的桌面背景包
 Name: gnome-backgrounds
 Version:	3.18.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -44,6 +44,9 @@ magic_rpm_clean.sh
 %{_datadir}/backgrounds/*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2
 - 更新到 3.18.0
 

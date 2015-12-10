@@ -4,7 +4,7 @@ Summary: A GNU archiving program
 Summary(zh_CN.UTF-8): 一个 GNU 归档程序
 Name: cpio
 Version: 2.11
-Release: 16%{?dist}
+Release: 17%{?dist}
 License: GPLv3+
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -112,6 +112,9 @@ fi
 %{_infodir}/*.info*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.11-17
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.11-16
 - 为 Magic 3.0 重建
 

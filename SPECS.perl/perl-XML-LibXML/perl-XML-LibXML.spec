@@ -4,7 +4,7 @@ Name:           perl-XML-LibXML
 # it might not be needed anymore
 # this module is maintained, the other is not
 Version:	2.0122
-Release:	2%{?dist}
+Release:	3%{?dist}
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 
@@ -102,6 +102,9 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1:2.0122-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1:2.0122-2
 - 为 Magic 3.0 重建
 

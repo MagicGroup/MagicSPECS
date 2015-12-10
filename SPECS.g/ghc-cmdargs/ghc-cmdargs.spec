@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.10.12
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Command line argument processing
 
 License:        BSD
@@ -70,6 +70,9 @@ cabal-tweak-flag quotation False
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.12-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.10.12-3
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@
 
 Name:             %{?scl_prefix}%{project}-%{pkgname}
 Version:          0.6.0
-Release:          12%{?dist}
+Release:          13%{?dist}
 Summary:          Parent package for Felix Gogo
 License:          ASL 2.0
 URL:              http://felix.apache.org/site/apache-felix-gogo.html
@@ -46,6 +46,9 @@ dynamic service deployment framework that is amenable to remote management.
 %doc LICENSE NOTICE
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.6.0-13
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.6.0-12
 - 为 Magic 3.0 重建
 

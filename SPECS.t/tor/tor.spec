@@ -11,7 +11,7 @@
 
 Name:       tor
 Version:    0.2.6.10
-Release:    5%{?dist}
+Release:    6%{?dist}
 Group:      System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 License:    BSD
@@ -156,6 +156,9 @@ exit 0
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.2.6.10-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.2.6.10-5
 - 为 Magic 3.0 重建
 

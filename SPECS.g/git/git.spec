@@ -44,7 +44,7 @@
 
 Name:           git
 Version:	2.6.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Fast Version Control System
 License:        GPLv2
 Group:          Development/Tools
@@ -632,6 +632,9 @@ rm -rf %{buildroot}
 # No files for you!
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.6.2-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 2.6.2-3
 - 更新到 2.6.2
 

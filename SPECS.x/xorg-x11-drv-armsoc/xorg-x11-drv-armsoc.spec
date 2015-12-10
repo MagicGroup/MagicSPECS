@@ -9,7 +9,7 @@ Summary:   Xorg X11 armsocdrm driver
 Summary(zh_CN.UTF-8): Xorg X11 armsocdrm 驱动
 Name:      xorg-x11-drv-armsoc
 Version:   1.3.0
-Release:   4%{?gitrev}%{?dist}
+Release:   5%{?gitrev}%{?dist}
 URL:       http://cgit.freedesktop.org/xorg/driver/xf86-video-armsoc
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -74,6 +74,9 @@ find $RPM_BUILD_ROOT -regex ".*\.la$" | xargs rm -f --
 %{_mandir}/man4/armsoc.4*
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.3.0-5.20150531
+- 为 Magic 3.0 重建
+
 * Wed Jul 29 2015 Dave Airlie <airlied@redhat.com> - 1.3.0-4.20150531
 - 1.15 ABI rebuild
 

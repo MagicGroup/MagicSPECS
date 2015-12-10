@@ -1,6 +1,6 @@
 Name:           at-spi2-core
 Version: 2.19.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Protocol definitions and daemon for D-Bus at-spi
 Summary(zh_CN.UTF-8): D-Bus at-spi 的协议定义和服务
 
@@ -80,7 +80,8 @@ rm $RPM_BUILD_ROOT%{_libdir}/libatspi.la
 %files -f %{name}.lang
 %doc COPYING AUTHORS README
 %{_libexecdir}/at-spi2-registryd
-%{_datadir}/dbus-1/services/org.a11y.atspi.Registry.service
+%{_userunitdir}/at-spi-dbus-bus.service
+%{_datadir}/dbus-1/accessibility-services/org.a11y.atspi.Registry.service
 %{_sysconfdir}/at-spi2
 %{_sysconfdir}/xdg/autostart/at-spi-dbus-bus.desktop
 %{_libdir}/libatspi.so.*
@@ -97,6 +98,9 @@ rm $RPM_BUILD_ROOT%{_libdir}/libatspi.la
 %{_libdir}/pkgconfig/atspi-2.pc
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.19.1-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.19.1-2
 - 更新到 2.19.1
 

@@ -2,7 +2,7 @@ Summary: Common C++ class framework for RTP/RTCP
 Summary(zh_CN.UTF-8): RTP/RTCP 的通用 C++ 类框架
 Name: ccrtp
 Version: 2.0.8
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -90,6 +90,9 @@ fi
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.0.8-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.0.8-6
 - 为 Magic 3.0 重建
 

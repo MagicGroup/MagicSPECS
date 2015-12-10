@@ -1,6 +1,6 @@
 Name:           perl-DBM-Deep
 Version:	2.0012
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A pure perl multi-level hash/array DBM
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ LONG_TESTS=1 TEST_SQLITE=1 ./Build test
 %{_mandir}/man3/DBM::Deep*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0012-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0012-2
 - 为 Magic 3.0 重建
 

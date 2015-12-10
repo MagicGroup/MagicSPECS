@@ -1,6 +1,6 @@
 Name:          geoclue
 Version:       0.12.99
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       A modular geoinformation service
 Summary(zh_CN.UTF-8): 模块化的地理信息服务
 
@@ -190,6 +190,9 @@ magic_rpm_clean.sh
 %{_datadir}/dbus-1/services/org.freedesktop.Geoclue.Providers.Gsmloc.service
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.12.99-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.12.99-3
 - 为 Magic 3.0 重建
 

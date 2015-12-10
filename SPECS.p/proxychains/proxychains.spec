@@ -1,6 +1,6 @@
 Name:		proxychains
 Version:	3.1
-Release:	18%{?dist}
+Release:	19%{?dist}
 Summary:	Provides proxy support to any application
 Summary(zh_CN.UTF-8): 给任意程序添加代理支持
 Group:		Applications/Internet
@@ -49,6 +49,9 @@ magic_rpm_clean.sh
 %{_libdir}/libproxychains.so.3.0.0
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.1-19
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.1-18
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 
 Name:          xerces-j2
 Version:       2.11.0
-Release:       21%{?dist}
+Release:       22%{?dist}
 Summary:       Java XML parser
 Group:         Development/Libraries
 License:       ASL 2.0
@@ -216,6 +216,9 @@ update-alternatives --install %{_javadir}/jaxp_parser_impl.jar \
 %{_datadir}/%{name}
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2.11.0-22
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.11.0-21
 - 为 Magic 3.0 重建
 

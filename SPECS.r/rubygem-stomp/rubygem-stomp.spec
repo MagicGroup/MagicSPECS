@@ -3,7 +3,7 @@
 Summary: Ruby client for the Stomp messaging protocol
 Name: rubygem-%{gem_name}
 Version: 1.3.4
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: http://stomp.codehaus.org/
@@ -133,6 +133,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.3.4-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1.3.4-5
 - 为 Magic 3.0 重建
 

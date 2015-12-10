@@ -2,7 +2,7 @@ Summary: imake source code configuration and build system
 Summary(zh_CN.UTF-8): imake 源代码配置和构建系统
 Name: imake
 Version: 1.0.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: MIT
 Group: User Interface/X
 Group(zh_CN.UTF-8): 用户界面/X
@@ -123,6 +123,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xmkmf.1*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.7-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.7-5
 - 为 Magic 3.0 重建
 

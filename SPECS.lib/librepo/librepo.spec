@@ -13,9 +13,9 @@
 Name:           librepo
 Version:        1.7.14
 %if 0%{git}
-Release:        0.git%{vcsdate}%{?dist}.3
+Release:        0.git%{vcsdate}%{?dist}.4
 %else
-Release:	4%{?dist}
+Release:	5%{?dist}
 %endif
 Summary:        Repodata downloading library
 Summary(zh_CN.UTF-8): Repo 数据下载库
@@ -175,6 +175,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20151031.4
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20151031.3
 - 更新到 20151031 日期的仓库源码
 

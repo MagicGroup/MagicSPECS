@@ -19,7 +19,7 @@ Summary:	Ruby based make-like utility
 Name:		rubygem-%{gem_name}
 
 Version:	%{majorver}
-Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.4
+Release:	%{?preminorver:0.}%{fedorarel}%{?preminorver:%{rpmminorver}}%{?dist}.5
 Group:		Development/Languages
 License:	MIT
 URL:		http://rake.rubyforge.org
@@ -102,6 +102,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 10.0.4-1.5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 10.0.4-1.4
 - 为 Magic 3.0 重建
 

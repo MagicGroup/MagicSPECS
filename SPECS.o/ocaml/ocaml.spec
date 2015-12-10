@@ -17,7 +17,7 @@
 
 Name:           ocaml
 Version: 4.02.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 Summary:        OCaml compiler and programming environment
 
@@ -59,6 +59,10 @@ Patch0012:      0012-arg-Allow-flags-such-as-flag-arg-as-well-as-flag-arg.patch
 Patch0013:      0013-PR-6517-use-ISO-C99-types-u-int-32-64-_t-in-preferen.patch
 Patch0014:      0014-ppc-ppc64-ppc64le-Mark-stack-as-non-executable.patch
 Patch0015:      0015-ppc64-ppc64le-proc-Interim-definitions-for-op_is_pur.patch
+Patch0016:      0016-ppc64le-Fix-calling-convention-of-external-functions.patch
+Patch0017:      0017-ppc64-Fix-PIC-variant-of-asmrun.patch
+Patch0018:      0018-ppc64le-Fix-PIC-variant-of-asmrun.patch
+Patch0019:      0019-ppc64-ppc64le-Fix-behaviour-of-Int64.max_int-1-RHBZ-.patch
 
 # Temporary, we can drop this explicit BR in June 2014:
 BuildRequires:  ocaml-srpm-macros
@@ -338,6 +342,7 @@ fi
 %{_libdir}/ocaml/*.cmxa
 %{_libdir}/ocaml/*.cmx
 %{_libdir}/ocaml/*.o
+%{_libdir}/ocaml/libasmrun_shared.so
 %endif
 %{_libdir}/ocaml/*.mli
 %{_libdir}/ocaml/libcamlrun_shared.so
@@ -362,6 +367,8 @@ fi
 %{_libdir}/ocaml/*.cmo
 %{_libdir}/ocaml/*.cmi
 %{_libdir}/ocaml/*.cma
+%{_libdir}/ocaml/*.cmt
+%{_libdir}/ocaml/*.cmti
 %{_libdir}/ocaml/stublibs
 %dir %{_libdir}/ocaml/vmthreads
 %{_libdir}/ocaml/vmthreads/*.cmi
@@ -371,8 +378,6 @@ fi
 %{_libdir}/ocaml/threads/*.cma
 %{_libdir}/ocaml/magic-ocaml-release
 %exclude %{_libdir}/ocaml/graphicsX11.cmi
-%exclude %{_libdir}/ocaml/stublibs/dlllabltk.so
-#%exclude %{_libdir}/ocaml/stublibs/dlltkanim.so
 
 
 %files source
@@ -396,8 +401,9 @@ fi
 %files docs
 %doc refman.pdf htmlman
 %{_infodir}/*
-%{_mandir}/man3/*
 %{_mandir}/man1/*
+%{_mandir}/man3/*
+
 
 %files emacs
 %doc emacs/README
@@ -411,6 +417,8 @@ fi
 %{_libdir}/ocaml/compiler-libs/*.cmi
 %{_libdir}/ocaml/compiler-libs/*.cmo
 %{_libdir}/ocaml/compiler-libs/*.cma
+%{_libdir}/ocaml/compiler-libs/*.cmt
+%{_libdir}/ocaml/compiler-libs/*.cmti
 %if %{native_compiler}
 %{_libdir}/ocaml/compiler-libs/*.a
 %{_libdir}/ocaml/compiler-libs/*.cmxa
@@ -420,6 +428,9 @@ fi
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 4.02.3-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 4.02.3-2
 - 更新到 4.02.3
 

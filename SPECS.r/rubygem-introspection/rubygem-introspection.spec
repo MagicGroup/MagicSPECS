@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.3
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Dynamic inspection of the hierarchy of method definitions on a Ruby object
 Group: Development/Languages
 # https://github.com/floehopper/introspection/issues/1
@@ -88,6 +88,9 @@ popd
 %doc %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.0.3-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.3-6
 - 为 Magic 3.0 重建
 

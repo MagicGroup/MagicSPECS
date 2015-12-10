@@ -1,6 +1,6 @@
 Name:           perl-Locale-Maketext
 Version:	1.26
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Framework for localization
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.26-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.26-2
 - 为 Magic 3.0 重建
 

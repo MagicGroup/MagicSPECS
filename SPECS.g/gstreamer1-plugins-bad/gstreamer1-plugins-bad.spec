@@ -4,8 +4,8 @@
 %bcond_without extras
 
 Name:           gstreamer1-plugins-bad
-Version:	1.6.0
-Release:        2%{?dist}
+Version:	1.6.1
+Release:        4%{?dist}
 Summary:        GStreamer streaming media framework "bad" plugins
 
 License:        LGPLv2+ and LGPLv2
@@ -369,6 +369,12 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/gstreamer-%{majorminor}/libgstcamerab
 %{_datadir}/gir-1.0/GstGL-1.0.gir
 
 %changelog
+* Mon Dec 07 2015 Liu Di <liudidi@gmail.com> - 1.6.1-4
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.6.0-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.6.0-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary:	Automated text file generator
 Name:		autogen
 Version: 5.18.6
-Release:	3%{?dist}
+Release:	4%{?dist}
 # Some files are licensed under GPLv2+.
 # We redistribute them under GPLv3+.
 License:	GPLv3+
@@ -62,6 +62,7 @@ sed -i 's|errors.test||' autoopts/test/Makefile.in
 
 %build
 # Static libraries are needed to run test-suite.
+export CFLAGS="$RPM_OPT_FLAGS -Wno-format-contains-nul"
 %configure
 
 # Fix Libtool to remove rpaths.
@@ -141,6 +142,9 @@ fi
 %{_includedir}/autoopts/usage-txt.h
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 5.18.6-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 5.18.6-3
 - 更新到 5.18.6
 

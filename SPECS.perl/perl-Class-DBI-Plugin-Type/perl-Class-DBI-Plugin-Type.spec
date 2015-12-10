@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Plugin-Type
 Version:        0.02
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        Determine type information for columns
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,6 +39,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.02-32
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.02-31
 - 为 Magic 3.0 重建
 

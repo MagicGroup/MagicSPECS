@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        0.95.1
-Release:        39%{?dist}
+Release:        40%{?dist}
 Summary:        Haskell regexp library
 
 License:        BSD
@@ -64,6 +64,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.95.1-40
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.95.1-39
 - 为 Magic 3.0 重建
 

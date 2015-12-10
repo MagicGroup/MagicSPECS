@@ -2,7 +2,7 @@ Name:           perl-version
 Epoch:          3
 Version:	0.9912
 %global module_version 0.9908
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl extension for Version Objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -80,6 +80,9 @@ make test
 %{_mandir}/man3/version::Internals.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3:0.9912-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3:0.9912-2
 - 为 Magic 3.0 重建
 

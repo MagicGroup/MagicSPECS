@@ -24,7 +24,7 @@ named "WenQuanYi Zen Hei Mono".
 
 Name:           %{fontname}-fonts
 Version:        0.9.46
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        WenQuanYi Zen Hei CJK Font
 Summary(zh_CN.UTF-8): 文泉驿正黑 CJK 字体
 
@@ -88,6 +88,9 @@ rm -fr %{buildroot}
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.9.46-10
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 0.9.46-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:               perl-Ham-Reference-QRZ
 Version:            0.03
-Release:            8%{?dist}
+Release:            9%{?dist}
 Summary:            An object oriented front end for the QRZ.COM Amateur Radio call-sign database	
 Group:              Development/Libraries
 License:            Artistic 2.0
@@ -43,6 +43,9 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.03-9
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.03-8
 - 为 Magic 3.0 重建
 

@@ -19,7 +19,7 @@
 Name:           ocaml-cairo
 Epoch:          1
 Version:        1.2.0
-Release:        0.24.git%{vcsdate}%{?dist}
+Release:        0.26.git%{vcsdate}%{?dist}
 Summary:        OCaml library for accessing cairo graphics
 
 ExcludeArch:    sparc64 s390 s390x
@@ -119,6 +119,12 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/dll*.so
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.26.git20151101
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.25.git20151101
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1:1.2.0-0.24.git20151101
 - 更新到 20151101 日期的仓库源码
 

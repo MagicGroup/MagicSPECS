@@ -1,6 +1,6 @@
 Name:           hdhomerun
 Version:	20150826
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:        Silicon Dust HDHomeRun configuration utility
 Summary(zh_CN.UTF-8): HDHomeRun 配置程序 
 
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/hdhomerun/*.h
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 20150826-5
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 20150826-4
 - 为 Magic 3.0 重建
 

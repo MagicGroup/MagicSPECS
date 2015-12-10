@@ -2,7 +2,7 @@ Name:    libassuan
 Summary: GnuPG IPC library
 Summary(zh_CN.UTF-8): GnuPG IPC 库
 Version: 2.3.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # The library is LGPLv2+, the documentation GPLv3+
 License: LGPLv2+ and GPLv3+
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.3.0-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.3.0-2
 - 更新到 2.3.0
 

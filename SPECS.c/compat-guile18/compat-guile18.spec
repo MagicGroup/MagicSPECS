@@ -5,7 +5,7 @@ Summary: A GNU implementation of Scheme for application extensibility
 Summary(zh_CN.UTF-8): Guile 的 1.8 版本
 Name: compat-guile18
 Version: %{mver}.8
-Release: 9%{?dist}
+Release: 10%{?dist}
 Source: ftp://ftp.gnu.org/pub/gnu/guile/guile-%{version}.tar.gz
 URL: http://www.gnu.org/software/guile/
 Patch1: guile-1.8.7-multilib.patch
@@ -187,6 +187,9 @@ fi
 %{_includedir}/libguile.h
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.8.8-10
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.8.8-9
 - 为 Magic 3.0 重建
 

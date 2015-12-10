@@ -1,0 +1,12 @@
+diff -ur BitStormLite-0.2q/src/LiteWindow.cpp BitStormLite-0.2q.new/src/LiteWindow.cpp
+--- BitStormLite-0.2q/src/LiteWindow.cpp	2010-01-17 21:03:52.000000000 +0800
++++ BitStormLite-0.2q.new/src/LiteWindow.cpp	2015-11-20 17:36:51.484202714 +0800
+@@ -529,7 +529,7 @@
+ 		GTK_DIALOG_MODAL,
+ 		GTK_MESSAGE_WARNING,
+ 		GTK_BUTTONS_OK,
+-		msg);
++		"%s", msg);
+ 	
+ 	gtk_dialog_run(GTK_DIALOG(dialog));
+ 	gtk_widget_destroy(dialog);

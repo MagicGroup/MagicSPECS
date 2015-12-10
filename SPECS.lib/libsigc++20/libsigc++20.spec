@@ -2,7 +2,7 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libsigc++20
-Version:	2.6.1
+Version:	2.6.2
 Release: 2%{?dist}
 Summary:        Typesafe signal framework for C++
 Summary(zh_CN.UTF-8): C++ 的类型安全信号框架
@@ -78,7 +78,7 @@ magic_rpm_clean.sh
 
 
 %files
-%doc AUTHORS COPYING README NEWS ChangeLog TODO
+%doc AUTHORS COPYING README NEWS ChangeLog 
 %{_libdir}/*.so.*
 
 %files devel
@@ -96,6 +96,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Dec 09 2015 Liu Di <liudidi@gmail.com> - 2.6.2-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.6.1-2
 - 更新到 2.6.1
 

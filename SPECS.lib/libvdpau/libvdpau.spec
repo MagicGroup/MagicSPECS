@@ -1,6 +1,6 @@
 Name:           libvdpau
 Version: 1.1.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Wrapper library for the Video Decode and Presentation API
 Summary(zh_CN.UTF-8): 对于视频解码和演示API的包装库
 
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.1.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.1.1-2
 - 更新到 1.1.1
 

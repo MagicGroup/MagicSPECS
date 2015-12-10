@@ -23,7 +23,7 @@
 Summary:       A script which automates a limited set of rubyforge operations
 Name:          rubygem-%{gemname}
 Version:       2.0.4
-Release:       16%{?dist}
+Release:       17%{?dist}
 Group:         Development/Languages
 License:       MIT
 URL:           http://rubyforge.org/projects/codeforpeople
@@ -130,6 +130,9 @@ popd
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.4-17
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.0.4-16
 - 为 Magic 3.0 重建
 

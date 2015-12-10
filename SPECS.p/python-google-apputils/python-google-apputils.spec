@@ -3,7 +3,7 @@
 
 Name:           python-%{srcname}
 Version:        0.4.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Google Application Utilities for Python
 Summary(zh_CN.UTF-8): Python 下的 Google 应用程序工具
 License:        ASL 2.0
@@ -134,6 +134,9 @@ popd
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.4.2-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.4.2-6
 - 为 Magic 3.0 重建
 

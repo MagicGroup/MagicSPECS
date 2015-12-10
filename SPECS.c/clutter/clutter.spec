@@ -6,7 +6,7 @@
 
 Name:          clutter
 Version:	1.24.2
-Release:       2%{?dist}
+Release:       3%{?dist}
 Summary:       Open Source software library for creating rich graphical user interfaces
 Summary(zh_CN.UTF-8): 建立图形用户界面的开源软件库
 
@@ -155,6 +155,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 #%{_datadir}/gtk-doc/html/cally
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.24.2-3
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.24.2-2
 - 更新到 1.24.2
 

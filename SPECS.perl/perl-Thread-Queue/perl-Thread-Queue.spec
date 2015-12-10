@@ -1,6 +1,6 @@
 Name:           perl-Thread-Queue
 Version:	3.07
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Thread-safe queues
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.07-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.07-2
 - 更新到 3.07
 

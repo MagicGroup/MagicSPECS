@@ -9,7 +9,7 @@ Summary: Access to FLAC audio metadata
 Summary(zh_CN): 对于 FLAC 音频元数据的访问
 Name: perl-Audio-FLAC-Header
 Version: 2.4
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -57,6 +57,9 @@ magic_rpm_clean.sh
 %{perl_archlib}
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.4-8
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.4-7
 - 为 Magic 3.0 重建
 

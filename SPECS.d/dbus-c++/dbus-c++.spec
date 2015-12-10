@@ -1,6 +1,6 @@
 Name:           dbus-c++
 Version:        0.9.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Native C++ bindings for D-Bus
 Summary(zh_CN.UTF-8): D-Bus 的原生 C++ 绑定
 Group:          System Environment/Libraries
@@ -11,6 +11,8 @@ Source0:        http://downloads.sourceforge.net/dbus-cplusplus/lib%{name}-%{ver
 
 Patch1: dbus-c++-gcc4.7.patch
 Patch2: dbus-c++-linkfix.patch
+# bind_property in glibmm/binding.h
+Patch3: dbus-c++-macro_collision.patch
 
 BuildRequires: dbus-devel
 BuildRequires: glib2-devel
@@ -46,10 +48,11 @@ developing applications that use %{name}.
 %{__sed} -i 's/libtoolize --force --copy/libtoolize -if --copy/' bootstrap
 %patch1 -p1 -b .gcc47
 %patch2 -p1 -b .linkfix
+%patch3 -p1
 
 %build
 ./autogen.sh
-export CPPFLAGS='%{optflags}'
+export CPPFLAGS='%{optflags} -std=c++11'
 %configure --disable-static --disable-tests
 make %{?_smp_mflags}
 
@@ -75,6 +78,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.9.0-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9.0-3
 - 为 Magic 3.0 重建
 

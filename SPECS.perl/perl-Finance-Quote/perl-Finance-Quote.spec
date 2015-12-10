@@ -1,6 +1,6 @@
 Name:		perl-Finance-Quote
 Version:        1.17
-Release: 	23%{?dist}
+Release: 	24%{?dist}
 Summary:        A Perl module that retrieves stock and mutual fund quotes
 Group:          Development/Libraries
 License:        GPLv2+
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.17-24
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.17-23
 - 为 Magic 3.0 重建
 

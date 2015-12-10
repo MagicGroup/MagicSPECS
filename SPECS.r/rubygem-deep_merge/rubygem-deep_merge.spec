@@ -6,7 +6,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.0.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 Summary: Merge Deeply Nested Hashes
 Group: Development/Languages
 License: MIT
@@ -100,6 +100,9 @@ ruby -Ilib test/test_deep_merge.rb
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.1-9
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-8
 - 为 Magic 3.0 重建
 

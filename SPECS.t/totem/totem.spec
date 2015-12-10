@@ -2,7 +2,7 @@ Summary: Movie player for GNOME
 Summary(zh_CN.UTF-8): GNOME 的视频播放器
 Name: totem
 Version:	3.18.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv2+ with exceptions
 Group: Applications/Multimedia
@@ -274,6 +274,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gir-1.0/Totem-1.0.gir
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-2
 - 更新到 3.18.1
 

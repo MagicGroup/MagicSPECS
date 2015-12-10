@@ -1,6 +1,6 @@
 Name:           perl-Module-CPANTS-Analyse
 Version:	0.96
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Generate Kwalitee ratings for a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -102,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Version.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.96-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.96-2
 - 为 Magic 3.0 重建
 

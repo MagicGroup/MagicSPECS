@@ -1,6 +1,6 @@
 Name:           lxde-icon-theme
 Version:        0.4.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Default icon theme for LXDE
 Summary(zh_CN.UTF-8): LXDE 的默认图标主题
 
@@ -66,6 +66,9 @@ gtk-update-icon-cache %{_datadir}/icons/nuoveXT2 &>/dev/null || :
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.4.2-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.4.2-7
 - 为 Magic 3.0 重建
 

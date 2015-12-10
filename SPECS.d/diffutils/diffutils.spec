@@ -2,7 +2,7 @@ Summary: A GNU collection of diff utilities
 Summary(zh_CN.UTF-8): 一组 GNU 比较工具
 Name: diffutils
 Version:	3.3
-Release: 12%{?dist}
+Release: 13%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 URL: http://www.gnu.org/software/diffutils/diffutils.html
@@ -85,6 +85,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/diffutils.info*gz
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.3-13
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.3-12
 - 为 Magic 3.0 重建
 

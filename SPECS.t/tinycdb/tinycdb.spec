@@ -2,7 +2,7 @@ Name:		tinycdb
 Summary:	Utility and library for manipulating constant databases
 Summary(zh_CN.UTF-8): 处理常数据库的工具和库
 Version:	0.78
-Release:	6%{?dist}
+Release:	7%{?dist}
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:	Public Domain
@@ -74,6 +74,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.78-7
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.78-6
 - 为 Magic 3.0 重建
 

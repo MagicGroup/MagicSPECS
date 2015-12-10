@@ -1,7 +1,7 @@
 Name:           perl-Flickr-Upload
 %define real_ver 1.5
 Version:	1.50
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Flickr.com upload module and script
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.50-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.50-3
 - 为 Magic 3.0 重建
 

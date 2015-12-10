@@ -2,7 +2,7 @@ Summary: Library of functions for manipulating TIFF format image files
 Summary(zh_CN.UTF-8): 处理 TIFF 格式图像文件的函数库
 Name: libtiff
 Version: 4.0.3
-Release: 18%{?dist}
+Release: 19%{?dist}
 
 License: libtiff
 Group: System Environment/Libraries
@@ -211,6 +211,9 @@ find html -name 'Makefile*' | xargs rm
 %{_mandir}/man1/*
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.0.3-19
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 4.0.3-18
 - 为 Magic 3.0 重建
 

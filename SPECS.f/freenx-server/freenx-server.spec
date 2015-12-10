@@ -1,24 +1,16 @@
-%if 0%{?fedora} > 15
 %bcond_without systemd
-%else
-%bcond_with systemd
-%endif
 
 %global _pkglibdir %{_libdir}/nx
 %global _pkgdatadir %{_datadir}/nx
 %global _pkglibexecdir %{_libexecdir}/nx
 
-%if 0%{?fedora} || 0%{?rhel} > 5
 %global cupsetcdir %{_datadir}/cups/mime
-%else
-%global cupsetcdir %{_sysconfdir}/cups
-%endif
 
 Summary: Free Software (GPL) Implementation of the NX Server
 Summary(zh_CN.UTF-8): NX 服务的自由 (GPL) 实现 
 Name: freenx-server
 Version: 0.7.3
-Release: 32%{?dist}
+Release: 33%{?dist}
 License: GPLv2
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -50,11 +42,7 @@ Requires(postun): systemd-units
 Requires: nx%{?_isa} cups
 Requires: openssh-server expect which perl
 Requires: xorg-x11-server-Xorg xorg-x11-apps xorg-x11-fonts-misc
-%if 0%{?fedora} > 17
 Requires: nmap-ncat
-%else
-Requires: nc
-%endif
 
 Obsoletes: freenx < %{version}-%{release}
 Provides: freenx = %{version}-%{release}
@@ -81,9 +69,7 @@ NX 是一种很好的远程访问技术。NoMachine 基于 GPL 提供了核心�
 %patch7 -p1 -b .nxipp
 %patch8 -p1 -b .nxagent-version
 %patch9 -p1 -b .authkeys2
-%if 0%{?fedora} > 17
 %patch10 -p1 -b .ncat
-%endif
 
 sed -i -e's,\$NX_DIR/bin,%{_pkglibexecdir},g'\
   -e's,\$NX_DIR/lib,%{_pkglibdir},g'\
@@ -220,6 +206,9 @@ systemctl daemon-reload &>/dev/null || :
 /var/log/nx
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.7.3-33
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.7.3-32
 - 为 Magic 3.0 重建
 

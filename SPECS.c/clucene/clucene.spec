@@ -2,7 +2,7 @@ Summary:	A C++ port of Lucene
 Summary(zh_CN.UTF-8): Lucene 的 C++ 移植
 Name:		clucene
 Version:	2.3.3.4
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	LGPLv2+ or ASL 2.0
 Group:		Development/System
 Group(zh_CN.UTF-8): 开发/系统
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/libclucene-core.pc
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.3.3.4-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.3.3.4-6
 - 为 Magic 3.0 重建
 

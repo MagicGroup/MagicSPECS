@@ -2,7 +2,7 @@
 
 Name:		rubygem-%{gem_name}
 Version:	1.2.0
-Release:	5%{?dist}
+Release:	6%{?dist}
 
 Summary:	Read file with caching
 
@@ -91,6 +91,9 @@ popd
 %doc	%{gem_instdir}/OLD*
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.0-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.0-5
 - 为 Magic 3.0 重建
 

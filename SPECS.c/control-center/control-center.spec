@@ -12,8 +12,8 @@
 Summary: Utilities to configure the GNOME desktop
 Summary(zh_CN.UTF-8): 配置 GNOME 桌面的工具
 Name: control-center
-Version: 3.18.1
-Release: 3%{?dist}
+Version: 3.18.2
+Release: 1%{?dist}
 Epoch: 1
 License: GPLv2+ and GFDL
 #VCS: git:git://git.gnome.org/gnome-control-center
@@ -201,7 +201,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc AUTHORS COPYING NEWS README
 %{_datadir}/gnome-control-center/keybindings/*.xml
 %{_datadir}/gnome-control-center/pixmaps
-%{_datadir}/gnome-control-center/datetime/
+#{_datadir}/gnome-control-center/datetime/
+%{_datadir}/appdata/gnome-control-center.appdata.xml
 %{_datadir}/gnome-control-center/sounds/gnome-sounds-default.xml
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/hicolor/*/*/*
@@ -228,6 +229,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:3.18.1-3
 - 更新到 3.18.1
 

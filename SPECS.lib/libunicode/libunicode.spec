@@ -2,7 +2,7 @@ Summary: Unicode manipulation library
 Summary(zh_CN.UTF-8): Unicode处理库
 Name: libunicode
 Version: 0.7
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -81,6 +81,9 @@ autoreconf -fisv
 %{_includedir}/*.h
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.7-8
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.7-7
 - 为 Magic 3.0 重建
 

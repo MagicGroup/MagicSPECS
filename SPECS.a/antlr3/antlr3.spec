@@ -1,36 +1,36 @@
 #%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
 
-%global antlr_version 3.5
+%global antlr_version 3.5.2
 %global c_runtime_version 3.4
 #%global python_runtime_version 3.1.3
 %global javascript_runtime_version 3.1
+%global baserelease 10
 
 Summary:            ANother Tool for Language Recognition
 Name:               antlr3
 Version:            %{antlr_version}
-Release:            1%{?dist}
+Release:            %{baserelease}%{?dist}
+Epoch:              1
 URL:                http://www.antlr3.org/
-Source0:            http://www.antlr3.org/download/antlr-%{antlr_version}.tar.gz
-Source1:            http://www.antlr3.org/download/C/libantlr3c-%{c_runtime_version}.tar.gz
+Source0:            https://github.com/antlr/antlr3/archive/%{antlr_version}.tar.gz
 #Source2:            http://www.antlr3.org/download/Python/antlr_python_runtime-%{python_runtime_version}.tar.gz
 Source3:            http://www.antlr3.org/download/antlr-javascript-runtime-%{javascript_runtime_version}.zip
 Source9:            antlr-runtime-MANIFEST.MF
 Patch1:             0001-java8-fix.patch
 License:            BSD
+
 BuildRequires:      maven-local
-BuildRequires:      maven-enforcer-plugin
 BuildRequires:      maven-plugin-bundle
-BuildRequires:      maven-assembly-plugin
-BuildRequires:      maven-shared-reporting-impl
 BuildRequires:      maven-surefire-provider-junit
-BuildRequires:      maven-install-plugin
-BuildRequires:      buildnumber-maven-plugin
 BuildRequires:      junit
-BuildRequires:      tomcat-servlet-3.0-api
+BuildRequires:      tomcat-servlet-3.1-api
 BuildRequires:      stringtemplate4
 BuildRequires:      stringtemplate
-BuildRequires:      felix-parent
 BuildRequires:      antlr3-tool
+
+BuildRequires:      autoconf
+BuildRequires:      automake
+BuildRequires:      libtool
 
 # we don't build it now
 Obsoletes:       antlr3-gunit < 3.2-15
@@ -44,9 +44,12 @@ descriptions containing actions in a variety of target languages.
 %package     tool
 Summary:     ANother Tool for Language Recognition
 BuildArch:   noarch
-Provides:    %{name} = %{antlr_version}-%{release}
-Obsoletes:   %{name} < %{antlr_version}-%{release}
-Requires:    %{name}-java = %{antlr_version}-%{release}
+Provides:    %{name} = %{epoch}:%{antlr_version}-%{release}
+Obsoletes:   %{name} < %{epoch}:%{antlr_version}-%{release}
+Requires:    %{name}-java = %{epoch}:%{antlr_version}-%{release}
+
+Provides:    ant-antlr3 = %{epoch}:%{antlr_version}-%{release}
+Obsoletes:   ant-antlr3 < %{epoch}:%{antlr_version}-%{release}
 
 %description tool
 ANother Tool for Language Recognition, is a language tool
@@ -61,9 +64,17 @@ BuildArch:   noarch
 %description java
 Java run-time support for ANTLR-generated parsers
 
+%package javadoc
+Summary:        API documentation for %{name}
+BuildArch:      noarch
+
+%description javadoc
+%{summary}.
+
 %package      javascript
 Summary:      Javascript run-time support for ANTLR-generated parsers
 Version:      %{javascript_runtime_version}
+Release:      %{antlr_version}.%{baserelease}%{?dist}
 BuildArch:    noarch
 
 %description  javascript
@@ -72,13 +83,17 @@ Javascript run-time support for ANTLR-generated parsers
 %package   C
 Summary:   C run-time support for ANTLR-generated parsers
 Version:   %{c_runtime_version}
+Release:      %{antlr_version}.%{baserelease}%{?dist}
 
 %description C
 C run-time support for ANTLR-generated parsers
 
 %package   C-devel
 Summary:   Header files for the C bindings for ANTLR-generated parsers
-Requires:  %{name}-C = %{c_runtime_version}-%{release}
+Requires:  %{name}-C = %{epoch}:%{c_runtime_version}-%{release}
+Version:   %{c_runtime_version}
+Release:      %{antlr_version}.%{baserelease}%{?dist}
+
 
 %description C-devel
 Header files for the C bindings for ANTLR-generated parsers
@@ -88,12 +103,20 @@ Summary:        API documentation for the C run-time support for ANTLR-generated
 BuildArch:      noarch
 BuildRequires:  graphviz
 BuildRequires:  doxygen
-Requires:       %{name}-C = %{c_runtime_version}-%{release}
+Requires:       %{name}-C = %{epoch}:%{c_runtime_version}-%{release}
+Version:   %{c_runtime_version}
+Release:      %{antlr_version}.%{baserelease}%{?dist}
 
 %description    C-docs
 This package contains doxygen documentation with instruction
 on how to use the C target in ANTLR and complete API description of the
 C run-time support for ANTLR-generated parsers.
+
+%package C++-devel
+Summary:        C++ runtime support for ANTLR-generated parsers
+
+%description C++-devel
+C++ runtime support for ANTLR-generated parsers.
 
 #%package        python
 #Group:          Development/Libraries
@@ -106,17 +129,14 @@ C run-time support for ANTLR-generated parsers.
 #%description    python
 #Python run-time support for ANTLR-generated parsers
 
-%package javadoc
-Summary:        API documentation for %{name}
-
-%description javadoc
-%{summary}.
-
-
 %prep
-%setup -q -n antlr3-antlr-%{antlr_version} -a 1 -a 3
-sed -i "s,\${buildNumber},`cat %{_sysconfdir}/fedora-release` `date`," tool/src/main/resources/org/antlr/antlr.properties
+%setup -q -n antlr3-%{antlr_version} -a 3
+sed -i "s,\${buildNumber},`cat %{_sysconfdir}/magic-release` `date`," tool/src/main/resources/org/antlr/antlr.properties
 %patch1 -p1
+
+# remove pre-built artifacts
+find -type f -a -name *.jar -delete
+find -type f -a -name *.class -delete
 
 %pom_disable_module antlr3-maven-archetype
 %pom_disable_module gunit
@@ -129,21 +149,14 @@ sed -i "s,\${buildNumber},`cat %{_sysconfdir}/fedora-release` `date`," tool/src/
 # compile for target 1.6, see BZ#842572
 sed -i 's/jsr14/1.6/' antlr3-maven-archetype/src/main/resources/archetype-resources/pom.xml \
                       antlr3-maven-plugin/pom.xml \
-					  gunit/pom.xml \
-					  gunit-maven-plugin/pom.xml \
-					  pom.xml \
-					  runtime/Java/pom.xml \
-					  tool/pom.xml
-
-# remove corrupted files:
-find . -name '._*' -delete
-
-%pom_xpath_remove pom:bootclasspath
+                                          gunit/pom.xml \
+                                          gunit-maven-plugin/pom.xml \
+                                          pom.xml \
+                                          runtime/Java/pom.xml \
+                                          tool/pom.xml
 
 # workarounds bug in filtering (Mark invalid)
 %pom_xpath_remove pom:resource/pom:filtering
-
-%pom_xpath_set -r 'pom:source|pom:target' 1.6
 
 %mvn_package :antlr-runtime java
 %mvn_package : tool
@@ -161,8 +174,8 @@ find . -name '._*' -delete
 #popd
 
 # Build the C runtime
-pushd libantlr3c-%{c_runtime_version}-beta4
-
+pushd runtime/C
+autoreconf -i
 %configure --disable-abiflags --enable-debuginfo \
 %if 0%{?__isa_bits} == 64
     --enable-64bit
@@ -170,23 +183,39 @@ pushd libantlr3c-%{c_runtime_version}-beta4
     %{nil}
 %endif
 
-sed -i "s/CFLAGS = .*/CFLAGS = $RPM_OPT_FLAGS/" Makefile
+sed -i "s#CFLAGS = .*#CFLAGS = $RPM_OPT_FLAGS#" Makefile
 make %{?_smp_mflags}
 doxygen -u # update doxygen configuration file
 doxygen # build doxygen documentation
+popd
+
+# build ant task
+pushd antlr-ant/main/antlr3-task/
+export CLASSPATH=$(build-classpath ant)
+javac -encoding ISO-8859-1 antlr3-src/org/apache/tools/ant/antlr/ANTLR3.java
+jar cvf ant-antlr3.jar \
+  -C antlr3-src org/apache/tools/ant/antlr/antlib.xml \
+  -C antlr3-src org/apache/tools/ant/antlr/ANTLR3.class
 popd
 
 # inject OSGi manifests
 mkdir -p META-INF
 cp -p %{SOURCE9} META-INF/MANIFEST.MF
 touch META-INF/MANIFEST.MF
-zip -u runtime/Java/target/antlr-runtime-%{antlr_version}.jar META-INF/MANIFEST.MF
+zip runtime/Java/target/antlr-runtime-%{antlr_version}.jar META-INF/MANIFEST.MF
 
 %install
 mkdir -p $RPM_BUILD_ROOT/%{_mandir}
 mkdir -p $RPM_BUILD_ROOT/%{_datadir}/antlr
 
 %mvn_install
+
+# install ant task
+install -m 644 antlr-ant/main/antlr3-task/ant-antlr3.jar -D $RPM_BUILD_ROOT%{_javadir}/ant/ant-antlr3.jar
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/ant.d
+cat > $RPM_BUILD_ROOT%{_sysconfdir}/ant.d/ant-antlr3 << EOF
+ant/ant-antlr3 antlr3
+EOF
 
 # install wrapper script
 %jpackage_script org.antlr.Tool '' '' 'stringtemplate4.jar:antlr3.jar:antlr3-runtime.jar' antlr3 true
@@ -198,7 +227,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_datadir}/antlr
 #popd
 
 # install C runtime
-pushd libantlr3c-%{c_runtime_version}-beta4
+pushd runtime/C
 make DESTDIR=$RPM_BUILD_ROOT install
 rm $RPM_BUILD_ROOT%{_libdir}/libantlr3c.{a,la}
 pushd api/man/man3
@@ -217,6 +246,10 @@ pushd antlr-javascript-runtime-%{javascript_runtime_version}
 install -pm 644 *.js $RPM_BUILD_ROOT%{_datadir}/antlr/
 popd
 
+# install C++ runtime (header only)
+mkdir -p $RPM_BUILD_ROOT/%{_includedir}/%{name}
+install -pm 644 runtime/Cpp/include/* $RPM_BUILD_ROOT/%{_includedir}/
+
 %post C -p /sbin/ldconfig
 
 %postun C -p /sbin/ldconfig
@@ -224,6 +257,8 @@ popd
 %files tool -f .mfiles-tool
 %doc README.txt tool/{LICENSE.txt,CHANGES.txt}
 %{_bindir}/antlr3
+%{_javadir}/ant/ant-antlr3.jar
+%config(noreplace) %{_sysconfdir}/ant.d/ant-antlr3
 
 #%files python
 #%doc tool/LICENSE.txt
@@ -235,11 +270,16 @@ popd
 %{_libdir}/libantlr3c.so
 
 %files C-devel
-%{_includedir}/antlr3*
 %{_mandir}/man3/*
+%{_includedir}/*.h
 
 %files C-docs
-%doc libantlr3c-%{c_runtime_version}-beta4/api/
+%doc runtime/C/api
+
+%files C++-devel
+%doc tool/LICENSE.txt
+%{_includedir}/*.hpp
+%{_includedir}/*.inl
 
 %files java -f .mfiles-java
 %doc tool/LICENSE.txt
@@ -252,6 +292,24 @@ popd
 %doc tool/LICENSE.txt
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 1:3.5.2-10
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 3.5.2-6
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 3.5.2-5
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 3.5.2-4
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 3.5.2-3
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.5-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 17 2014 Michael Simacek <msimacek@redhat.com> - 3.5-1
 - Update to upstream version 3.5
 

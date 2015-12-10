@@ -1,6 +1,6 @@
 Name:           perl-Config-Perl-V
 Version:        0.24
-Release:        350%{?dist}
+Release:        351%{?dist}
 Summary:        Structured data retrieval of perl -V output
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.24-351
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.24-350
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           libxcb
 Version: 1.11.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        A C binding to the X11 protocol
 Summary(zh_CN.UTF-8): X11 协议的 C 绑定
 
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgdocdir}
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.11.1-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.1-2
 - 更新到 1.11.1
 

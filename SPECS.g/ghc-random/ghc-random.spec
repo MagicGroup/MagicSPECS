@@ -5,7 +5,7 @@
 Name:           ghc-%{pkg_name}
 # part of haskell-platform
 Version:        1.0.1.1
-Release:        31%{?dist}
+Release:        32%{?dist}
 Summary:        Random number library
 
 License:        BSD
@@ -64,6 +64,9 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.1.1-32
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.0.1.1-31
 - 为 Magic 3.0 重建
 

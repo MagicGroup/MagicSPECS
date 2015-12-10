@@ -3,7 +3,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.9.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A Tier 3 KDE Frameworks 5 module that provides indexing and search functionality
 Summary(zh_CN.UTF-8): 查找和管理元数据的框架
 License:        LGPLv2+
@@ -179,6 +179,9 @@ fi
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.9.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 5.9.2-2
 - 为 Magic 3.0 重建
 

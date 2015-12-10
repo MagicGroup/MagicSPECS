@@ -1,6 +1,6 @@
 Name:           perl-Cache-FastMmap
 Version:	1.43
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Uses an mmap'ed file to act as a shared memory interprocess cache
 Summary(zh_CN.UTF-8): 使用 mmap 文件做为共享内存间的缓存
 License:        GPL+ or Artistic
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.43-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.43-2
 - 更新到 1.43
 

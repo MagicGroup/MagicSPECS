@@ -2,7 +2,7 @@
 
 Name:           ocaml-p3l
 Version:        2.03
-Release:        19%{?dist}
+Release:        21%{?dist}
 Summary:        OCaml compiler for parallel programs
 Summary(zh_CN.UTF-8): 并行程序的 OCaml 编译器
 License:        LGPLv2+ with exceptions
@@ -135,6 +135,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.03-21
+- 为 Magic 3.0 重建
+
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 2.03-20
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.03-19
 - 为 Magic 3.0 重建
 

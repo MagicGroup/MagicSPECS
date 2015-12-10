@@ -1,6 +1,6 @@
 Name:           libpgf
 Version: 6.14.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PGF (Progressive Graphics File) library
 Summary(zh_CN.UTF-8): PGF (渐进式图形文件) 库
 
@@ -77,6 +77,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 6.14.12-2
+- 为 Magic 3.0 重建
+
 * Mon Jul 28 2014 Liu Di <liudidi@gmail.com> - 6.14.12-1
 - 更新到 6.14.12
 

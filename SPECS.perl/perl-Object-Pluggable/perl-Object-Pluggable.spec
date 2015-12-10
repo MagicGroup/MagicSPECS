@@ -1,6 +1,6 @@
 Name:           perl-Object-Pluggable
 Version:        1.29
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Base class for creating plugin-enabled objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.29-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.29-9
 - 为 Magic 3.0 重建
 

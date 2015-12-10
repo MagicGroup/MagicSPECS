@@ -8,7 +8,7 @@ Summary:   Xorg X11 mouse input driver
 Summary(zh_CN.UTF-8): Xorg X11 鼠标输入驱动
 Name:      xorg-x11-drv-mouse
 Version:	1.9.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -76,6 +76,9 @@ X.Org X11 mouse input driver development files.
 %{_libdir}/pkgconfig/xorg-mouse.pc
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.9.1-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.9.1-3
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@ Summary: ht://Dig - Web search engine
 Summary(zh_CN.UTF-8): ht://Dig - 网页搜索引擎
 Name: htdig
 Version: 3.2.0
-Release: 0.17.b6%{?dist}
+Release: 0.18.b6%{?dist}
 Epoch: 4
 License: GPLv2
 Group: Applications/Internet
@@ -162,6 +162,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4:3.2.0-0.18.b6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 4:3.2.0-0.17.b6
 - 为 Magic 3.0 重建
 

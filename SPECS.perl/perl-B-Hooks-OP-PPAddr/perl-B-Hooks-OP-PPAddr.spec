@@ -1,6 +1,6 @@
 Name:           perl-B-Hooks-OP-PPAddr
 Version:	0.04_01
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Hook into opcode execution
 Summary(zh_CN.UTF-8): 挂接到代码执行
 License:        GPL+ or Artistic
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04_01-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04_01-3
 - 为 Magic 3.0 重建
 

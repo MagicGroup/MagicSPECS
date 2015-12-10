@@ -1,8 +1,8 @@
 %global use_wayland 0
 
 Name:           enlightenment
-Version:	0.20.0-beta
-Release:        3%{?dist}
+Version:	0.20.0
+Release:        11111111111%{?dist}
 License:        BSD
 Summary:        Enlightenment window manager
 Summary(zh_CN.UTF-8): Enlightenment 窗口管理器
@@ -83,7 +83,6 @@ find %{buildroot} -name '*.la' -delete
 
 magic_rpm_clean.sh
 %find_lang %{name}
-desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 
 %post
 %systemd_post enlightenment.service
@@ -104,6 +103,8 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 %{_bindir}/enlightenment_open
 %{_bindir}/enlightenment_remote
 %{_bindir}/enlightenment_start
+%{_bindir}/emixer
+%{_datadir}/pixmaps/emixer.png
 %{_libdir}/enlightenment
 %{_unitdir}/enlightenment.service
 
@@ -118,7 +119,7 @@ desktop-file-validate %{buildroot}/%{_datadir}/applications/*.desktop
 
 %changelog
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com>
-- 更新到 0.20.0-beta
+- 更新到 0.20.0
 
 * Sun Sep 06 2015 Liu Di <liudidi@gmail.com> - 0.19.9-2
 - 为 Magic 3.0 重建

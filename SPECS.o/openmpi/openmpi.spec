@@ -20,9 +20,11 @@
 
 %global macrosdir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
+%define debug_package %{nil}
+
 Name:			openmpi%{?_cc_name_suffix}
 Version:		1.10.1
-Release:		3%{?dist}
+Release:		7%{?dist}
 Summary:		Open Message Passing Interface
 Group:			Development/Libraries
 License:		BSD, MIT and Romio
@@ -103,11 +105,7 @@ Contains development headers and libraries for openmpi.
 Summary:	Java library
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%if 0%{?fedora} >= 20 || 0%{?rhel} >= 7
 Requires:	java-headless
-%else
-Requires:	java
-%endif
 
 %description java
 Java library.
@@ -280,6 +278,18 @@ make check
 
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.10.1-7
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.10.1-6
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.10.1-5
+- 为 Magic 3.0 重建
+
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.10.1-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Orion Poplawski <orion@cora.nwra.com> - 1.10.1-3
 - Add upstream patch to fix zero size message
 

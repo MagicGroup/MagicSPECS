@@ -2,7 +2,7 @@ Summary: X.Org X11 libXxf86misc runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXxf86misc 运行库
 Name: libXxf86misc
 Version: 1.0.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -55,6 +55,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.3-6
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.3-5
 - 为 Magic 3.0 重建
 

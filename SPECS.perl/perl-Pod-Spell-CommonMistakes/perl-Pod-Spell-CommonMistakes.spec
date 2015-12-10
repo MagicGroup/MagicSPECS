@@ -1,6 +1,6 @@
 Name:           perl-Pod-Spell-CommonMistakes
 Version:        1.002
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Catches common typos in POD
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.002-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.002-4
 - 为 Magic 3.0 重建
 

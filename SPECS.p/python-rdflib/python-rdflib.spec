@@ -11,7 +11,7 @@
 
 Name:           python-rdflib
 Version:	4.2.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Python library for working with RDF
 Summary(zh_CN.UTF-8): RDF 的 Python 库
 
@@ -185,6 +185,9 @@ PYTHONPATH=./build/lib %{__python} run_tests.py --verbose
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.2.1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.2.1-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Scalar-List-Utils
 Version:	1.42
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:        A selection of general-utility scalar and list subroutines
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.42-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.42-6
 - 为 Magic 3.0 重建
 

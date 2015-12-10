@@ -6,7 +6,7 @@
 Name:		nacl-arm-newlib
 Summary:	C library intended for use on embedded systems
 Version:	2.1.0
-Release:	2.git%{gitver}%{?dist}
+Release:	3.git%{gitver}%{?dist}
 # Generated from git
 # git clone https://chromium.googlesource.com/native_client/nacl-newlib
 # (Checkout ID taken from native_client/toolchain_build/toolchain_build.py
@@ -94,6 +94,9 @@ rm -rf %{buildroot}%{_datadir}
 %{_prefix}/arm-nacl/lib/
 
 %changelog
+* Wed Nov 25 2015 Liu Di <liudidi@gmail.com> - 2.1.0-3.git373135e
+- 为 Magic 3.0 重建
+
 * Thu Oct  1 2015 Tom Callaway <spot@fedoraproject.org> 2.1.0-2.git373135e
 - new stuff
 

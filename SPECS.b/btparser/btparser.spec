@@ -2,7 +2,7 @@
 
 Name: btparser
 Version: 0.25
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Parser and analyzer for backtraces produced by GDB
 Group: Development/Libraries
 License: GPLv2+
@@ -96,6 +96,9 @@ make check
 %{python_sitearch}/%{name}/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.25-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.25-3
 - 为 Magic 3.0 重建
 

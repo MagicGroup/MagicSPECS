@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 3.1.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: A Rails form builder plugin with semantically rich and accessible markup
 Group: Development/Languages
 License: MIT
@@ -84,6 +84,9 @@ popd
 %{gem_instdir}/spec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 3.1.3-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 3.1.3-3
 - 为 Magic 3.0 重建
 

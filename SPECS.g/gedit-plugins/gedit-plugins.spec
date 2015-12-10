@@ -77,6 +77,8 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/glib-2.0/schemas/org.gnome.gedit.plugins.terminal.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.gnome.gedit.plugins.wordcompletion.gschema.xml
 %{_datadir}/help/*
+%{_datadir}/appdata/gedit-*.xml
+
 
 %changelog
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.18.0-2

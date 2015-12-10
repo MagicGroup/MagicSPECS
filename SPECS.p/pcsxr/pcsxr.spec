@@ -10,7 +10,7 @@ Obsoletes:      pcsx
 Provides:	pcsx
 Autoreqprov:    on
 Version:        1.9.94
-Release:        svn%{rver}%{dist}.1
+Release:        svn%{rver}%{dist}.2
 Summary:        Free Sony PlayStation emulator
 Summary(zh_CN.UTF-8):	自由的 Sony PlayStation 模拟器
 Source0:        pcsxr-%{rver}.zip
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.9.94-svn94433.2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.9.94-svn94433.1
 - 为 Magic 3.0 重建
 

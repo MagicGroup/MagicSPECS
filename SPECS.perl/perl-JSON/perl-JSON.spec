@@ -1,7 +1,7 @@
 Name:           perl-JSON
 Summary:        Parse and convert to JSON (JavaScript Object Notation)
 Version:        2.90
-Release:        17%{?dist}
+Release:        18%{?dist}
 License:        GPL+ or Artistic
 
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MAKAMAKA/JSON-%{version}.tar.gz 
@@ -69,6 +69,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.90-18
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.90-17
 - 为 Magic 3.0 重建
 

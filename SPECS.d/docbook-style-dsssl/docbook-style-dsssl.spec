@@ -1,6 +1,6 @@
 Name: docbook-style-dsssl
 Version: 1.79
-Release: 15%{?dist}
+Release: 17%{?dist}
 Group: Applications/Text
 Group(zh_CN.UTF-8): 应用程序/文本
 
@@ -79,6 +79,12 @@ fi
 exit 0
 
 %changelog
+* Fri Nov 27 2015 Liu Di <liudidi@gmail.com> - 1.79-17
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.79-16
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.79-15
 - 为 Magic 3.0 重建
 

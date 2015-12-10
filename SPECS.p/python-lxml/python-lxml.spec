@@ -4,7 +4,7 @@
 
 Name:           python-lxml
 Version:	3.5.0b1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        ElementTree-like Python bindings for libxml2 and libxslt
 Summary(zh_CN.UTF-8): libxml2 和 libxslt 的 Python 绑定
 
@@ -135,6 +135,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.5.0b1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.5.0b1-2
 - 更新到 3.5.0b1
 

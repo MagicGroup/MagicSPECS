@@ -1,6 +1,6 @@
 Name:           libdvdread
 Version: 4.9.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A library for reading DVD video discs based on Ogle code
 Summary(zh_CN.UTF-8): 基于 Ogle 代码读取 DVD 视频光盘的库
 
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/dvdread.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.9.9-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 15 2014 Liu Di <liudidi@gmail.com> - 4.9.9-1
 - 更新到 4.9.9
 

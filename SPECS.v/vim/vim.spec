@@ -20,7 +20,7 @@ Summary(zh_CN.UTF-8): VIM 编辑器
 URL:     http://www.vim.org/
 Name: vim
 Version: 7.4.909
-Release:	2%{?dist}
+Release:	3%{?dist}
 License: Vim
 Group: Applications/Editors
 Group(zh_CN.UTF-8): 应用程序/工程
@@ -2604,6 +2604,9 @@ rm -rf %{buildroot}
 %{_datadir}/icons/hicolor/*/apps/*
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:7.4.909-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2:7.4.909-2
 - 更新到 7.4.909
 

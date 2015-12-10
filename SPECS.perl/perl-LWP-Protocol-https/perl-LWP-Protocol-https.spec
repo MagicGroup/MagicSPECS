@@ -1,6 +1,6 @@
 Name:           perl-LWP-Protocol-https
 Version:	6.06
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Provide HTTPS support for LWP::UserAgent
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 6.06-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 6.06-2
 - 为 Magic 3.0 重建
 

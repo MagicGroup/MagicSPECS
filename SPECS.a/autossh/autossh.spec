@@ -2,7 +2,7 @@ Summary: Utility to autorestart SSH tunnels
 Summary(zh_CN.UTF-8): 自动重启动 SSH 隧道的工具
 Name: autossh
 Version: 1.4c
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: BSD
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.4c-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4c-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.4.4
-Release:        3%{?dist}
+Release:        6%{?dist}
 Summary:        Lift computations from the bottom of a transformer stack
 
 License:        BSD
@@ -63,6 +63,15 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.4.4-6
+- 为 Magic 3.0 重建
+
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 0.4.4-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.4-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.4.4-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 Summary: An XMPP/Jabber library for Ruby
 Name: rubygem-%{gem_name}
 Version: 0.5
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: Development/Languages
 License: GPL+ or Ruby
 URL: http://home.gna.org/xmpp4r/
@@ -102,6 +102,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.5-14
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.5-13
 - 为 Magic 3.0 重建
 

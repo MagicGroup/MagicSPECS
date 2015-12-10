@@ -4,7 +4,7 @@
 
 Name:           python-%{pypi_name}
 Version:	1.1.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        The new features in unittest backported to Python 2.4+
 Summary(zh_CN.UTF-8): 单元测试模块
 
@@ -110,6 +110,9 @@ popd
 %endif # with_python3
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.1.0-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.1.0-2
 - 为 Magic 3.0 重建
 

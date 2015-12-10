@@ -5,7 +5,7 @@
 Summary: Provides integration between factory_girl and rails 3
 Name: rubygem-%{gem_name}
 Version: 1.4.0
-Release: 11%{?dist}
+Release: 12%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/thoughtbot/factory_girl_rails
@@ -80,6 +80,9 @@ rm -rf CONTRIBUTING.md %{gem_name}.gemspec .gitignore .bundle
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.4.0-12
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.4.0-11
 - 为 Magic 3.0 重建
 

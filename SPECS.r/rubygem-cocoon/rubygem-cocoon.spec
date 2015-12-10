@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 1.2.6
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Easier nested forms with standard forms, formtastic and simple-form
 Group: Development/Languages
 License: MIT
@@ -103,6 +103,9 @@ sed -i -e '1d' %{buildroot}/%{gem_instdir}/spec/dummy/script/rails
 %{gem_instdir}/%{gem_name}.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.2.6-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.2.6-6
 - 为 Magic 3.0 重建
 

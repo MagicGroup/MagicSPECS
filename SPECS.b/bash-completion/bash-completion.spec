@@ -5,7 +5,7 @@
 
 Name:           bash-completion
 Version:        2.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Epoch:          1
 Summary:        Programmable completion for Bash
 Summary(zh_CN.UTF-8): Bash 的可编程的命令补全
@@ -92,6 +92,9 @@ exit $result
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:2.1-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:2.1-5
 - 为 Magic 3.0 重建
 

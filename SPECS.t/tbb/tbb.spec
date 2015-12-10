@@ -11,7 +11,7 @@ Name:    tbb
 Summary: The Threading Building Blocks library abstracts low-level threading details
 Summary(zh_CN.UTF-8): 抽象低级线程信息的线程构建库
 Version: %{dotver}
-Release: 6.%{releasedate}%{?dist}
+Release: 7.%{releasedate}%{?dist}
 License: GPLv2 with exceptions
 Group:   Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -138,6 +138,9 @@ magic_rpm_clean.sh
 %doc doc/html
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 4.4-7.20150728
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 4.4-6.20150728
 - 为 Magic 3.0 重建
 

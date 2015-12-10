@@ -1,6 +1,6 @@
 Name:           libdiscid
 Version: 0.6.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        A Library for creating MusicBrainz DiscIDs
 
 Group:          System Environment/Libraries
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.6.1-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.6.1-8
 - 为 Magic 3.0 重建
 

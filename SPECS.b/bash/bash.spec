@@ -9,7 +9,7 @@ Version: %{baseversion}%{patchleveltag}
 Name: bash
 Summary: The GNU Bourne Again shell
 Summary(zh_CN.UTF-8): GNU Bash
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: System Environment/Shells
 Group(zh_CN.UTF-8): 系统环境/外壳
 License: GPLv3+
@@ -354,8 +354,8 @@ builtin $ea "\$@"
 EOF
 chmod +x "$RPM_BUILD_ROOT"/%{_bindir}/"$ea"
 done
-
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || :
 
 # copy doc to /usr/share/doc
 cat /dev/null > %{name}-doc.files
@@ -450,8 +450,12 @@ end
 %defattr(-, root, root)
 %doc doc/*.ps doc/*.0 doc/*.html doc/article.txt
 %{_docdir}/bash
+%{_infodir}/bash.info.gz
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 4.3.42-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.3.42-4
 - 为 Magic 3.0 重建
 

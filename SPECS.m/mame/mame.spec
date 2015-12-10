@@ -15,7 +15,7 @@
 
 Name:           mame
 Version:        0.%{baseversion}
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Multiple Arcade Machine Emulator
 
 License:        MAME License and BSD and GPLv2+ and LGPLv2+ and Public Domain and zlib
@@ -313,6 +313,9 @@ popd
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.163-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.163-6
 - 为 Magic 3.0 重建
 

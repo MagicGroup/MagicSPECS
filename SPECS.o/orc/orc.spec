@@ -1,6 +1,6 @@
 Name:		orc
 Version:	0.4.24
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	The Oil Run-time Compiler
 Summary(zh_CN.UTF-8): Oil 运行时编译器
 
@@ -117,6 +117,9 @@ make check
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.4.24-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 0.4.24-2
 - 为 Magic 3.0 重建
 

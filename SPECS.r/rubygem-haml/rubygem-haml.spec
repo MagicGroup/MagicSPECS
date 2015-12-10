@@ -4,7 +4,7 @@
 Summary: An elegant, structured XHTML/XML templating engine
 Name: rubygem-%{gem_name}
 Version: 4.0.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 Group: Development/Languages
 License: MIT and WTFPL
 URL: http://haml-lang.com/
@@ -99,6 +99,9 @@ find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
 %{gem_instdir}/test
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 4.0.5-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 4.0.5-6
 - 为 Magic 3.0 重建
 

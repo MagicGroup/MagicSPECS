@@ -1,6 +1,6 @@
 Name:           libshout
 Version: 2.3.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:        Icecast source streaming library
 Summary(zh_CN.UTF-8): Icecast 源流媒体库
 
@@ -89,6 +89,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/aclocal/shout.m4
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 2.3.1-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.3.1-2
 - 为 Magic 3.0 重建
 

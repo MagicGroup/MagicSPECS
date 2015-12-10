@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 2.0.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: A flexible and extendable logging library for Ruby
 Group: Development/Languages
 License: MIT
@@ -71,6 +71,9 @@ popd
 %{gem_instdir}/logging.gemspec
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.0.0-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.0.0-4
 - 为 Magic 3.0 重建
 

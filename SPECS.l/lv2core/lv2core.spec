@@ -2,7 +2,7 @@
 
 Name:           lv2core
 Version:        6.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Audio Plugin Standard
 Summary(zh_CN.UTF-8): 音频插件标准
 Group:          System Environment/Libraries
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lv2core.pc
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 6.0-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 6.0-4
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: The zlib compression and decompression library
 Summary(zh_CN.UTF-8): zlib 压缩和解压库
 Name: zlib
 Version:	1.2.8
-Release:	3%{?dist}
+Release:	4%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Source: http://www.zlib.net/zlib-%{version}.tar.gz
@@ -168,6 +168,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/minizip.pc
 
 %changelog
+* Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 1.2.8-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 1.2.8-3
 - 为 Magic 3.0 重建
 

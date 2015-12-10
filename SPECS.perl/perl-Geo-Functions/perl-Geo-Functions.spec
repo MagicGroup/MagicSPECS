@@ -1,6 +1,6 @@
 Name:           perl-Geo-Functions
 Version:        0.07
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Standard Geo:: functions
 
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.07-16
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.07-15
 - 为 Magic 3.0 重建
 

@@ -5,7 +5,7 @@
 
 Name:    dvb-apps
 Version: 1.1.2
-Release: 0.hg%{vcsdate}%{?dist}.4
+Release: 0.hg%{vcsdate}%{?dist}.5
 Summary: Utility, demo and test applications using the Linux DVB API
 Summary(zh_CN.UTF-8): 使用 Linux DVB API 的工具、示例和测试程序
 
@@ -90,6 +90,9 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 %exclude %{_includedir}/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20151029.5
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1.1.2-0.hg20151029.4
 - 更新到 20151029 日期的仓库源码
 

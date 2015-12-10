@@ -2,7 +2,7 @@
 
 Name:           PyYAML
 Version:	3.11
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        YAML parser and emitter for Python
 Summary(zh_CN.UTF-8): Python 下的 YAML 解析器
 
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.11-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.11-2
 - 为 Magic 3.0 重建
 

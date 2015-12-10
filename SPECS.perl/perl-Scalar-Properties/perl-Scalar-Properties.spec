@@ -3,7 +3,7 @@
 
 Name:           perl-Scalar-Properties
 Version:        1.100860
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Run-time properties on scalar variables
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -85,6 +85,9 @@ make test AUTHOR_TESTING=1 RELEASE_TESTING=1
 %{_mandir}/man3/Scalar::Properties.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.100860-11
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.100860-10
 - 为 Magic 3.0 重建
 

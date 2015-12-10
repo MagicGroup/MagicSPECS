@@ -1,6 +1,6 @@
 Name:		gssproxy
 Version: 0.4.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary:	GSSAPI Proxy
 Summary(zh_CN.UTF-8): GSSAPI 代理
 
@@ -11,11 +11,7 @@ URL:		http://fedorahosted.org/gss-proxy
 Source0:	http://fedorahosted.org/released/gss-proxy/%{name}-%{version}.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 
-Patch0:		gssproxy-0.3.1-flags_handling.patch
-Patch1:		gssproxy-0.3.1-nfsd_startup.patch
-Patch2:		gssproxy-0.3.1-deadlock_fix.patch
-Patch3:		gssproxy-0.3.1-gssi_inquire_context.patch
-Patch4:		0001-Fix-error-in-compiling-without-SELinux.patch
+Patch0: clear_message_structure.patch
 
 %global servicename gssproxy
 %global pubconfpath %{_sysconfdir}/gssproxy
@@ -62,17 +58,13 @@ GSSAPI 代理。
 %prep
 %setup -q
 
-%patch0 -p2 -b .flags_handling
-%patch1 -p2 -b .nfsd_startup
-%patch2 -p2 -b .deadlock_fix
-%patch3 -p2 -b .gssi_inquire_context
-%patch4 -p2 -b .without_selinux
+%patch0 -p2 
 
 %build
 autoreconf -f -i
 %configure \
     --with-pubconf-path=%{pubconfpath} \
-    --with-init-dir=%{_initrddir} \
+    --with-initscript=systemd \
     --disable-static \
     --disable-rpath \
     --without-selinux \
@@ -86,10 +78,9 @@ rm -rf %{buildroot}
 make install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/gssproxy/proxymech.la
 install -d -m755 %{buildroot}%{_sysconfdir}/gssproxy
-install -d -m755 %{buildroot}%{_unitdir}
 install -m644 examples/gssproxy.conf %{buildroot}%{_sysconfdir}/gssproxy/gssproxy.conf
-install -m644 examples/mech %{buildroot}%{_sysconfdir}/gss/mech
-install -m644 systemd/gssproxy.service %{buildroot}%{_unitdir}/gssproxy.service
+mkdir -p %{buildroot}%{_sysconfdir}/gss/mech.d
+install -m644 examples/mech %{buildroot}%{_sysconfdir}/gss/mech.d/gssproxy.conf
 magic_rpm_clean.sh
 
 %clean
@@ -105,7 +96,7 @@ rm -rf %{buildroot}
 %attr(755,root,root) %dir %{gpstatedir}
 %attr(700,root,root) %dir %{gpstatedir}/clients
 %attr(0600,root,root) %config(noreplace) /%{_sysconfdir}/gssproxy/gssproxy.conf
-%attr(0644,root,root) %config(noreplace) /%{_sysconfdir}/gss/mech
+%attr(0644,root,root) %config(noreplace) /%{_sysconfdir}/gss/mech.d
 %{_libdir}/gssproxy/proxymech.so
 %{_mandir}/man5/gssproxy.conf.5*
 %{_mandir}/man8/gssproxy.8*
@@ -121,6 +112,9 @@ rm -rf %{buildroot}
 %systemd_postun_with_restart gssproxy.service
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.4.1-2
 - 更新到 0.4.1
 

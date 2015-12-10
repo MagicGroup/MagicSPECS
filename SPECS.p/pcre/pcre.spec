@@ -2,7 +2,7 @@
 #%%global rcversion RC1
 Name: pcre
 Version:	8.37
-Release:	2%{?dist}
+Release:	3%{?dist}
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
 Summary(zh_CN.UTF-8): 兼容 Perl 的正则表达式库
@@ -153,6 +153,9 @@ make %{?_smp_mflags} check VERBOSE=yes
 %{_mandir}/man1/pcretest.*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 8.37-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 8.37-2
 - 更新到 8.37
 

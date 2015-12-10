@@ -13,7 +13,7 @@
 %define clutter_gtk_version 0.10
 %define webkit_version 1.8.0
 
-%define evo_base_version 3.14
+%define evo_base_version 3.20
 
 %define last_anjal_version 0.3.2-3
 %define last_libgal2_version 2:2.5.3-2
@@ -26,13 +26,13 @@
 # Coverity scan can override this to 0, to skip checking in gtk-doc generated code
 %{!?with_docs: %define with_docs 1}
 
-%define evo_plugin_dir %{_libdir}/evolution/%{evo_base_version}/plugins
+%define evo_plugin_dir %{_libdir}/evolution/plugins
 
 ### Abstract ###
 
 Name: evolution
-Version:	3.19.1
-Release: 3%{?dist}
+Version:	3.19.2
+Release: 1%{?dist}
 Group: Applications/Productivity
 Summary: Mail and calendar client for GNOME
 License: GPLv2+ and GFDL
@@ -46,12 +46,6 @@ Obsoletes: libgal2 <= %{last_libgal2_version}
 Obsoletes: evolution-NetworkManager < %{last_evo_nm_version}
 
 ### Patches ###
-
-# bad hack
-Patch01: evolution-1.4.4-ldap-x86_64-hack.patch
-
-# RH bug #589555
-Patch02: evolution-2.30.1-help-contents.patch
 
 ## Dependencies ###
 
@@ -193,10 +187,17 @@ This package contains the plugin to import Microsoft Personal Storage Table
 (PST) files used by Microsoft Outlook and Microsoft Exchange.
 %endif
 
+%package tests
+Summary: Tests for the %{name} package
+Group: Development/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description tests
+The %{name}-tests package contains tests that can be used to verify
+the functionality of the installed %{name} package.
+
 %prep
 %setup -q -n evolution-%{version}
-%patch01 -p1 -b .ldaphack
-%patch02 -p1 -b .help-contents
 
 # Remove the welcome email from Novell
 for inbox in mail/default/*/Inbox; do
@@ -237,9 +238,11 @@ autoconf
 
 %configure \
 	--disable-maintainer-mode \
+	--disable-autoar \
 	--with-sub-version=" (%{version}-%{release})" \
 	%ldap_flags %ssl_flags %gtkdoc_flags \
-	--enable-plugins=all
+	--enable-plugins=all \
+	--enable-installed-tests
 export tagname=CC
 make %{?_smp_mflags} LIBTOOL=/usr/bin/libtool CFLAGS="$CFLAGS -fno-strict-aliasing"
 
@@ -358,80 +361,79 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/32x32/apps/*
 %{_datadir}/icons/hicolor/48x48/apps/*
 %{_datadir}/icons/hicolor/256x256/apps/*
+%{_datadir}/icons/hicolor/symbolic/apps/*
 
 # The main data directory
 # (have not attempted to split this up into an explicit list)
 %dir %{_datadir}/evolution
-%{_datadir}/evolution/%{evo_base_version}
+%{_datadir}/evolution
 
 # Modules:
 %dir %{_libdir}/evolution
-%dir %{_libdir}/evolution/%{evo_base_version}
-%dir %{_libdir}/evolution/%{evo_base_version}/modules
-%{_libdir}/evolution/%{evo_base_version}/modules/module-addressbook.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-backup-restore.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-book-config-google.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-book-config-ldap.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-book-config-local.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-book-config-webdav.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-caldav.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-contacts.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-google.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-local.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-weather.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-cal-config-webcal.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-calendar.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-composer-autosave.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-contact-photos.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-gravatar.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-itip-formatter.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-mail-config.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-mail.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-mailto-handler.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-mdn.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-offline-alert.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-prefer-plain.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-plugin-lib.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-plugin-manager.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-settings.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-startup-wizard.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-text-highlight.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-vcard-inline.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-web-inspector.so
-%{_libdir}/evolution/%{evo_base_version}/modules/module-tnef-attachment.so
+%dir %{_libdir}/evolution/modules
+%{_libdir}/evolution/modules/module-addressbook.so
+%{_libdir}/evolution/modules/module-backup-restore.so
+%{_libdir}/evolution/modules/module-book-config-google.so
+%{_libdir}/evolution/modules/module-book-config-ldap.so
+%{_libdir}/evolution/modules/module-book-config-local.so
+%{_libdir}/evolution/modules/module-book-config-webdav.so
+%{_libdir}/evolution/modules/module-cal-config-caldav.so
+%{_libdir}/evolution/modules/module-cal-config-contacts.so
+%{_libdir}/evolution/modules/module-cal-config-google.so
+%{_libdir}/evolution/modules/module-cal-config-local.so
+%{_libdir}/evolution/modules/module-cal-config-weather.so
+%{_libdir}/evolution/modules/module-cal-config-webcal.so
+%{_libdir}/evolution/modules/module-calendar.so
+%{_libdir}/evolution/modules/module-composer-autosave.so
+%{_libdir}/evolution/modules/module-contact-photos.so
+%{_libdir}/evolution/modules/module-gravatar.so
+%{_libdir}/evolution/modules/module-itip-formatter.so
+%{_libdir}/evolution/modules/module-mail-config.so
+%{_libdir}/evolution/modules/module-mail.so
+%{_libdir}/evolution/modules/module-mailto-handler.so
+%{_libdir}/evolution/modules/module-mdn.so
+%{_libdir}/evolution/modules/module-offline-alert.so
+%{_libdir}/evolution/modules/module-prefer-plain.so
+%{_libdir}/evolution/modules/module-plugin-lib.so
+%{_libdir}/evolution/modules/module-plugin-manager.so
+%{_libdir}/evolution/modules/module-settings.so
+%{_libdir}/evolution/modules/module-startup-wizard.so
+%{_libdir}/evolution/modules/module-text-highlight.so
+%{_libdir}/evolution/modules/module-vcard-inline.so
+%{_libdir}/evolution/modules/module-web-inspector.so
+%{_libdir}/evolution/modules/module-tnef-attachment.so
 
 # Shared libraries:
-%{_libdir}/evolution/%{evo_base_version}/libevolution-mail-composer.so
-%{_libdir}/evolution/%{evo_base_version}/libeabutil.so
-%{_libdir}/evolution/%{evo_base_version}/libecontacteditor.so
-%{_libdir}/evolution/%{evo_base_version}/libecontactlisteditor.so
-%{_libdir}/evolution/%{evo_base_version}/libemail-engine.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-mail-formatter.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-shell.so
-%{_libdir}/evolution/%{evo_base_version}/libessmime.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-util.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-addressbook-importers.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-calendar.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-calendar-importers.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-mail-importers.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-mail.so
-%{_libdir}/evolution/%{evo_base_version}/libevolution-smime.so
-%{_libdir}/evolution/%{evo_base_version}/libgnomecanvas.so
+%{_libdir}/evolution/libevolution-mail-composer.so
+%{_libdir}/evolution/libeabutil.so
+%{_libdir}/evolution/libecontacteditor.so
+%{_libdir}/evolution/libecontactlisteditor.so
+%{_libdir}/evolution/libemail-engine.so
+%{_libdir}/evolution/libevolution-mail-formatter.so
+%{_libdir}/evolution/libevolution-shell.so
+%{_libdir}/evolution/libessmime.so
+%{_libdir}/evolution/libevolution-util.so
+%{_libdir}/evolution/libevolution-addressbook-importers.so
+%{_libdir}/evolution/libevolution-calendar.so
+%{_libdir}/evolution/libevolution-calendar-importers.so
+%{_libdir}/evolution/libevolution-mail-importers.so
+%{_libdir}/evolution/libevolution-mail.so
+%{_libdir}/evolution/libevolution-smime.so
+%{_libdir}/evolution/libgnomecanvas.so
 
 # Various libexec programs:
 %dir %{_libexecdir}/evolution
-%dir %{_libexecdir}/evolution/%{evo_base_version}
-%{_libexecdir}/evolution/%{evo_base_version}/evolution-addressbook-export
-%{_libexecdir}/evolution/%{evo_base_version}/evolution-alarm-notify
-%{_libexecdir}/evolution/%{evo_base_version}/evolution-backup
-%{_libexecdir}/evolution/%{evo_base_version}/killev
+%{_libexecdir}/evolution/evolution-addressbook-export
+%{_libexecdir}/evolution/evolution-alarm-notify
+%{_libexecdir}/evolution/evolution-backup
+%{_libexecdir}/evolution/killev
 
 # The plugin directory:
 %dir %{evo_plugin_dir}
 
 # The various plugins follow; they are all part of the main package:
-# (note that there are various resources such as ui and pixmap files that 
-# are built as part of specific plugins but which are currently packaged using 
+# (note that there are various resources such as ui and pixmap files that
+# are built as part of specific plugins but which are currently packaged using
 # globs above; the purpose of the separation below is to be more explicit about
 # which plugins we ship)
 %{evo_plugin_dir}/org-gnome-evolution-attachment-reminder.eplug
@@ -448,9 +450,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{evo_plugin_dir}/org-gnome-face.eplug
 %{evo_plugin_dir}/liborg-gnome-face.so
-
-%{evo_plugin_dir}/org-gnome-itip-formatter.eplug
-%{evo_plugin_dir}/liborg-gnome-itip-formatter.so
 
 %{evo_plugin_dir}/org-gnome-mailing-list-actions.eplug
 %{evo_plugin_dir}/liborg-gnome-mailing-list-actions.so
@@ -479,10 +478,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-, root, root)
-%{_includedir}/evolution-%{evo_base_version}
+%{_includedir}/evolution
 %{_libdir}/pkgconfig/evolution-calendar-3.0.pc
 %{_libdir}/pkgconfig/evolution-mail-3.0.pc
-#%{_libdir}/pkgconfig/evolution-plugin-3.0.pc
 %{_libdir}/pkgconfig/evolution-shell-3.0.pc
 %{_libdir}/pkgconfig/libemail-engine.pc
 
@@ -502,15 +500,17 @@ rm -rf $RPM_BUILD_ROOT
 
 %files bogofilter
 %defattr(-, root, root)
-%{_libdir}/evolution/%{evo_base_version}/modules/module-bogofilter.so
+%{_libdir}/evolution/modules/module-bogofilter.so
+%{_datadir}/appdata/evolution-bogofilter.metainfo.xml
 
 %files spamassassin
 %defattr(-, root, root)
-%{_libdir}/evolution/%{evo_base_version}/modules/module-spamassassin.so
+%{_libdir}/evolution/modules/module-spamassassin.so
+%{_datadir}/appdata/evolution-spamassassin.metainfo.xml
 
 %files perl
 %defattr(-, root, root)
-%{_libexecdir}/evolution/%{evo_base_version}/csv2vcard
+%{_libexecdir}/evolution/csv2vcard
 
 %if %{libpst_support}
 %files pst
@@ -519,7 +519,14 @@ rm -rf $RPM_BUILD_ROOT
 %{evo_plugin_dir}/liborg-gnome-pst-import.so
 %endif
 
+%files tests
+%{_libexecdir}/%{name}/installed-tests
+%{_datadir}/installed-tests
+
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
 - 更新到 3.19.1
 

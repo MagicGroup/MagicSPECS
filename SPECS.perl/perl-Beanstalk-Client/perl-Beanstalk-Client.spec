@@ -1,6 +1,6 @@
 Name:           perl-Beanstalk-Client
 Version:	1.07
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Client class to talk to a beanstalkd server
 Summary(zh_CN.UTF-8): 与 beanstalkd 服务器对话的客户端
 License:        GPL+ or Artistic
@@ -50,6 +50,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/Beanstalk::*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.07-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.07-3
 - 为 Magic 3.0 重建
 

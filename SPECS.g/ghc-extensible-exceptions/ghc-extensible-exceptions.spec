@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        0.1.1.4
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Extensible exceptions
 
 License:        BSD
@@ -60,6 +60,9 @@ files.
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.1.1.4-19
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 0.1.1.4-18
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           libglpng
 Version:        1.45
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Toolkit for loading PNG images as OpenGL textures
 Summary(zh_CN.UTF-8): 把 PNG 图像做为 OpenGL 纹理载入的工具集
 
@@ -70,6 +70,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.45-11
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.45-10
 - 为 Magic 3.0 重建
 

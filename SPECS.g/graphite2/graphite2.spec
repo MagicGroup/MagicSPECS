@@ -1,6 +1,6 @@
 Name:           graphite2
 Version:	1.3.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Font rendering capabilities for complex non-Roman writing systems
 Summary(zh_CN.UTF-8): 复杂非罗马书写系统的字体渲染
 Group:          Development/Tools
@@ -85,6 +85,9 @@ ctest
 %{_libdir}/pkgconfig/graphite2.pc
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.3.3-6
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.3.3-5
 - 更新到 1.3.3
 

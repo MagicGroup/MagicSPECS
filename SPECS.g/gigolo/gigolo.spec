@@ -1,6 +1,6 @@
 Name:           gigolo
 Version:        0.4.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        GIO/GVFS management application
 
 Group:          User Interface/Desktops
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/gigolo.1.gz
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.4.1-5
+- 为 Magic 3.0 重建
+
 * Sun Apr 06 2014 Liu Di <liudidi@gmail.com> - 0.4.1-4
 - 更新到
 

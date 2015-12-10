@@ -1,6 +1,6 @@
 Name: texi2html
 Version:	5.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 # GPLv2+ is for the code
 # OFSFDL (Old FSF Documentation License) for the documentation
 # CC-BY-SA or GPLv2 for the images
@@ -93,6 +93,9 @@ fi
 %dir %{_sysconfdir}/texinfo
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 5.0-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.0-3
 - 为 Magic 3.0 重建
 

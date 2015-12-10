@@ -1,6 +1,6 @@
 Name:           perl-File-CheckTree
 Version:        4.42
-Release:        295%{?dist}
+Release:        296%{?dist}
 Summary:        Run many file-test checks on a tree
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 4.42-296
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.42-295
 - 为 Magic 3.0 重建
 

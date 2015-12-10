@@ -5,7 +5,7 @@
 
 Name:            Falcon
 Version:         0.9.6.8
-Release:         3%{?dist}
+Release:         4%{?dist}
 Summary:         The Falcon Programming Language
 Summary(zh_CN.UTF-8):     Falcon 程序语言
 
@@ -143,6 +143,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.9.6.8-4
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.9.6.8-3
 - 为 Magic 3.0 重建
 

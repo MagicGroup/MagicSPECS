@@ -2,7 +2,7 @@
 
 Name:           hamcrest12
 Version:        1.2
-Release:        11%{?dist}
+Release:        12%{?dist}
 Epoch:          0
 Summary:        Library of matchers for building test expressions
 License:        BSD
@@ -78,6 +78,9 @@ ant -Dversion=%{version} library bigjar javadoc
 %doc LICENSE.txt
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0:1.2-12
+- 为 Magic 3.0 重建
+
 * Tue Sep 22 2015 Liu Di <liudidi@gmail.com> - 0:1.2-11
 - 为 Magic 3.0 重建
 

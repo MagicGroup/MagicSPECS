@@ -3,7 +3,7 @@
 
 Name:           gl-manpages
 Version:        1.1
-Release:        7.%{vcsdate}%{?dist}
+Release:        8.%{vcsdate}%{?dist}
 Summary:        OpenGL manpages
 
 License:        MIT and Open Publication
@@ -61,6 +61,9 @@ done
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.1-8.20121009
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.1-7.20121009
 - 更新到 20151030 日期的仓库源码
 

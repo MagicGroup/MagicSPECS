@@ -1,6 +1,6 @@
 Name:		potrace
 Version:	1.13
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Transform bitmaps into vector graphics
 Summary(zh_CN.UTF-8): 转换位图到向量图形
 Group:		Applications/Multimedia
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 %doc potrace.pdf potracelib.pdf
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.13-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.13-2
 - 更新到 1.13
 

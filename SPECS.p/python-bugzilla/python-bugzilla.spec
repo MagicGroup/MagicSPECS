@@ -7,7 +7,7 @@
 
 Name:           python-bugzilla
 Version:	1.2.1
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A python library and tool for interacting with Bugzilla
 Summary(zh_CN.UTF-8): 与 Bugzilla 交互的 PYthon 库和工具
 
@@ -101,6 +101,9 @@ magic_rpm_clean.sh
 %{python3_sitelib}/*
 %endif # with_python3
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.2.1-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.2.1-2
 - 为 Magic 3.0 重建
 

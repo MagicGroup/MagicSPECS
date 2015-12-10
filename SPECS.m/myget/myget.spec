@@ -5,7 +5,7 @@ Name: myget
 Summary: A download accelerator for GNU/Linux
 Summary(zh_CN.UTF-8): GNU/Linux下的下载加速器
 Version: %{version}
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPL
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -49,6 +49,9 @@ rm -rf %{_builddir}/%{name}-%{version}
 
 
 %changelog
+* Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.1.2-5
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.1.2-4
 - 为 Magic 3.0 重建
 

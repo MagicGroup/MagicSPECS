@@ -2,7 +2,7 @@ Summary:        The GNU Portable Threads library
 Summary(zh_CN.UTF-8):	GNU 可移植线程库
 Name:           pth
 Version:        2.0.7
-Release:        12%{?dist}
+Release:        13%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.0.7-13
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 2.0.7-12
 - 为 Magic 3.0 重建
 

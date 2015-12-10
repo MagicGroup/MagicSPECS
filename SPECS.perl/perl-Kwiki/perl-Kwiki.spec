@@ -1,6 +1,6 @@
 Name:           perl-Kwiki
 Version:        0.39
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        Kwiki Wiki Building Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.39-29
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.39-28
 - 为 Magic 3.0 重建
 

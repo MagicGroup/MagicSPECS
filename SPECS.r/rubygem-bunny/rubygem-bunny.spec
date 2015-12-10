@@ -20,7 +20,7 @@
 Summary: Synchronous Ruby AMQP 0.9.1 client
 Name: rubygem-%{gem_name}
 Version: 0.7.9
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://github.com/ruby-amqp/bunny
@@ -93,6 +93,9 @@ cp -a .%{gem_dir}/* \
 %doc %{gem_instdir}/Rakefile
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.9-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7.9-9
 - 为 Magic 3.0 重建
 

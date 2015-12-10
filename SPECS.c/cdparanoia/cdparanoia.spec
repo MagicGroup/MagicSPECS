@@ -2,7 +2,7 @@
 
 Name: cdparanoia
 Version: 10.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 # the app is GPLv2, everything else is LGPLv2
 License: GPLv2 and LGPLv2
 Group: Applications/Multimedia
@@ -12,6 +12,12 @@ Source: http://downloads.xiph.org/releases/%{name}/%{name}-III-%{version}.src.tg
 # https://trac.xiph.org/changeset/15338
 # https://bugzilla.redhat.com/show_bug.cgi?id=463009
 Patch0: cdparanoia-10.2-#463009.patch
+# #466659
+Patch1: cdparanoia-10.2-endian.patch
+Patch2: cdparanoia-10.2-install.patch
+Patch3: cdparanoia-10.2-format-security.patch
+Patch4: cdparanoia-use-proper-gnu-config-files.patch
+
 Url: http://www.xiph.org/paranoia/index.html
 BuildRoot: %{_tmppath}/cdparanoia-%{version}-root
 Requires: cdparanoia-libs = %{version}-%{release}
@@ -64,36 +70,26 @@ cdparanoia-libs包包含了读取CD数字音轨的应用程序所需要的动态
 %prep
 %setup -q -n %{name}-III-%{version}
 %patch0 -p3 -b .#463009
+%patch1 -p1 -b .endian
+%patch2 -p1 -b .install
+%patch3 -p1 -b .fmt-sec
+%patch4 -p1 -b .config
+
+# Update config.guess/sub for newer architectures
+cp /usr/lib/rpm/magic/config.* .
 
 %build
 rm -rf $RPM_BUILD_ROOT
-export OPT="${CFLAGS:-%optflags} -O0 -Wno-pointer-sign -Wno-unused -Werror-implicit-function-declaration"
 %configure --includedir=%{_includedir}/cdda
-make OPT="$OPT"
+# Using -O0 is mandatory, the build fails otherwise...
+# Also remove many warnings which we are aware of
+# Lastly, don't use _smp_mflags since it also makes the build fail
+make OPT="$RPM_OPT_FLAGS -O0 -Wno-pointer-sign -Wno-unused"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT%{_bindir}
-install -d $RPM_BUILD_ROOT%{_includedir}/cdda
-install -d $RPM_BUILD_ROOT%{_libdir}
-install -d $RPM_BUILD_ROOT%{_mandir}/man1
-install -m 0755 cdparanoia $RPM_BUILD_ROOT%{_bindir}
-install -m 0644 cdparanoia.1 $RPM_BUILD_ROOT%{_mandir}/man1/ 
-install -m 0644 utils.h paranoia/cdda_paranoia.h interface/cdda_interface.h \
-	$RPM_BUILD_ROOT%{_includedir}/cdda
-install -m 0755 paranoia/libcdda_paranoia.so.0.10.? \
-	interface/libcdda_interface.so.0.10.? \
-	$RPM_BUILD_ROOT%{_libdir}
-install -m 0755 paranoia/libcdda_paranoia.a interface/libcdda_interface.a \
-	$RPM_BUILD_ROOT%{_libdir}
-
-/sbin/ldconfig -n $RPM_BUILD_ROOT/%{_libdir}
-
-pushd $RPM_BUILD_ROOT%{_libdir}
-ln -s libcdda_paranoia.so.0.10.? libcdda_paranoia.so
-ln -s libcdda_interface.so.0.10.? libcdda_interface.so
-popd
+make install DESTDIR=$RPM_BUILD_ROOT
 
 %post -n cdparanoia-libs
 /sbin/ldconfig
@@ -122,6 +118,9 @@ fi
 %{_libdir}/*.a
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 10.2-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 10.2-6
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary: Gives a fake chroot environment
 Summary(zh_CN.UTF-8): 创建一个假的 chroot 环境
 Name: fakechroot
 Version: 2.9
-Release: 28%{?dist}
+Release: 29%{?dist}
 License: LGPLv2+
 Group: Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 %{_libdir}/fakechroot/libfakechroot.so
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.9-29
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 2.9-28
 - 为 Magic 3.0 重建
 

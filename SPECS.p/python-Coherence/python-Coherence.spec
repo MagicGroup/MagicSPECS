@@ -3,7 +3,7 @@
 Summary: Python framework to participate in digital living networks
 Name: python-Coherence
 Version: 0.6.6.2
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: MIT
 Group: Development/Languages
 URL: http://coherence.beebits.net/
@@ -78,6 +78,9 @@ find coherence -type f -exec \
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.6.6.2-7
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.6.6.2-6
 - 为 Magic 3.0 重建
 

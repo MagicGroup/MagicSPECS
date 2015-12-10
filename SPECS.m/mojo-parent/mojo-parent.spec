@@ -1,6 +1,6 @@
 Name:           mojo-parent
 Version:        33
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Codehaus MOJO parent project pom file
 
 License:        ASL 2.0
@@ -36,6 +36,9 @@ cp %SOURCE1 .
 %doc LICENSE-2.0.txt
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 33-7
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 33-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-IPC-System-Simple 
 Version:	1.25
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
 Summary:	Run commands simply, with detailed diagnostics 
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IPC::System::Simple.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.25-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.25-5
 - 为 Magic 3.0 重建
 

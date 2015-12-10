@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-LinkCheck
 Version:        0.008
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Tests POD for invalid links
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -75,6 +75,9 @@ perl Build.PL --installdirs=vendor
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.008-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.008-5
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           python-reportlab
 Version:	3.2.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Python 2.x library for generating PDFs and graphics
 Summary(zh_CN.UTF-8): 生成 PDF 和图像的 Python 2.x 库
 License:        BSD
@@ -100,6 +100,9 @@ magic_rpm_clean.sh
 #%doc docs/*.pdf
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 3.2.0-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.2.0-3
 - 为 Magic 3.0 重建
 

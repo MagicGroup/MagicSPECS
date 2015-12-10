@@ -7,9 +7,9 @@
 Name:           libbluray
 Version: 0.9.0
 %if %{snapshot}
-Release:        0.10.%{tarball_date}git%{git_short}%{?dist}
+Release:        0.11.%{tarball_date}git%{git_short}%{?dist}
 %else
-Release:        4%{?dist}
+Release:        5%{?dist}
 %endif
 Summary:        Library to access Blu-Ray disks for video playback 
 Summary(zh_CN.UTF-8): 为视频回放访问蓝光光盘的库
@@ -179,6 +179,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.0-5
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.9.0-4
 - 更新到 0.9.0
 

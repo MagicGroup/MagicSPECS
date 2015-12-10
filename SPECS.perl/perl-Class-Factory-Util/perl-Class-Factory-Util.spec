@@ -1,6 +1,6 @@
 Name:           perl-Class-Factory-Util
 Version:        1.7
-Release:        24%{?dist}
+Release:        25%{?dist}
 Summary:        Provide utility methods for factory classes 
 
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.7-25
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.7-24
 - 为 Magic 3.0 重建
 

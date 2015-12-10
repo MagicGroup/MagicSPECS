@@ -10,12 +10,12 @@ Name: aMule
 Version:	 2.3.1
 #Release: 0.cvs%{date}.2mgc
 %if %{svn}
-Release: 0.svn.%{svn}.1%{?dist}.4
+Release: 0.svn.%{svn}.1%{?dist}.7
 %endif
 %if 0%{_rc}
-Release: 0.2%{?_dotrc}.%{?dist}
+Release: 0.5%{?_dotrc}.%{?dist}
 %else
-Release: 3%{?dist}
+Release: 6%{?dist}
 %endif
 Summary: aMule - eMule client
 Summary(zh_CN.UTF-8): aMule - eMule 客户端
@@ -371,6 +371,15 @@ done
 %{_mandir}/man1/xas.1.gz
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 2.3.1-6
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 2.3.1-5
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2.3.1-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 2.3.1-3
 - 为 Magic 3.0 重建
 

@@ -6,7 +6,7 @@ Summary: The AbiWord word processor
 Summary(zh_CN): AbiWord 字处理程序
 Name: abiword
 Version: %{majorversion}.%{minorversion}.%{microversion}
-Release: 6%{?dist}
+Release: 11%{?dist}
 Epoch: 1
 Group: Applications/Editors
 Group(zh_CN): 应用程序/编辑器
@@ -35,12 +35,6 @@ Group(zh_CN): 系统环境/库
 Patch0: abiword-2.6.0-windowshelppaths.patch
 Patch1: abiword-2.8.3-desktop.patch
 Patch2: abiword-2.6.0-boolean.patch
-Patch3: abiword-plugins-2.6.0-boolean.patch
-Patch103: abiword-2.8.6-libwpd.patch
-Patch104: abiword-2.8.6-no-undefined.patch
-Patch105: abiword-2.9.3-ebook.patch
-Patch106: abiword-3.0.0-fix-boost154.patch 
-Patch107: abiword-3.0.0-fix-libgcrypt160.patch
 
 BuildRequires: autoconf, libtool
 BuildRequires: desktop-file-utils
@@ -91,17 +85,7 @@ Includes and definitions for developing with libabiword.
 
 # patch abiword
 %patch1 -p1 -b .desktop
-%if 0%{?fedora} >= 9
 %patch2 -p1 -b .boolean
-%endif
-#%patch103 -p0 -b .libwpd
-#%patch104 -p1 -b .no-undefined
-%patch105 -p1
-%patch106 -p1
-%patch107 -p1
-
-# patch abiword plugins
-#%patch3 -p1 -b .boolean
 
 # setup abiword documentation
 %setup -q -T -b 1 -n abiword-docs-%{version}
@@ -179,10 +163,12 @@ update-desktop-database %{_datadir}/applications > /dev/null 2>&1 || :
 %{_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.AbiCollab.service
 %{_datadir}/telepathy/clients/AbiCollab.client
 %{_mandir}/man1/abiword.1.gz
+%{_datadir}/icons/hicolor/scalable/apps/abiword.svg
 
 %files -n libabiword
 %doc $RPM_BUILD_DIR/%{name}-%{version}/COPYING $RPM_BUILD_DIR/%{name}-%{version}/COPYRIGHT.TXT
 %{_libdir}/libabiword-%{majorversion}.%{minorversion}.so
+%{_libdir}/libAiksaurusGtk3*
 %{_libdir}/%{name}-%{majorversion}.%{minorversion}
 %{_datadir}/%{name}-%{majorversion}.%{minorversion}
 # Abiword help - included in GUI app
@@ -193,6 +179,21 @@ update-desktop-database %{_datadir}/applications > /dev/null 2>&1 || :
 %{_libdir}/pkgconfig/%{name}-%{majorversion}.%{minorversion}.pc
 
 %changelog
+* Tue Dec 01 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-11
+- 为 Magic 3.0 重建
+
+* Tue Dec 01 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-10
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-9
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-8
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:3.0.1-6
 - 更新到 3.0.1
 

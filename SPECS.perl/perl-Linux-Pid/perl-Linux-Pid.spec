@@ -1,6 +1,6 @@
 Name:           perl-Linux-Pid
 Version:        0.04
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Get the native PID and the PPID on Linux 
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-21
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04-20
 - 为 Magic 3.0 重建
 

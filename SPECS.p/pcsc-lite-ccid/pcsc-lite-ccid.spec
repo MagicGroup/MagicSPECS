@@ -4,7 +4,7 @@
 
 Name:           pcsc-lite-ccid
 Version:	1.4.21
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Generic USB CCID smart card reader driver
 Summary(zh_CN.UTF-8): 通用 USB CCID 智能卡读取器驱动
 
@@ -60,6 +60,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.4.21-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.4.21-2
 - 更新到 1.4.21
 

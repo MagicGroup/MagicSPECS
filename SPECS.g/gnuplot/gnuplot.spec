@@ -4,11 +4,13 @@
 
 %define x11_app_defaults_dir %{_datadir}/X11/app-defaults
 
+#undefine   _hardened_build
+
 Summary: A program for plotting mathematical expressions and data
 Summary(zh_CN.UTF-8): 一种绘制数学表达式和数据的程序
 Name: gnuplot
 Version: %{major}.%{minor}.%{patchlevel}
-Release: 2%{?dist}
+Release: 3%{?dist}
 # Modifications are to be distributed as patches to the released version.
 # aglfn.txt has license: MIT
 License: gnuplot and MIT
@@ -332,6 +334,9 @@ fi
 %{_datadir}/texmf/tex/latex/gnuplot/
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 5.0.1-3
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.0.1-2
 - 为 Magic 3.0 重建
 

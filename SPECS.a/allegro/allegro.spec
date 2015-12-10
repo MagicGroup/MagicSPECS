@@ -5,7 +5,7 @@ Summary: A game programming library.
 Summary(zh_CN.UTF-8): 一个游戏程序库。
 Name: allegro
 Version: %{soft_version}
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: Gift Ware
 Packager: Allegro development team
 Group:          System Environment/Libraries
@@ -389,6 +389,9 @@ rm -rf %{builddir}/%{name}-%{version}
 %{_includedir}/logg.h
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 4.4.2-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.4.2-6
 - 为 Magic 3.0 重建
 

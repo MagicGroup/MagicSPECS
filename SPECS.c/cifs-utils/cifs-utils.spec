@@ -3,7 +3,7 @@
 
 Name:           cifs-utils
 Version:	6.3
-Release:        1%{pre_release}%{?dist}
+Release:        2%{pre_release}%{?dist}
 Summary:        Utilities for mounting and managing CIFS mounts
 Summary(zh_CN.UTF-8): 挂载和管理 CIFS 的工具
 
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/request-key.d/cifs.spnego.conf
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 6.3-2
+- 为 Magic 3.0 重建
+
 * Tue Mar 11 2014 Liu Di <liudidi@gmail.com> - 6.3-1
 - 更新到 6.3
 

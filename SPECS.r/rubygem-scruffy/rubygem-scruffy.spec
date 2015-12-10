@@ -4,7 +4,7 @@
 Summary: A powerful, clean graphing library for Ruby
 Name: rubygem-%{gem_name}
 Version: 0.3.0
-Release: 10.beta1%{?dist}
+Release: 11.beta1%{?dist}
 Group: Development/Languages
 License: MIT
 URL: https://github.com/brasten/scruffy
@@ -70,6 +70,9 @@ popd
 %doc %{gem_dir}/doc/%{gem_name}-%{version}.beta1
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.3.0-11.beta1
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.3.0-10.beta1
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           perl-Unicode-Map8
 Version:        0.13
-Release:        14%{?dist}
+Release:        15%{?dist}
 
 Summary:        Mapping table between 8-bit chars and Unicode for Perl
 
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.13-15
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.13-14
 - 为 Magic 3.0 重建
 

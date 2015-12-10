@@ -1,6 +1,6 @@
 Name:           perl-Sub-Override
 Version:        0.09
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl extension for easily overriding subroutines
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,6 +40,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.09-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.09-9
 - 为 Magic 3.0 重建
 

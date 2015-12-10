@@ -3,7 +3,7 @@
 %global oname json
 Name:          android-json-org-java
 Version:       4.3
-Release:       0.4.r3.1%{?dist}
+Release:       0.6.r3.1%{?dist}
 Summary:       Androids rewrite of the evil licensed Json.org
 License:       ASL 2.0
 URL:           https://android.googlesource.com/platform/libcore/+/master/json
@@ -65,6 +65,12 @@ rm -rf MODULE_LICENSE_BSD_LIKE
 %doc LICENSE-2.0.txt
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 4.3-0.6.r3.1
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 4.3-0.5.r3.1
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 4.3-0.4.r3.1
 - 为 Magic 3.0 重建
 

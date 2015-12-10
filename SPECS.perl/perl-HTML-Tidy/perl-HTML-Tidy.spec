@@ -1,6 +1,6 @@
 Name:           perl-HTML-Tidy
 Version:	1.56
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        (X)HTML cleanup in a Perl object
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/HTML::Tidy::Message.3pm*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.56-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.56-3
 - 为 Magic 3.0 重建
 

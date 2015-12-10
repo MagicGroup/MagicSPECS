@@ -5,7 +5,7 @@
 Summary: A simple universally unique ID generation library
 Name: rubygem-%{gem_name}
 Version: 2.1.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: ASL 2.0
 URL: https://github.com/sporkmonger/uuidtools
@@ -66,6 +66,9 @@ popd
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 2.1.5-5
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 2.1.5-4
 - 为 Magic 3.0 重建
 

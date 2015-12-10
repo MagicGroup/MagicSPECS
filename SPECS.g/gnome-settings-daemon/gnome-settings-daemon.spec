@@ -6,7 +6,7 @@
 
 Name:           gnome-settings-daemon
 Version:	3.18.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        The daemon sharing settings from GNOME to GTK+/KDE applications
 Summary(zh_CN.UTF-8): GNOME 和 GTK+/KDE 程序共享设置的服务
 
@@ -208,9 +208,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/gnome-settings-daemon-3.0/orientation.gnome-settings-plugin
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.orientation.gschema.xml
 
-%{_libdir}/gnome-settings-daemon-3.0/libcursor.so
-%{_libdir}/gnome-settings-daemon-3.0/cursor.gnome-settings-plugin
-
 %{_libdir}/gnome-settings-daemon-3.0/libsharing.so
 %{_libdir}/gnome-settings-daemon-3.0/sharing.gnome-settings-plugin
 %{_datadir}/glib-2.0/schemas/org.gnome.settings-daemon.plugins.sharing.gschema.xml
@@ -248,7 +245,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %endif
 %{_libexecdir}/gsd-test-a11y-keyboard
 %{_libexecdir}/gsd-test-a11y-settings
-%{_libexecdir}/gsd-test-cursor
 %{_libexecdir}/gsd-test-datetime
 %{_libexecdir}/gsd-test-housekeeping
 %{_libexecdir}/gsd-test-input-helper
@@ -266,6 +262,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.1-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.1-3
 - 更新到 3.18.1
 

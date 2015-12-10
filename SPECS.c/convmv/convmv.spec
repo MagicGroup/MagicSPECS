@@ -1,8 +1,9 @@
+%define debug_package %{nil}
 Summary: Converts filenames from one encoding to another.
 Summary(zh_CN.UTF-8): 转换文件名从一个编码到另一个。
 Name:    convmv
 Version: 1.15
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL
 Group:   Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -48,6 +49,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man1/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.15-4
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1.15-3
 - 为 Magic 3.0 重建
 

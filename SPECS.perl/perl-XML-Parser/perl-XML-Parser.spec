@@ -1,6 +1,6 @@
 Name:           perl-XML-Parser
 Version:	2.44
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Perl module for parsing XML files
 
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.44-3
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 2.44-2
 - 为 Magic 3.0 重建
 

@@ -30,7 +30,7 @@
 
 Name:           httpunit
 Version:        1.7
-Release:        19%{?dist}
+Release:        26%{?dist}
 Epoch:          0
 Summary:        Automated web site testing toolkit
 License:        MIT and ASL 2.0
@@ -114,11 +114,11 @@ ln -s \
   %{_javadir}/xerces-j2.jar \
   jars
 
-mv %{SOURCE1} pom.xml
-mv %{SOURCE2} META-INF/
-mv %{SOURCE3} META-INF/
-mv %{SOURCE4} META-INF/
-mv %{SOURCE5} LICENSE-ASL
+cp %{SOURCE1} pom.xml
+cp %{SOURCE2} META-INF/
+cp %{SOURCE3} META-INF/
+cp %{SOURCE4} META-INF/
+cp %{SOURCE5} LICENSE-ASL
 
 
 %build
@@ -160,6 +160,27 @@ popd
 %doc doc/*
 
 %changelog
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-26
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-25
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-24
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-23
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-22
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-21
+- 为 Magic 3.0 重建
+
+* Thu Nov 19 2015 Liu Di <liudidi@gmail.com> - 0:1.7-20
+- 为 Magic 3.0 重建
+
 * Wed Sep 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.7-19
 - Port to Rhino 1.7.7
 - Resolves: rhbz#1263627

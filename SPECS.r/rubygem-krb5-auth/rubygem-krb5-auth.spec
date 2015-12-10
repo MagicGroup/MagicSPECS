@@ -4,7 +4,7 @@
 Summary: Kerberos binding for Ruby
 Name: rubygem-%{gem_name}
 Version: 0.7
-Release: 17%{?dist}
+Release: 18%{?dist}
 Group: Development/Languages
 License: LGPLv2+
 URL: http://rubyforge.org/projects/krb5-auth
@@ -47,6 +47,9 @@ rm -rf %{buildroot}%{gem_instdir}/ext
 
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7-18
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.7-17
 - 为 Magic 3.0 重建
 

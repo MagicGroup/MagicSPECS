@@ -2,7 +2,7 @@
 
 Name:           compizconfig-python
 Version:        0.8.4
-Release:        12%{?dist}
+Release:        13%{?dist}
 Epoch:          1
 Summary:        Python bindings for the Compiz Configuration System
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ find $RPM_BUILD_ROOT -type f -name "*.a" -o -name "*.la" | xargs rm -f
 
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:0.8.4-13
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 1:0.8.4-12
 - 为 Magic 3.0 重建
 

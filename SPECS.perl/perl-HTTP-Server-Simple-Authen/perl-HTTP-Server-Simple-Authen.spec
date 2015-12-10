@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Server-Simple-Authen
 Version:        0.04
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Authentication plugin for HTTP::Server::Simple
 # https://rt.cpan.org/Public/Bug/Display.html?id=71033
 # You can redistribute it and/or modify it under the same terms as Perl itself.
@@ -59,6 +59,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.04-8
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.04-7
 - 为 Magic 3.0 重建
 

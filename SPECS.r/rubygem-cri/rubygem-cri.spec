@@ -3,7 +3,7 @@
 Summary: Ruby library for building easy-to-use commandline tools
 Name: rubygem-%{gem_name}
 Version: 1.0.1
-Release: 13%{?dist}
+Release: 14%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://rubygems.org/gems/cri
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{gem_docdir}
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.0.1-14
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 1.0.1-13
 - 为 Magic 3.0 重建
 

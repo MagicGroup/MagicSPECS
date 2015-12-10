@@ -2,7 +2,7 @@
 
 Name:       miniz
 Version:    1.15
-Release:    4.%{miniz_revision}%{?dist}
+Release:    5.%{miniz_revision}%{?dist}
 Summary:    Compression library implementing the zlib and Deflate
 Summary(zh_CN.UTF-8): 实现 zlib 的压缩库
 Group:      System Environment/Libraries
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.15-5.r4
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.15-4.r4
 - 为 Magic 3.0 重建
 

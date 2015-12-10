@@ -1,6 +1,6 @@
 Name:           gnome-common
 Version:	3.18.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Useful things common to building gnome packages from scratch
 Summary(zh_CN.UTF-8): 从源码构建 gnome 包所需要的通用包
 
@@ -38,23 +38,23 @@ a GNOME application.
 %setup -q
 
 %build
-%configure
+%configure  --with-autoconf-archive
 make %{?_smp_mflags}
-cp doc-build/README doc-README
 # No sense making a doc subdir in the rpm pkg for one file.
-cp doc/usage.txt usage.txt
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 magic_rpm_clean.sh
 
 %files
-%doc doc-README usage.txt ChangeLog
+%doc ChangeLog
 %{_bindir}/*
 %{_datadir}/aclocal/*
-%{_datadir}/%{name}
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.18.0-4
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.18.0-3
 - 更新到 3.18.0
 

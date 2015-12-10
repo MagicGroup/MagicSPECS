@@ -3,7 +3,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.0.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Module for the 'fog' gem to support libvirt
 Group: Development/Languages
 License: MIT
@@ -80,6 +80,9 @@ popd
 %{gem_instdir}/minitests
 
 %changelog
+* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.0.2-5
+- 为 Magic 3.0 重建
+
 * Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 0.0.2-4
 - 为 Magic 3.0 重建
 

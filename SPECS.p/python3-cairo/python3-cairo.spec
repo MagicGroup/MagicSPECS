@@ -4,7 +4,7 @@
 
 Name: python3-cairo
 Version: 1.10.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: MPLv1.1 or LGPLv2
 Group: Development/Languages
 Group(zh_CN.UTF-8): 开发/库
@@ -101,6 +101,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/py3cairo.pc
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.10.0-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 1.10.0-5
 - 为 Magic 3.0 重建
 

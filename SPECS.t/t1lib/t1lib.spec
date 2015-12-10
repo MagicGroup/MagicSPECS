@@ -1,6 +1,6 @@
 Name:           t1lib
 Version:        5.1.2
-Release:        12%{?dist}
+Release:        13%{?dist}
 
 Summary:        PostScript Type 1 font rasterizer
 Summary(zh_CN.UTF-8): PostScript Type 1 字体栅格化
@@ -169,6 +169,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 5.1.2-13
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 5.1.2-12
 - 为 Magic 3.0 重建
 

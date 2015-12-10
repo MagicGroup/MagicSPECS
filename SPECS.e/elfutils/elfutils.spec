@@ -1,7 +1,7 @@
 Name: elfutils
 Summary: A collection of utilities and DSOs to handle compiled objects
 Version: 0.164
-%global baserelease 2
+%global baserelease 4
 URL: https://fedorahosted.org/elfutils/
 %global source_url http://fedorahosted.org/releases/e/l/elfutils/%{version}/
 License: GPLv3+ and (GPLv2+ or LGPLv3+)
@@ -19,33 +19,19 @@ Group: Development/Tools
 %global use_zlib                0
 %global use_xz                  0
 
-%if 0%{?rhel}
-%global portability             (%rhel < 6)
-%global scanf_has_m             (%rhel >= 6)
-%global separate_devel_static   (%rhel >= 6)
-%global use_zlib                (%rhel >= 5)
-%global use_xz                  (%rhel >= 5)
-%endif
-%if 0%{?fedora}
-%global portability             (%fedora < 9)
-%global scanf_has_m             (%fedora >= 8)
-%global separate_devel_static   (%fedora >= 7)
-%global use_zlib                (%fedora >= 5)
-%global use_xz                  (%fedora >= 10)
-%endif
+%global portability             0
+%global scanf_has_m             1
+%global separate_devel_static   1
+%global use_zlib                1
+%global use_xz                  1
 
-%if %{compat} || %{!?rhel:6}%{?rhel} < 6
-%global nocheck true
-%else
+%global provide_yama_scope	1
+
 %global nocheck false
-%endif
 
 %global depsuffix %{?_isa}%{!?_isa:-%{_arch}}
 
 Source: %{?source_url}%{name}-%{version}.tar.bz2
-
-Patch1: %{?source_url}elfutils-robustify.patch
-Patch2: %{?source_url}elfutils-portability.patch
 
 %if !%{compat}
 Release: %{baserelease}%{?dist}
@@ -55,10 +41,6 @@ Release: 0.%{baserelease}
 
 Requires: elfutils-libelf%{depsuffix} = %{version}-%{release}
 Requires: elfutils-libs%{depsuffix} = %{version}-%{release}
-
-%if %{!?rhel:6}%{?rhel} < 6 || %{!?fedora:9}%{?fedora} < 10
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%endif
 
 BuildRequires: gettext
 BuildRequires: bison >= 1.875
@@ -100,6 +82,9 @@ License: GPLv2+ or LGPLv3+
 Provides: elfutils-libs%{depsuffix} = %{version}-%{release}
 %endif
 Requires: elfutils-libelf%{depsuffix} = %{version}-%{release}
+%if %{provide_yama_scope}
+Requires: default-yama-scope
+%endif
 
 %description libs
 The elfutils-libs package contains libraries which implement DWARF, ELF,
@@ -188,6 +173,26 @@ Requires: elfutils-libelf-devel%{depsuffix} = %{version}-%{release}
 The elfutils-libelf-static package contains the static archive
 for libelf.
 
+%if %{provide_yama_scope}
+%package default-yama-scope
+Summary: Default yama attach scope sysctl setting
+Group: Development/Tools
+License: GPLv2+ or LGPLv3+
+Provides: default-yama-scope
+BuildArch: noarch
+# For the sysctl_apply macro
+BuildRequires: systemd >= 215
+
+%description default-yama-scope
+Yama sysctl setting to enable default attach scope settings
+enabling programs to use ptrace attach, access to
+/proc/PID/{mem,personality,stack,syscall}, and the syscalls
+process_vm_readv and process_vm_writev which are used for
+interprocess services, communication and introspection
+(like synchronisation, signaling, debugging, tracing and
+profiling) of processes.
+%endif
+
 %prep
 %setup -q
 
@@ -195,8 +200,6 @@ for libelf.
 : 'portability=%portability'
 : 'separate_devel_static=%separate_devel_static'
 : 'scanf_has_m=%scanf_has_m'
-
-%patch1 -p1 -b .robustify
 
 %if %{portability}
 %patch2 -p1 -b .portability
@@ -243,12 +246,16 @@ make -s install DESTDIR=${RPM_BUILD_ROOT}
 chmod +x ${RPM_BUILD_ROOT}%{_prefix}/%{_lib}/lib*.so*
 chmod +x ${RPM_BUILD_ROOT}%{_prefix}/%{_lib}/elfutils/lib*.so*
 
+%if %{provide_yama_scope}
+install -Dm0644 config/10-default-yama-scope.conf ${RPM_BUILD_ROOT}%{_sysctldir}/10-default-yama-scope.conf
+%endif
+
 # XXX Nuke unpackaged files
 (cd ${RPM_BUILD_ROOT}
  rm -f .%{_bindir}/eu-ld
 )
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 %check
 make -s %{?_smp_mflags} check || (cat tests/test-suite.log; %{nocheck})
@@ -303,6 +310,8 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_includedir}/elfutils/libdw.h
 %{_includedir}/elfutils/libdwfl.h
 %{_includedir}/elfutils/version.h
+%{_includedir}/elfutils/known-dwarf.h
+%{_includedir}/elfutils/libdwelf.h
 %{_libdir}/libebl.a
 %{_libdir}/libasm.so
 %{_libdir}/libdw.so
@@ -312,7 +321,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/libasm.a
 %{_libdir}/libdw.a
 
-%files -f %{name}.lang libelf
+%files libelf
 %defattr(-,root,root)
 %{_libdir}/libelf-%{version}.so
 %{_libdir}/libelf.so.*
@@ -328,7 +337,19 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(-,root,root)
 %{_libdir}/libelf.a
 
+%if %{provide_yama_scope}
+%files default-yama-scope
+%defattr(-,root,root)
+%config(noreplace) %{_sysctldir}/10-default-yama-scope.conf
+%endif
+
 %changelog
+* Tue Dec 01 2015 Liu Di <liudidi@gmail.com> - 0.164-4
+- 为 Magic 3.0 重建
+
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 0.164-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 0.164-2
 - 更新到 0.164
 

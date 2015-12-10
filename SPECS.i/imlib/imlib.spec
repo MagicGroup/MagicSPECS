@@ -1,7 +1,7 @@
 Summary:	An image loading and rendering library for X11R6
 Name:		imlib
 Version:	1.9.15
-Release:	19%{?dist}
+Release:	20%{?dist}
 Epoch:		1
 License:	LGPLv2+
 Group:		System Environment/Libraries
@@ -182,6 +182,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/imlib-config.1*
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:1.9.15-20
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1:1.9.15-19
 - 为 Magic 3.0 重建
 

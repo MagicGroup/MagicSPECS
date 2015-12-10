@@ -1,6 +1,6 @@
 Name:           perl-File-ShareDir-PAR
 Version:        0.06
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        File::ShareDir with PAR support
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 0.06-23
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 0.06-22
 - 为 Magic 3.0 重建
 

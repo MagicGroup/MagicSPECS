@@ -1,8 +1,8 @@
 Summary:        Tool to analyse BIOS DMI data
 Summary(zh_CN.UTF-8): 分析 BIOS DMI 数据的工具
 Name:           dmidecode
-Version:	3.0
-Release:        5%{?dist}
+Version:	2.12
+Release:        6%{?dist}
 Epoch:          1
 Group:          System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -54,6 +54,9 @@ rm -rf ${buildroot}
 %{_mandir}/man8/*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:3.0-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 1:3.0-5
 - 更新到 3.0
 

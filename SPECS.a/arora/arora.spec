@@ -6,9 +6,9 @@
 Name:           arora
 Version:        0.11.1
 %if 0%{git}
-Release:	0.git%{vcsdate}.%{?dist}.7
+Release:	0.git%{vcsdate}.%{?dist}.8
 %else
-Release:        7%{?dist}
+Release:        8%{?dist}
 %endif
 Summary:        A cross platform web browser
 Summary(zh_CN): 一个跨平台的网页浏览器
@@ -99,6 +99,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/man/man1
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Wed Oct 28 2015 Liu Di <liudidi@gmail.com>
 - 更新到 20151028 日期的仓库源码
 

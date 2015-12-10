@@ -4,7 +4,7 @@ Summary: Mercurial -- a distributed SCM
 Summary(zh_CN.UTF-8): 一个分布式版本控制系统
 Name: mercurial
 Version: 3.5.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 #Release: 1%{?dist}
 
 #%define upstreamversion %{version}-rc
@@ -195,6 +195,9 @@ rm -rf $RPM_BUILD_ROOT
 ##cd tests && %{__python} run-tests.py
 
 %changelog
+* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.5.2-3
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.5.2-2
 - 更新到 3.5.2
 

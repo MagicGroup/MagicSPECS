@@ -1,0 +1,54 @@
+diff -up clementine-1.2.1/dist/clementine.desktop.dt_categories clementine-1.2.1/dist/clementine.desktop
+--- clementine-1.2.1/dist/clementine.desktop.dt_categories	2013-08-04 03:01:38.000000000 -0500
++++ clementine-1.2.1/dist/clementine.desktop	2014-01-03 11:16:54.012334646 -0600
+@@ -12,12 +12,12 @@ Exec=clementine %U
+ TryExec=clementine
+ Icon=application-x-clementine
+ Terminal=false
+-Categories=AudioVideo;Player;Qt;
++Categories=AudioVideo;Audio;Player;Qt;
+ StartupNotify=false
+ MimeType=application/ogg;application/x-ogg;application/x-ogm-audio;audio/aac;audio/mp4;audio/mpeg;audio/mpegurl;audio/ogg;audio/vnd.rn-realaudio;audio/vorbis;audio/x-flac;audio/x-mp3;audio/x-mpeg;audio/x-mpegurl;audio/x-ms-wma;audio/x-musepack;audio/x-oggflac;audio/x-pn-realaudio;audio/x-scpls;audio/x-speex;audio/x-vorbis;audio/x-vorbis+ogg;audio/x-wav;video/x-ms-asf;x-content/audio-player;x-scheme-handler/zune;x-scheme-handler/itpc;x-scheme-handler/itms;x-scheme-handler/feed;
+ X-Ayatana-Desktop-Shortcuts=Play;Pause;Stop;Previous;Next;
+ 
+-[Play Shortcut Group]
++[X-Play Shortcut Group]
+ Name=Play
+ Exec=clementine --play
+ TargetEnvironment=Unity
+@@ -66,7 +66,7 @@ Name[vi]=Phát
+ Name[zh_CN]=播放
+ Name[zh_TW]=播放
+ 
+-[Pause Shortcut Group]
++[X-Pause Shortcut Group]
+ Name=Pause
+ Exec=clementine --pause
+ TargetEnvironment=Unity
+@@ -110,7 +110,7 @@ Name[vi]=Tạm dừng
+ Name[zh_CN]=暂停
+ Name[zh_TW]=暫停
+ 
+-[Stop Shortcut Group]
++[X-Stop Shortcut Group]
+ Name=Stop
+ Exec=clementine --stop
+ TargetEnvironment=Unity
+@@ -157,7 +157,7 @@ Name[vi]=Dừng
+ Name[zh_CN]=停止
+ Name[zh_TW]=停止
+ 
+-[Previous Shortcut Group]
++[X-Previous Shortcut Group]
+ Name=Previous
+ Exec=clementine --previous
+ TargetEnvironment=Unity
+@@ -203,7 +203,7 @@ Name[vi]=Trước
+ Name[zh_CN]=上一首
+ Name[zh_TW]=往前
+ 
+-[Next Shortcut Group]
++[X-Next Shortcut Group]
+ Name=Next
+ Exec=clementine --next
+ TargetEnvironment=Unity

@@ -4,7 +4,7 @@
 
 Name:		apache-resource-bundles
 Version:	2
-Release:	14%{?dist}
+Release:	15%{?dist}
 Summary:	Apache Resource Bundles
 
 Group:		Development/Libraries
@@ -78,6 +78,9 @@ popd
 %dir %{_javadir}/%{name}
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 2-15
+- 为 Magic 3.0 重建
+
 * Mon Jun 09 2014 Liu Di <liudidi@gmail.com> - 2-14
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Summary:	Toolchain to master DVD+RW/+R media
 Summary(zh_CN.UTF-8): 管理 DVD+RW/+R 媒体的工具链
 Name:		dvd+rw-tools
 Version:	7.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPLv2
 Group:		Applications/Multimedia
 Group(zh_CN.UTF-8): 	应用程序/多媒体
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man1/growisofs.1*
 
 %changelog
+* Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 7.1-6
+- 为 Magic 3.0 重建
+
 * Thu Oct 29 2015 Liu Di <liudidi@gmail.com> - 7.1-5
 - 为 Magic 3.0 重建
 

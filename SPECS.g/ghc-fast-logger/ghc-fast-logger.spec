@@ -9,7 +9,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        2.1.4
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        A fast logging system
 
 License:        BSD
@@ -81,6 +81,12 @@ This package provides the Haskell %{pkg_name} library development files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 2.1.4-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.1.4-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.1.4-3
 - 为 Magic 3.0 重建
 

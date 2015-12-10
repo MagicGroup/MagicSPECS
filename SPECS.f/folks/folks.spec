@@ -6,7 +6,7 @@
 Name:           folks
 Epoch:          1
 Version:	0.11.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        GObject contact aggregation library
 Summary(zh_CN.UTF-8): GObject 联系人聚合库
 
@@ -130,6 +130,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
 %changelog
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:0.11.1-2
+- 为 Magic 3.0 重建
+
 * Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 1:0.11.1-1
 - 更新到 0.11.1
 

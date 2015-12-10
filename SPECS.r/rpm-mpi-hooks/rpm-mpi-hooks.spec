@@ -1,7 +1,8 @@
 Name:           rpm-mpi-hooks
 Version:        3
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        RPM dependency generator hooks for MPI packages
+Summary(zh_CN.UTF-8): MPI 包的 RPM 依赖生成
 
 License:        MIT
 BuildArch:      noarch
@@ -21,6 +22,8 @@ RPM dependency generator hooks for MPI packages. This package should be added
 as a BuildRequires to all mpi implementations (i.e. openmpi, mpich) as well as
 a Requires to the their -devel packages.
 
+%description -l zh_CN.UTF-8
+MPI 包的 RPM 依赖生成。
 
 %prep
 cp -a %SOURCE4 .
@@ -46,6 +49,12 @@ install -Dpm 0755 %{SOURCE3} %{buildroot}%{_rpmconfigdir}/mpi.req
 
 
 %changelog
+* Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 3-5
+- 为 Magic 3.0 重建
+
+* Mon Nov 16 2015 Liu Di <liudidi@gmail.com> - 3-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 2 2015 Orion Poplawski <orion@cora.nwra.com> - 3-3
 - Drop requires rpm-build, fileattrs now owned by rpm
 

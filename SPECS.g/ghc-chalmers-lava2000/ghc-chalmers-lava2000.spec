@@ -4,7 +4,7 @@
 
 Name:           ghc-%{pkg_name}
 Version:        1.4.1
-Release:        3%{?dist}
+Release:        5%{?dist}
 Summary:        Hardware description EDSL
 
 License:        BSD
@@ -73,6 +73,12 @@ files.
 
 
 %changelog
+* Fri Dec 04 2015 Liu Di <liudidi@gmail.com> - 1.4.1-5
+- 为 Magic 3.0 重建
+
+* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.4.1-4
+- 为 Magic 3.0 重建
+
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 1.4.1-3
 - 为 Magic 3.0 重建
 
