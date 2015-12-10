@@ -1,0 +1,14 @@
+diff -up gypsy-0.8/gypsy/gypsy-time.c.unusedvar gypsy-0.8/gypsy/gypsy-time.c
+--- gypsy-0.8/gypsy/gypsy-time.c.unusedvar	2011-03-13 12:12:43.000000000 +0000
++++ gypsy-0.8/gypsy/gypsy-time.c	2011-03-13 12:23:38.000000000 +0000
+@@ -155,7 +155,9 @@ get_property (GObject    *object,
+ 	      GValue     *value,
+ 	      GParamSpec *pspec)
+ {
+-	GypsyTimePrivate *priv;
++    /* KH: gcc complains about unused var, not sure if GET_PRIVATE hasn't some side effects, 
++     * marking that as unused only so that gcc doesn't bail out anymore */
++	__attribute__((__unused__)) GypsyTimePrivate *priv;
+ 
+ 	priv = GET_PRIVATE (object);
+ 	switch (prop_id) {

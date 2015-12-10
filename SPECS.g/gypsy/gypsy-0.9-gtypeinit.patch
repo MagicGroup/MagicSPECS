@@ -1,0 +1,63 @@
+--- gypsy-0.9/src/main.c.orig	2013-05-19 18:06:00.511498667 +0100
++++ gypsy-0.9/src/main.c	2013-05-19 18:06:44.789974863 +0100
+@@ -188,7 +188,9 @@
+ 
+ 	umask (022);
+ 
++#if (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 35) 
+ 	g_type_init ();
++#endif
+ 
+ 	mainloop = g_main_loop_new (NULL, FALSE);
+ 
+--- gypsy-0.9/examples/list-known-gps-devices.c.orig	2013-05-19 18:20:12.719833223 +0100
++++ gypsy-0.9/examples/list-known-gps-devices.c	2013-05-19 18:21:04.714404534 +0100
+@@ -21,7 +21,9 @@
+     GPtrArray *known_devices;
+     int i;
+ 
++#if (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 35) 
+     g_type_init ();
++#endif
+ 
+     discovery = gypsy_discovery_new ();
+     known_devices = gypsy_discovery_list_devices (discovery, &error);
+--- gypsy-0.9/examples/simple-gps-dbus.c.orig	2013-05-19 18:21:21.712591296 +0100
++++ gypsy-0.9/examples/simple-gps-dbus.c	2013-05-19 18:22:36.394411761 +0100
+@@ -122,7 +122,9 @@
+ 	DBusError error;
+ 	GMainLoop *mainloop;
+ 
+-	g_type_init ();
++#if (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 35) 
++ 	g_type_init ();
++#endif
+ 	conn = get_connection ();
+ 
+ 	dbus_error_init (&error);
+--- gypsy-0.9/examples/simple-gps-gypsy.c.orig	2013-05-19 18:21:29.829680477 +0100
++++ gypsy-0.9/examples/simple-gps-gypsy.c	2013-05-19 18:22:57.716645989 +0100
+@@ -68,7 +68,9 @@
+ 		return 0;
+ 	}
+ 
+-	g_type_init ();
++#if (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 35) 
++ 	g_type_init ();
++#endif
+ 
+ 	control = gypsy_control_get_default ();
+ 	path = gypsy_control_create (control, argv[1], &error);
+--- gypsy-0.9/examples/simple-gps-satellites.c.orig	2013-05-19 18:21:38.097771316 +0100
++++ gypsy-0.9/examples/simple-gps-satellites.c	2013-05-19 18:23:09.356773853 +0100
+@@ -43,7 +43,9 @@
+ 		return 0;
+ 	}
+ 
+-	g_type_init ();
++#if (GLIB_MAJOR_VERSION == 2 && GLIB_MINOR_VERSION < 35) 
++ 	g_type_init ();
++#endif
+ 
+ 	control = gypsy_control_get_default ();
+ 	path = gypsy_control_create (control, argv[1], &error);
