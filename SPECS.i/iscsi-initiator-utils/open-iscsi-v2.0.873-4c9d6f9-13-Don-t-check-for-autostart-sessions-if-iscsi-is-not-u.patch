@@ -1,0 +1,30 @@
+From 89aefb2bb117d9766cc3ff4e05f4e0735d108a41 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Tue, 28 May 2013 13:12:27 -0700
+Subject: [PATCH] Don't check for autostart sessions if iscsi is not used (bug
+ #951951)
+
+Change conditional startup in iscsi.service to check for a non-empty
+nodes directory, instead of initiator-name.  This fits better with what
+it's doing, as there's no need to scan for autostart node records if
+there are no node records at all.
+---
+ etc/systemd/iscsi.service | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etc/systemd/iscsi.service b/etc/systemd/iscsi.service
+index 0309e2f..d5712bd 100644
+--- a/etc/systemd/iscsi.service
++++ b/etc/systemd/iscsi.service
+@@ -5,7 +5,7 @@ DefaultDependencies=no
+ Conflicts=shutdown.target
+ After=systemd-remount-fs.service network.target iscsid.service iscsiuio.service
+ Before=remote-fs-pre.target
+-ConditionPathExists=/etc/iscsi/initiatorname.iscsi
++ConditionDirectoryNotEmpty=/var/lib/iscsi/nodes
+ 
+ [Service]
+ Type=oneshot
+-- 
+2.1.0
+

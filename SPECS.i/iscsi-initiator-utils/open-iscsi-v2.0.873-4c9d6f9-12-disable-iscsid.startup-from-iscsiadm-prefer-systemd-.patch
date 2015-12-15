@@ -1,0 +1,26 @@
+From ae7a99ffb02936d6ab9da51ed1e98a08439a6acb Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Thu, 21 Feb 2013 21:05:39 -0800
+Subject: [PATCH] disable iscsid.startup from iscsiadm, prefer systemd socket
+ activation
+
+---
+ etc/iscsid.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/etc/iscsid.conf b/etc/iscsid.conf
+index cfa6844..db395df 100644
+--- a/etc/iscsid.conf
++++ b/etc/iscsid.conf
+@@ -17,7 +17,7 @@
+ # maintainers.
+ #
+ # Default for Fedora and RHEL. (uncomment to activate).
+-iscsid.startup = /etc/rc.d/init.d/iscsid force-start
++#iscsid.startup = /bin/systemctl start iscsid.service
+ # 
+ # Default for upstream open-iscsi scripts (uncomment to activate).
+ # iscsid.startup = /sbin/iscsid
+-- 
+2.1.0
+

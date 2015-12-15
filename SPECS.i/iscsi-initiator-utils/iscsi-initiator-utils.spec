@@ -1,118 +1,45 @@
-%define open_iscsi_version	2.0
-%define open_iscsi_build	873
+%global open_iscsi_version	2.0
+%global open_iscsi_build	873
+%global commit0 		4c9d6f9908bc55e4514b00c178ae72bb0d8fc96b
+%global shortcommit0		%(c=%{commit0}; echo ${c:0:7})
 
 Summary: iSCSI daemon and utility programs
 Name: iscsi-initiator-utils
 Version: 6.%{open_iscsi_version}.%{open_iscsi_build}
-Release: 22%{?dist}
+Release: 30.git%{shortcommit0}%{?dist}
 Group: System Environment/Daemons
 License: GPLv2+
 URL: http://www.open-iscsi.org
-
-Source0: http://www.open-iscsi.org/bits/open-iscsi-%{open_iscsi_version}-%{open_iscsi_build}.tar.gz
+Source0: https://github.com/mikechristie/open-iscsi/archive/%{commit0}.tar.gz#/open-iscsi-%{shortcommit0}.tar.gz
 Source4: 04-iscsi
 Source5: iscsi-tmpfiles.conf
 
-# upstream patches, post last tagged version
-Patch1: 0001-iscsid-fix-iscsid-segfault-during-qla4xxx-login.patch
-Patch2: 0002-ISCSISTART-Bring-up-the-corresponding-network-interf.patch
-Patch3: 0003-iscsi-tools-fix-compile-error-when-OFFLOAD_BOOT_SUPP.patch
-Patch4: 0004-ISCSID-Passing-more-net-params-from-ibft-to-iface.patch
-Patch5: 0005-iscsi-tools-Convert-r-argument-to-an-integer-before-.patch
-Patch6: 0006-Update-README-for-removal-of-DBM-requirement.patch
-Patch7: 0007-iscsid-iscsiadm-fix-abstract-socket-length-in-bind-c.patch
-Patch8: 0008-iscsid-implement-systemd-compatible-socket-activatio.patch
-Patch9: 0009-iscsid-add-example-unit-files-for-systemd.patch
-Patch10: 0010-iscsi-tools-fix-get_random_bytes-error-handling.patch
-Patch11: 0011-ISCSID-Added-socket-communication-hooks-for-uip.patch
-Patch12: 0012-ISCSID-Modified-the-Makefile-for-iscsiuio-compilatio.patch
-Patch13: 0013-ISCSID-Added-iscsiuio-source-to-the-open-iscsi-pkg.patch
-Patch14: 0014-From-Adheer-Chandravanshi-adheer.chandravanshi-qlogi.patch
-Patch15: 0015-Manpage-changes-for-flashnode-submode-support-for-ho.patch
-Patch16: 0016-README-changes-for-flashnode-submode-support-for-hos.patch
-Patch17: 0017-PATCH-1-of-1-correctly-check-return-value-of-nice.patch
-Patch18: 0018-Allow-firmware-mode-to-use-debug-flag.patch
-Patch19: 0019-iscsiadm-return-error-when-login-fails.patch
-Patch20: 0020-iscsiadm-bind-ifaces-to-portals-found-using-isns.patch
-Patch21: 0021-iscsiadm-Check-for-mode-is-not-required-when-creatin.patch
-Patch22: 0022-iscsid-iscsiadm-add-support-for-emulex-one-connect-s.patch
-Patch23: 0023-ISCSIUIO-Updated-iscsiuio-to-version-0.7.8.1b-for-pe.patch
-Patch24: 0024-Fix-discovery-error-return-without-return-value.patch
-Patch25: 0025-iscsid-Fix-strlen-parameter.patch
-Patch26: 0026-iscsiuio-Change-socket-bind-to-use-the-same-struct-s.patch
-Patch27: 0027-Make-rescan-run-in-parallel.patch
-Patch28: 0028-iscsiadm-Correctly-check-for-invalid-hostno-and-flas.patch
-Patch29: 0029-iscsi-tools-Print-additional-session-info-for-flashn.patch
-Patch30: 0030-iscsi-tools-sync-iscsi_if.h-with-kernel-space.patch
-Patch31: 0031-PATCH-v5-1-3-ISCSISTART-Saved-ibft-boot-info-to-the-.patch
-Patch32: 0032-ISCSID-Added-the-extraction-of-the-session-boot-info.patch
-Patch33: 0033-ISCSID-Added-iface-content-override-fix.patch
-Patch34: 0034-iscsi-tools-Bug-fix-on-IPC-address-copy-version-2.patch
-Patch35: 0035-flashnode-Add-support-to-set-ISCSI_FLASHNODE_CHAP_OU.patch
-Patch36: 0036-iscsiadm-Use-x-option-instead-of-v-to-specify-chap_t.patch
-Patch37: 0037-iscsiadm-Man-page-changes-to-use-x-option-for-chap_t.patch
-Patch38: 0038-README-changes-to-use-long-option-index-instead-of-f.patch
-Patch39: 0039-iscsiadm-Add-support-to-set-CHAP-entry-using-host-ch.patch
-Patch40: 0040-iscsi-tools-Correctly-get-username_in-and-password_i.patch
-Patch41: 0041-README-changes-for-adding-support-to-set-CHAP-entry.patch
-Patch42: 0042-iscsi-tools-Setup-iface-conf-file-with-all-iface-att.patch
-Patch43: 0043-iscsi_if.h-Remove-numbers-used-for-network-parameter.patch
-Patch44: 0044-iscsi_if.h-Additional-parameters-for-network-param-s.patch
-Patch45: 0045-iscsi-tools-Use-macro-to-set-IPv4-IPv6-IP-addresses.patch
-Patch46: 0046-iscsi-tools-Use-single-function-to-enable-disable-ne.patch
-Patch47: 0047-iscsi-tools-Use-single-function-to-set-integer-netwo.patch
-Patch48: 0048-iscsi-tools-Ignore-network-parameter-if-not-enabled-.patch
-Patch49: 0049-iscsi-tools-Additional-parameters-for-network-settin.patch
-Patch50: 0050-iscsi-tools-iface-params-should-be-updated-for-node_.patch
-Patch51: 0051-iscsi-tools-Let-default-type-of-iface-be-ipv4.patch
-Patch52: 0052-iscsi-tools-Show-iface-params-based-on-iface-type.patch
-Patch53: 0053-iscsiadm-Added-document-for-description-of-iface-att.patch
-Patch54: 0054-iscsi_tool-Add-offload-host-statistics-support.patch
-Patch55: 0055-README-Updated-for-host-statistics.patch
-Patch56: 0056-iscsiadm.8-Updated-man-page-for-host-statistics.patch
-Patch57: 0057-iscsi-tools-Fix-the-iscsiadm-help-options-for-host-m.patch
-Patch58: 0058-Man-page-correction-for-host-mode-options-of-iscsiad.patch
-Patch59: 0059-ISCSIUIO-Added-tx-doorbell-override-mechanism.patch
-Patch60: 0060-ISCSIUIO-Added-fix-for-the-iface.subnet_mask-decodin.patch
-Patch61: 0061-ISCSIUIO-Added-fix-for-the-ARP-cache-flush-mechanism.patch
-Patch62: 0062-ISCSIUIO-Updated-RELEASE-note-and-version.patch
-Patch63: 0063-ISCSIUIO-Updated-the-configure-file-to-reflect-the-n.patch
-Patch64: 0064-ISCSIUIO-Removed-the-auto-generated-COPYING-file.patch
-Patch68: 0068-iscsiuio-fix-compilation.patch
-Patch69: 0069-Add-missing-DESTDIR.patch
-Patch70: 0070-iscsi-tools-set-non-negotiated-params-early.patch
+Patch1: open-iscsi-v2.0.873-4c9d6f9-1-idmb_rec_write-check-for-tpgt-first.patch
+Patch2: open-iscsi-v2.0.873-4c9d6f9-2-idbm_rec_write-seperate-old-and-new-style-writes.patch
+Patch3:open-iscsi-v2.0.873-4c9d6f9-3-idbw_rec_write-pick-tpgt-from-existing-record.patch
+Patch4:open-iscsi-v2.0.873-4c9d6f9-4-update-systemd-service-files-add-iscsi.service-for-s.patch
+Patch5:open-iscsi-v2.0.873-4c9d6f9-5-iscsi-boot-related-service-file-updates.patch
+Patch6:open-iscsi-v2.0.873-4c9d6f9-6-update-initscripts-and-docs.patch
+Patch7:open-iscsi-v2.0.873-4c9d6f9-7-use-var-for-config.patch
+Patch8:open-iscsi-v2.0.873-4c9d6f9-8-use-red-hat-for-name.patch
+Patch9:open-iscsi-v2.0.873-4c9d6f9-9-libiscsi.patch
+Patch10:open-iscsi-v2.0.873-4c9d6f9-10-remove-the-offload-boot-supported-ifdef.patch
+Patch11:open-iscsi-v2.0.873-4c9d6f9-11-iscsiuio-systemd-unit-files.patch
+Patch12:open-iscsi-v2.0.873-4c9d6f9-12-disable-iscsid.startup-from-iscsiadm-prefer-systemd-.patch
+Patch13:open-iscsi-v2.0.873-4c9d6f9-13-Don-t-check-for-autostart-sessions-if-iscsi-is-not-u.patch
+Patch14:open-iscsi-v2.0.873-4c9d6f9-14-start-socket-listeners-on-iscsiadm-command.patch
+Patch15:open-iscsi-v2.0.873-4c9d6f9-15-Revert-iscsiadm-return-error-when-login-fails.patch
+Patch16:open-iscsi-v2.0.873-4c9d6f9-16-update-handling-of-boot-sessions.patch
+Patch17:open-iscsi-v2.0.873-4c9d6f9-17-update-iscsi.service-for-boot-session-recovery.patch
+Patch18:open-iscsi-v2.0.873-4c9d6f9-18-updates-to-iscsi.service.patch
+Patch19:open-iscsi-v2.0.873-4c9d6f9-19-make-session-shutdown-a-seperate-service.patch.patch
+Patch20:open-iscsi-v2.0.873-4c9d6f9-20-Add-macros-to-release-GIL-lock.patch
+Patch21:open-iscsi-v2.0.873-4c9d6f9-21-libiscsi-introduce-sessions-API.patch
+# ugly version string patch, should change with every rebuild
+Patch22:open-iscsi-v2.0.873-4c9d6f9-22-use-Red-Hat-version-string-to-match-RPM-package-vers.patch
 
-# not (yet) upstream merged
-Patch131: 0131-iscsiadm-Fix-the-hostno-check-for-stats-submode-of-h.patch
-Patch132: 0132-iscsiadm-Fix-the-compile-time-warning.patch
-Patch143: 0143-idmb_rec_write-check-for-tpgt-first.patch
-Patch145: 0145-idbm_rec_write-seperate-old-and-new-style-writes.patch
-Patch146: 0146-idbw_rec_write-pick-tpgt-from-existing-record.patch
-Patch147: 0147-iscsiuio-systemd-socket-activation-support.patch
-Patch149: 0149-update-systemd-service-files-add-iscsi.service-for-s.patch
-Patch150: 0150-iscsi-boot-related-service-file-updates.patch
-# distro specific modifications
-Patch151: 0151-update-initscripts-and-docs.patch
-Patch152: 0152-use-var-for-config.patch
-Patch153: 0153-use-red-hat-for-name.patch
-Patch154: 0154-add-libiscsi.patch
-Patch155: 0155-dont-use-static.patch
-Patch156: 0156-remove-the-offload-boot-supported-ifdef.patch
-Patch159: 0159-iscsiuio-systemd-unit-files.patch
-Patch160: 0160-use-systemctl-to-start-iscsid.patch
-Patch161: 0161-resolve-565245-multilib-issues-caused-by-doxygen.patch
-Patch162: 0162-Don-t-check-for-autostart-sessions-if-iscsi-is-not-u.patch
-Patch163: 0163-fix-order-of-setting-uid-gid-and-drop-supplementary-.patch
-Patch164: 0164-libiscsi-fix-incorrect-strncpy-use.patch
-Patch165: 0165-fix-hardened-build-of-iscsiuio.patch
-Patch166: 0166-start-socket-listeners-on-iscsiadm-command.patch
-Patch167: 0167-Revert-iscsiadm-return-error-when-login-fails.patch
-Patch168: 0168-update-handling-of-boot-sessions.patch
-Patch169: 0169-update-iscsi.service-for-boot-session-recovery.patch
-# version string, needs to be updated with each build
-Patch199: 0199-use-Red-Hat-version-string-to-match-RPM-package-vers.patch
-
-BuildRequires: flex bison python-devel doxygen kmod-devel systemd-devel
+BuildRequires: flex bison python2-devel python3-devel python-setuptools doxygen kmod-devel systemd-units
+BuildRequires: autoconf automake libtool libmount-devel isns-utils-devel openssl-devel
 # For dir ownership
 Requires: %{name}-iscsiuio >= %{version}-%{release}
 Requires(post): systemd
@@ -120,7 +47,7 @@ Requires(preun): systemd
 Requires(postun): systemd
 
 %global _hardened_build 1
-%global __provides_exclude_from ^(%{python_sitearch}/.*\\.so)$
+%global __provides_exclude_from ^(%{python2_sitearch}/.*\\.so|%{python3_sitearch}/.*\\.so)$
 
 %description
 The iscsi package provides the server daemon for the iSCSI protocol,
@@ -147,105 +74,24 @@ Requires: %{name} = %{version}-%{release}
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
+%package -n python-%{name}
+Summary: Python %{python2_version} bindings to %{name}
+Group: Development/Libraries
+
+%description -n python-%{name}
+The %{name}-python2 package contains Python %{python2_version} bindings to the
+libiscsi interface for interacting with %{name}
+
+%package -n python3-%{name}
+Summary: Python %{python3_version} bindings to %{name}
+Group: Development/Libraries
+
+%description -n python3-%{name}
+The %{name}-python3 package contains Python %{python3_version} bindings to the
+libiscsi interface for interacting with %{name}
+
 %prep
-%setup -q -n open-iscsi-%{open_iscsi_version}-%{open_iscsi_build}
-# upstream patches
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1
-%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
-%patch30 -p1
-%patch31 -p1
-%patch32 -p1
-%patch33 -p1
-%patch34 -p1
-%patch35 -p1
-%patch36 -p1
-%patch37 -p1
-%patch38 -p1
-%patch39 -p1
-%patch40 -p1
-%patch41 -p1
-%patch42 -p1
-%patch43 -p1
-%patch44 -p1
-%patch45 -p1
-%patch46 -p1
-%patch47 -p1
-%patch48 -p1
-%patch49 -p1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
-%patch54 -p1
-%patch55 -p1
-%patch56 -p1
-%patch57 -p1
-%patch58 -p1
-%patch59 -p1
-%patch60 -p1
-%patch61 -p1
-%patch62 -p1
-%patch63 -p1
-%patch64 -p1
-%patch68 -p1
-%patch69 -p1
-%patch70 -p1
-# pending upstream merge
-%patch131 -p1
-%patch132 -p1
-%patch143 -p1
-%patch145 -p1
-%patch146 -p1
-%patch147 -p1
-%patch149 -p1
-%patch150 -p1
-# distro specific modifications
-%patch151 -p1
-%patch152 -p1
-%patch153 -p1
-%patch154 -p1
-%patch155 -p1
-%patch156 -p1
-%patch159 -p1
-%patch160 -p1
-%patch161 -p1
-%patch162 -p1
-%patch163 -p1
-%patch164 -p1
-%patch165 -p1
-%patch166 -p1
-%patch167 -p1
-%patch168 -p1
-%patch169 -p1
-# version string
-%patch199 -p1
+%autosetup -p1 -n open-iscsi-%{commit0}
 
 # change exec_prefix, there's no easy way to override
 %{__sed} -i -e 's|^exec_prefix = /$|exec_prefix = %{_exec_prefix}|' Makefile
@@ -255,16 +101,14 @@ developing applications that use %{name}.
 # configure sub-packages from here
 # letting the top level Makefile do it will lose setting from rpm
 cd iscsiuio
-%{__chmod} +x configure
+autoreconf --install
 %{configure}
 cd ..
-cd utils/open-isns
-%{configure}
-cd ../..
 
 %{__make} OPTFLAGS="%{optflags} %{?__global_ldflags} -DUSE_KMOD -lkmod"
 pushd libiscsi
-python setup.py build
+%{__python2} setup.py build
+%{__python3} setup.py build
 touch -r libiscsi.doxy html/*
 popd
 
@@ -295,6 +139,7 @@ touch $RPM_BUILD_ROOT/var/lock/iscsi/lock
 
 %{__install} -d $RPM_BUILD_ROOT%{_unitdir}
 %{__install} -pm 644 etc/systemd/iscsi.service $RPM_BUILD_ROOT%{_unitdir}
+%{__install} -pm 644 etc/systemd/iscsi-shutdown.service $RPM_BUILD_ROOT%{_unitdir}
 %{__install} -pm 644 etc/systemd/iscsid.service $RPM_BUILD_ROOT%{_unitdir}
 %{__install} -pm 644 etc/systemd/iscsid.socket $RPM_BUILD_ROOT%{_unitdir}
 %{__install} -pm 644 etc/systemd/iscsiuio.service $RPM_BUILD_ROOT%{_unitdir}
@@ -315,15 +160,18 @@ touch $RPM_BUILD_ROOT/var/lock/iscsi/lock
 %{__install} -d $RPM_BUILD_ROOT%{_includedir}
 %{__install} -pm 644 libiscsi/libiscsi.h $RPM_BUILD_ROOT%{_includedir}
 
-%{__install} -d $RPM_BUILD_ROOT%{python_sitearch}
-%{__install} -pm 755 libiscsi/build/lib.linux-*/libiscsimodule.so \
-	$RPM_BUILD_ROOT%{python_sitearch}
+%{__install} -d $RPM_BUILD_ROOT%{python2_sitearch}
+%{__install} -d $RPM_BUILD_ROOT%{python3_sitearch}
+pushd libiscsi
+%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
+%{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
+popd
 
 
 %post
 /sbin/ldconfig
 
-%systemd_post iscsi.service iscsid.service iscsiuio.service iscsid.socket iscsiuio.socket
+%systemd_post iscsi.service iscsi-shutdown.service iscsid.service iscsid.socket
 
 if [ $1 -eq 1 ]; then
 	if [ ! -f %{_sysconfdir}/iscsi/initiatorname.iscsi ]; then
@@ -332,33 +180,53 @@ if [ $1 -eq 1 ]; then
 	# enable socket activation and persistant session startup by default
 	/bin/systemctl enable iscsi.service >/dev/null 2>&1 || :
 	/bin/systemctl enable iscsid.socket >/dev/null 2>&1 || :
+fi
+
+%post iscsiuio
+%systemd_post iscsiuio.service iscsiuio.socket
+
+if [ $1 -eq 1 ]; then
 	/bin/systemctl enable iscsiuio.socket >/dev/null 2>&1 || :
 fi
 
 %preun
-%systemd_preun iscsi.service iscsid.service iscsiuio.service iscsid.socket iscsiuio.socket
+%systemd_preun iscsi.service iscsi-shutdown.service iscsid.service iscsiuio.service iscsid.socket iscsiuio.socket
+
+%preun iscsiuio
+%systemd_preun iscsiuio.service iscsiuio.socket
 
 %postun
 /sbin/ldconfig
 %systemd_postun
 
-%triggerun -- iscsi-initiator-utils < 6.2.0.873-1
-# Save the current service runlevel info
-# User must manually run systemd-sysv-convert --apply iscsid
-# and systemd-sysv-convert --apply iscsi
-# to migrate them to systemd targets
-/usr/bin/systemd-sysv-convert --save iscsi >/dev/null 2>&1 ||:
-/usr/bin/systemd-sysv-convert --save iscsid >/dev/null 2>&1 ||:
+%postun iscsiuio
+%systemd_postun
 
-# enable socket activation
-/bin/systemctl enable iscsid.socket >/dev/null 2>&1 || :
-/bin/systemctl enable iscsiuio.socket >/dev/null 2>&1 || :
+%triggerun -- iscsi-initiator-utils < 6.2.0.873-25
+# prior to 6.2.0.873-24 iscsi.service was missing a Wants=remote-fs-pre.target
+# this forces remote-fs-pre.target active if needed for a clean shutdown/reboot
+# after upgrading this package
+if [ $1 -gt 0 ]; then
+    /usr/bin/systemctl -q is-active iscsi.service
+    if [ $? -eq 0 ]; then
+        /usr/bin/systemctl -q is-active remote-fs-pre.target
+        if [ $? -ne 0 ]; then
+            SRC=`/usr/bin/systemctl show --property FragmentPath remote-fs-pre.target | cut -d= -f2`
+            DST=/run/systemd/system/remote-fs-pre.target
+            if [ $SRC != $DST ]; then
+                cp $SRC $DST
+            fi
+            sed -i 's/RefuseManualStart=yes/RefuseManualStart=no/' $DST
+            /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+            /usr/bin/systemctl start remote-fs-pre.target >/dev/null 2>&1 || :
+        fi
+    fi
+fi
+# added in 6.2.0.873-25
+if [ $1 -gt 0 ]; then
+    systemctl start iscsi-shutdown.service >/dev/null 2>&1 || :
+fi
 
-# Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del iscsid >/dev/null 2>&1 || :
-/sbin/chkconfig --del iscsi >/dev/null 2>&1 || :
-/bin/systemctl try-restart iscsid.service >/dev/null 2>&1 || :
-/bin/systemctl try-restart iscsi.service >/dev/null 1>&1 || :
 
 %files
 %doc README
@@ -372,6 +240,7 @@ fi
 %ghost %{_var}/lock/iscsi
 %ghost %{_var}/lock/iscsi/lock
 %{_unitdir}/iscsi.service
+%{_unitdir}/iscsi-shutdown.service
 %{_unitdir}/iscsid.service
 %{_unitdir}/iscsid.socket
 %{_libexecdir}/iscsi-mark-root-nodes
@@ -384,7 +253,6 @@ fi
 %{_sbindir}/iscsid
 %{_sbindir}/iscsistart
 %{_libdir}/libiscsi.so.0
-%{python_sitearch}/libiscsimodule.so
 %{_mandir}/man8/iscsi-iname.8.gz
 %{_mandir}/man8/iscsiadm.8.gz
 %{_mandir}/man8/iscsid.8.gz
@@ -402,9 +270,54 @@ fi
 %{_libdir}/libiscsi.so
 %{_includedir}/libiscsi.h
 
+%files -n python-%{name}
+%{python2_sitearch}/*
+
+%files -n python3-%{name}
+%{python3_sitearch}/*
+
 %changelog
-* Sun Apr 20 2014 Liu Di <liudidi@gmail.com> - 6.2.0.873-22
-- 为 Magic 3.0 重建
+* Tue Nov 03 2015 Robert Kuska <rkuska@redhat.com> - 6.2.0.873-30.git4c9d6f9
+- Rebuilt for Python3.5 rebuild
+
+* Tue Oct 06 2015 Chris Leech <cleech@redhat.com> - 6.2.0.873-29.git4c9d6f9
+- rebase with upstream, change Source0 url to github
+- build with external isns-utils
+
+* Mon Oct 05 2015 Chris Leech <cleech@redhat.com> - 6.2.0.873-28.git6aa2c9b
+- fixed broken multiple trigger scripts, removed old pre-systemd migration triggers
+- added libiscsi session API patch (bz #1262279)
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.873-27.git6aa2c9b
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Wed Jun 10 2015 Chris Leech <cleech@redhat.com> - 6.2.0.873-26.git6aa2c9b
+- rebase to upstream snapshot
+- add patch to improve GIL lock performance in libiscsi
+- Split Python 2 and Python 3 bindings out into subpackages
+
+* Wed Jan 28 2015 Chris Leech <cleech@redhat.com> - 6.2.0.873-25.gitc9d830b
+- split out session logout on shutdown to a separate service
+- 985321 roll up libiscsi patches, update python bindings to support python3
+- scriptlets were never split out properly for the iscsiuio subpackage
+- fix regression in network interface binding
+- created iscsi-shutdown.service to ensure that session cleanup happens
+- Add --with-slp=no
+- segfault from unexpected netlink event during discovery
+- inhibit strict aliasing optimizations in iscsiuio, rpmdiff error
+
+* Thu Oct 23 2014 Chris Leech <cleech@redhat.com> - 6.2.0.873-24.gitc9d830b
+- sync with upstream v2.0.873-84-gc9d830b
+- ignore iscsiadm return in iscsi.service
+- make sure systemd order against remote mounts is correct
+- add discovery as a valid mode in iscsiadm.8
+- make sure to pass --with-security=no to isns configure
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.873-23
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.2.0.873-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Mon Apr 14 2014 Chris Leech <cleech@redhat.com> - 6.2.0.873-21
 - boot session handling improvements

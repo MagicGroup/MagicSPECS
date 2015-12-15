@@ -1,0 +1,93 @@
+From d9f3f79341167e5cd956683bf2d223b8e9114745 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 19 Dec 2012 15:07:36 -0800
+Subject: [PATCH] update systemd service files, add iscsi.service for starting
+ sessions on boot
+
+Signed-off-by: Chris Leech <cleech@redhat.com>
+---
+ etc/systemd/iscsi.service         | 19 +++++++++++++++++++
+ etc/systemd/iscsi_mark_root_nodes | 14 ++++++++++++++
+ etc/systemd/iscsid.service        |  7 +++++--
+ etc/systemd/iscsid.socket         |  2 +-
+ 4 files changed, 39 insertions(+), 3 deletions(-)
+ create mode 100644 etc/systemd/iscsi.service
+ create mode 100755 etc/systemd/iscsi_mark_root_nodes
+
+diff --git a/etc/systemd/iscsi.service b/etc/systemd/iscsi.service
+new file mode 100644
+index 0000000..bbd52fd
+--- /dev/null
++++ b/etc/systemd/iscsi.service
+@@ -0,0 +1,19 @@
++[Unit]
++Description=Login and scanning of iSCSI devices
++Documentation=man:iscsid(8) man:iscsiadm(8)
++DefaultDependencies=no
++Conflicts=shutdown.target
++After=systemd-remount-fs.service network.target iscsid.service iscsiuio.service
++Before=remote-fs-pre.target
++ConditionPathExists=/etc/iscsi/initiatorname.iscsi
++
++[Service]
++Type=oneshot
++RemainAfterExit=true
++ExecStart=/usr/libexec/iscsi_mark_root_nodes
++ExecStart=/sbin/iscsiadm -m node --loginall=automatic
++ExecStop=/bin/sync
++ExecStop=/sbin/iscsiadm -m node --logoutall=automatic
++
++[Install]
++WantedBy=sysinit.target
+diff --git a/etc/systemd/iscsi_mark_root_nodes b/etc/systemd/iscsi_mark_root_nodes
+new file mode 100755
+index 0000000..c68475c
+--- /dev/null
++++ b/etc/systemd/iscsi_mark_root_nodes
+@@ -0,0 +1,14 @@
++#!/bin/bash
++
++ISCSIADM=/sbin/iscsiadm
++SESSION_FILE=/run/initramfs/iscsi.sessions
++
++if [ ! -f $SESSION_FILE ] ; then
++  exit 0
++fi
++
++while read t num i target; do
++  ip=${i%:*}
++  $ISCSIADM -m node -p $ip -T $target -o update -n node.startup -v onboot
++done < $SESSION_FILE
++
+diff --git a/etc/systemd/iscsid.service b/etc/systemd/iscsid.service
+index 028e0b3..653dd08 100644
+--- a/etc/systemd/iscsid.service
++++ b/etc/systemd/iscsid.service
+@@ -1,7 +1,10 @@
+ [Unit]
+ Description=Open-iSCSI
+-Documentation=man:iscsid(8) man:iscsiuio(8) man:iscsiadm(8)
+-After=network.target NetworkManager-wait-online.service iscsiuio.service tgtd.service targetcli.service
++Documentation=man:iscsid(8) man:iscsiadm(8)
++DefaultDependencies=no
++Conflicts=shutdown.target
++After=network.target iscsiuio.service
++Before=remote-fs-pre.target
+ 
+ [Service]
+ Type=forking
+diff --git a/etc/systemd/iscsid.socket b/etc/systemd/iscsid.socket
+index 832451d..58a8d12 100644
+--- a/etc/systemd/iscsid.socket
++++ b/etc/systemd/iscsid.socket
+@@ -1,6 +1,6 @@
+ [Unit]
+ Description=Open-iSCSI iscsid Socket
+-Documentation=man:iscsid(8) man:iscsiuio(8) man:iscsiadm(8)
++Documentation=man:iscsid(8) man:iscsiadm(8)
+ 
+ [Socket]
+ ListenStream=@ISCSIADM_ABSTRACT_NAMESPACE
+-- 
+2.1.0
+

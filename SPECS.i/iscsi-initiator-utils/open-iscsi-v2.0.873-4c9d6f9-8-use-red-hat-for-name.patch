@@ -1,0 +1,25 @@
+From ccdc848d3e9a10f4615fbb55aa928dd28b29df7b Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Mon, 19 Nov 2012 16:40:04 -0800
+Subject: [PATCH] use red hat for name
+
+---
+ utils/iscsi-iname.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils/iscsi-iname.c b/utils/iscsi-iname.c
+index 6347edc..cb2f6c8 100644
+--- a/utils/iscsi-iname.c
++++ b/utils/iscsi-iname.c
+@@ -73,7 +73,7 @@ main(int argc, char *argv[])
+ 			exit(0);
+ 		}
+ 	} else {
+-		prefix = "iqn.2005-03.org.open-iscsi";
++		prefix = "iqn.1994-05.com.redhat";
+ 	}
+ 
+ 	/* try to feed some entropy from the pool to MD5 in order to get
+-- 
+2.1.0
+

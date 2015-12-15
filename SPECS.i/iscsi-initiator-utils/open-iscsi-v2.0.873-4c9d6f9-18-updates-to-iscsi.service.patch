@@ -1,0 +1,41 @@
+From fb58e20b5d988a4dc863ed0087f701efa1454d78 Mon Sep 17 00:00:00 2001
+From: Chris Leech <cleech@redhat.com>
+Date: Wed, 17 Sep 2014 09:58:39 -0700
+Subject: [PATCH] updates to iscsi.service
+
+Resolves: #1126524
+Resolves: #1111925
+---
+ etc/systemd/iscsi.service | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/etc/systemd/iscsi.service b/etc/systemd/iscsi.service
+index 3de76c5..ad7be34 100644
+--- a/etc/systemd/iscsi.service
++++ b/etc/systemd/iscsi.service
+@@ -5,17 +5,17 @@ DefaultDependencies=no
+ Conflicts=shutdown.target
+ After=systemd-remount-fs.service network.target iscsid.service iscsiuio.service
+ Before=remote-fs-pre.target
++Wants=remote-fs-pre.target
+ ConditionDirectoryNotEmpty=|/var/lib/iscsi/nodes
+ ConditionDirectoryNotEmpty=|/sys/class/iscsi_session
+ 
+ [Service]
+ Type=oneshot
+ RemainAfterExit=true
+-ExecStart=/usr/libexec/iscsi-mark-root-nodes
+-SuccessExitStatus=21
+-ExecStart=/sbin/iscsiadm -m node --loginall=automatic
+-ExecStop=/sbin/iscsiadm -m node --logoutall=automatic
+-ExecReload=/sbin/iscsiadm -m node --loginall=automatic
++ExecStart=-/usr/libexec/iscsi-mark-root-nodes
++ExecStart=-/sbin/iscsiadm -m node --loginall=automatic
++ExecStop=-/sbin/iscsiadm -m node --logoutall=automatic
++ExecReload=-/sbin/iscsiadm -m node --loginall=automatic
+ 
+ [Install]
+ WantedBy=sysinit.target
+-- 
+2.1.0
+

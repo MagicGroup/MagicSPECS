@@ -1,0 +1,55 @@
+From c4a695ec82c71e01ac2ab66a67b9b463a7ffb44f Mon Sep 17 00:00:00 2001
+From: rpm-build <rpm-build>
+Date: Tue, 13 Jan 2015 16:30:01 -0800
+Subject: [PATCH] make-session-shutdown-a-seperate-service.patch
+
+---
+ etc/systemd/iscsi-shutdown.service | 14 ++++++++++++++
+ etc/systemd/iscsi.service          |  3 +--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+ create mode 100644 etc/systemd/iscsi-shutdown.service
+
+diff --git a/etc/systemd/iscsi-shutdown.service b/etc/systemd/iscsi-shutdown.service
+new file mode 100644
+index 0000000..23758e9
+--- /dev/null
++++ b/etc/systemd/iscsi-shutdown.service
+@@ -0,0 +1,14 @@
++[Unit]
++Description=Logout off all iSCSI sessions on shutdown
++Documentation=man:iscsid(8) man:iscsiadm(8)
++DefaultDependencies=no
++Conflicts=shutdown.target
++After=systemd-remount-fs.service network.target iscsid.service iscsiuio.service
++Before=remote-fs-pre.target
++Wants=remote-fs-pre.target
++RefuseManualStop=yes
++
++[Service]
++Type=oneshot
++RemainAfterExit=true
++ExecStop=-/sbin/iscsiadm -m node --logoutall=all
+diff --git a/etc/systemd/iscsi.service b/etc/systemd/iscsi.service
+index ad7be34..2736956 100644
+--- a/etc/systemd/iscsi.service
++++ b/etc/systemd/iscsi.service
+@@ -5,7 +5,7 @@ DefaultDependencies=no
+ Conflicts=shutdown.target
+ After=systemd-remount-fs.service network.target iscsid.service iscsiuio.service
+ Before=remote-fs-pre.target
+-Wants=remote-fs-pre.target
++Wants=remote-fs-pre.target iscsi-shutdown.service
+ ConditionDirectoryNotEmpty=|/var/lib/iscsi/nodes
+ ConditionDirectoryNotEmpty=|/sys/class/iscsi_session
+ 
+@@ -14,7 +14,6 @@ Type=oneshot
+ RemainAfterExit=true
+ ExecStart=-/usr/libexec/iscsi-mark-root-nodes
+ ExecStart=-/sbin/iscsiadm -m node --loginall=automatic
+-ExecStop=-/sbin/iscsiadm -m node --logoutall=automatic
+ ExecReload=-/sbin/iscsiadm -m node --loginall=automatic
+ 
+ [Install]
+-- 
+2.1.0
+
