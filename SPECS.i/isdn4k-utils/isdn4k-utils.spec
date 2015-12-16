@@ -1,22 +1,25 @@
 %global _default_patch_fuzz 2
 %global app_defaults_dir %{_datadir}/X11/app-defaults
-%global interver CVS-2010-05-01
+%global gitdate 20151118
 %global PIE -fpie
 
 Summary: Utilities for configuring an ISDN subsystem
 Name: isdn4k-utils
-Version: 3.2
-Release: 101%{?dist}
+Version: 3.27
+Release: 2%{?dist}
 License: GPLv2+ and GPL+ and MIT and BSD and zlib
 Group: Applications/System
 Url: http://www.isdn4linux.de/
 
 # license issue, remove the isdn_lzscomp.c and firmwares
-# Also remove ./eurofile/src/wuauth/sigfix.c (non-free)
-# and isdnlog/isdnlog/ora* (non-free)
 # and isdnlog/tools/telrate (non-free)
-# and pcbit/convhexbin.c (non-free, but replaced with a free copy)
-Source0: ftp://ftp.isdn4linux.de/pub/isdn4linux/utils/isdn4k-utils-%{interver}-patched.tar.bz2
+# git clone git://git.misdn.eu/isdn4k-utils.git
+# rm -f isdn4k-utils/icn/firmware/*
+# rm -f isdn4k-utils/act2000/firmware/*
+# rm -f isdn4k-utils/eicon/firmware/*
+# rm -rf isdn4k-utils/.git
+# tar cvJf isdn4k-utils-%{version}_%{gitdate}.tar.xz isdn4k-utils
+Source0: isdn4k-utils-%{version}_%{gitdate}.tar.xz 
 Source2: isdn.init
 Source7: capi20.conf
 Source8: capi.service
@@ -25,29 +28,24 @@ Source9: capiinit.8
 Source10: 40-isdn.rules
 Source11: isdn.service
 
-Patch0: isdn4k-utils-CVS-2009-10-20-redhat.patch
+Patch0: isdn4k-utils-redhat.patch
 Patch1: isdn4k-utils-CVS-2009-10-20-lib64.patch
 Patch3: isdn4k-utils-man.patch
-Patch4: isdn4k-utils-CVS-2004-11-18-autoconf25x.patch
-Patch5: isdn4k-utils-0202131200-true.patch
+Patch4: isdn4k-utils-autoconf25x.patch
+Patch5: isdn4k-utils-true.patch
 
 Patch11: isdn4k-utils-statfs.patch
 Patch12: isdn4k-utils-CVS-2005-03-09-xmon.patch
 Patch13: isdn4k-utils-capiinit.patch
-Patch16: isdn4k-utils-CVS-2006-07-20-capi.patch
-Patch17: isdn4k-utils-misc-overflow-in-capi-subsystem.patch
 Patch18: isdn4k-utils-sh-linux.patch
 Patch19: isdn4k-utils-autoconf-2.6.4-quoting.patch
-Patch20: isdn4k-utils-CVS-2010-05-01-capi.patch
-Patch21: isdn4k-utils-CVS-2010-05-01-capi-soname.patch
 Patch22: isdn4k-utils-CVS-2010-05-01-patched-vboxgetty-config.patch
 Patch23: isdn-manpages.patch
-Patch24: isdn4k-fix-ipppd.patch
-Patch25: isdn4k-utils-capi20-link.patch
-Patch26: isdn4k-utils-CVS-2010-05-01-patched-legal-fixes.patch
-Patch27: isdn4k-utils-CVS-2010-05-01-patched-strict-aliasing.patch
+Patch24: isdn-nofirmware.patch
+Patch27: isdn4k-utils-strict-aliasing.patch
 Patch28: isdn4k-fix-Werror-format-security-ftbfs.patch
-patch29: vbox-tcl-8.6.patch
+Patch29: vbox-tcl-8.6.patch
+Patch30: isdn4k-utils-mkzonedb.patch
 
 Requires: udev >= 039-10.14.EL4
 Requires: hwdata >= 0.146.18.EL-1
@@ -55,7 +53,10 @@ Requires: initscripts >= 5.92
 Requires(pre): coreutils, chkconfig, /sbin/service, bzip2
 Conflicts: filesystem < 3
 Conflicts: udev <= 179-1
-Requires: systemd-units >= 39-2
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
+Requires: %{name}-data = %{version}-%{release}
 
 BuildRequires: openjade
 BuildRequires: linuxdoc-tools
@@ -74,9 +75,9 @@ BuildRequires: imake
 BuildRequires: automake
 BuildRequires: libtool
 BuildRequires: ppp-devel
-BuildRequires: systemd-units >= 39-2
+BuildRequires: systemd
 # for /usr/bin/pod2man
-%if 0%{?fedora} > 18 || 0%{?rhel} > 6
+%if 0%{?fedora} > 18
 BuildRequires: perl-podlators
 %endif
 
@@ -85,6 +86,14 @@ ExcludeArch: s390 s390x
 %description
 The isdn4k-utils package contains a collection of utilities needed for
 configuring an ISDN subsystem.
+
+%package data
+Summary: data files
+BuildArch: noarch
+Group: Applications/System
+
+%description data
+The isdn4k-utils-data package contains data needed for configuring an ISDN subsystem.
 
 %package devel
 Summary: Header files for capi development
@@ -132,7 +141,7 @@ Requires: %{name}
 The isdn4k-utils-doc package contains the documentation for isdn4k-utils.
 
 %prep
-%setup -q -n %{name}-%{interver}-patched
+%setup -q -n %{name}-%{version}_%{gitdate}
 %patch0 -p1 -b .redhat
 %patch1 -p1 -b .lib64
 
@@ -143,26 +152,15 @@ The isdn4k-utils-doc package contains the documentation for isdn4k-utils.
 %patch11 -p1 -b .statfs
 %patch12 -p1 -b .xmon
 %patch13 -p1 -b .capi
-%patch16 -p1 -b .capi
-%patch17 -p1 -b .misc-overflow
 %patch18 -p1 -b .sh-support
 %patch19 -p1 -b .quote
-%patch20 -p1 -b .capinew
-%patch21 -p1 -b .capi-soname
 %patch22 -p1 -b .vboxgetty-config
-%patch23 -p0 -b .manpages
-%patch24 -p1 -b .fix-ipppd
-%patch25 -p1 -b .capi20-link
-%patch26 -p1 -b .legal
-%patch27 -p1 -b .no-strict-aliasing
-%patch28 -p1 -b .format-security
+%patch23 -p1 -b .manpages
+%patch24 -p1 -b .nofw
+%patch27 -p1 -b .strict-aliasing
+%patch28 -p1 -b .Werror-format-security
 %patch29 -p1 -b .tcl8.6
-
-# remove useless files
-find -type d -name "CVS" | xargs rm -rf
-
-# enable capi20.new
-rm -rf capi20 && mv capi20.new capi20
+%patch30 -p1 -b .mkzonedb-crash
 
 # autoreconf for new autofoo
 for i in */configure; do
@@ -187,7 +185,7 @@ echo CONFIG_GENMAN=y >>.config
 echo CONFIG_FAQ=y >>.config
 echo "CONFIG_FAQDIR='/usr/share/doc/isdn4k-utils'" >>.config
 echo "CONFIG_DATADIR='%{_datadir}/isdn'" >>.config
-echo "LIBDIR='%{_libdir}'" >>.config
+echo "CONFIG_LIBDIR='%{_libdir}'" >>.config
 echo "CONFIG_FIRMWAREDIR='%{_datadir}/isdn'" >>.config
 echo "CONFIG_CARD_SBINDIR='%{_sbindir}'" >>.config
 sed -e "s,',,g" .config > .config.h
@@ -273,14 +271,12 @@ install -m 644 %{SOURCE7} $RPM_BUILD_ROOT/etc
 echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 
 # install 40-isdn.rules, it's dropped from udev in F14 and later
-%if 0%{?fedora} > 13 || 0%{?rhel} > 6
-	mkdir -p %{buildroot}%{_libdir}/udev/rules.d/
-	install -m 644 %{SOURCE10} %{buildroot}%{_libdir}/udev/rules.d/
+%if 0%{?fedora} < 21 || 0%{?rhel} > 6
+	mkdir -p %{buildroot}%{_udevdir}
+	install -m 644 %{SOURCE10} %{buildroot}%{_udevdir}/
 %endif
 
-# touch zone-de-dtag.cdb, create it later in %post to avoid multilib issue
-# on machine with BIGENDIAN
-> %{buildroot}/%{_datadir}/isdn/zone-de-dtag.cdb
+mv %{buildroot}/pppd %{buildroot}%{_libdir}
 
 %post
 /sbin/ldconfig
@@ -310,12 +306,9 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 %config(noreplace) /etc/ppp/peers/*
 %config(noreplace) /etc/capi.conf
 %config(noreplace) /etc/capi20.conf
-%if 0%{?fedora} > 13 || 0%{?rhel} > 6
-%{_libdir}/udev/rules.d/40-isdn.rules
+%if 0%{?fedora} < 21 || 0%{?rhel} > 6
+%{_udevdir}/40-isdn.rules
 %endif
-%{_libdir}/pppd
-%{_datadir}/isdn/*.dat
-%{_datadir}/isdn/dest.cdb
 %{_libdir}/*.so.*
 %{_libdir}/capi/*.so.*
 %defattr(755,root,root,755)
@@ -323,7 +316,6 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 %{_sbindir}/hisaxctrl
 %{_sbindir}/icnctrl
 %{_sbindir}/isdnctrl
-%{_sbindir}/pcbitctl
 %{_libexecdir}/isdn
 %{_unitdir}/isdn.service
 %{_unitdir}/capi.service
@@ -339,10 +331,12 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 %{_sbindir}/mkzonedb
 %{_sbindir}/rcapid
 %{_sbindir}/vboxd
+%{_sbindir}/vboxmail
+%dir %{_datadir}/isdn
+%{_libdir}/pppd
 %defattr(644,root,root,755)
-%doc COPYING README isdnlog/README.*
+%doc gpl-2.0.txt README isdnlog/README.*
 %doc isdnlog/tools/zone/de/01033/zred.dtag.bz2
-%ghost %{_datadir}/isdn/zone-de-dtag.cdb
 %{_mandir}/man1/*
 %{_mandir}/man4/*
 %{_mandir}/man5/*
@@ -385,6 +379,12 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 %{_bindir}/xisdnload
 %{_bindir}/xmonisdn
 
+%files data
+%defattr(644,root,root,755)
+%{_datadir}/isdn/*.dat
+%{_datadir}/isdn/dest.cdb
+%ghost %{_datadir}/isdn/zone-de-dtag.cdb
+
 %files doc
 %defattr(-,root,root)
 %doc isdnlog/FAQ
@@ -400,17 +400,29 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 
 
 %changelog
-* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.2-101
-- 为 Magic 3.0 重建
+* Thu Nov 19 2015 Dennis Gilmore <dennis@ausil.us> - 3.27-2
+- mark %%{_datadir}/isdn as a directory in the file list for isdn4k-utils
+- fixes duplication of files making isdn4k-utils-data uninstallable
 
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 3.2-100
-- 为 Magic 3.0 重建
+* Wed Nov 18 2015 Than Ngo <than@redhat.com> - 3.27-1
+- update to 3.27
+- change to msidn.org git tree, thanks to Thomas Sailer
 
-* Sat Sep 19 2015 Liu Di <liudidi@gmail.com> - 3.2-99
-- 为 Magic 3.0 重建
+* Fri Jul 10 2015 Than Ngo <than@redhat.com> - 3.2-101
+- bz#1239582, fix build failure with new gcc5
+- fix warnings in changelog
 
-* Sun Jun 22 2014 Liu Di <liudidi@gmail.com> - 3.2-98
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-100
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2-99
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Wed Jul 30 2014 Than Ngo <than@redhat.com> - 3.2-98
+- fixed #1045909, multilib issue
+- fixed #913721, udev rules are installed into wrong directory
+- fixed #1073894, service files are installed with unnecessary executable perms
+- fixed #1052058,  mkzonedb killed by SIGSEGV
 
 * Wed Jun 18 2014 Than Ngo <than@redhat.com> - 3.2-97
 - fix bz#1106807, FTBFS
@@ -576,7 +588,7 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 - add pppd 2.4.4
 - use isdn-header files from upstream
 
-* Wed Jul 14 2006 Jesse Keating <jkeating@redhat.com> - 3.2-49
+* Fri Jul 14 2006 Jesse Keating <jkeating@redhat.com> - 3.2-49
 - rebuild
 - add missing br automake libtool
 
@@ -650,7 +662,6 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 * Wed Apr 20 2005 Martin Stransky <stransky@redhat.com> 3.2-27
 - fix for large filesystems (#155441)
 
->>>>>>> 1.34
 * Wed Mar 09 2005 Than Ngo <than@redhat.com> 3.2-26
 - update cvs snapshot
 - fix gcc4 build problem
@@ -812,7 +823,7 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 - fix bug in isdnlog (bug #60013)
 - fix bug in imon
 
-* Wed Feb 21 2002 Than Ngo <than@redhat.com> 3.1-51
+* Thu Feb 21 2002 Than Ngo <than@redhat.com> 3.1-51
 - fix bad memory allocation (enrico.scholz@informatik.tu-chemnitz.de), bug #60179
 
 * Tue Feb 19 2002 Bernhard Rosenkraenzer <bero@redhat.com> 3.1-50
@@ -951,7 +962,7 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 - change Makefiles instead of moving things around in the spec file
 - include the manpages of the X11 progs only in the xisdnload rpm
 
-* Tue Feb 03 2000 Ngo Than <than@redhat.de>
+* Thu Feb 03 2000 Ngo Than <than@redhat.de>
 - fix pap and chap problem in isdn.init
 
 * Tue Feb 01 2000 Ngo Than <than@redhat.de>
@@ -974,7 +985,7 @@ echo "# config files" >> %{buildroot}/etc/ppp/ioptions
 * Thu Sep 30 1999 Karsten Hopp <karsten@redhat.de>
 - added isdnconfig script and related files
 
-* Fri Sep 25 1999 Bill Nottingham <notting@redhat.com>
+* Sat Sep 25 1999 Bill Nottingham <notting@redhat.com>
 - bang on init script
 
 * Mon Sep 20 1999 Cristian Gafton <gafton@redhat.com>

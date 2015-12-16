@@ -1,0 +1,11 @@
+diff -up isdn4k-utils-CVS-2010-05-01-patched/isdnlog/tools/zone/mkzonedb.c.crash isdn4k-utils-CVS-2010-05-01-patched/isdnlog/tools/zone/mkzonedb.c
+--- isdn4k-utils-CVS-2010-05-01-patched/isdnlog/tools/zone/mkzonedb.c.crash	2014-07-31 11:31:57.000000000 +0200
++++ isdn4k-utils-CVS-2010-05-01-patched/isdnlog/tools/zone/mkzonedb.c	2014-07-31 11:35:12.000000000 +0200
+@@ -362,6 +362,7 @@ int main (int argc, char *argv[])
+         if (verbose)
+             stdoutisatty = isatty(fileno(stdout));
+ 
++	if (!rf || !df) usage(argv);
+ 	read_rzfile(rf);
+ 	make_table();
+ 	write_db(df);

@@ -1,0 +1,13 @@
+--- isdn4k-utils/imon/imon.c.true	2013-11-23 12:23:42.000000000 +0100
++++ isdn4k-utils/imon/imon.c	2013-11-23 13:12:03.435893932 +0100
+@@ -73,6 +73,10 @@
+ 
+ #include <linux/isdn.h>
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ #define KEY_Q                81
+ #define KEY_q               113
+ 

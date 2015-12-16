@@ -1,12 +1,74 @@
-diff -up isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in.vboxgetty-config isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in
---- isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in.vboxgetty-config	2009-10-20 11:07:28.000000000 +0200
-+++ isdn4k-utils-CVS-2010-05-01-patched/vbox/Makefile.in	2014-06-18 16:15:47.000000000 +0200
+diff -up isdn4k-utils-3.27_20151118/ipppd/main.c.than isdn4k-utils-3.27_20151118/ipppd/main.c
+--- isdn4k-utils-3.27_20151118/ipppd/main.c.than	2015-11-18 21:13:04.575352833 +0100
++++ isdn4k-utils-3.27_20151118/ipppd/main.c	2015-11-18 21:39:36.637385767 +0100
+@@ -1297,12 +1297,13 @@ int vfmtmsg(char *buf,int buflen,char *f
+         break;
+     case 'r':
+         f = va_arg(args, char *);
+-        a = va_arg(args, va_list);
++        va_copy(a, args);
+ #if defined(__alpha__) || defined(__sh__) || defined ( __arm__)       /* always do this? */
+ 	n = fmtmsg(buf, buflen + 1, f, a);
+ #else
+ 	n = vfmtmsg(buf, buflen + 1, f, a);
+ #endif
++        va_end(a);
+         buf += n;
+         buflen -= n;
+         continue;
+diff -up isdn4k-utils-3.27_20151118/isdnlog/isdnrep/isdnrep.c.than isdn4k-utils-3.27_20151118/isdnlog/isdnrep/isdnrep.c
+diff -up isdn4k-utils-3.27_20151118/isdnlog/tools/rate.c.than isdn4k-utils-3.27_20151118/isdnlog/tools/rate.c
+--- isdn4k-utils-3.27_20151118/isdnlog/tools/rate.c.than	2015-11-18 21:10:11.454980332 +0100
++++ isdn4k-utils-3.27_20151118/isdnlog/tools/rate.c	2015-11-18 21:10:53.089588917 +0100
+@@ -1134,11 +1134,11 @@ char   *prefix2provider_variant(int pref
+   return s;
+ }
+ 
+-inline int getNProvider( void ) {
++extern inline int getNProvider( void ) {
+   return nProvider;
+ }
+ 
+-inline int isProviderBooked( int i) {
++extern inline int isProviderBooked( int i) {
+   return Provider[i].booked;
+ }
+ 
+diff -up isdn4k-utils-3.27_20151118/isdnlog/tools/rate.h.than isdn4k-utils-3.27_20151118/isdnlog/tools/rate.h
+diff -up isdn4k-utils-3.27_20151118/vbox3/vboxgetty/tclscript.c.than isdn4k-utils-3.27_20151118/vbox3/vboxgetty/tclscript.c
+--- isdn4k-utils-3.27_20151118/vbox3/vboxgetty/tclscript.c.than	2015-11-18 21:45:31.798046888 +0100
++++ isdn4k-utils-3.27_20151118/vbox3/vboxgetty/tclscript.c	2015-11-18 21:45:44.743925189 +0100
+@@ -4,6 +4,8 @@
+ ** Copyright 1996-1998 Michael 'Ghandi' Herold <michael@abadonna.mayn.de>
+ */
+ 
++#define USE_INTERP_ERRORLINE
++
+ #ifdef HAVE_CONFIG_H
+ #  include "../config.h"
+ #endif
+diff -up isdn4k-utils-3.27_20151118/vbox/Makefile.in.than isdn4k-utils-3.27_20151118/vbox/Makefile.in
+--- isdn4k-utils-3.27_20151118/vbox/Makefile.in.than	2015-11-18 21:51:41.090575154 +0100
++++ isdn4k-utils-3.27_20151118/vbox/Makefile.in	2015-11-18 21:52:12.312281654 +0100
 @@ -53,7 +53,7 @@ INSTALL_DIRS	= @INSTALL@ -d
  #----------------------------------------------------------------------------#
  
  CC		= @CC@
--VBOX_CFLAGS	= @CFLAGS@ @LINK_NCURSES_INCL@ @LINK_TCL_INCL@
-+VBOX_CFLAGS	= -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE @CFLAGS@ @LINK_NCURSES_INCL@ @LINK_TCL_INCL@
- LDFLAGS		= @LDFLAGS@
+-VBOX_CFLAGS	= @CFLAGS@ @LINK_NCURSES_INCL@ @LINK_TCL_INCL@ -Wall -fno-strict-aliasing -fpie
++VBOX_CFLAGS	= -DUSE_INTERP_RESULT -DUSE_INTERP_ERRORLINE @CFLAGS@ @LINK_NCURSES_INCL@ @LINK_TCL_INCL@ -Wall -fno-strict-aliasing -fpie
+ LDFLAGS		= @LDFLAGS@ -pie
  
  #----------------------------------------------------------------------------#
+diff -up isdn4k-utils-3.27_20151118/vbox/src/script.c.than isdn4k-utils-3.27_20151118/vbox/src/script.c
+--- isdn4k-utils-3.27_20151118/vbox/src/script.c.than	2015-11-18 21:40:49.833697651 +0100
++++ isdn4k-utils-3.27_20151118/vbox/src/script.c	2015-11-18 21:45:17.911177444 +0100
+@@ -4,6 +4,9 @@
+ ** Copyright (C) 1996, 1997 Michael 'Ghandi' Herold
+ */
+ 
++#define USE_INTERP_RESULT
++#define USE_INTERP_ERRORLINE
++
+ #include "config.h"
+ 
+ #if TIME_WITH_SYS_TIME

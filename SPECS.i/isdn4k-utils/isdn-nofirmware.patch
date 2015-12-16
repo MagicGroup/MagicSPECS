@@ -1,0 +1,23 @@
+--- isdn4k-utils/icn/Makefile.in.nofw	2013-11-23 18:55:13.780774825 +0100
++++ isdn4k-utils/icn/Makefile.in	2013-11-23 18:55:13.800774324 +0100
+@@ -49,9 +49,6 @@
+ 
+ install-data:
+ 	mkdir -p $(DESTDIR)$(DATADIR)
+-	$(INSTALL_DATA) firmware/loadpg.bin $(DESTDIR)$(DATADIR)/loadpg.bin
+-	$(INSTALL_DATA) firmware/pc_eu_ca.bin $(DESTDIR)$(DATADIR)/pc_eu_ca.bin
+-	$(INSTALL_DATA) firmware/pc_1t_ca.bin $(DESTDIR)$(DATADIR)/pc_1t_ca.bin
+ 
+ install-man: $(PROGRAM).man
+ 	mkdir -p $(DESTDIR)$(MAN8DIR)
+--- isdn4k-utils/hisax/Makefile.in.nofw	2013-11-23 18:58:57.654318661 +0100
++++ isdn4k-utils/hisax/Makefile.in	2013-11-23 18:59:17.007847228 +0100
+@@ -44,8 +44,6 @@
+ install: $(PROGRAMS) $(MANPAGES)
+ 	mkdir -p $(DESTDIR)$(SBINDIR)
+ 	$(INSTALL_PROGRAM) $(PROGRAMS) $(DESTDIR)$(SBINDIR)
+-	mkdir -p $(DESTDIR)$(DATADIR)
+-	$(INSTALL_DATA) ISAR.BIN $(DESTDIR)$(DATADIR)/ISAR.BIN
+ 	mkdir -p $(DESTDIR)$(MAN8DIR)
+ 	$(INSTALL_MAN) $(MANPAGES) $(DESTDIR)$(MAN8DIR)
+ 

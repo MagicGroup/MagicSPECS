@@ -1,0 +1,26 @@
+diff -up isdn4k-utils-3.27_20151118/ipppd/Makefile.in.than isdn4k-utils-3.27_20151118/ipppd/Makefile.in
+--- isdn4k-utils-3.27_20151118/ipppd/Makefile.in.than	2015-11-18 22:33:13.351145388 +0100
++++ isdn4k-utils-3.27_20151118/ipppd/Makefile.in	2015-11-18 22:33:24.649039181 +0100
+@@ -73,7 +73,7 @@ endif
+ 
+ DEBUG_FLAGS   = @CONFIG_IPPPD_DEBUGFLAGS@
+ COMPILE_FLAGS = @CFLAGS@
+-CFLAGS        = $(RPM_OPT_FLAGS) -DREQ_SYSOPTIONS=0
++CFLAGS        = $(RPM_OPT_FLAGS) -DREQ_SYSOPTIONS=0 -fno-strict-aliasing
+ VER           = 2.2.0
+ 
+ # it's a hack
+diff -up isdn4k-utils-3.27_20151118/rcapid/Makefile.am.than isdn4k-utils-3.27_20151118/rcapid/Makefile.am
+--- isdn4k-utils-3.27_20151118/rcapid/Makefile.am.than	2015-11-18 22:34:20.527513865 +0100
++++ isdn4k-utils-3.27_20151118/rcapid/Makefile.am	2015-11-18 22:34:36.784361034 +0100
+@@ -8,7 +8,7 @@ MAINTAINERCLEANFILES    = configure aclo
+ 			  stamp-h.in comperr
+ 
+ INCLUDES = -I../capi20 $(all_includes)
+-CFLAGS = -Wall $(RPM_OPT_FLAGS)
++CFLAGS = -Wall $(RPM_OPT_FLAGS) -fno-strict-aliasing
+ LDFLAGS = -L../capi20/.libs -L../capi20 $(all_libraries)
+ LDADD = -lcapi20
+ 
+diff -up isdn4k-utils-3.27_20151118/rcapid/Makefile.in.than isdn4k-utils-3.27_20151118/rcapid/Makefile.in
+diff -up isdn4k-utils-3.27_20151118/vbox/Makefile.in.than isdn4k-utils-3.27_20151118/vbox/Makefile.in
