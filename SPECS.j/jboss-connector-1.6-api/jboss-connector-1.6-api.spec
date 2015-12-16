@@ -1,18 +1,15 @@
-%global namedreltag .20120310git9dc9a5
+%global namedreltag .Final
 %global namedversion %{version}%{?namedreltag}
 
 Name:             jboss-connector-1.6-api
 Version:          1.0.1
-Release:          0.9%{namedreltag}%{?dist}
+Release:          2%{?dist}
 Summary:          Connector Architecture 1.6 API
 Group:            Development/Libraries
 License:          CDDL or GPLv2 with exceptions
 URL:              http://www.jboss.org
 
-# git clone git://github.com/jboss/jboss-connector-api_spec.git jboss-connector-1.6-api
-# cd jboss-connector-1.6-api/ && git archive --format=tar --prefix=jboss-connector-1.6-api/ 9dc9a58fb8672609790db93abcaac3875901243c | xz > jboss-connector-1.6-api-1.0.1.20120310git9dc9a5.tar.xz
-
-Source0:          %{name}-%{namedversion}.tar.xz
+Source0:          https://github.com/jboss/jboss-connector-api_spec/archive/jboss-connector-api_1.6_spec-%{namedversion}.tar.gz
 
 BuildRequires:    java-devel
 BuildRequires:    jboss-specs-parent
@@ -25,10 +22,6 @@ BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-javadoc-plugin
 BuildRequires:    jboss-transaction-1.1-api
 
-Requires:         java
-Requires:         jboss-transaction-1.1-api
-Requires:         jpackage-utils
-
 BuildArch:        noarch
 
 %description
@@ -37,54 +30,36 @@ Java EE Connector Architecture 1.6 API classes
 %package javadoc
 Summary:          Javadocs for %{name}
 Group:            Documentation
-Requires:         jpackage-utils
 
 %description javadoc
 This package contains the API documentation for %{name}.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n jboss-connector-api_spec-jboss-connector-api_1.6_spec-%{namedversion}
 
 %build
-mvn-rpmbuild install javadoc:aggregate
+%mvn_build
 
 %install
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}
-install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+%mvn_install
 
-# JAR
-install -pm 644 target/jboss-connector-api_1.6_spec-%{version}-SNAPSHOT.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
-
-# POM
-install -pm 644 pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
-
-# DEPMAP
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
-
-# APIDOCS
-cp -rp target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-%files
-%{_javadir}/%{name}.jar
-%{_mavenpomdir}/*
-%{_datadir}/maven-metadata/jboss-connector-1.6-api.xml
-#%{_mavendepmapfragdir}/*
+%files -f .mfiles
+%dir %{_javadir}/%{name}
 %doc README LICENSE
 
-%files javadoc
-%{_javadocdir}/%{name}
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE
 
 %changelog
-* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.1-0.9.20120310git9dc9a5
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.1-0.8.20120310git9dc9a5
-- 为 Magic 3.0 重建
+* Tue Mar 24 2015 Marek Goldmann <mgoldman@redhat.com> - 1.0.1-1
+- Upstream release 1.0.1.Final
+- Switch to xmvn
 
-* Fri Aug 15 2014 Liu Di <liudidi@gmail.com> - 1.0.1-0.7.20120310git9dc9a5
-- 为 Magic 3.0 重建
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-0.7.20120310git9dc9a5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-0.6.20120310git9dc9a5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
