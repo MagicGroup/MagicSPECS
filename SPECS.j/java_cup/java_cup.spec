@@ -1,72 +1,35 @@
-# Copyright (c) 2000-2005, JPackage Project
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions
-# are met:
-#
-# 1. Redistributions of source code must retain the above copyright
-#    notice, this list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright
-#    notice, this list of conditions and the following disclaimer in the
-#    documentation and/or other materials provided with the
-#    distribution.
-# 3. Neither the name of the JPackage Project nor the names of its
-#    contributors may be used to endorse or promote products derived
-#    from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-
-%define pkg_version     11a
-%define section         free
-%define with_bootstrap  1
+%define pkg_version     11b
+%define with_bootstrap  0
 
 Name:           java_cup
-Version:        0.11a
-Release:        17%{?dist}
+Version:        0.11b
+Release:        1%{?dist}
 Epoch:          1
-Summary:        Java source interpreter
+Summary:        LALR parser generator for Java
 License:        MIT
-URL:            http://www.cs.princeton.edu/%7Eappel/modern/java/CUP/
-#svn export -r 21 https://www2.in.tum.de/repos/cup/develop/ java_cup-0.11a 
-#tar cjf java_cup-0.11a.tar.bz2 java_cup-0.11a/
-Source0:        java_cup-0.11a.tar.bz2
+URL:            http://www2.cs.tum.edu/projects/cup/
+BuildArch:      noarch
+
+# svn export -r 65 https://www2.in.tum.de/repos/cup/develop/ java_cup-0.11b
+# tar cjf java_cup-0.11b.tar.bz2 java_cup-0.11b/
+Source0:        java_cup-%{version}.tar.bz2
 Source1:        java_cup-pom.xml
 # Add OSGi manifests
 Source2:        %{name}-MANIFEST.MF
 Source4:        %{name}-runtime-MANIFEST.MF
-# Taken from http://www2.cs.tum.edu/projects/cup/
-Source3:        LICENSE.txt
+
 Patch0:         %{name}-build.patch
-Patch1:         java_cup-0.11a-manifest.patch
 
-# Patch from eclipe-pdt to get around generated actions methods exceeding the 65535 bytes limit:
-# http://git.eclipse.org/c/pdt/org.eclipse.pdt.git/tree/plugins/org.eclipse.php.core.parser/javacup10k_split_do_action_method.diff
-Patch2:         javacup10k_split_do_action_method.diff
-
-BuildRequires: ant
-BuildRequires: jdk
-#BuildRequires: java-devel
-BuildRequires: jpackage-utils >= 0:1.5
-BuildRequires: jflex
+BuildRequires:  ant
+BuildRequires:  java-devel
+BuildRequires:  jpackage-utils >= 0:1.5
+BuildRequires:  jflex
 %if ! %{with_bootstrap}
-BuildRequires: java_cup >= 1:0.11a
+BuildRequires:  java_cup >= 1:0.11a
 %endif
-BuildRequires: zip
+BuildRequires:  zip
 
-Requires:      java-headless
-BuildArch:     noarch
+Requires:       java-headless
 
 
 %description
@@ -87,22 +50,17 @@ Documentation for java_cup.
 %prep
 %setup -q 
 %patch0 -b .build
-%patch1 -p1 -b .manifest
-pushd src
-%patch2 -p1 -b .orig
-popd
 cp %{SOURCE1} pom.xml
-cp %{SOURCE3} .
 
 # remove all binary files
 find -name "*.class" -delete
 
 %if ! %{with_bootstrap}
 # remove prebuilt JFlex
-rm -rf java_cup-0.11a/bin/JFlex.jar
+rm -rf java_cup-%{version}/bin/JFlex.jar
 
 # remove prebuilt java_cup, if not bootstrapping
-rm -rf java_cup-0.11a/bin/java-cup-11.jar
+rm -rf java_cup-%{version}/bin/java-cup-11.jar
 %endif
 
 %build
@@ -110,7 +68,7 @@ rm -rf java_cup-0.11a/bin/java-cup-11.jar
 export CLASSPATH=$(build-classpath java_cup java_cup-runtime jflex)
 %endif
 
-ant
+ant -Dcupversion=20150326 -Dsvnversion=65
 find -name parser.cup -delete
 ant javadoc
 
@@ -138,22 +96,34 @@ install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
 cp -pr dist/javadoc/* %{buildroot}%{_javadocdir}/%{name}
 
-%files
-%doc changelog.txt LICENSE.txt
+%files -f .mfiles
+%doc changelog.txt
 %{_javadir}/*
-%{_mavenpomdir}/*
-%{_mavendepmapfragdir}/*
+%license licence.txt
 
 %files manual
-%doc manual.html LICENSE.txt
+%doc manual.html
+%license licence.txt
 
 %files javadoc
-%doc LICENSE.txt
+%license licence.txt
 %{_javadocdir}/%{name}
 
 %changelog
-* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1:0.11a-17
-- 为 Magic 3.0 重建
+* Tue Jun 23 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1:0.11b-1
+- Update to upstream version 0.11b
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.11a-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Feb 06 2015 gil cattaneo <puntogil@libero.it> 1:0.11a-19
+- introduce license macro
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.11a-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Thu May 29 2014 Mikolaj Izdebski <mizdebsk@redhat.com> - 1:0.11a-17
+- Use .mfiles generated during build
 
 * Tue Mar 04 2014 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1:0.11a-16
 - Use Requires: java-headless rebuild (#1067528)
