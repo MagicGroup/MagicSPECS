@@ -36,7 +36,7 @@ Name: boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.59.0
 %define version_enc 1_59_0
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: Boost and MIT and Python
 
 %define toplev_dirname %{name}_%{version_enc}
@@ -1291,6 +1291,9 @@ fi
 %{_mandir}/man1/bjam.1*
 
 %changelog
+* Fri Dec 11 2015 Liu Di <liudidi@gmail.com> - 1.59.0-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 1.59.0-6
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,8 @@
+/var/log/iguanaIR/*.log {
+        su iguanair iguanair
+	missingok
+	notifempty
+	postrotate
+		systemctl try-restart iguanaIR.service
+	endscript
+}

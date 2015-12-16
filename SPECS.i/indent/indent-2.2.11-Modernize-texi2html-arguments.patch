@@ -1,0 +1,41 @@
+From 7df0983c326f406dddbcc7c98dce72d5174d2a3c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 18 Mar 2015 18:30:01 +0100
+Subject: [PATCH] Modernize texi2html arguments
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+texi2html-5.0 complains on -number argument:
+
+    Option number is ambiguous (number-footnotes, number-sections)
+
+This patch updates texi2html arguments to comply with texi2html-5.0.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index d1fb09a..5eb9dc0 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -34,14 +34,14 @@ html-monolithic: @PACKAGE@.html
+ html-split: @PACKAGE@_toc.html
+ 
+ @PACKAGE@.html: version.texi $(@PACKAGE@_TEXINFOS)
+-	$(TEXI2HTML) -expandinfo -number -monolithic `if test -f @PACKAGE@.texinfo; then echo @PACKAGE@.texinfo; else echo $(srcdir)/@PACKAGE@.texinfo; fi`
++	$(TEXI2HTML) -expand info -number-sections -monolithic `if test -f @PACKAGE@.texinfo; then echo @PACKAGE@.texinfo; else echo $(srcdir)/@PACKAGE@.texinfo; fi`
+ 
+ @PACKAGE@_toc.html: version.texi $(@PACKAGE@_TEXINFOS)
+ 	case "$(TEXI2HTML)" in \
+ 	  *"/missing texi2html") \
+-	     $(TEXI2HTML) -expand info -number -nomenu -split section `if test -f @PACKAGE@.texinfo; then echo @PACKAGE@.texinfo; else echo $(srcdir)/@PACKAGE@.texinfo; fi` || exit 0 ;; \
++	     $(TEXI2HTML) -expand info -number-sections -nomenu -split section `if test -f @PACKAGE@.texinfo; then echo @PACKAGE@.texinfo; else echo $(srcdir)/@PACKAGE@.texinfo; fi` || exit 0 ;; \
+ 	  *) $(RM) @PACKAGE@_*.html ; \
+-	     $(TEXI2HTML) -expand info -number -nomenu -split section `if test -f @PACKAGE@.texinfo; then echo @PACKAGE@.texinfo; else echo $(srcdir)/@PACKAGE@.texinfo; fi` ;; \
++	     $(TEXI2HTML) -expand info -number-sections -nomenu -split section `if test -f @PACKAGE@.texinfo; then echo @PACKAGE@.texinfo; else echo $(srcdir)/@PACKAGE@.texinfo; fi` ;; \
+ 	esac
+ 
+ install-html-monolithic: @PACKAGE@.html
+-- 
+2.1.0
+

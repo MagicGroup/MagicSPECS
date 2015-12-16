@@ -1,0 +1,166 @@
+From 582ad604b72f1ce3c8d00ac0e964f28a8d615604 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Wed, 18 Mar 2015 16:29:49 +0100
+Subject: [PATCH] Support hexadecimal floats
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ regression/TEST                         |  2 +-
+ regression/input/hexadecimal_float.c    | 17 +++++++++
+ regression/standard/hexadecimal_float.c | 17 +++++++++
+ src/lexi.c                              | 63 ++++++++++++++++-----------------
+ 4 files changed, 66 insertions(+), 33 deletions(-)
+ create mode 100644 regression/input/hexadecimal_float.c
+ create mode 100644 regression/standard/hexadecimal_float.c
+
+diff --git a/regression/TEST b/regression/TEST
+index 480ef7c..7db4c36 100755
+--- a/regression/TEST
++++ b/regression/TEST
+@@ -36,7 +36,7 @@ EXAMPLES="do.c else.c for.c func-def.c lshift.c ncs.c \
+ BUGS="case-label.c one-line-1.c one-line-2.c one-line-3.c \
+         one-line-4.c struct-decl.c sizeof-in-while.c line-break-comment.c \
+         macro.c enum.c elif.c nested.c wrapped-string.c minus_predecrement.c \
+-        float-constant-suffix.c"
++        float-constant-suffix.c hexadecimal_float.c"
+ 
+ INDENTSRC="args.c backup.h backup.c dirent_def.h globs.c indent.h \
+         indent.c indent_globs.h io.c lexi.c memcpy.c parse.c pr_comment.c \
+diff --git a/regression/input/hexadecimal_float.c b/regression/input/hexadecimal_float.c
+new file mode 100644
+index 0000000..34c52cd
+--- /dev/null
++++ b/regression/input/hexadecimal_float.c
+@@ -0,0 +1,17 @@
++/* Hexadecimal */
++double xpi = 0x1.921fb54442d18p+1;
++double xa = 0xe.fp-1;
++double xb = 0xe.fP-1;
++double xc = 0xf.P+1;
++double xd = 0x.fP+1;
++/* hexadecimal floats must have exponent part */
++
++/* Decimal */
++double dpi = 3.141592653589793e+0;
++double da = 1.2e-1;
++double db = 1.2E-1;
++double dc = 1.E+1;
++double dd = .1E+1;
++double de = 1.2;
++double df = 1.;
++double dg = .1;
+diff --git a/regression/standard/hexadecimal_float.c b/regression/standard/hexadecimal_float.c
+new file mode 100644
+index 0000000..34c52cd
+--- /dev/null
++++ b/regression/standard/hexadecimal_float.c
+@@ -0,0 +1,17 @@
++/* Hexadecimal */
++double xpi = 0x1.921fb54442d18p+1;
++double xa = 0xe.fp-1;
++double xb = 0xe.fP-1;
++double xc = 0xf.P+1;
++double xd = 0x.fP+1;
++/* hexadecimal floats must have exponent part */
++
++/* Decimal */
++double dpi = 3.141592653589793e+0;
++double da = 1.2e-1;
++double db = 1.2E-1;
++double dc = 1.E+1;
++double dd = .1E+1;
++double de = 1.2;
++double df = 1.;
++double dg = .1;
+diff --git a/src/lexi.c b/src/lexi.c
+index 0a98059..21e2c24 100644
+--- a/src/lexi.c
++++ b/src/lexi.c
+@@ -267,50 +267,49 @@ extern codes_ty lexi(void)
+       if (isdigit (*buf_ptr) ||
+           ((buf_ptr[0] == '.') && isdigit (buf_ptr[1])))
+       {
+-         int seendot = 0, seenexp = 0;
++         int seendot = 0, seenexp = 0, ishexa = 0;
+ 
+          if ((*buf_ptr == '0') && ((buf_ptr[1] == 'x') || (buf_ptr[1] == 'X')))
+          {
+-            buf_ptr += 2;
+-            while (isxdigit (*buf_ptr))
+-            {
+-               buf_ptr++;
+-            }
++            ishexa = 1;
++            buf_ptr += 1;
+          }
+-         else
++         while (1)
+          {
+-            while (1)
++            if (*buf_ptr == '.')
+             {
+-               if (*buf_ptr == '.')
++               if (seendot)
+                {
+-                  if (seendot)
+-                  {
+-                     break;
+-                  }
+-                  else
+-                  {
+-                     seendot++;
+-                  }
++                  break;
+                }
++               else
++               {
++                  seendot++;
++               }
++            }
+ 
+-               buf_ptr++;
+-                    
+-               if (!isdigit (*buf_ptr) && *buf_ptr != '.')
++            buf_ptr++;
++
++            if (!(ishexa && !seenexp ?
++                 isxdigit (*buf_ptr) : isdigit (*buf_ptr)
++                 ) && *buf_ptr != '.')
++            {
++               if ((ishexa ?
++                   (*buf_ptr != 'P' && *buf_ptr != 'p') :
++                   (*buf_ptr != 'E' && *buf_ptr != 'e')
++                   ) || seenexp)
+                {
+-                  if ((*buf_ptr != 'E' && *buf_ptr != 'e') || seenexp)
+-                  {
+-                     break;
+-                  }
+-                  else
++                  break;
++               }
++               else
++               {
++                  seenexp++;
++                  seendot++;
++                  buf_ptr++;
++
++                  if (*buf_ptr == '+' || *buf_ptr == '-')
+                   {
+-                     seenexp++;
+-                     seendot++;
+                      buf_ptr++;
+-
+-                     if (*buf_ptr == '+' || *buf_ptr == '-')
+-                     {
+-                        buf_ptr++;
+-                     }
+                   }
+                }
+             }
+-- 
+2.1.0
+

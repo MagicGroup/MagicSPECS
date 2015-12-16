@@ -64,9 +64,9 @@ Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.6.10
 %if 0%{?rcver:1}
-Release: 0.%{rpmrel}.%{rcver}%{?dist}.5
+Release: 0.%{rpmrel}.%{rcver}%{?dist}.6
 %else
-Release: %{rpmrel}%{?dist}.5
+Release: %{rpmrel}%{?dist}.6
 %endif
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
@@ -1485,6 +1485,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Dec 13 2015 Liu Di <liudidi@gmail.com> - 5.6.10-1.6
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.6.10-1.5
 - 为 Magic 3.0 重建
 

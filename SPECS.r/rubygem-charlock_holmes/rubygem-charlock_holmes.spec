@@ -2,7 +2,7 @@
 
 Name: rubygem-%{gem_name}
 Version: 0.7.3
-Release: 10%{?dist}
+Release: 11%{?dist}
 Summary: Character encoding detection, brought to you by ICU
 Group: Development/Languages
 License: MIT
@@ -91,6 +91,9 @@ popd
 
 
 %changelog
+* Sun Dec 13 2015 Liu Di <liudidi@gmail.com> - 0.7.3-11
+- 为 Magic 3.0 重建
+
 * Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.7.3-10
 - 为 Magic 3.0 重建
 

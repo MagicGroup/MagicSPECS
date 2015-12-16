@@ -1,0 +1,34 @@
+From df41e2509f3bbab594a1c2adba4d404135fc3705 Mon Sep 17 00:00:00 2001
+From: Jan Synacek <jsynacek@redhat.com>
+Date: Thu, 19 Nov 2015 10:15:06 +0100
+Subject: [PATCH] ping: always use POSIX locale when parsing -i
+
+Interpreting floating-point numbers from the command line based on the
+current locale is a bad idea.
+
+Original bugreport: https://bugzilla.redhat.com/show_bug.cgi?id=1283277
+---
+ ping.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/ping.c b/ping.c
+index 95a10a7..c42d6eb 100644
+--- a/ping.c
++++ b/ping.c
+@@ -259,7 +259,13 @@ main(int argc, char **argv)
+ 			char *ep;
+ 
+ 			errno = 0;
++#ifdef USE_IDN
++			setlocale(LC_ALL, "C");
++#endif
+ 			dbl = strtod(optarg, &ep);
++#ifdef USE_IDN
++			setlocale(LC_ALL, "");
++#endif
+ 
+ 			if (errno || *ep != '\0' ||
+ 				!finite(dbl) || dbl < 0.0 || dbl >= (double)INT_MAX / 1000 - 1.0) {
+-- 
+2.5.0
+

@@ -12,7 +12,7 @@ Summary: Qt5 - QtWebKit components
 Summary(zh_CN.UTF-8): Qt5 - QtWebKit 组件
 Name:    qt5-qtwebkit
 Version: 5.5.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LICENSE.GPL LICENSE.LGPL LGPL_EXCEPTION.txt, for details
 # See also http://qt-project.org/doc/qt-5.0/qtdoc/licensing.html
@@ -209,6 +209,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Dec 13 2015 Liu Di <liudidi@gmail.com> - 5.5.1-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.5.1-3
 - 为 Magic 3.0 重建
 

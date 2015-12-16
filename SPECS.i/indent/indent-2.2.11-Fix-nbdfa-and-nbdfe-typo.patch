@@ -1,0 +1,31 @@
+From 138fedaef6d94f7fe1601a6eba90d6354a7fb4dd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Mon, 9 Nov 2015 10:09:57 +0100
+Subject: [PATCH] Fix -nbdfa and -nbdfe typo
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<http://lists.gnu.org/archive/html/bug-indent/2015-11/msg00000.html>
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ doc/indent.texinfo | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/doc/indent.texinfo b/doc/indent.texinfo
+index 08f35f6..50aaf61 100644
+--- a/doc/indent.texinfo
++++ b/doc/indent.texinfo
+@@ -1048,7 +1048,7 @@ appear at one indention level deeper than the function declaration.  This
+ is particularly helpful for functions with long argument lists. 
+ The option @option{-bfde} causes a newline to be forced before the closing 
+ bracket of the function declaration. For both options the 'n' setting is the default:
+--nbdfa and -nbdfe.
++-nbfda and -nbfde.
+ 
+ 
+ For 
+-- 
+2.4.3
+

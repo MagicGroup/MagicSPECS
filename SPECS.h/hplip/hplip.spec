@@ -1,13 +1,10 @@
 # we don't want to provide private python extension libs
-%{?filter_setup:
 %filter_provides_in %{python_sitearch}/.*\.so$
-%filter_setup
-}
 
 Summary: HP Linux Imaging and Printing Project
 Summary(zh_CN.UTF-8): HP Linux 图像和打印项目
 Name: hplip
-Version: 3.15.9
+Version: 3.15.11
 Release: 3%{?dist}
 License: GPLv2+ and MIT
 
@@ -31,7 +28,12 @@ Patch13: hplip-bad-low-ink-warning.patch
 Patch14: hplip-deviceIDs-ppd.patch
 Patch15: hplip-ppd-ImageableArea.patch
 Patch16: hplip-scan-tmp.patch
-Patch17: hplip-codec.patch
+Patch17: hplip-log-stderr.patch
+Patch18: hplip-avahi-parsing.patch
+Patch20: hplip-dj990c-margin.patch
+Patch21: hplip-strncpy.patch
+Patch22: hplip-no-write-bytecode.patch
+Patch23: hplip-silence-ioerror.patch
 
 %global hpijs_epoch 1
 Requires: hpijs%{?_isa} = %{hpijs_epoch}:%{version}-%{release}
@@ -136,32 +138,8 @@ SANE driver for scanners in HP's multi-function devices (from HPOJ).
 %patch4 -p1 -b .no-asm
 
 # Corrected several IEEE 1284 Device IDs using foomatic data.
-# Color LaserJet CM1312nfi (bug #581005)
-# Color LaserJet 3800 (bug #581935)
-# Color LaserJet 2840 (bug #582215)
-# Color LaserJet CP1518ni (bug #613689)
-# Color LaserJet 2600n (bug #613712)
-# Color LaserJet 2500/3700/4550/4600/4650/4700/5550/CP1515n/CP2025n
-#                CP3525/CP4520 Series/CM2320nf (bug #659040)
-# Color LaserJet CP2025dn (bug #651509)
-# Color LaserJet CM4730 MFP (bug #658831)
-# Color LaserJet CM3530 MFP (bug #659381)
-# LaserJet 4050 Series/4100 Series/2100 Series/4350/5100 Series/8000 Series
-#          P3005/P3010 Series/P4014/P4515 (bug #659039)
-# LaserJet Professional P1606dn (bug #708472)
-# LaserJet Professional M1212nf MFP (bug #742490)
-# LaserJet M1536dnf MFP (bug #743915)
-# LaserJet M1522nf MFP (bug #745498)
-# LaserJet M1319f MFP (bug #746614)
-# LaserJet M1120 MFP (bug #754139)
-# LaserJet P1007 (bug #585272)
-# LaserJet P1505 (bug #680951)
-# LaserJet P2035 (Ubuntu #917703)
-# PSC 1600 series (bug #743821)
-# Officejet 6300 series (bug #689378)
-# LaserJet Professional P1102w (bug #795958)
-# Color LaserJet CM4540 MFP (bug #968177)
-# Color LaserJet cp4005 (bug #980976)
+# Color LaserJet 2500 series (bug #659040)
+# LaserJet 4100 Series/2100 Series (bug #659039)
 %patch5 -p1 -b .deviceIDs-drv
 chmod +x %{SOURCE2}
 mv prnt/drv/hpijs.drv.in{,.deviceIDs-drv-hpijs}
@@ -169,7 +147,8 @@ mv prnt/drv/hpijs.drv.in{,.deviceIDs-drv-hpijs}
            prnt/drv/hpijs.drv.in.deviceIDs-drv-hpijs \
            > prnt/drv/hpijs.drv.in
 
-# Don't a%description -l zh_CN.UTF-8 printer queue, just check plugin.
+# Move udev rule for calling hp-config_usb_printer into separate file.
+# Don't specify python version in hplip-printer@.service.
 # Move udev rules from /etc/ to /usr/lib/ (bug #748208).
 %patch6 -p1 -b .udev-rules
 
@@ -195,23 +174,7 @@ mv prnt/drv/hpijs.drv.in{,.deviceIDs-drv-hpijs}
 %patch13 -p1 -b .bad-low-ink-warning
 
 # Add Device ID for
-# LaserJet 1200 (bug #577308)
-# LaserJet 1320 series (bug #579920)
-# LaserJet 2300 (bug #576928)
-# LaserJet P2015 Series (bug #580231)
-# LaserJet 4250 (bug #585499)
-# Color LaserJet 2605dn (bug #583953)
-# Color LaserJet 3800 (bug #581935)
-# Color LaserJet 2840 (bug #582215)
-# LaserJet 4050 Series/4100 Series/2100 Series/2420/4200/4300/4350/5100 Series
-#          8000 Series/M3027 MFP/M3035 MFP/P3005/P3010 Series (bug #659039)
-# Color LaserJet 2500/2550/2605dn/3700/4550/4600
-#                4650/4700/5550/CP3525 (bug #659040)
-# Color LaserJet CM4730 MFP (bug #658831)
-# Color LaserJet CM3530 MFP (bug #659381)
-# Designjet T770 (bug #747957)
-# Color LaserJet CM4540 MFP (bug #968177)
-# Color LaserJet cp4005 (bug #980976)
+# HP LaserJet Color M451dn (bug #1159380)
 for ppd_file in $(grep '^diff' %{PATCH14} | cut -d " " -f 4);
 do
   gunzip ${ppd_file#*/}.gz
@@ -236,8 +199,25 @@ done
 # Scan to /var/tmp instead of /tmp (bug #1076954).
 %patch16 -p1 -b .scan-tmp
 
-# Fixed codec issue (bug #984167).
-%patch17 -p1 -b .codec
+# Treat logging before importing of logger module (bug #984699).
+%patch17 -p1 -b .log-stderr
+
+# Fix parsing of avahi-daemon output (bug #1096939).
+%patch18 -p1 -b .parsing
+
+# Fixed left/right margins for HP DeskJet 990C (LP #1405212).
+%patch20 -p1 -b .dj990c-margin
+
+# Fixed uses of strncpy throughout.
+%patch21 -p1 -b .strncpy
+
+# Don't try to write bytecode cache for hpfax backend (bug #1192761).
+# or for hp-config_usb_printer (bug #1266903).
+%patch22 -p1 -b .no-write-bytecode
+
+# Ignore IOError when logging output (bug #712537).
+%patch23 -p1 -b .silence-ioerror
+
 
 sed -i.duplex-constraints \
     -e 's,\(UIConstraints.* \*Duplex\),//\1,' \
@@ -422,7 +402,8 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 
 %files common
 %doc COPYING
-%{_udevrulesdir}/*.rules
+#%{_udevrulesdir}/*.rules
+%{_sysconfdir}/udev/rules.d/56-hpmud.rules
 %dir %{_sysconfdir}/hp
 %config(noreplace) %{_sysconfdir}/hp/hplip.conf
 %dir %{_datadir}/hplip
@@ -431,6 +412,8 @@ rm -f %{buildroot}%{_sysconfdir}/xdg/autostart/hplip-systray.desktop
 
 %files libs
 %{_libdir}/libhpip.so.*
+%{_libdir}/libhpdiscovery.so*
+%{_libdir}/libhpipp.so*
 # The so symlink is required here (see bug #489059).
 %{_libdir}/libhpmud.so*
 # Python extension

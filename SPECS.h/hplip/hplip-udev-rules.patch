@@ -1,25 +1,45 @@
-diff -up hplip-3.14.3/data/rules/56-hpmud.rules.udev-rules hplip-3.14.3/data/rules/56-hpmud.rules
---- hplip-3.14.3/data/rules/56-hpmud.rules.udev-rules	2014-03-07 10:06:30.338946358 +0100
-+++ hplip-3.14.3/data/rules/56-hpmud.rules	2014-03-07 10:10:25.004683464 +0100
-@@ -11,9 +11,6 @@ LABEL="hpmud_usb_rules"
- ATTR{idVendor}=="03f0", ATTR{idProduct}=="????", OWNER="root", GROUP="lp", MODE="0664", ENV{sane_hpaio}="yes", ENV{libsane_matched}="yes", ENV{hp_test}="yes", ENV{ID_HPLIP}="1"
+diff -up hplip-3.15.11/data/rules/56-hp_conf_usb.rules.udev-rules hplip-3.15.11/data/rules/56-hp_conf_usb.rules
+--- hplip-3.15.11/data/rules/56-hp_conf_usb.rules.udev-rules	2015-11-18 13:41:08.003952433 +0100
++++ hplip-3.15.11/data/rules/56-hp_conf_usb.rules	2015-11-18 13:41:08.003952433 +0100
+@@ -0,0 +1,4 @@
++# HPLIP udev rules file.
++
++# This rule will check the smart install feature, plugin status and firmware download for the required printers.
++ENV{hp_test}=="yes", PROGRAM="/bin/sh -c 'logger -p user.info loading HP Device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c 'systemctl --no-block start hplip-printer@$env{BUSNUM}:$env{DEVNUM}.service'"
+diff -up hplip-3.15.11/data/rules/56-hpmud.rules.udev-rules hplip-3.15.11/data/rules/56-hpmud.rules
+--- hplip-3.15.11/data/rules/56-hpmud.rules.udev-rules	2015-11-12 11:28:50.000000000 +0100
++++ hplip-3.15.11/data/rules/56-hpmud.rules	2015-11-18 13:41:08.003952433 +0100
+@@ -12,7 +12,4 @@ ENV{ID_USB_INTERFACES}=="", IMPORT{built
+ # ENV{ID_HPLIP}="1" is for Ubuntu udev-acl
+ ATTR{idVendor}=="03f0", ENV{ID_USB_INTERFACES}=="*:0701??:*|*:08????:", OWNER="root", GROUP="lp", MODE="0664", ENV{libsane_matched}="yes", ENV{hp_test}="yes", ENV{ID_HPLIP}="1"
  
- 
--# This rule will add the printer and install plugin
--ENV{hp_test}=="yes", PROGRAM="/bin/sh -c 'logger -p user.info loading HP Device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c 'if [ -f /usr/bin/systemctl ]; then /usr/bin/systemctl --no-block start hplip-printer@$env{BUSNUM}:$env{DEVNUM}.service; else /usr/bin/nohup /usr/bin/python /usr/bin/hp-config_usb_printer $env{BUSNUM}:$env{DEVNUM} ; fi &'"
+-# This rule will check the smart install feature, plugin status and firmware download for the required printers.
+-ENV{hp_test}=="yes", PROGRAM="/bin/sh -c 'logger -p user.info loading HP Device $env{BUSNUM} $env{DEVNUM}'", RUN+="/bin/sh -c '/usr/bin/nohup /usr/bin/hp-config_usb_printer $env{BUSNUM}:$env{DEVNUM}'"
 -
- # If sane-bankends is installed add hpaio backend support to dll.conf if needed.
- ENV{sane_hpaio}=="yes", RUN+="/bin/sh -c 'grep -q ^#hpaio /etc/sane.d/dll.conf;if [ $$? -eq 0 ];then sed -i -e s/^#hpaio/hpaio/ /etc/sane.d/dll.conf;else grep -q ^hpaio /etc/sane.d/dll.conf;if [ $$? -ne 0 ];then echo hpaio >>/etc/sane.d/dll.conf;fi;fi'"
+ LABEL="hpmud_rules_end"
+diff -up hplip-3.15.11/data/rules/hplip-printer@.service.udev-rules hplip-3.15.11/data/rules/hplip-printer@.service
+--- hplip-3.15.11/data/rules/hplip-printer@.service.udev-rules	2015-11-12 11:28:50.000000000 +0100
++++ hplip-3.15.11/data/rules/hplip-printer@.service	2015-11-18 13:41:08.003952433 +0100
+@@ -2,4 +2,4 @@
+ Description=Configure HP Plugged-In Printer
  
-diff -up hplip-3.14.3/Makefile.in.udev-rules hplip-3.14.3/Makefile.in
---- hplip-3.14.3/Makefile.in.udev-rules	2014-03-06 06:11:18.000000000 +0100
-+++ hplip-3.14.3/Makefile.in	2014-03-07 10:06:30.341946316 +0100
-@@ -4442,7 +4442,7 @@ cups_drv = prnt/drv/hpcups.drv
- @HPLIP_BUILD_TRUE@dist_rulessystem_DATA = data/rules/hplip-printer@.service
+ [Service]
+-ExecStart=/usr/bin/python /usr/bin/hp-config_usb_printer "%i"
++ExecStart=/usr/bin/hp-config_usb_printer "%i"
+diff -up hplip-3.15.11/Makefile.am.udev-rules hplip-3.15.11/Makefile.am
+--- hplip-3.15.11/Makefile.am.udev-rules	2015-11-12 11:29:04.000000000 +0100
++++ hplip-3.15.11/Makefile.am	2015-11-18 13:54:18.817431087 +0100
+@@ -118,11 +118,12 @@ rulessystemdir=/usr/lib/systemd/system
+ dist_rulessystem_DATA =data/rules/hplip-printer@.service
  
  # hpmud.rules
--@HPLIP_BUILD_TRUE@rulesdir = /etc/udev/rules.d
-+@HPLIP_BUILD_TRUE@rulesdir = /usr/lib/udev/rules.d
- @HPLIP_BUILD_TRUE@@UDEV_SYSFS_RULES_FALSE@dist_rules_DATA = data/rules/56-hpmud.rules
- @HPLIP_BUILD_TRUE@@UDEV_SYSFS_RULES_TRUE@dist_rules_DATA = data/rules/56-hpmud_sysfs.rules
- @HPLIP_BUILD_TRUE@halpredir = /usr/share/hal/fdi/preprobe/10osvendor
+-rulesdir = /etc/udev/rules.d
++rulesdir = /usr/lib/udev/rules.d
+ if UDEV_SYSFS_RULES
+ dist_rules_DATA = data/rules/56-hpmud_sysfs.rules
+ else
+ dist_rules_DATA = data/rules/56-hpmud.rules
++dist_rules_DATA += data/rules/56-hp_conf_usb.rules
+ endif
+ 
+ halpredir = /usr/share/hal/fdi/preprobe/10osvendor

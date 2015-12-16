@@ -10,7 +10,7 @@
 
 Name:		webkitgtk
 Version:	2.4.9
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	GTK+ Web content engine library
 Summary(zh_CN.UTF-8): GTK+ 的网页内容引擎库
 
@@ -231,6 +231,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gtk-doc/html/webkitgtk
 
 %changelog
+* Fri Dec 11 2015 Liu Di <liudidi@gmail.com> - 2.4.9-6
+- 为 Magic 3.0 重建
+
 * Thu Nov 05 2015 Liu Di <liudidi@gmail.com> - 2.4.9-5
 - 为 Magic 3.0 重建
 

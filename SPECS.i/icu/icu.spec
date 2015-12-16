@@ -1,13 +1,14 @@
 Name:      icu
-Version:	0.23.1
-Release:	3%{?dist}
+Version:	56.1
+Release:	1%{?dist}
 Summary:   International Components for Unicode
 Summary(zh_CN.UTF-8): Unicode 的国际化组件
 Group:     Development/Tools
 Group(zh_CN.UTF-8): 开发/工具
 License:   MIT and UCD and Public Domain
 URL:       http://www.icu-project.org/
-Source0:   http://download.icu-project.org/files/icu4c/52.1/icu4c-52_1-src.tgz
+%define tarver %(echo %{version} | awk -F. '{print $1"_"$2}')
+Source0:   http://download.icu-project.org/files/icu4c/%{version}/icu4c-%{tarver}-src.tgz
 Source1:   icu-config.sh
 BuildRequires: doxygen, autoconf, python
 Requires: lib%{name}%{?_isa} = %{version}-%{release}
@@ -15,9 +16,9 @@ Requires: lib%{name}%{?_isa} = %{version}-%{release}
 Patch1: icu.8198.revert.icu5431.patch
 Patch2: icu.8800.freeserif.crash.patch
 Patch3: icu.7601.Indic-ccmp.patch
-Patch4: icu.9948.mlym-crash.patch
-Patch5: gennorm2-man.patch
-Patch6: icuinfo-man.patch
+Patch4: gennorm2-man.patch
+Patch5: icuinfo-man.patch
+Patch6: armv7hl-disable-tests.patch
 
 %description
 Tools and utilities for developing with icu.
@@ -81,9 +82,11 @@ BuildArch: noarch
 %patch1 -p2 -R -b .icu8198.revert.icu5431.patch
 %patch2 -p1 -b .icu8800.freeserif.crash.patch
 %patch3 -p1 -b .icu7601.Indic-ccmp.patch
-%patch4 -p1 -b .icu9948.mlym-crash.patch
-%patch5 -p1 -b .gennorm2-man.patch
-%patch6 -p1 -b .icuinfo-man.patch
+%patch4 -p1 -b .gennorm2-man.patch
+%patch5 -p1 -b .icuinfo-man.patch
+%ifarch armv7hl
+%patch6 -p1 -b .armv7hl-disable-tests.patch
+%endif
 
 %build
 cd source
@@ -192,11 +195,8 @@ make %{?_smp_mflags} -C source check
 %doc source/__docs/%{name}/html/*
 
 %changelog
-* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.23.1-3
-- 为 Magic 3.0 重建
-
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.23.1-2
-- 更新到 0.23.1
+* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 56.1-1
+- 更新到 56.1
 
 * Fri Apr 18 2014 Liu Di <liudidi@gmail.com> - 52.1-3
 - 为 Magic 3.0 重建

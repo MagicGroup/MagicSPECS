@@ -1,7 +1,7 @@
 Summary:        Tool for generating configure script for qmake-based projects
 Name:           qconf
 Version:        2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Epoch:          1
 
 License:        GPLv2+ with exceptions
@@ -49,6 +49,9 @@ make INSTALL_ROOT=%{buildroot} install
 
 
 %changelog
+* Tue Dec 15 2015 Liu Di <liudidi@gmail.com> - 1:2.0-2
+- 为 Magic 3.0 重建
+
 * Wed Dec  9 2015 Ivan Romanov <drizt@land.ru> - 1:2.0-1
 - New upstream version 2.0
 - Use pkgconfig() style

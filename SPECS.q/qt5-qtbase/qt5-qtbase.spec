@@ -35,7 +35,7 @@
 Summary: Qt5 - QtBase components
 Name:    qt5-qtbase
 Version: 5.5.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # See LGPL_EXCEPTIONS.txt, for exception details
 License: LGPLv2 with exceptions or GPLv3 with exceptions
@@ -134,34 +134,11 @@ BuildRequires: pkgconfig(libudev)
 BuildRequires: pkgconfig(NetworkManager)
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libpulse) pkgconfig(libpulse-mainloop-glib)
-%if 0%{?fedora}
 %global xkbcommon -system-xkbcommon
-%if 0%{?fedora} > 20
 BuildRequires: pkgconfig(xcb-xkb) >= 1.10
 BuildRequires: pkgconfig(xkbcommon) >= 0.4.1
 BuildRequires: pkgconfig(xkbcommon-x11) >= 0.4.1
-%else
-# apply patch to support older version of xcb, resulting lack of xkbcommon-x11
-%global old_xcb 1
-%if 0%{?fedora} > 19
-# Fedora 20
-BuildRequires: pkgconfig(xkbcommon) >= 0.4.1
-%global xkbcommon_version %(pkg-config --modversion xkbcommon 2> /dev/null || echo '0.4.1')
-Requires: libxkbcommon%{?_isa} >= %{xkbcommon_version}
-%else
-# Fedora 19 and older
-BuildRequires: pkgconfig(xkbcommon)
-# apply patch to support older version of xkbcommon
-%global old_xkbcommon 1
-%endif
-%endif
-%else
-# not Fedora
-%global xkbcommon -qt-xkbcommon
-Provides: bundled(libxkbcommon) = 0.4.1
-%endif
 BuildRequires: pkgconfig(xkeyboard-config)
-%if 0%{?fedora} || 0%{?rhel} > 6
 %define egl 1
 BuildRequires: pkgconfig(atspi-2)
 BuildRequires: pkgconfig(egl)
@@ -169,18 +146,12 @@ BuildRequires: pkgconfig(gbm)
 BuildRequires: pkgconfig(glesv2)
 BuildRequires: pkgconfig(sqlite3) >= 3.7
 %define sqlite -system-sqlite
-%if 0%{?fedora} > 20
 BuildRequires: pkgconfig(harfbuzz) >= 0.9.31
 %define harfbuzz -system-harfbuzz
-%endif
 BuildRequires: pkgconfig(icu-i18n)
 BuildRequires: pkgconfig(libpcre) >= 8.36
 %define pcre -system-pcre
 BuildRequires: pkgconfig(xcb-xkb)
-%else
-BuildRequires: libicu-devel
-%define pcre -qt-pcre
-%endif
 BuildRequires: pkgconfig(xcb) pkgconfig(xcb-glx) pkgconfig(xcb-icccm) pkgconfig(xcb-image) pkgconfig(xcb-keysyms) pkgconfig(xcb-renderutil)
 BuildRequires: pkgconfig(zlib)
 
@@ -194,13 +165,6 @@ Requires(postun): %{_sbindir}/update-alternatives
 %if 0%{?rhel}
 %define ibase -no-sql-ibase
 %define tds -no-sql-tds
-%endif
-
-# workaround gold linker bug by not using it
-# https://bugzilla.redhat.com/show_bug.cgi?id=1193044
-#https://sourceware.org/bugzilla/show_bug.cgi?id=16992
-%if 0%{?fedora} > 21
-%define use_gold_linker -no-use-gold-linker
 %endif
 
 %description
@@ -410,8 +374,7 @@ test -x configure || chmod +x configure
   %{?sqlite} \
   %{?tds} \
   %{?xkbcommon} \
-  -system-zlib \
-  %{?use_gold_linker}
+  -system-zlib 
 
 make %{?_smp_mflags}
 
@@ -881,6 +844,9 @@ fi
 
 
 %changelog
+* Sun Dec 13 2015 Liu Di <liudidi@gmail.com> - 5.5.1-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.5.1-3
 - 为 Magic 3.0 重建
 

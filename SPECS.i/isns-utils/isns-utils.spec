@@ -1,6 +1,6 @@
 Name:           isns-utils
 Version:        0.94
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The iSNS daemon and utility programs
 
 Group:          System Environment/Daemons
@@ -93,6 +93,9 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/isnsd.service
 
 
 %changelog
+* Tue Dec 15 2015 Liu Di <liudidi@gmail.com> - 0.94-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 05 2015 Chris Leech <cleech@redhat.com> - 0.94-1
 - new upstream location, update to 0.94
 - new devel package, upstream open-iscsi is dropping it's internal copy

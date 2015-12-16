@@ -1,0 +1,31 @@
+From 5ddb9821391e7417bddd4388f78e810ea15a39d1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 2 Apr 2015 16:14:12 +0200
+Subject: [PATCH] doc: Correct a typo about enabling control comment
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<http://lists.gnu.org/archive/html/bug-indent/2015-04/msg00000.html>
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ doc/indent.texinfo | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/doc/indent.texinfo b/doc/indent.texinfo
+index 08f35f6..15627e0 100644
+--- a/doc/indent.texinfo
++++ b/doc/indent.texinfo
+@@ -1463,7 +1463,7 @@ formatting for a section of a program, place the disabling control
+ comment @code{/* *INDENT-OFF* */} on a line by itself just before that
+ section.  Program text scanned after this control comment is output
+ precisely as input with no modifications until the corresponding
+-enabling comment is scanned on a line by itself.  The disabling control
++enabling comment is scanned on a line by itself.  The enabling control
+ comment is @code{/* *INDENT-ON* */}, and any text following the comment
+ on the line is also output unformatted.  Formatting begins again with
+ the input line following the enabling control comment.
+-- 
+2.1.0
+

@@ -1,0 +1,11 @@
+--- iputils-s20150815/Makefile	2015-08-15 16:07:28.000000000 +0200
++++ iputils-s20150815-new/Makefile	2015-09-24 09:22:09.000000000 +0200
+@@ -52,7 +52,7 @@ ENABLE_RDISC_SERVER=no
+ # What a pity, all new gccs are buggy and -Werror does not work. Sigh.
+ # CFLAGS+=-fno-strict-aliasing -Wstrict-prototypes -Wall -Werror -g
+ CFLAGS?=-O3 -g
+-CFLAGS+=-fno-strict-aliasing -Wstrict-prototypes -Wall
++CFLAGS+=$(RPM_OPT_FLAGS) -fno-strict-aliasing -Wstrict-prototypes -Wall
+ CPPFLAGS+=-D_GNU_SOURCE
+ LDLIB=
+ 

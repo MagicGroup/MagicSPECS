@@ -1,0 +1,30 @@
+diff -pruN imsettings-1.6.8.orig/configure.ac imsettings-1.6.8/configure.ac
+--- imsettings-1.6.8.orig/configure.ac	2015-01-15 17:04:54.000000000 +0900
++++ imsettings-1.6.8/configure.ac	2015-02-23 19:03:45.178127747 +0900
+@@ -14,7 +14,7 @@ AM_MAINTAINER_MODE
+ AC_CONFIG_HEADERS([config.h])
+ AC_CONFIG_MACRO_DIR([m4macros])
+ 
+-AX_CHECK_ENABLE_DEBUG
++dnl AX_CHECK_ENABLE_DEBUG
+ 
+ LT_PREREQ([2.2])
+ LT_INIT([disable-static])
+@@ -174,14 +174,14 @@ AM_CONDITIONAL(ENABLE_XIM, test x$use_xi
+ dnl ======================================================================
+ dnl check another libraries
+ dnl ======================================================================
+-im_saved_CFLAGS="$CFLAGS"
+-CFLAGS=$(echo $CFLAGS | sed -e 's/\-Werror.*//g')
++dnl im_saved_CFLAGS="$CFLAGS"
++dnl CFLAGS=$(echo $CFLAGS | sed -e 's/\-Werror.*//g')
+ AM_PATH_GLIB_2_0($GLIB_REQUIRED, :,
+ 	AC_MSG_ERROR([
+ *** GLIB $GLIB_REQUIRED or better is required. The latest version of
+ *** GLIB is always available from ftp://ftp.gtk.org/.]),
+     glib)
+-CFLAGS="$im_saved_CFLAGS"
++dnl CFLAGS="$im_saved_CFLAGS"
+ 
+ GOBJECT_INTROSPECTION_CHECK([1.30.0])
+ 

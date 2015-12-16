@@ -1,7 +1,7 @@
-diff -up hplip-3.14.3/prnt/hpcups/HPCupsFilter.cpp.logdir hplip-3.14.3/prnt/hpcups/HPCupsFilter.cpp
---- hplip-3.14.3/prnt/hpcups/HPCupsFilter.cpp.logdir	2014-03-07 10:10:48.512355710 +0100
-+++ hplip-3.14.3/prnt/hpcups/HPCupsFilter.cpp	2014-03-07 10:15:27.912460207 +0100
-@@ -604,7 +605,7 @@ int HPCupsFilter::processRasterData(cups
+diff -up hplip-3.15.2/prnt/hpcups/HPCupsFilter.cpp.logdir hplip-3.15.2/prnt/hpcups/HPCupsFilter.cpp
+--- hplip-3.15.2/prnt/hpcups/HPCupsFilter.cpp.logdir	2015-02-04 14:22:43.838774401 +0100
++++ hplip-3.15.2/prnt/hpcups/HPCupsFilter.cpp	2015-02-04 14:22:43.844774315 +0100
+@@ -619,7 +619,7 @@ int HPCupsFilter::processRasterData(cups
      char hpPreProcessedRasterFile[MAX_FILE_PATH_LEN]; //temp file needed to store raster data with swaped pages.
  
  
@@ -10,15 +10,15 @@ diff -up hplip-3.14.3/prnt/hpcups/HPCupsFilter.cpp.logdir hplip-3.14.3/prnt/hpcu
  
  
      while (cupsRasterReadHeader2(cups_raster, &cups_header))
-diff -up hplip-3.14.3/prnt/hpcups/SystemServices.cpp.logdir hplip-3.14.3/prnt/hpcups/SystemServices.cpp
---- hplip-3.14.3/prnt/hpcups/SystemServices.cpp.logdir	2014-03-07 10:10:48.539355334 +0100
-+++ hplip-3.14.3/prnt/hpcups/SystemServices.cpp	2014-03-07 10:18:16.632107853 +0100
+diff -up hplip-3.15.2/prnt/hpcups/SystemServices.cpp.logdir hplip-3.15.2/prnt/hpcups/SystemServices.cpp
+--- hplip-3.15.2/prnt/hpcups/SystemServices.cpp.logdir	2015-02-04 14:22:43.844774315 +0100
++++ hplip-3.15.2/prnt/hpcups/SystemServices.cpp	2015-02-04 14:24:04.080626127 +0100
 @@ -38,7 +38,7 @@ SystemServices::SystemServices(int iLogL
-     if (iLogLevel & SAVE_PCL_FILE)
+     if (iLogLevel & SAVE_OUT_FILE)
      {
          char    fname[MAX_FILE_PATH_LEN];
--        sprintf(fname, "%s/hp_%s_cups_out_job%d_XXXXXX",CUPS_TMP_DIR, user_name, job_id);
-+        snprintf(fname, sizeof(fname), "%s/hp_%s_cups_out_job%d_XXXXXX",CUPS_TMP_DIR, user_name, job_id);
-         
+-        sprintf(fname, "%s/hpcups_%s_out_job%d_XXXXXX",CUPS_TMP_DIR, user_name, job_id);
++        snprintf(fname, sizeof(fname), "%s/hpcups_%s_out_job%d_XXXXXX",CUPS_TMP_DIR, user_name, job_id);
          createTempFile(fname, &m_fp);
          if (m_fp)
+         {

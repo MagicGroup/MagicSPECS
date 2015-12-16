@@ -1,0 +1,24 @@
+Index: /trunk/software/usb_ir/CMakeLists.txt
+===================================================================
+--- trunk/software/usb_ir/CMakeLists.txt	(revision 2709)
++++ trunk/software/usb_ir/CMakeLists.txt	(revision 2710)
+@@ -1,4 +1,7 @@
+ cmake_minimum_required(VERSION 2.6)
+ project(IguanaIR C)
++
++Set(SOVERSION 0)
++Set(FULLVER 0.3)
+
+ #Set(TARGET_ANDROID true)
+@@ -98,9 +101,10 @@
+                      iguanaIR.c dataPackets.c ${PIPESRC}
+                      ${BASESRC})
++set_target_properties(iguanaIR PROPERTIES
++                      VERSION ${SOVERSION} SOVERSION ${FULLVER})
+ set_property(TARGET iguanaIR
+              APPEND PROPERTY COMPILE_DEFINITIONS IGUANAIR_EXPORTS)
+ install(TARGETS iguanaIR
+         DESTINATION ${LIBDIR})
+-
+
+ # build the service/server that controls hardware

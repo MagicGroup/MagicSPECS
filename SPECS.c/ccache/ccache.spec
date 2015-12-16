@@ -12,8 +12,8 @@
 %global relccache %(%abs2rel %{_bindir}/ccache %{_libdir}/ccache)
 
 Name:           ccache
-Version:	3.1.9
-Release:        3%{?dist}
+Version:	3.2.4
+Release:        1%{?dist}
 Summary:        C/C++ compiler cache
 Summary(zh_CN.UTF-8): C/C++ 编译器缓存
 
@@ -148,6 +148,9 @@ getent group ccache >/dev/null || groupadd -r ccache || :
 
 
 %changelog
+* Fri Dec 11 2015 Liu Di <liudidi@gmail.com> - 3.2.4-1
+- 为 Magic 3.0 重建
+
 * Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 3.1.9-3
 - 为 Magic 3.0 重建
 

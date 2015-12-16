@@ -39,14 +39,14 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root,-)
 %doc README AUTHORS COPYING NEWS TODO ChangeLog
 %{_bindir}/extresso

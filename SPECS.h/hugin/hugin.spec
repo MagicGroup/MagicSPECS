@@ -1,8 +1,8 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
 Summary: A panoramic photo stitcher and more
 Name: hugin
-Version:	2014.0.0
-Release: 9%{?dist}
+Version:	2015.0.0
+Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/Multimedia
 Source: http://downloads.sourceforge.net/hugin/%{name}-%{version}.tar.bz2

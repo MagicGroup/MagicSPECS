@@ -21,6 +21,7 @@ Patch1:		%{name}-disable-xim.patch
 Patch2:		%{name}-xinput-xcompose.patch
 ## Fedora specific: Force enable the IM management on imsettings for Cinnamon
 Patch3:		%{name}-force-enable-for-cinnamon.patch
+Patch4:		%{name}-fix-configure.patch
 
 Summary:	Delivery framework for general Input Method configuration
 Group:		Applications/System
@@ -198,8 +199,10 @@ This package contains a module to get this working on Cinnamon.
 %if 0
 %patch3 -p1 -b .3-force-cinnamon
 %endif
+%patch4 -p1
 
 %build
+autoreconf -fisv
 %configure	\
 	--with-xinputsh=50-xinput.sh \
 	--disable-static \

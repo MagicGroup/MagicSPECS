@@ -1,6 +1,6 @@
 #!/bin/bash
 url="http://ccache.samba.org/download.html"
-new1="he latest stable release is <b>"
+new1="he latest release is <b>"
 new2="<\\/b>"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null

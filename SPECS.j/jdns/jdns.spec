@@ -1,6 +1,6 @@
 Name:           jdns
 Version:        2.0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A simple DNS queries library
 
 License:        MIT
@@ -174,6 +174,9 @@ test "$(pkg-config --modversion qjdns-qt5)" = "%{version}"
 
 
 %changelog
+* Tue Dec 15 2015 Liu Di <liudidi@gmail.com> - 2.0.3-2
+- 为 Magic 3.0 重建
+
 * Thu Jul  9 2015 Ivan Romanov <drizt@land.ru> - 2.0.3-1
 - updated to 2.0.3
 - 2.0.3 introduces some api/abi breaking. They fixed/workarounded.

@@ -11,6 +11,33 @@ URL: http://indent.isidore-it.eu/beautify.html
 Source: http://indent.isidore-it.eu/%{name}-%{version}.tar.gz
 Patch5: indent-2.2.9-lcall.patch
 Patch7: indent-2.2.9-man.patch
+# Bug 733051, submitted to upstream
+# <https://lists.gnu.org/archive/html/bug-indent/2011-08/msg00000.html>
+Patch8: indent-2.2.11-Do-not-split-decimal-float-suffix-from-constant.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2012-02/msg00000.html>
+Patch9: indent-2.2.11-Return-non-zero-exit-code-on-tests-failure.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2013-02/msg00000.html>
+Patch10: indent-2.2.11-Fix-compiler-warnings.patch
+# Submitted to upstream, bug #912635
+# <http://lists.gnu.org/archive/html/bug-indent/2013-02/msg00001.html>
+Patch11: indent-2.2.11-Allow-64-bit-stat.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2013-03/msg00002.html>
+Patch12: indent-2.2.11-Fix-copying-overlapping-comment.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2015-03/msg00002.html>
+Patch13: indent-2.2.11-Support-hexadecimal-floats.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2015-03/msg00003.html>
+Patch14: indent-2.2.11-Modernize-texi2html-arguments.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2015-04/msg00001.html>
+Patch15: indent-2.2.11-doc-Correct-a-typo-about-enabling-control-comment.patch
+# Submitted to upstream
+# <http://lists.gnu.org/archive/html/bug-indent/2015-11/msg00000.html>
+Patch16: indent-2.2.11-Fix-nbdfa-and-nbdfe-typo.patch
 BuildRequires: texinfo texi2html
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /usr/sbin/install-info
@@ -33,9 +60,22 @@ you want a program to format your code.
 %setup -q
 %patch5 -p1
 %patch7 -p1
+%patch8 -p1 -b .float_suffix
+%patch9 -p1 -b .exit_code
+%patch10 -p1 -b .warnings
+%patch11 -p1 -b .warnings
+%patch12 -p1 -b .comments
+%patch13 -p1 -b .hexa_float
+%patch14 -p1 -b .texi2html5
+%patch15 -p1 -b .doc_dcc
+%patch16 -p1 -b .doc_nbdfa
+# Regenerate sources
+rm src/gperf.c src/gperf-cc.c
+# Update config.sub to support aarch64, bug #925588
+autoreconf -i -f
 
 %build
-%configure
+%configure  CFLAGS='%optflags -D_FILE_OFFSET_BITS=64'
 make %{?_smp_mflags}
 
 %install

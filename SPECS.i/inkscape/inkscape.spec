@@ -132,13 +132,22 @@ find share/extensions -name '*.py' | xargs chmod -x
 dos2unix -k -q share/extensions/*.py
 
 %build
+# Build in C++11 mode as glibmm headers use C++11 features. This can be dropped
+# when GCC in Fedora switches to C++11 by default (with GCC 6, most likely).
+export CXXFLAGS="%{optflags} -std=c++11"
+
+# --disable-strict-build is needed due to gtkmm using a deprecated glibmm
+# method: https://lists.fedoraproject.org/pipermail/devel/2015-July/212652.html
+# If upstream gtkmm fixes https://bugzilla.gnome.org/show_bug.cgi?id=752797
+# this can be removed.
 %configure                      \
         --with-python           \
         --with-perl             \
         --with-gnome-vfs        \
         --with-xft              \
         --enable-lcms           \
-        --enable-poppler-cairo 
+        --enable-poppler-cairo  \
+	--disable-strict-build
 
 make %{?_smp_mflags}
 

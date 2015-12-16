@@ -1,25 +1,30 @@
 %global _hardened_build 1
 
 Summary: Network monitoring tools including ping
+Summary(zh_CN.UTF-8): 包括 ping 在内的网络监视工具
 Name: iputils
-Version: 20121221
-Release: 12%{?dist}
+Version: 20150815
+Release: 1%{?dist}
 # some parts are under the original BSD (ping.c)
 # some are under GPLv2+ (tracepath.c)
 License: BSD and GPLv2+
 URL: http://www.skbuff.net/iputils
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 
-Source0: http://www.skbuff.net/iputils/%{name}-s%{version}.tar.bz2
+Source0: https://github.com/iputils/iputils/archive/s%{version}.tar.gz#/%{name}-s%{version}.tar.gz
 Source1: ifenslave.tar.gz
-Source4: rdisc.service
-Source6: ninfod.service
+Source2: rdisc.service
+Source3: ninfod.service
 
-Patch0: iputils-20020927-rh.patch
+# Taken from ping.c on 2014-07-12
+Source4: bsd.txt
+Source5: https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+
+Patch0: iputils-rh.patch
 Patch1: iputils-ifenslave.patch
-Patch2: iputils-20121221-floodlocale.patch
-Patch3: iputils-20121221-eperm-flood.patch
-Patch4: iputils-20121221-sigalrm-unblock.patch
+Patch2: iputils-doc.patch
+Patch3: iputils-locale-i.patch
 
 BuildRequires: docbook-utils perl-SGMLSpm
 BuildRequires: glibc-kernheaders >= 2.4-8.19
@@ -44,9 +49,14 @@ including ping. The ping command sends a series of ICMP protocol
 ECHO_REQUEST packets to a specified network host to discover whether
 the target machine is alive and receiving network traffic.
 
+%description -l zh_CN.UTF-8
+基本的网络监视工具，包括 ping。
+
 %package ninfod
 Group: System Environment/Daemons
+Group(zh_CN.UTF-8): 系统环境/服务
 Summary: Node Information Query Daemon
+Summary(zh_CN.UTF-8): 节点信息查询服务
 Requires: %{name} = %{version}-%{release}
 Provides: %{_sbindir}/ninfod
 
@@ -54,14 +64,16 @@ Provides: %{_sbindir}/ninfod
 Node Information Query (RFC4620) daemon. Responds to IPv6 Node Information
 Queries.
 
+%description ninfod -l zh_CN.UTF-8
+节点信息查询服务。
 %prep
 %setup -q -a 1 -n %{name}-s%{version}
+cp %{SOURCE4} %{SOURCE5} .
 
-%patch0 -p1 -b .rh
-%patch1 -p1 -b .addr
-%patch2 -p1 -b .floc
-%patch3 -p1 -b .eperm
-%patch4 -p1 -b .sigalrm
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 %ifarch s390 s390x
@@ -71,7 +83,7 @@ Queries.
 %endif
 export LDFLAGS="-pie -Wl,-z,relro,-z,now"
 
-make %{?_smp_mflags} arping clockdiff ping ping6 rdisc tracepath tracepath6 \
+make %{?_smp_mflags} arping clockdiff ping rdisc tracepath tracepath6 \
                      ninfod
 gcc -Wall $RPM_OPT_FLAGS $CFLAGS $LDFLAGS ifenslave.c -o ifenslave
 make -C doc man
@@ -86,13 +98,13 @@ install -cp arping		${RPM_BUILD_ROOT}%{_sbindir}/
 install -cp ping		${RPM_BUILD_ROOT}%{_bindir}/
 install -cp ifenslave		${RPM_BUILD_ROOT}%{_sbindir}/
 install -cp rdisc		${RPM_BUILD_ROOT}%{_sbindir}/
-install -cp ping6		${RPM_BUILD_ROOT}%{_bindir}/
 install -cp tracepath		${RPM_BUILD_ROOT}%{_bindir}/
 install -cp tracepath6		${RPM_BUILD_ROOT}%{_bindir}/
 install -cp ninfod/ninfod	${RPM_BUILD_ROOT}%{_sbindir}/
 
 mkdir -p ${RPM_BUILD_ROOT}%{_bindir}
-ln -sf ../bin/ping6 ${RPM_BUILD_ROOT}%{_sbindir}
+ln -sf ../bin/ping ${RPM_BUILD_ROOT}%{_sbindir}/ping6
+ln -sf ../bin/ping ${RPM_BUILD_ROOT}%{_sbindir}/ping6
 ln -sf ../bin/tracepath ${RPM_BUILD_ROOT}%{_sbindir}
 ln -sf ../bin/tracepath6 ${RPM_BUILD_ROOT}%{_sbindir}
 
@@ -108,12 +120,13 @@ ln -s ping.8.gz ${RPM_BUILD_ROOT}%{_mandir}/man8/ping6.8.gz
 ln -s tracepath.8.gz ${RPM_BUILD_ROOT}%{_mandir}/man8/tracepath6.8.gz
 
 install -dp ${RPM_BUILD_ROOT}%{_sysconfdir}/rc.d/init.d
-install -m 644 %SOURCE4 ${RPM_BUILD_ROOT}/%{_unitdir}
-install -m 644 %SOURCE6 ${RPM_BUILD_ROOT}/%{_unitdir}
+install -m 644 %SOURCE2 ${RPM_BUILD_ROOT}/%{_unitdir}
+install -m 644 %SOURCE3 ${RPM_BUILD_ROOT}/%{_unitdir}
 
 iconv -f ISO88591 -t UTF8 RELNOTES -o RELNOTES.tmp
 touch -r RELNOTES RELNOTES.tmp
 mv -f RELNOTES.tmp RELNOTES
+magic_rpm_clean.sh
 
 %post
 %systemd_post rdisc.service
@@ -135,13 +148,14 @@ mv -f RELNOTES.tmp RELNOTES
 
 %files
 %doc RELNOTES README.bonding
+%{!?_licensedir:%global license %%doc}
+%license bsd.txt gpl-2.0.txt
 %{_unitdir}/rdisc.service
 %attr(0755,root,root) %caps(cap_net_raw=ep) %{_sbindir}/clockdiff
 %attr(0755,root,root) %caps(cap_net_raw=ep) %{_sbindir}/arping
 %attr(0755,root,root) %caps(cap_net_raw=ep cap_net_admin=ep) %{_bindir}/ping
 %{_sbindir}/ifenslave
 %{_sbindir}/rdisc
-%attr(0755,root,root) %caps(cap_net_raw=ep cap_net_admin=ep) %{_bindir}/ping6
 %{_bindir}/tracepath
 %{_bindir}/tracepath6
 %{_sbindir}/ping6
@@ -160,6 +174,7 @@ mv -f RELNOTES.tmp RELNOTES
 %attr(0755,root,root) %caps(cap_net_raw=ep) %{_sbindir}/ninfod
 %{_unitdir}/ninfod.service
 %attr(644,root,root) %{_mandir}/man8/ninfod.8.gz
+
 
 %changelog
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 20121221-12

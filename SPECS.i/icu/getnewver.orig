@@ -1,6 +1,6 @@
 #!/bin/bash
-url="http://p11-glue.freedesktop.org/releases/?C=M&O=D"
-new1="p11-kit-"
+url="http://site.icu-project.org/download"
+new1="-"
 new2=".tar.gz"
 downcommand="wget -q" 
 pushd $(dirname $0) > /dev/null

@@ -6,8 +6,8 @@
 # NOTE:  Try not to release new versions to released versions of Fedora
 # You need to recompile all users of HDF5 for each version change
 Name: hdf5
-Version: 1.8.15
-Release: 7%{?dist}
+Version: 1.8.16
+Release: 1%{?dist}
 Summary: A general purpose library and file format for storing scientific data
 License: BSD
 Group: System Environment/Libraries
@@ -16,9 +16,10 @@ URL: http://www.hdfgroup.org/HDF5/
 Source0: http://www.hdfgroup.org/ftp/HDF5/releases/hdf5-%{version}%{?snaprel}/src/hdf5-%{version}%{?snaprel}.tar.bz2
 Source1: h5comp
 # For man pages
-Source2: http://ftp.us.debian.org/debian/pool/main/h/hdf5/hdf5_1.8.13+docs-15.debian.tar.xz
+Source2: http://ftp.us.debian.org/debian/pool/main/h/hdf5/hdf5_1.8.15-patch1+docs-5.debian.tar.xz
 Patch0: hdf5-LD_LIBRARY_PATH.patch
-Patch1: hdf5-1.8.8-tstlite.patch
+# Fix -Werror=format-security errors
+Patch2: hdf5-format.patch
 # Fix long double conversions on ppc64le
 # https://bugzilla.redhat.com/show_bug.cgi?id=1078173
 Patch3: hdf5-ldouble-ppc64le.patch
@@ -148,14 +149,11 @@ HDF5 parallel openmpi static libraries
 #setup -q -n %{name}-%{version}%{?snaprel}
 %setup -q -a 2
 %patch0 -p1 -b .LD_LIBRARY_PATH
-%ifarch ppc64 s390x
-# the tstlite test fails with "stack smashing detected" on these arches
-%patch1 -p1 -b .tstlite
-%endif
-%patch3 -p1 -b .aarch64
-#This should be fixed in 1.8.7
-find \( -name '*.[ch]*' -o -name '*.f90' -o -name '*.txt' \) -exec chmod -x {} +
-
+%patch2 -p1 -b .format
+%patch3 -p1 -b .ldouble-ppc64le
+# Force shared by default for compiler wrappers (bug #1266645)
+sed -i -e '/^STATIC_AVAILABLE=/s/=.*/=no/' */*/h5[cf]*.in
+autoreconf -f -i
 
 %build
 #Do out of tree builds
@@ -367,6 +365,7 @@ done
 %{_libdir}/mpich/bin/h5pfc
 %{_libdir}/mpich/lib/lib*.so
 %{_libdir}/mpich/lib/lib*.settings
+%{_libdir}/mpich/share/hdf5_examples/*
 
 %files mpich-static
 %{_libdir}/mpich/lib/*.a
@@ -402,6 +401,7 @@ done
 %{_libdir}/openmpi/bin/h5pfc
 %{_libdir}/openmpi/lib/lib*.so
 %{_libdir}/openmpi/lib/lib*.settings
+%{_libdir}/openmpi/share/hdf5_examples/*
 
 %files openmpi-static
 %{_libdir}/openmpi/lib/*.a

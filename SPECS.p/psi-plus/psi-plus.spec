@@ -7,7 +7,7 @@
 Summary:        Jabber client based on Qt
 Name:           psi-plus
 Version:        0.16
-Release:        0.22.%{rev}%{?dist}
+Release:        0.23.%{rev}%{?dist}
 Epoch:          1
 
 URL:            http://code.google.com/p/psi-dev/
@@ -377,6 +377,9 @@ fi
 %exclude %{_datadir}/psi-plus/*.qm
 
 %changelog
+* Tue Dec 15 2015 Liu Di <liudidi@gmail.com> - 1:0.16-0.23.20141205git440
+- 为 Magic 3.0 重建
+
 * Wed Nov 18 2015 Rex Dieter <rdieter@fedoraproject.org> 1:0.16-0.22
 - rebuild (tidy)
 

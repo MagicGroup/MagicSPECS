@@ -1,26 +1,14 @@
 %global             cbq_version v0.7.3
 Summary:            Advanced IP routing and network device configuration tools
 Name:               iproute
-Version:	4.2.0
+Version:	4.3.0
 Release:            5%{?dist}
 Group:              Applications/System
 URL:                http://kernel.org/pub/linux/utils/net/%{name}2/
 Source0:            http://kernel.org/pub/linux/utils/net/%{name}2/%{name}2-%{version}.tar.gz
 Source1:            cbq-0000.example
 Source2:            avpkt
-Patch0:             man-pages.patch
-Patch1:             iproute2-3.4.0-kernel.patch
-Patch2:             iproute2-3.11.0-optflags.patch
-Patch3:             iproute2-3.9.0-IPPROTO_IP_for_SA.patch
-Patch4:             iproute2-example-cbq-service.patch
-Patch5:             iproute2-2.6.35-print-route.patch
-Patch6:             iproute2-2.6.39-create-peer-veth-without-a-name.patch
-Patch7:             iproute2-3.12.0-lnstat-dump-to-stdout.patch
-Patch8:             iproute2-3.10.0-rtnl_send.patch
-# Rejected by upstream <http://thread.gmane.org/gmane.linux.network/284101>
-Patch9:             iproute2-3.11.0-tc-ok.patch
-Patch10:            iproute2-3.11.0-rtt.patch
-Patch11:            iproute2-3.12.0-lnstat-interval.patch
+
 License:            GPLv2+ and Public Domain
 BuildRequires:      bison
 BuildRequires:      flex
@@ -64,91 +52,39 @@ The libnetlink static library.
 
 %prep
 %setup -q -n %{name}2-%{version}
-%patch0 -p1
-%patch1 -p1 -b .kernel
-%patch2 -p1 -b .opt_flags
-%patch3 -p1 -b .ipproto
-%patch4 -p1 -b .fix_cbq
-%patch5 -p1 -b .print-route
-#%patch6 -p1 -b .peer-veth-without-name
-%patch7 -p1 -b .lnstat-dump-to-stdout
-#%patch8 -p1 -b .rtnl_send
-%patch9 -p1 -b .tc_ok
-%patch10 -p1 -b .rtt
-%patch11 -p1 -b .lnstat-interval
-sed -i 's/^LIBDIR=/LIBDIR?=/' Makefile
 
 %build
+export CFLAGS="%{optflags}"
 export LIBDIR=/%{_libdir}
 export IPT_LIB_DIR=/%{_lib}/xtables
 ./configure
 make %{?_smp_mflags}
-make -C doc
+#make -C doc
 
 %install
-mkdir -p \
-    %{buildroot}%{_includedir} \
-    %{buildroot}%{_sbindir} \
-    %{buildroot}%{_mandir}/man3 \
-    %{buildroot}%{_mandir}/man7 \
-    %{buildroot}%{_mandir}/man8 \
-    %{buildroot}%{_libdir}/tc \
-    %{buildroot}%{_sysconfdir}/iproute2 \
-    %{buildroot}%{_sysconfdir}/sysconfig/cbq
+export DESTDIR='%{buildroot}'
+export SBINDIR='%{_sbindir}'
+export MANDIR='%{_mandir}'
+export LIBDIR='%{_libdir}'
+export CONFDIR='%{_sysconfdir}/iproute2'
+export DOCDIR='%{_docdir}'
+make install
 
-for binary in \
-    bridge/bridge \
-    examples/cbq.init-%{cbq_version} \
-    genl/genl \
-    ip/ifcfg \
-    ip/ip \
-    ip/routef \
-    ip/routel \
-    ip/rtmon \
-    ip/rtpr \
-    misc/arpd \
-    misc/ifstat \
-    misc/lnstat \
-    misc/nstat \
-    misc/rtacct \
-    misc/ss \
-    tc/tc
-    do install -m755 ${binary} %{buildroot}%{_sbindir}
-done
-mv %{buildroot}%{_sbindir}/cbq.init-%{cbq_version} %{buildroot}%{_sbindir}/cbq
-cd %{buildroot}%{_sbindir}
-    ln -s lnstat ctstat
-    ln -s lnstat rtstat
-cd -
+install -m755 examples/cbq.init-%{cbq_version} ${DESTDIR}/${SBINDIR}/cbq
 
-# Libs
-install -m644 netem/*.dist %{buildroot}%{_libdir}/tc
-%if 0%{?fedora}
-install -m755 tc/q_atm.so %{buildroot}%{_libdir}/tc
-%endif
-install -m755 tc/m_xt.so %{buildroot}%{_libdir}/tc
-cd %{buildroot}%{_libdir}/tc
-    ln -s m_xt.so m_ipt.so
-cd -
-
-# libnetlink
-install -m644 include/libnetlink.h %{buildroot}%{_includedir}
-install -m644 lib/libnetlink.a %{buildroot}%{_libdir}
-
-# Manpages
-iconv -f latin1 -t utf8 man/man8/ss.8 > man/man8/ss.8.utf8 &&
-    mv man/man8/ss.8.utf8 man/man8/ss.8
-install -m644 man/man3/*.3 %{buildroot}%{_mandir}/man3
-install -m644 man/man7/*.7 %{buildroot}%{_mandir}/man7
-install -m644 man/man8/*.8 %{buildroot}%{_mandir}/man8
-
-# Config files
-install -m644 etc/iproute2/* %{buildroot}%{_sysconfdir}/iproute2
+install -d -m755 %{buildroot}%{_sysconfdir}/sysconfig/cbq
 for config in \
     %{SOURCE1} \
     %{SOURCE2}
     do install -m644 ${config} %{buildroot}%{_sysconfdir}/sysconfig/cbq
 done
+
+# libnetlink
+install -D -m644 include/libnetlink.h %{buildroot}%{_includedir}/libnetlink.h
+install -D -m644 lib/libnetlink.a %{buildroot}%{_libdir}/libnetlink.a
+
+# drop these files, iproute-doc package extracts files directly from _buil%description -l zh_CN.UTF-8ir
+rm -rf '%{buildroot}%{_docdir}'
 
 %files
 %dir %{_sysconfdir}/iproute2
@@ -163,10 +99,11 @@ done
 %dir %{_sysconfdir}/sysconfig/cbq
 %config(noreplace) %{_sysconfdir}/sysconfig/cbq/*
 
+
 %files doc
 %doc COPYING
-%doc doc/*.ps
-%doc examples
+#%doc doc/*.ps
+#%doc examples
 
 %files devel
 %doc COPYING

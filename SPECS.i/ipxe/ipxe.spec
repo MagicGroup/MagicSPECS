@@ -35,7 +35,7 @@
 # And then change these two:
 
 %define git 1
-%define vcsdate 20151030
+%define vcsdate 20151215
 %global hash c4bce43
 
 Name:    ipxe
@@ -204,16 +204,16 @@ done
 %{_datadir}/%{name}/ipxe.dsk
 %{_datadir}/%{name}/ipxe.lkrn
 %{_datadir}/%{name}/undionly.kpxe
-%doc COPYING COPYRIGHTS USAGE
+%doc COPYING 
 
 %files roms -f rom.list
 %dir %{_datadir}/%{name}
-%doc COPYING COPYRIGHTS
+%doc COPYING
 
 %files roms-qemu -f qemu.rom.list
 %dir %{_datadir}/%{name}
 %dir %{_datadir}/%{name}.efi
-%doc COPYING COPYRIGHTS
+%doc COPYING 
 %endif
 
 %changelog

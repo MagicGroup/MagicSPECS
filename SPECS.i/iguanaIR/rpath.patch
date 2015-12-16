@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6bdf24d..7ca5c4b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,6 +71,9 @@ ElseIf("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+       Set(DAEMONLIBS pthread dl)
+     EndIf()
+
++    Set(CMAKE_SKIP_RPATH True)
++    Set(INSTALL_LIBDIR @libdir@)
++
+     Set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -Wall -pedantic")
+
+     # see if we have clock_gettime in time.h
+

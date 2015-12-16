@@ -3,7 +3,7 @@ Summary:        Generic Programming for Computer Vision
 Summary(zh_CN.UTF-8): 计算机视觉的通用程序
 Name:           vigra
 Version:        1.10.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 License:        MIT
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -105,6 +105,9 @@ rm -rf %{buildroot}
 %{_libdir}/vigranumpy
 
 %changelog
+* Fri Dec 11 2015 Liu Di <liudidi@gmail.com> - 1.10.0-10
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.10.0-9
 - 为 Magic 3.0 重建
 

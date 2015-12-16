@@ -36,7 +36,7 @@
 
 Name: evolution-data-server
 Version:	3.19.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Summary: Backend data server for Evolution
@@ -428,6 +428,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/installed-tests
 
 %changelog
+* Fri Dec 11 2015 Liu Di <liudidi@gmail.com> - 3.19.2-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.19.1-3
 - 为 Magic 3.0 重建
 

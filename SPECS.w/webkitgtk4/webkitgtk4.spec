@@ -9,7 +9,7 @@
 
 Name:           webkitgtk4
 Version:        2.10.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        GTK+ Web content engine library
 
 License:        LGPLv2
@@ -222,6 +222,9 @@ make %{?_smp_mflags} -C %{_target_platform}
 %{_datadir}/gtk-doc/html/webkitdomgtk-4.0/
 
 %changelog
+* Sat Dec 12 2015 Liu Di <liudidi@gmail.com> - 2.10.2-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Liu Di <liudidi@gmail.com> - 2.10.2-2
 - 为 Magic 3.0 重建
 

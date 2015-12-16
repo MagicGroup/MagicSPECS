@@ -1,6 +1,7 @@
 Name:           iguanaIR
-Version:        1.0.5
-Release:        6%{?dist}
+Version:        1.1.0
+Release:        15%{?dist}
+Epoch:          2
 Summary:        Driver for Iguanaworks USB IR transceiver
 
 Group:          System Environment/Daemons
@@ -10,16 +11,36 @@ Source0:        http://iguanaworks.net/downloads/%{name}-%{version}.tar.bz2
 Source1:        iguanaIR.service
 Source2:        iguanaIR-rescan
 Source3:        README.fedora
-# https://iguanaworks.net/projects/IguanaIR/ticket/205 for patch 5, 3, 2.
-Patch3:         0003-Use-platform-specific-python-extension-dir.patch
-# Fedora only
-Patch6:         0006-udev-invoke-systemd-support-not-sysV-init-file.patch
+Source4:        patch-soname
+Source5:        iguanaIR.logrotate
+# https://iguanaworks.net/projects/IguanaIR/ticket/317
+Patch1:         changeset_2710.patch
+Patch2:         rpath.patch
+Patch3:         cmake-args.patch
 
-Requires:       lirc, udev
-BuildRequires:  popt-devel, libusb1-devel, libusb-devel, systemd-units
+Requires:       udev
+
+BuildRequires:  cmake
+BuildRequires:  libusb1-devel, libusb-devel
+BuildRequires:  popt-devel
+BuildRequires:  systemd-units
+                # For patch-soname (xxd, util-linux)
+Buildrequires:  /usr/bin/xxd
+BuildRequires:  util-linux
+
 Requires(post): systemd-units, systemd-sysv
 Requires(preun): systemd-units
 Requires(postun): systemd-units
+
+# resolve cyclic dep iguanaIR <-> lirc. Once removed
+# in lirc, we can do the required so-bump.
+%ifarch x86_64
+Provides:       libiguanaIR.so.0()(64bit)
+Provides:       libiguanaIR.so.0(IGUANAIR_0)(64bit)
+%else
+Provides:       libiguanaIR.so.0
+Provides:       libiguanaIR.so.0(IGUANAIR_0)
+%endif
 
 
 # some features can be disabled during the rpm build
@@ -28,6 +49,9 @@ Requires(postun): systemd-units
 # Don't add provides for python .so files
 %define __provides_exclude_from %{python_sitearch}/.*\.so$
 
+# Filter away patched soname form requires
+%global __requires_exclude                     libiguanaIR.so.0.3
+
 %description
 This package provides igdaemon and igclient, the programs necessary to
 control the Iguanaworks USB IR transceiver.
@@ -35,7 +59,7 @@ control the Iguanaworks USB IR transceiver.
 %package devel
 Summary: Library and header files for iguanaIR
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name} = %{epoch}:%{version}-%{release}
 
 %description devel
 The development files needed to interact with the iguanaIR igdaemon are
@@ -44,7 +68,7 @@ included in this package.
 %package python
 Group: System Environment/Daemons
 Summary: Python module for Iguanaworks USB IR transceiver
-Requires: %{name} = %{version}-%{release}, python >= 2.4
+Requires: %{name} = %{epoch}:%{version}-%{release}, python >= 2.4
 BuildRequires: python-devel swig
 
 %description python
@@ -64,20 +88,34 @@ what this means, you don't need it.
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch1 -p3
+%patch2 -p1
 %patch3 -p1
-%patch6 -p1
 cp %{SOURCE3} README.fedora
+cp %{SOURCE4} .
 
 
 %build
-%configure %{?_disable_clock_gettime}
+./runCmake -DLIBDIR="%{_libdir}"
+cd build
 make CFLAGS="%{optflags} -fpic -DFEDORA=1" %{?_smp_mflags}
+cp %{SOURCE4} .
+
 
 
 %install
+cd build
 make install PREFIX=$RPM_BUILD_ROOT/usr DESTDIR=$RPM_BUILD_ROOT INLIBDIR=$RPM_BUILD_ROOT%{_libdir}
 
 install -m755 -d $RPM_BUILD_ROOT%{_localstatedir}/run/%{name}
+
+# For now, patch bad soname introduced when they switched to cmake...
+bash -c "./patch-soname $RPM_BUILD_ROOT%{_libdir}/libiguanaIR.so.0.3 \
+         libiguanaIR.so.0.3 IGUANAIR_0"
+
+# fix missing links
+pushd  $RPM_BUILD_ROOT%{_libdir}
+ln -sf libiguanaIR.so.0.3 libiguanaIR.so.0
 
 # Use /etc/sysconfig instead of /etc/default
 mkdir $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig || :
@@ -101,7 +139,9 @@ install -m755 -d $RPM_BUILD_ROOT/etc/tmpfiles.d
 cat > $RPM_BUILD_ROOT/etc/tmpfiles.d/%{name}.conf <<EOF
 d   /run/%{name}    0755    iguanair   iguanair
 EOF
-install -m755 -d $RPM_BUILD_ROOT/run/%{name}
+install -m 755 -d $RPM_BUILD_ROOT/run/%{name}
+install -m 644 -D %{SOURCE5} $RPM_BUILD_ROOT/etc/logrotate.d/%{name}
+
 
 
 %pre
@@ -135,19 +175,21 @@ fi
 
 
 %files
-%doc AUTHORS LICENSE LICENSE-LGPL WHY protocols.txt
-%doc README.txt notes.txt ChangeLog
+%doc AUTHORS LICENSE LICENSE-LGPL
+%doc README.txt WHY ChangeLog
 %doc README.fedora
 %{_bindir}/igdaemon
 %{_bindir}/igclient
+%{_bindir}/iguanaIR-rescan
 %{_libdir}/lib%{name}.so.*
 %{_libdir}/%{name}/*.so
 %{_libexecdir}/%{name}/
 %{_unitdir}/%{name}.service
+/etc/logrotate.d/%{name}
 /lib/udev/rules.d/80-%{name}.rules
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
-%attr(755, iguanair, iguanair) /run/%{name}
+%config(noreplace) /etc/sysconfig/%{name}
+%config(noreplace) /etc/tmpfiles.d/%{name}.conf
+%ghost %attr(755, iguanair, iguanair) /run/%{name}
 %attr(775, iguanair, iguanair) %{_localstatedir}/log/%{name}
 
 %files devel
@@ -162,14 +204,66 @@ fi
 %{_bindir}/%{name}-reflasher
 
 %changelog
-* Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.0.5-6
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:1.1.0-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.5-5
-- 为 Magic 3.0 重建
+* Mon Dec 22 2014  Alec Leamas <leamas.alec@gmail.com> - 2:1.1.0-14
+- Fixing #1176627: Update logrotate conf.
 
-* Tue Jul 01 2014 Liu Di <liudidi@gmail.com> - 1.0.5-4
-- 为 Magic 3.0 重建
+* Thu Dec 11 2014 Alec Leamas <leamas.alec@gmail.com> - 2:1.1.0-13
+- Filter away bogus, patched so-name from Requires:
+
+* Wed Dec 10 2014 Alec Leamas <leamas.alec@gmail.com> - 2:1.1.0-12
+- Fixes #1159618.
+- Re-install logrotate file, mysteriously dropped sometime.
+
+* Wed Sep 10 2014  Alec Leamas <leamas.alec@nowhere.net> - 2:1.1.0-11
+- Fixed 64-bit provides tweak.
+
+* Tue Sep 09 2014  Alec Leamas <leamas.alec@nowhere.net> - 2:1.1.0-10
+- Added 64-bit provides tweak.
+
+* Wed Sep 03 2014 Alec Leamas <leamas.alec@nowhere.net> - 2:1.1.0-9
+- Remove needless and circular dependency on lirc.
+
+* Wed Sep 03 2014 Alec Leamas <leamas.alec@nowhere.net> - 2:1.1.0-8
+- patch soname + add virtual compatibility Provides:
+
+* Wed Sep 3 2014 Alec Leamas <leamas.alec@nowhere.net - 2:1.1.0-7
+- Patch soname on rawhide to avoid unintended bump.
+
+* Tue Sep 2 2014 Alec Leamas <leamas.alec@nowhere.net - 2:1.1.0-6
+- Make a new try to sort out deps for 1.1.0
+
+* Wed Aug 27 2014 Alec Leamas <leamas.alec@nowhere.net - 2:1.0.5-7
+- Have to re-add sources as well.
+
+* Wed Aug 27 2014 Alec Leamas <leamas.alec@nowhere.net - 2:1.0.5-6
+- Backing out 1.1.0 again, broken dependencies problem
+
+* Thu Aug 21 2014 Alec Leamas <leamas.alec@nowhere.net - 1:1.1.0-5
+- Fixing typo, bad %%{epoch} requires:
+
+* Thu Aug 21 2014 Alec Leamas <leamas.alec@nowhere.net> - 1:1.1.0-4
+- New attempt to introduce 1.1.0 (ABI bump)
+
+* Wed Aug 20 2014 Alec Leamas <leamas.alec@nowhere.net> - 1:1.0.5-5
+- Updating dependencies with epoch (sigh...).
+
+* Tue Aug 19 2014 Alec Leamas <leamas.alec@nowhere.net> - 1:1.0.5-4
+- Backing out 1.1.0 due to ABI problems.
+- Purged old changelog dating to 2006, partly outside Fedora.
+
+* Mon Aug 18 2014 Alec Leamas <leamas.alec@gmail.com> - 1.1.0-3
+- Add missing patch (how did this ever build?).
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Mon Aug 11 2014 Alec Leamas <leamas.alec@gmail.com> - 1.1.0-1
+- Updating to latest version
+- Old patches now upstreamed, new patches for cmake required. LIBDIR handling
+  needs cleanup (not required part in rpath.patch).
 
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
@@ -206,69 +300,3 @@ fi
 * Wed Jul 21 2010 Jarod Wilson <jarod@redhat.com> 1.0-0.1.pre2
 - Update to 1.0pre2 snapshot
 - Revamp spec to be more compliant with Fedora packaging guidelines
-
-* Sat Jun 27 2008 Joseph Dunn <jdunn@iguanaworks.net> 0.96-1
-- Bug fix release.
-
-* Fri Mar 27 2008 Joseph Dunn <jdunn@iguanaworks.net> 0.95-1
-- Decided to do another release to fix a udev problem.
-
-* Sun Mar 23 2008 Joseph Dunn <jdunn@iguanaworks.net> 0.94-1
-- Better windows support, a pile of bugs fixed.  Works with newer
-  firmwares (version 0x102) including frequency and channel support
-  with or without LIRC.
-
-* Sat Mar 10 2007 Joseph Dunn <jdunn@iguanaworks.net> 0.31-1
-- First release with tentative win32 and darwin support.  Darwin needs
-  some work, and windows needs to interface with applications.
-
-* Thu Feb 1 2007 Joseph Dunn <jdunn@iguanaworks.net> 0.30-1
-- Added a utility to change the frequency on firmware version 3, and
-  had to make iguanaRemoveData accessible to python code.
-
-* Sun Jan 21 2007 Joseph Dunn <jdunn@iguanaworks.net> 0.29-1
-- Last currently known problem in the driver.  Using clock_gettime
-  instead of gettimeofday to avoid clock rollbacks.
-
-* Sun Dec 31 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.26-1
-- Happy New Years! and a bugfix.  Long standing bug that caused the
-  igdaemon to hang is fixed.
-
-* Sun Dec 10 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.25-1
-- The socket specification accept a path instead of just an index or
-  label.
-
-* Wed Dec 6 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.24-1
-- Fixes bad argument parsing in igdaemon, and the init script *should*
-  work for fedora and debian now.
-
-* Wed Oct 18 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.19-1
-- A real release has been made, and we'll try to keep track of version
-  numbers a bit better now.
-
-* Sat Sep 23 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.10-1
-- Preparing for a real release.
-
-* Wed Jul 11 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.9-1
-- Switch to using udev instead of hotplug.
-
-* Mon Jul 10 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.8-1
-- Version number bumps, and added python support and package.
-
-* Mon Mar 27 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.5-1
-- Version number bump.
-
-* Mon Mar 20 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.4-1
-- Version number bump.
-
-* Tue Mar 07 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.3-1
-- Packaged a client library, and header file.
-
-* Tue Mar 07 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.2-2
-- Added support for chkconfig
-
-* Tue Mar 07 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.2-1
-- Added files for hotplug.
-
-* Tue Mar 07 2006 Joseph Dunn <jdunn@iguanaworks.net> 0.1-1
-- Initial RPM spec file.

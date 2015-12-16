@@ -2,7 +2,7 @@
 
 Name:           sword           
 Version:	1.7.4
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:        Free Bible Software Project
 Summary(zh_CN.UTF-8): 免费圣经软件项目
 
@@ -152,6 +152,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 13 2015 Liu Di <liudidi@gmail.com> - 1.7.4-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.7.4-3
 - 为 Magic 3.0 重建
 

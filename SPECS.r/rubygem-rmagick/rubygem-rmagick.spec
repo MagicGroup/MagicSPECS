@@ -18,30 +18,12 @@ Source0:	https://rubygems.org/gems/%{gem_name}-%{version}.gem
 
 BuildRequires:	rubygems-devel 
 BuildRequires:	ruby-devel
-%if 0%{?fedora} >= 22
 BuildRequires:	rubygem(test-unit)
-%endif
-%if 0%{?fedora} >= 21
 BuildRequires:	rubygem(minitest4)
-%else
-BuildRequires:	rubygem(minitest)
-%endif
 BuildRequires:	rubygem(rspec)
 # Due to test/RMagick/rmmain.c test_Magick_version(), for now
 # we specify the exact version for ImageMagick
-%if 0%{?fedora}
-%setIMver 24 6.9.1.3
-%setIMver 23 6.9.1.3
-%setIMver 22 6.8.8.10
-%setIMver 21 6.8.8.10
-%setIMver 20 6.8.6.3
-%endif
-%if 0%{?fedora} < 21
-#Requires:	ruby(release)
-#MRI Only
-Requires:	ruby
-Requires:	ruby(rubygems)
-%endif
+%setIMver 22 6.9.2.1
 
 Obsoletes:	ruby-RMagick < 2.13.2
 Provides:	ruby-RMagick = %{version}-%{release}
