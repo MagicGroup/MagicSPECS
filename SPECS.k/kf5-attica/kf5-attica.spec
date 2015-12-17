@@ -1,10 +1,9 @@
 %global framework attica
 
 Name:           kf5-attica
-Version:	5.15.0
-Release:	2%{?dist}
+Version:        5.17.0
+Release:        1%{?dist}
 Summary:        KDE Frameworks Tier 1 Addon with Open Collaboration Services API
-Summary(zh_CN.UTF-8): 开放协作服务 API 的 KDE 框架实现
 
 License:        LGPLv2+
 URL:            https://projects.kde.org/projects/frameworks/attica
@@ -18,30 +17,24 @@ URL:            https://projects.kde.org/projects/frameworks/attica
 %endif
 Source0:        http://download.kde.org/%{stable}/frameworks/%{versiondir}/%{framework}-%{version}.tar.xz
 
-BuildRequires:  kf5-rpm-macros
-BuildRequires:  extra-cmake-modules
+BuildRequires:  kf5-rpm-macros >= %{version}
+BuildRequires:  extra-cmake-modules >= %{version}
 BuildRequires:  qt5-qtbase-devel
 
-Requires:       kf5-filesystem
+Requires:       kf5-filesystem >= %{version}
 
 %description
 Attica is a Qt library that implements the Open Collaboration Services
 API version 1.4.
 
-%description -l zh_CN.UTF-8
-这是开放协作服务 API 版本 1.4 实现的 Qt 库。
-
 %package        devel
 Summary:        Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       qt5-qtbase-devel
 
 %description    devel
 %{summary}.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %prep
 %setup -q -n %{framework}-%{version}
@@ -58,7 +51,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-magic_rpm_clean.sh
+
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -78,8 +71,26 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 5.15.0-2
-- 更新到 5.15.0
+* Tue Dec 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.17.0-1
+- KDE Frameworks 5.17.0
+
+* Sun Nov 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.16.0-1
+- KDE Frameworks 5.16.0
+
+* Thu Oct 08 2015 Daniel Vrátil <dvratil@redhat.com> - 5.15.0-1
+- KDE Frameworks 5.15.0
+
+* Wed Sep 16 2015 Daniel Vrátil <dvratil@redhat.com> - 5.14.0-1
+- KDE Frameworks 5.14.0
+
+* Wed Aug 19 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-1
+- KDE Frameworks 5.13.0
+
+* Wed Aug 19 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-1
+- KDE Frameworks 5.13.0
+
+* Tue Aug 11 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-0.1
+- KDE Frameworks 5.13
 
 * Thu Jul 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.12.0-1
 - 5.12.0, update URL, .spec cosmetics
