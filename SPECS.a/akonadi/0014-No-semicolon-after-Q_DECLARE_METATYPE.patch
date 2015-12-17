@@ -1,0 +1,38 @@
+From f49b99f5a49da1a78b0ced930b6438bb53b49fdd Mon Sep 17 00:00:00 2001
+From: Volker Krause <vkrause@kde.org>
+Date: Sun, 30 Nov 2014 11:25:56 +0100
+Subject: [PATCH 14/30] No semicolon after Q_DECLARE_METATYPE.
+
+---
+ server/src/storage/entity.h                   | 2 +-
+ server/tests/unittest/akappendhandlertest.cpp | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/server/src/storage/entity.h b/server/src/storage/entity.h
+index eb180e4..acebb0b 100644
+--- a/server/src/storage/entity.h
++++ b/server/src/storage/entity.h
+@@ -192,6 +192,6 @@ namespace _detail {
+ } // namespace Server
+ } // namespace Akonadi
+ 
+-Q_DECLARE_METATYPE(Akonadi::Server::Tristate);
++Q_DECLARE_METATYPE(Akonadi::Server::Tristate)
+ 
+ #endif
+diff --git a/server/tests/unittest/akappendhandlertest.cpp b/server/tests/unittest/akappendhandlertest.cpp
+index c221a3a..d7f57f9 100644
+--- a/server/tests/unittest/akappendhandlertest.cpp
++++ b/server/tests/unittest/akappendhandlertest.cpp
+@@ -41,7 +41,7 @@
+ using namespace Akonadi;
+ using namespace Akonadi::Server;
+ 
+-Q_DECLARE_METATYPE(PimItem);
++Q_DECLARE_METATYPE(PimItem)
+ Q_DECLARE_METATYPE(QVector<Flag>)
+ Q_DECLARE_METATYPE(QVector<FakePart>)
+ Q_DECLARE_METATYPE(QVector<FakeTag>)
+-- 
+2.1.0
+

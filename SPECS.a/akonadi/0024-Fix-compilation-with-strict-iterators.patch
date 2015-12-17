@@ -1,0 +1,25 @@
+From fcae659e9be22b00b0efe52f19a89b8fce26a925 Mon Sep 17 00:00:00 2001
+From: David Faure <faure@kde.org>
+Date: Sat, 6 Dec 2014 11:35:16 +0100
+Subject: [PATCH 24/30] Fix compilation with strict iterators
+
+---
+ server/src/storage/collectionstatistics.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/server/src/storage/collectionstatistics.cpp b/server/src/storage/collectionstatistics.cpp
+index 85ee449..b2c6915 100644
+--- a/server/src/storage/collectionstatistics.cpp
++++ b/server/src/storage/collectionstatistics.cpp
+@@ -52,7 +52,7 @@ const CollectionStatistics::Statistics& CollectionStatistics::statistics(const C
+ {
+     QMutexLocker lock(&mCacheLock);
+     auto it = mCache.find(col.id());
+-    if (it == mCache.constEnd()) {
++    if (it == mCache.end()) {
+         it = mCache.insert(col.id(), getCollectionStatistics(col));
+     }
+     return it.value();
+-- 
+2.1.0
+

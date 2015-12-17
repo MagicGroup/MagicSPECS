@@ -1,0 +1,60 @@
+From abe71f46c3b2e657db25ac16c43a4c76b2212a9f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Vr=C3=A1til?= <dvratil@redhat.com>
+Date: Wed, 17 Jun 2015 13:04:13 +0200
+Subject: [PATCH 32/34] Don't throw exception when MOVE handler finds no items
+ to move
+
+Instead return "OK MOVE complete" right away. The reason for this is that
+when client tries to move an Item from a folder into the same folder (it's
+possible in KMail, also mailfilter agent might trigger this situation) the
+subsequent command gets eaten by ImapStreamParser and the client's Job gets
+stuck waiting for response forever. According to Laurent this could also fix
+the Mail Filter Agent getting stuck occasionally.
+
+The problem is in ImapStreamParser::atCommandEnd() method, which is called
+by the Move handler at some point. atCommandEnd() checks whether we reached
+command end in the stream by looking if the next characters in the stream
+are "\r\n" and if so it will consume the command end ("\r\n"), effectively
+moving the streaming position BEYOND the command. In case of MOVE the
+command has already been completely parsed so we are actually at the end of
+the command and so ImapStreamParser will consume the "\r\n" and position the
+stream beyond the command end.
+
+After that the Move handler tries to get the items from DB and throws the
+exception (the second part of the condition in the SQL query causes that
+the query yields no results in this situation)  which gets us back to
+Connection where we then call ImapStreamParser::skipCommand(). At this point
+however there are no more data in the stream (because atCommandEnd() moved
+us beyond the end of the MOVE command) and so ImapStreamParser will block
+and wait for more data (with 30 seconds timeout). If client sends another
+command within this time the ImapStreamParser will think that this is the
+command to be skipped and will consume it. This means that the command never
+really reaches the Connection as it's consumed as soon as it's captured by
+ImapStreamParser. And because Akonadi never receives the command it cannot
+send a response and thus the Job in client will wait forever and ever...
+
+Proper fix would be to make ImapStreamParser::atCommandEnd() to only peek
+instead of actually altering the position in the stream however I'm really
+afraid that it could break some other stuff that relies on this (broken?)
+behaviour and our test coverage is not sufficient at this point to be
+reliable enough.
+---
+ server/src/handler/move.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/server/src/handler/move.cpp b/server/src/handler/move.cpp
+index 0a6c3bf..4cf9d4e 100644
+--- a/server/src/handler/move.cpp
++++ b/server/src/handler/move.cpp
+@@ -85,7 +85,7 @@ bool Move::parseStream()
+   if ( qb.exec() ) {
+     const QVector<PimItem> items = qb.result();
+     if ( items.isEmpty() ) {
+-      throw HandlerException( "No items found" );
++      return successResponse( "MOVE complete" );
+     }
+ 
+     // Split the list by source collection
+-- 
+2.4.3
+

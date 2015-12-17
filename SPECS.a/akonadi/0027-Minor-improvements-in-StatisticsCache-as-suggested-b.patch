@@ -1,0 +1,185 @@
+From ac118e12fca25826340b6c8561939be19c4b7170 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Vr=C3=A1til?= <dvratil@redhat.com>
+Date: Mon, 8 Dec 2014 13:55:58 +0100
+Subject: [PATCH 27/30] Minor improvements in StatisticsCache as suggested by
+ Millian
+
+* rename instance() to self()
+* first call self() from main thread to avoid having mutex
+* use CountQueryBuilder
+---
+ server/src/akonadi.cpp                       |  4 +++-
+ server/src/handler/select.cpp                |  2 +-
+ server/src/handler/status.cpp                |  2 +-
+ server/src/handlerhelper.cpp                 |  2 +-
+ server/src/storage/collectionstatistics.cpp  | 10 ++--------
+ server/src/storage/collectionstatistics.h    |  2 +-
+ server/src/storage/notificationcollector.cpp | 10 +++++-----
+ 7 files changed, 14 insertions(+), 18 deletions(-)
+
+diff --git a/server/src/akonadi.cpp b/server/src/akonadi.cpp
+index 5369320..faef3a5 100644
+--- a/server/src/akonadi.cpp
++++ b/server/src/akonadi.cpp
+@@ -35,6 +35,7 @@
+ #include "utils.h"
+ #include "debuginterface.h"
+ #include "storage/itemretrievalthread.h"
++#include "storage/collectionstatistics.h"
+ #include "preprocessormanager.h"
+ #include "search/searchmanager.h"
+ #include "search/searchtaskmanagerthread.h"
+@@ -169,6 +170,8 @@ bool AkonadiServer::init()
+     new DebugInterface( this );
+     ResourceManager::self();
+ 
++    CollectionStatistics::self();
++
+     // Initialize the preprocessor manager
+     PreprocessorManager::init();
+ 
+@@ -194,7 +197,6 @@ bool AkonadiServer::init()
+     mAgentSearchManagerThread = new SearchTaskManagerThread( this );
+     mAgentSearchManagerThread->start();
+ 
+-
+     const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
+                                                        QStringList() << QLatin1String( "Nepomuk" )
+                                                                      << QLatin1String( "Agent" ) ).toStringList();
+diff --git a/server/src/handler/select.cpp b/server/src/handler/select.cpp
+index f1ecc44..a94d971 100644
+--- a/server/src/handler/select.cpp
++++ b/server/src/handler/select.cpp
+@@ -97,7 +97,7 @@ bool Select::parseStream()
+     response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String( " " ) ).toLatin1() + ")" );
+     Q_EMIT responseAvailable( response );
+ 
+-    const CollectionStatistics::Statistics stats = CollectionStatistics::instance()->statistics(col);
++    const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
+     if ( stats.count == -1 ) {
+       return failureResponse( "Unable to determine item count" );
+     }
+diff --git a/server/src/handler/status.cpp b/server/src/handler/status.cpp
+index 283532c..5fc9bb1 100644
+--- a/server/src/handler/status.cpp
++++ b/server/src/handler/status.cpp
+@@ -63,7 +63,7 @@ bool Status::parseStream()
+     // Responses:
+     // REQUIRED untagged responses: STATUS
+ 
+-  const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
++  const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
+   if (stats.count == -1) {
+       return failureResponse( "Failed to query statistics." );
+   }
+diff --git a/server/src/handlerhelper.cpp b/server/src/handlerhelper.cpp
+index 39583ce..a88bc6e 100644
+--- a/server/src/handlerhelper.cpp
++++ b/server/src/handlerhelper.cpp
+@@ -166,7 +166,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
+   b += " " AKONADI_PARAM_VIRTUAL " " + QByteArray::number( col.isVirtual() ) + ' ';
+ 
+   if ( includeStatistics ) {
+-    const CollectionStatistics::Statistics &stats = CollectionStatistics::instance()->statistics(col);
++    const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
+     if (stats.count > -1) {
+       b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number( stats.count ) + ' ';
+       b += AKONADI_ATTRIBUTE_UNSEEN " ";
+diff --git a/server/src/storage/collectionstatistics.cpp b/server/src/storage/collectionstatistics.cpp
+index b2c6915..7307956 100644
+--- a/server/src/storage/collectionstatistics.cpp
++++ b/server/src/storage/collectionstatistics.cpp
+@@ -31,14 +31,11 @@ using namespace Akonadi::Server;
+ 
+ CollectionStatistics *CollectionStatistics::sInstance = 0;
+ 
+-CollectionStatistics* CollectionStatistics::instance()
++CollectionStatistics* CollectionStatistics::self()
+ {
+-    static QMutex lock;
+-    lock.lock();
+     if (sInstance == 0) {
+         sInstance = new CollectionStatistics();
+     }
+-    lock.unlock();
+     return sInstance;
+ }
+ 
+@@ -60,11 +57,8 @@ const CollectionStatistics::Statistics& CollectionStatistics::statistics(const C
+ 
+ CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(const Collection &col)
+ {
+-    QueryBuilder qb(PimItem::tableName());
+     // COUNT(DISTINCT PimItemTable.id)
+-    qb.addAggregation(QString::fromLatin1("DISTINCT %1")
+-                          .arg(PimItem::idFullColumnName()),
+-                      QLatin1String("count"));
++    CountQueryBuilder qb(PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct);
+     // SUM(PimItemTable.size)
+     qb.addAggregation(PimItem::sizeFullColumnName(), QLatin1String("sum"));
+     // SUM(CASE WHEN FlagTable.name IN ('\SEEN', '$IGNORED') THEN 1 ELSE 0 END)
+diff --git a/server/src/storage/collectionstatistics.h b/server/src/storage/collectionstatistics.h
+index 2c0af6a..a0b9f24 100644
+--- a/server/src/storage/collectionstatistics.h
++++ b/server/src/storage/collectionstatistics.h
+@@ -50,7 +50,7 @@ public:
+         qint64 read;
+     };
+ 
+-    static CollectionStatistics* instance();
++    static CollectionStatistics* self();
+ 
+     const Statistics& statistics(const Collection &col);
+     void invalidateCollection(const Collection &col);
+diff --git a/server/src/storage/notificationcollector.cpp b/server/src/storage/notificationcollector.cpp
+index dbc7883..7ed255c 100644
+--- a/server/src/storage/notificationcollector.cpp
++++ b/server/src/storage/notificationcollector.cpp
+@@ -134,7 +134,7 @@ void NotificationCollector::collectionChanged( const Collection &collection,
+   if ( AkonadiServer::instance()->intervalChecker() ) {
+     AkonadiServer::instance()->intervalChecker()->collectionAdded( collection.id() );
+   }
+-  CollectionStatistics::instance()->invalidateCollection(collection);
++  CollectionStatistics::self()->invalidateCollection(collection);
+   collectionNotification( NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
+ }
+ 
+@@ -161,7 +161,7 @@ void NotificationCollector::collectionRemoved( const Collection &collection,
+   if ( AkonadiServer::instance()->intervalChecker() ) {
+     AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
+   }
+-  CollectionStatistics::instance()->invalidateCollection(collection);
++  CollectionStatistics::self()->invalidateCollection(collection);
+ 
+   collectionNotification( NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource );
+ }
+@@ -187,7 +187,7 @@ void NotificationCollector::collectionUnsubscribed( const Collection &collection
+   if ( AkonadiServer::instance()->intervalChecker() ) {
+     AkonadiServer::instance()->intervalChecker()->collectionRemoved( collection.id() );
+   }
+-  CollectionStatistics::instance()->invalidateCollection(collection);
++  CollectionStatistics::self()->invalidateCollection(collection);
+ 
+   collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
+ }
+@@ -288,7 +288,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
+     copy.setParentCollection( iter.key() );
+     copy.setResource( resource );
+ 
+-    CollectionStatistics::instance()->invalidateCollection(Collection::retrieveById(iter.key()));
++    CollectionStatistics::self()->invalidateCollection(Collection::retrieveById(iter.key()));
+     dispatchNotification( copy );
+   }
+ 
+@@ -311,7 +311,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
+   }
+   msg.setResource( res );
+ 
+-  CollectionStatistics::instance()->invalidateCollection(col);
++  CollectionStatistics::self()->invalidateCollection(col);
+   dispatchNotification( msg );
+ }
+ 
+-- 
+2.1.0
+

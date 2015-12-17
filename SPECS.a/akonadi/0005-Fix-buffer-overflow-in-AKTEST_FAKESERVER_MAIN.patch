@@ -1,0 +1,25 @@
+From 01c86229f9e26d9e036f6f2ab405659ed836b5c0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dan=20Vr=C3=A1til?= <dvratil@redhat.com>
+Date: Mon, 8 Sep 2014 15:36:18 +0200
+Subject: [PATCH 05/30] Fix buffer overflow in AKTEST_FAKESERVER_MAIN()
+
+---
+ shared/aktest.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/shared/aktest.h b/shared/aktest.h
+index b1b9caa..3026304 100644
+--- a/shared/aktest.h
++++ b/shared/aktest.h
+@@ -57,7 +57,7 @@ int main(int argc, char **argv) \
+       } \
+   } \
+   TestObject tc; \
+-  char **fakeArgv = (char **) malloc(options.count()); \
++  char **fakeArgv = (char **) malloc(options.count() * sizeof(char**)); \
+   for (int i = 0; i < options.count(); ++i) { \
+       fakeArgv[i] = options[i]; \
+   } \
+-- 
+2.1.0
+
