@@ -1,0 +1,13 @@
+diff --git a/data/parsetrigrams.cpp b/data/parsetrigrams.cpp
+index a2c5ef9..1c746e4 100644
+--- a/data/parsetrigrams.cpp
++++ b/data/parsetrigrams.cpp
+@@ -42,7 +42,7 @@ int main(int argc, char **argv)
+     QString path = QLatin1String(argv[1]);
+     QDir td(path);
+ 
+-    QHash< QString, QHash<QString,int> > models;
++    QMap< QString, QMap<QString,int> > models;
+ 
+     QStringList files = td.entryList(QDir::Files);
+ 

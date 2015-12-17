@@ -1,0 +1,12 @@
+diff -up sonnet-5.15.0/src/core/loader.cpp.qDebug sonnet-5.15.0/src/core/loader.cpp
+--- sonnet-5.15.0/src/core/loader.cpp.qDebug	2015-10-05 03:29:56.000000000 -0500
++++ sonnet-5.15.0/src/core/loader.cpp	2015-10-19 09:39:40.679656424 -0500
+@@ -95,7 +95,7 @@ SpellerPlugin *Loader::createSpeller(con
+     const QVector<Client *> lClients = d->languageClients[plang];
+ 
+     if (lClients.isEmpty()) {
+-        qWarning() << "No language dictionaries for the language:" << plang;
++        qDebug() << "No language dictionaries for the language:" << plang;
+         return 0;
+     }
+ 
