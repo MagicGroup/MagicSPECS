@@ -1,73 +1,74 @@
 %define         framework baloo
-%define         plasma_version 5.3.0
 
 Name:           kf5-%{framework}
-Version:        5.9.2
-Release:        3%{?dist}
 Summary:        A Tier 3 KDE Frameworks 5 module that provides indexing and search functionality
-Summary(zh_CN.UTF-8): 查找和管理元数据的框架
-License:        LGPLv2+
-URL:            https://projects.kde.org/projects/kde/workspace/baloo
-# backup URL: https://community.kde.org/Baloo
+Version:        5.16.0
+Release:        1%{?dist}
 
+# libs are LGPL, tools are GPL
+# KDE e.V. may determine that future LGPL/GPL versions are accepted
+License:        (LGPLv2 or LGPLv3) and (GPLv2 or GPLv3)
+URL:            https://projects.kde.org/projects/kde/kdelibs/baloo
+
+%global versiondir %(echo %{version} | cut -d. -f1-2)
 %global revision %(echo %{version} | cut -d. -f3)
 %if %{revision} >= 50
 %global stable unstable
 %else
 %global stable stable
 %endif
-Source0:        http://download.kde.org/%{stable}/plasma/%{plasma_version}/%{framework}-%{version}.tar.xz
+Source0:        http://download.kde.org/%{stable}/frameworks/%{versiondir}/%{framework}-%{version}.tar.xz
 
-Source1: 97-kde-baloo-filewatch-inotify.conf
+Source1:        97-kde-baloo-filewatch-inotify.conf
 
+## upstreamable patches
+# http://bugzilla.redhat.com/1235026
+Patch1: baloo-5.14.0-baloofile_config.patch
+
+BuildRequires:  cmake
+BuildRequires:  extra-cmake-modules >= %{version}
+BuildRequires:  kf5-kconfig-devel >= %{version}
+BuildRequires:  kf5-kcoreaddons-devel >= %{version}
+BuildRequires:  kf5-kcrash-devel >= %{version}
+BuildRequires:  kf5-kdbusaddons-devel >= %{version}
+BuildRequires:  kf5-kfilemetadata-devel >= %{version}
+BuildRequires:  kf5-ki18n-devel >= %{version}
+BuildRequires:  kf5-kidletime-devel >= %{version}
+BuildRequires:  kf5-kio-devel >= %{version}
+BuildRequires:  kf5-rpm-macros >= %{version}
+BuildRequires:  kf5-solid-devel >= %{version}
+BuildRequires:  lmdb-devel
 BuildRequires:  qt5-qtbase-devel
 BuildRequires:  qt5-qtdeclarative-devel
-BuildRequires:  kf5-rpm-macros
-BuildRequires:  extra-cmake-modules
-BuildRequires:  xapian-core-devel
 
-BuildRequires:  kf5-ki18n-devel
-BuildRequires:  kf5-kconfig-devel
-BuildRequires:  kf5-kidletime-devel
-BuildRequires:  kf5-kcmutils-devel
-BuildRequires:  kf5-kauth-devel
-BuildRequires:  kf5-kcrash-devel
-BuildRequires:  kf5-solid-devel
-BuildRequires:  kf5-kio-devel
-BuildRequires:  kf5-kdelibs4support-devel
-BuildRequires:  kf5-kfilemetadata-devel
 
-Requires:       kf5-filesystem
+Requires:       kf5-filesystem >= %{version}
 
 Obsoletes:      kf5-baloo-tools < 5.5.95-1
 Obsoletes:      baloo < 5
 Provides:       baloo = %{version}-%{release}
 
 %description
-%{summary}.
-
-%description -l zh_CN.UTF-8
-查找和管理元数据的框架。
+%{Summary}.
 
 %package        devel
 Summary:        Development files for %{name}
-Summary(zh_CN.UTF-8): %{name} 的开发包
-Group:          Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
+# KDE e.V. may determine that future LGPL versions are accepted
+License:        LGPLv2 or LGPLv3
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-file%{?_isa} = %{version}-%{release}
-Requires:       kf5-kfilemetadata-devel
-Requires:       xapian-core-devel
+Requires:       kf5-kcoreaddons-devel >= %{version}
+Requires:       kf5-kfilemetadata-devel >= %{version}
+Requires:       qt5-qtbase-devel
+
 %description    devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %package        file
 Summary:        File indexing and search for Baloo
-Summary(zh_CN.UTF-8): Baloo 的文件索引和查找
+# KDE e.V. may determine that future LGPL versions are accepted
+License:        LGPLv2 or LGPLv3
 Obsoletes:      %{name} < 5.0.1-2
 Obsoletes:      baloo-file < 5.0.1-2
 Provides:       baloo-file = %{version}-%{release}
@@ -75,20 +76,18 @@ Requires:       %{name} = %{version}-%{release}
 %description    file
 %{summary}.
 
-%description file -l zh_CN.UTF-8
-Baloo 的文件索引和查找。
-
 %package        libs
 Summary:        Runtime libraries for %{name}
-Summary(zh_CN.UTF-8): %{name} 的运行库
+# KDE e.V. may determine that future LGPL versions are accepted
+License:        LGPLv2 or LGPLv3
 %description    libs
 %{summary}.
 
-%description libs -l zh_CN.UTF-8
-%{name} 的运行库。
 
 %prep
 %setup -qn %{framework}-%{version}
+
+%patch1 -p1 -b .baloofile_config
 
 
 %build
@@ -104,25 +103,22 @@ make %{?_smp_mflags} -C %{_target_platform}
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 
 install -p -m644 -D %{SOURCE1} %{buildroot}%{_prefix}/lib/sysctl.d/97-kde-baloo-filewatch-inotify.conf
-magic_rpm_clean.sh
-%find_lang balooctl --with-qt
-%find_lang kio_baloosearch --with-qt
-%find_lang baloo_file --with-qt
-%find_lang kio_tags --with-qt
-%find_lang baloosearch --with-qt
-%find_lang kio_timeline --with-qt
-%find_lang baloo_file_extractor --with-qt
-%find_lang balooshow --with-qt
 
-cat kio_tags.lang kio_baloosearch.lang kio_timeline.lang \
-    > %{name}-libs.lang
+%find_lang kio_baloosearch --with-qt
+%find_lang kio_tags --with-qt
+%find_lang kio_timeline --with-qt
+%find_lang balooctl --with-qt
+%find_lang baloosearch --with-qt
+%find_lang balooshow --with-qt
+%find_lang baloo_file --with-qt
+%find_lang baloo_file_extractor --with-qt
+%find_lang baloomonitorplugin --with-qt
+
+cat kio_tags.lang kio_baloosearch.lang kio_timeline.lang balooctl.lang baloosearch.lang balooshow.lang baloomonitorplugin.lang \
+    > %{name}.lang
 
 cat baloo_file.lang baloo_file_extractor.lang \
     > %{name}-file.lang
-
-cat baloosearch.lang balooshow.lang balooctl.lang \
-    > %{name}.lang
-
 
 %post
 touch --no-create %{_kf5_datadir}/icons/hicolor &> /dev/null || :
@@ -137,68 +133,67 @@ gtk-update-icon-cache %{_kf5_datadir}/icons/hicolor &> /dev/null || :
 fi
 
 %files -f %{name}.lang
+%license COPYING
 %{_kf5_bindir}/baloosearch
 %{_kf5_bindir}/balooshow
 %{_kf5_bindir}/balooctl
 %{_kf5_plugindir}/kio/baloosearch.so
 %{_kf5_plugindir}/kio/tags.so
 %{_kf5_plugindir}/kio/timeline.so
-%{_kf5_qtplugindir}/kded_baloosearch_kio.so
+%{_kf5_plugindir}/kded/baloosearchmodule.so
 %{_kf5_qmldir}/org/kde/baloo
 %{_kf5_datadir}/kservices5/baloosearch.protocol
 %{_kf5_datadir}/kservices5/tags.protocol
 %{_kf5_datadir}/kservices5/timeline.protocol
-%{_kf5_datadir}/kservices5/kded/baloosearchfolderupdater.desktop
 %{_kf5_datadir}/icons/hicolor/*/apps/baloo.png
 
 %files file -f %{name}-file.lang
 %{_prefix}/lib/sysctl.d/97-kde-baloo-filewatch-inotify.conf
 %{_kf5_bindir}/baloo_file
 %{_kf5_bindir}/baloo_file_extractor
-%{_kf5_bindir}/baloo_file_cleaner
 %{_kf5_sysconfdir}/xdg/autostart/baloo_file.desktop
-%{_kf5_sysconfdir}/dbus-1/system.d/org.kde.baloo.filewatch.conf
-%{_kf5_libexecdir}/kauth/kde_baloo_filewatch_raiselimit
-%{_kf5_datadir}/dbus-1/system-services/org.kde.baloo.filewatch.service
-%{_kf5_datadir}/dbus-1/interfaces/org.kde.baloo.file.indexer.xml
-%{_datadir}/polkit-1/actions/org.kde.baloo.filewatch.policy
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-%files libs -f %{name}-libs.lang
+%files libs
+%license COPYING.LIB
 %{_kf5_libdir}/libKF5Baloo.so.*
-%{_kf5_libdir}/libKF5BalooXapian.so.*
+%{_kf5_libdir}/libKF5BalooEngine.so.*
 
 %files devel
 %{_kf5_libdir}/libKF5Baloo.so
-%{_kf5_libdir}/libKF5BalooXapian.so
-%{_kf5_libdir}/cmake/KF5Baloo
-%{_kf5_includedir}/Baloo
+%{_kf5_libdir}/cmake/KF5Baloo/
+%{_kf5_libdir}/pkgconfig/Baloo.pc
+%{_kf5_includedir}/Baloo/
 %{_kf5_includedir}/baloo_version.h
+%{_kf5_datadir}/dbus-1/interfaces/org.kde.baloo.*.xml
 
 
 %changelog
-* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.9.2-3
-- 为 Magic 3.0 重建
+* Sun Nov 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.16.0-1
+- KDE Frameworks 5.16.0
 
-* Sat Jul 25 2015 Liu Di <liudidi@gmail.com> - 5.9.2-2
-- 为 Magic 3.0 重建
+* Thu Oct 08 2015 Daniel Vrátil <dvratil@redhat.com> - 5.15.0-1
+- KDE Frameworks 5.15.0
 
-* Thu Jun 25 2015 Daniel Vrátil <dvratil@redhat.com> - 5.9.2-1
-- Plasma 5.3.2
+* Sat Oct 03 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.14.0-2
+- index only well-known document-centric dirs by default (#1235026)
+- .spec cosmetics
+- polish licensing
+- -devel: drop xapian dep
 
-* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+* Wed Sep 16 2015 Daniel Vrátil <dvratil@redhat.com> - 5.14.0-1
+- KDE Frameworks 5.14.0
 
-* Tue May 26 2015 Daniel Vrátil <dvratil@redhat.com> - 5.9.1-1
-- Plasma 5.3.1
+* Wed Aug 19 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-1
+- KDE Frameworks 5.13.0
 
-* Sat May 23 2015 Rex Dieter <rdieter@fedoraproject.org> 5.9.0-2
-- fix %%description/URL (#1224510), .spec cosmetics
+* Wed Aug 19 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-1
+- KDE Frameworks 5.13.0
 
-* Mon Apr 27 2015 Daniel Vrátil <dvratil@redhat.com> - 5.9.0-1
-- Plasma 5.3.0
+* Tue Aug 11 2015 Daniel Vrátil <dvratil@redhat.com> - 5.13.0-0.1
+- KDE Frameworks 5.13 (Baloo moved from Plasma 5 to KF5)
 
 * Wed Apr 22 2015 Daniel Vrátil <dvratil@redhat.com> - 5.6.95-1
 - Plasma 5.2.95

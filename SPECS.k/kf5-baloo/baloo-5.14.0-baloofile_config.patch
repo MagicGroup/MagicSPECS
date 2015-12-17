@@ -1,0 +1,19 @@
+diff -up baloo-5.14.0/src/file/fileindexerconfig.cpp.balooconfig baloo-5.14.0/src/file/fileindexerconfig.cpp
+--- baloo-5.14.0/src/file/fileindexerconfig.cpp.balooconfig	2015-09-10 01:43:46.000000000 -0500
++++ baloo-5.14.0/src/file/fileindexerconfig.cpp	2015-10-03 09:48:28.880859786 -0500
+@@ -276,8 +276,13 @@ void cleanupList(QList<QPair<QString, bo
+ void FileIndexerConfig::buildFolderCache()
+ {
+     KConfigGroup group = m_config.group("General");
+-    QStringList includeFoldersPlain = group.readPathEntry("folders", QStringList() << QDir::homePath());
+-    QStringList excludeFoldersPlain = group.readPathEntry("exclude folders", QStringList());
++    QStringList includeFoldersPlain = group.readPathEntry("folders", QStringList() << 
++        QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation) <<
++        QStandardPaths::standardLocations(QStandardPaths::MusicLocation) <<
++        QStandardPaths::standardLocations(QStandardPaths::MoviesLocation) <<
++        QStandardPaths::standardLocations(QStandardPaths::PicturesLocation) 
++    );
++    QStringList excludeFoldersPlain = group.readPathEntry("exclude folders", QStringList() << QDir::homePath());
+ 
+     // Add all removable media and network shares as ignored unless they have
+     // been explicitly added in the include list
