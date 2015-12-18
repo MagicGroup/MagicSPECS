@@ -1,0 +1,56 @@
+From dfd59ab11a5421c81b83f74d15e2e493dbc3b71b Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Sun, 18 Jan 2015 12:33:06 +0100
+Subject: [PATCH] Install headers into a versioned directory
+
+Allowing to co-install grantlee-0.5 and grantlee-5.
+---
+ CMakeLists.txt                  | 2 +-
+ templates/lib/CMakeLists.txt    | 3 +++
+ textdocument/lib/CMakeLists.txt | 3 +++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 45f8673..4c0a8a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -94,7 +94,7 @@ set (LIB_SUFFIX "" CACHE STRING "Define suffix of library directory name (eg. '6
+ set( LIB_INSTALL_DIR lib${LIB_SUFFIX} )
+ set( PLUGIN_INSTALL_DIR lib${LIB_SUFFIX}/grantlee/${Grantlee_MAJOR_MINOR_VERSION_STRING} )
+ set( BIN_INSTALL_DIR bin )
+-set( INCLUDE_INSTALL_DIR include )
++set( INCLUDE_INSTALL_DIR include/Grantlee5 )
+ set( DATA_INSTALL_DIR share/apps )
+ 
+ # set up RPATH/install_name_dir
+diff --git a/templates/lib/CMakeLists.txt b/templates/lib/CMakeLists.txt
+index 789205c..3b2d08a 100644
+--- a/templates/lib/CMakeLists.txt
++++ b/templates/lib/CMakeLists.txt
+@@ -79,6 +79,9 @@ add_library(Grantlee5::Templates ALIAS Grantlee_Templates)
+ generate_export_header(Grantlee_Templates)
+ set_property(TARGET Grantlee_Templates PROPERTY EXPORT_NAME Templates)
+ target_include_directories(Grantlee_Templates PRIVATE ../scriptabletags)
++target_include_directories(Grantlee_Templates
++    INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>"
++)
+ 
+ if (BUILD_TESTS)
+   set(GRANTLEE_TESTS_EXPORT "GRANTLEE_TEMPLATES_EXPORT")
+diff --git a/textdocument/lib/CMakeLists.txt b/textdocument/lib/CMakeLists.txt
+index 14163db..c9ee757 100644
+--- a/textdocument/lib/CMakeLists.txt
++++ b/textdocument/lib/CMakeLists.txt
+@@ -25,6 +25,9 @@ generate_export_header(Grantlee_TextDocument)
+ add_library(Grantlee::TextDocument ALIAS Grantlee_TextDocument)
+ set_property(TARGET Grantlee_TextDocument PROPERTY EXPORT_NAME TextDocument)
+ 
++target_include_directories(Grantlee_TextDocument
++    INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}>"
++)
+ 
+ target_link_libraries(Grantlee_TextDocument
+   LINK_PUBLIC Qt5::Gui
+-- 
+2.3.5
+
