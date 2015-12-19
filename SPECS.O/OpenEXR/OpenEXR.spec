@@ -3,7 +3,7 @@ Name:	 OpenEXR
 Summary: A high dynamic-range (HDR) image file format
 Summary(zh_CN.UTF-8): 大动态范围 (HDR) 图像文件格式
 Version: 2.2.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 License: BSD
 URL:	 http://www.openexr.com/
@@ -103,6 +103,9 @@ make %{?_smp_mflags} check ||:
 
 
 %changelog
+* Sat Dec 19 2015 Liu Di <liudidi@gmail.com> - 2.2.0-5
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.2.0-4
 - 为 Magic 3.0 重建
 

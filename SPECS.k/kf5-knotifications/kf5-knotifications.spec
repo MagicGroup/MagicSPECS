@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        KDE Frameworks 5 Tier 2 solution with abstraction for system notifications
 
 License:        LGPLv2+
@@ -91,6 +91,9 @@ mkdir -p %{buildroot}/%{_kf5_datadir}/knotifications5
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.17.0-1
 - KDE Frameworks 5.17.0
 

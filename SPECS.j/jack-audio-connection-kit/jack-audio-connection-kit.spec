@@ -11,8 +11,8 @@
 Summary:       The Jack Audio Connection Kit
 Summary(zh_CN.UTF-8): Jack 音频连接工具
 Name:          jack-audio-connection-kit
-Version:       1.9.9.5
-Release:       8%{?dist}
+Version:       1.9.10
+Release:       1%{?dist}
 # The entire source (~500 files) is a mixture of these three licenses
 License:       GPLv2 and GPLv2+ and LGPLv2+
 Group:         System Environment/Daemons
@@ -28,14 +28,14 @@ Patch0:        jack-audio-connection-kit-no_date_footer.patch
 Patch1:        jack-doxygen-output-dir-fix.patch
 # We don't want the internal API documentation
 Patch2:        jack-apidoc-only.patch
-# Fix doxygen doc build regression. From upstream trunk 95a1162d6aecc91
-Patch3:        jack-doxygen-buildfix.patch
 # Adjust default priority. RHBZ#795094
-Patch4:        jack-realtime-compat.patch
+Patch3:        jack-realtime-compat.patch
 # Enable renaming and reordering the jack ports RHBZ#887408
-Patch5:        jack-portnames.patch
+Patch4:        jack-portnames.patch
 # Fix ppc64 mpd startup issue RHBZ#799552
-Patch6:        jack-ppc64-long.patch
+Patch5:        jack-ppc64-long.patch
+# Fix building with gcc5
+Patch6:        jack-gcc5.patch
 
 BuildRequires: alsa-lib-devel
 BuildRequires: dbus-devel
@@ -119,10 +119,10 @@ Small example clients that use the Jack Audio Connection Kit.
 %patch0 -p1 -b .nodate
 %patch1 -p1 -b .outdir
 %patch2 -p1 -b .nointernalapi
-%patch3 -p1 -b .doxyfix
-%patch4 -p1 -b .priority
-%patch5 -p1 -b .portnames
-%patch6 -p1 -b .mpd
+%patch3 -p1 -b .priority
+%patch4 -p1 -b .portnames
+%patch5 -p1 -b .mpd
+%patch6 -p1 -b .gcc5
 
 # Fix encoding issues
 for file in ChangeLog README TODO; do

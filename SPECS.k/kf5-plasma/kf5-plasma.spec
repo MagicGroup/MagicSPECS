@@ -1,8 +1,8 @@
 %global framework plasma
 
 Name:    kf5-%{framework}
-Version: 5.1670
-Release: 0%{?dist}
+Version: 5.17.0
+Release: 1%{?dist}
 Summary: KDE Frameworks 5 Tier 3 framework is foundation to build a primary user interface
 
 License: GPLv2+ and LGPLv2+ and BSD
@@ -139,12 +139,13 @@ sed -e "s|@@VERSION@@|%{version}|g" fedora-plasma-cache.sh.in > \
 %{_kf5_qmldir}/QtQuick/Controls/Styles/Plasma/
 %{_kf5_qtplugindir}/*.so
 %{_kf5_qtplugindir}/plasma/
-%{_kf5_datadir}/dbus-1/interfaces/*.xml
+#%{_kf5_datadir}/dbus-1/interfaces/*.xml
 %{_kf5_datadir}/plasma/
 %{_kf5_datadir}/kservices5/*.desktop
 %{_kf5_datadir}/kservicetypes5/*.desktop
 %{_kf5_mandir}/man1/plasmapkg2.1*
-%{_kf5_plugindir}/kded/platformstatus.so
+#%{_kf5_plugindir}/kded/platformstatus.so
+%{_kf5_datadir}/kdevappwizard/templates/*
 
 %lang(lt) %{_datadir}/locale/lt/LC_SCRIPTS/libplasma5/
 
@@ -159,6 +160,9 @@ sed -e "s|@@VERSION@@|%{version}|g" fedora-plasma-cache.sh.in > \
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 5.17.0-1
+- 为 Magic 3.0 重建
+
 * Tue Dec 08 2015 Jan Grulich <jgrulich@redhat.com> - 5.16.0-4
 - Update to new network icons
 

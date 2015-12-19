@@ -4,7 +4,7 @@
 
 Name:    kf5-%{framework}
 Version: 5.5.1
-Release: 0%{?dist}
+Release: 1%{?dist}
 Summary: KDE Frameworks 5 library that wraps Client and Server Wayland libraries
 
 License: GPLv2+
@@ -79,6 +79,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Sat Dec 19 2015 Liu Di <liudidi@gmail.com> - 5.5.1-1
+- 为 Magic 3.0 重建
+
 * Thu Dec 03 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.5.0-1
 - Plasma 5.5.0
 

@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        KDE Frameworks 5 Tier 1 integration module for idle time detection
 
 License:        GPLv2+ and LGPLv2+
@@ -62,7 +62,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 %doc COPYING COPYING.LIB README.md
 %{_kf5_libdir}/libKF5IdleTime.so.*
 %dir %{_kf5_plugindir}/org.kde.kidletime.platforms
-%{_kf5_plugindir}/org.kde.kidletime.platforms/KF5IdleTimeXcbPlugin0.so
+%{_kf5_plugindir}/org.kde.kidletime.platforms/KF5IdleTimeXcbPlugin*.so
 
 %files devel
 %doc
@@ -74,6 +74,9 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.17.0-1
 - KDE Frameworks 5.17.0
 

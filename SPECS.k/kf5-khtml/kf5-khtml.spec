@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.17.0
-Release:        0%{?dist}
+Release:        1%{?dist}
 Summary:        KDE Frameworks 5 Tier 4 solution with KHTML, a HTML rendering engine
 
 License:        LGPLv2+ and GPLv3 and MIT and BSD
@@ -112,6 +112,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 5.17.0-1
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.16.0-1
 - KDE Frameworks 5.16.0
 

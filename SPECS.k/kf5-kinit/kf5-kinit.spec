@@ -2,8 +2,8 @@
 %global rpm_macros_dir %(d=%{_rpmconfigdir}/macros.d; [ -d $d ] || d=%{_sysconfdir}/rpm; echo $d)
 
 Name:           kf5-%{framework}
-Version:        5.16.0
-Release:        1%{?dist}
+Version:        5.17.0
+Release:        2%{?dist}
 Summary:        KDE Frameworks 5 tier 3 solution for process launching
 
 License:        LGPLv2+ and BSD
@@ -92,6 +92,9 @@ install -p -m644 -D %{SOURCE10} \
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.16.0-1
 - KDE Frameworks 5.16.0
 

@@ -36,14 +36,14 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 # remove .desktop file so that kasumi is accessible from scim panel/ibus panel and it's not necessary for other users.
 rm -rf $RPM_BUILD_ROOT%{_datadir}/applications/*.desktop
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 
-%files -f %{name}.lang
+%files 
 %defattr(-,root,root, -)
 %{_bindir}/kasumi
 %{_mandir}/man1/kasumi.1*

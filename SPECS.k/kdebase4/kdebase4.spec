@@ -8,10 +8,11 @@ License: GPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 4.14.3
-Release: 3%{?dist}
+Version: 15.08.3
+Release: 2%{?dist}
 %define rversion %version
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://mirrors.ustc.edu.cn/kde/stable/applications/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -187,7 +188,7 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
 # fix documentation multilib conflict in index.cache
-for f in konqueror dolphin ; do
+for f in konqueror ; do
    bunzip2 %{buildroot}%{_kde4_docdir}/HTML/en/$f/index.cache.bz2
    sed -i -e 's!name="id[a-z]*[0-9]*"!!g' %{buildroot}%{_kde4_docdir}/HTML/en/$f/index.cache
    sed -i -e 's!#id[a-z]*[0-9]*"!!g' %{buildroot}%{_kde4_docdir}/HTML/en/$f/index.cache
@@ -267,6 +268,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 #%{kde4_appsdir}/webkitpart/kpartplugins/khtmlkttsd.*
 %{kde4_kcfgdir}/konqueror.kcfg
 %{kde4_datadir}/autostart/konqy_preload.desktop
+%{kde4_datadir}/appdata/konqueror.appdata.xml
 %config %{kde4_configdir}/konqsidebartngrc
 %{kde4_dbus_interfacesdir}/org.kde.Konqueror.*.xml
 %{kde4_dbus_interfacesdir}/org.kde.konqueror.*.xml
@@ -343,7 +345,7 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %dir %{kde4_datadir}/autostart
 # dolphin config file
 %config %{kde4_configdir}/servicemenu.knsrc
-%{kde4_datadir}/appdata/dolphin.appdata.xml
+%{kde4_datadir}/appdata/kfind.appdata.xml
 %{kde4_datadir}/autostart/*.desktop
 %{kde4_kcfgdir}/*.kcfg
 %{kde4_dbus_interfacesdir}/org.kde.*.xml
@@ -448,6 +450,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Wed Dec 16 2015 Liu Di <liudidi@gmail.com> - 15.08.3-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
 - 为 Magic 3.0 重建
 

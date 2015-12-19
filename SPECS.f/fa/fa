@@ -1,8 +1,0 @@
-#!/bin/bash
-for i in perl-*/downfail;do
-	DIR=$(dirname $i)
-	cp downurl $DIR
-	cd $DIR
-	./downurl
-	cd -
-done

@@ -3,7 +3,7 @@
 Name:    kf5-%{framework}
 Summary: KDE Frameworks 5 Tier 3 solution for advanced plugin and service introspection
 Version: 5.17.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # mixture of LGPLv2 and LGPLv2+ (mostly the latter)
 License: LGPLv2
@@ -19,7 +19,7 @@ URL:     https://projects.kde.org/projects/frameworks/kservice
 Source0:        http://download.kde.org/%{stable}/frameworks/%{versiondir}/%{framework}-%{version}.tar.xz
 
 # Fedora customizations to the menu categories
-# adds the Administration menu from redhat-menus which equals System + Settings
+# adds the Administration menu from magic-menus which equals System + Settings
 # This prevents the stuff getting listed twice, under both System and Settings.
 Patch0:         kservice-5.15.0-xdg-menu.patch
 
@@ -43,7 +43,7 @@ BuildRequires:  qt5-qtbase-devel
 
 Requires:       kf5-filesystem >= %{versiondir}
 # for the Administration category
-Requires:       redhat-menus
+Requires:       magic-menus
 
 %description
 KDE Frameworks 5 Tier 3 solution for advanced plugin and service
@@ -105,6 +105,12 @@ mkdir -p %{buildroot}%{_kf5_datadir}/kservicetypes5
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-3
+- 为 Magic 3.0 重建
+
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 09 2015 Rex Dieter <rdieter@fedoraproject.org> 5.17.0-2
 - reduce kbuildsycoca5 warning(spam) output
 

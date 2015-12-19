@@ -1,8 +1,8 @@
 %global framework akonadi
 
 Name:           kf5-%{framework}
-Version:        15.11.90
-Release:        2%{?dist}
+Version:        15.12.0
+Release:        1%{?dist}
 Summary:        The Akonadi client libraries
 
 License:        LGPLv2+
@@ -304,6 +304,9 @@ update-mime-database %{_kf5_datadir}/mime >& /dev/null
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 15.11.90-3
+- 为 Magic 3.0 重建
+
 * Tue Dec 08 2015 Jan Grulich <jgrulich@redhat.com> - 15.11.90-2
 - Rebuild (gcc)
 

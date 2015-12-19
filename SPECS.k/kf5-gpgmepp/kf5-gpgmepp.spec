@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        15.12.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C++ wrapper and Qt integreation for GpgMe library
 
 License:        LGPLv2+
@@ -75,6 +75,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 15.12.0-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 07 2015 Jan Grulich <jgrulich@redhat.com> - 15.11.90-1
 - Update to 15.11.90
 

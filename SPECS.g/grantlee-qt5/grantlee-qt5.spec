@@ -4,7 +4,7 @@
 Name:    grantlee-qt5
 Summary: Qt5 string template engine based on the Django template system
 Version: 5.0.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 License: LGPLv2+
 URL:     https://github.com/steveire/grantlee
@@ -55,7 +55,6 @@ developing applications that use %{name}.
 
 %package apidocs
 Summary: Grantlee API documentation
-Requires: kde-filesystem
 BuildArch: noarch
 %description apidocs
 This package includes the Grantlee API documentation in HTML
@@ -118,6 +117,9 @@ xvfb-run -a make test -C %{_target_platform}
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 5.0.0-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 08 2015 Rex Dieter <rdieter@fedoraproject.org>  5.0.0-2
 - update URL
 

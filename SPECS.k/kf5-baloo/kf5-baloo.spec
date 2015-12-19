@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Summary:        A Tier 3 KDE Frameworks 5 module that provides indexing and search functionality
-Version:        5.16.0
+Version:        5.17.0
 Release:        1%{?dist}
 
 # libs are LGPL, tools are GPL

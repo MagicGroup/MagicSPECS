@@ -7,14 +7,10 @@
 %global _changelog_trimtime %(date +%s -d "1 year ago")
 
 %global mysql mysql
-%if 0%{?rhel} > 6
-# el7 mariadb pkgs don't have compat Provides: mysql (apparently?)
-%global mysql mariadb
-%endif
 
 Name:           kf5-%{framework}
 Summary:        PIM Storage Service
-Version:        15.11.90
+Version:        15.12.0
 Release:        1%{?dist}
 
 License:        LGPLv2+
@@ -49,7 +45,7 @@ BuildRequires:  pkgconfig(sqlite3) >= 3.6.23
 
 # backends, used at buildtime to query known locations of server binaries
 # FIXME/TODO: set these via cmake directives, avoids needless buildroot items
-BuildRequires:  mariadb-server
+BuildRequires:  mysql-server
 BuildRequires:  postgresql-server
 
 Requires:       kf5-filesystem
@@ -74,9 +70,6 @@ Obsoletes:      akonadi-mysql < 15.08.0
 Conflicts:      akonadi-mysql < 15.08.0
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{mysql}-server
-%if "%{?mysql}" != "mariadb" && 0%{?fedora} > 20
-Recommends:     mariadb-server
-%endif
 Requires:       qt5-qtbase-mysql%{?_isa}
 Requires(post): %{_sbindir}/update-alternatives
 Requires(postun): %{_sbindir}/update-alternatives
@@ -187,6 +180,12 @@ fi
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 15.12.0-1
+- 为 Magic 3.0 重建
+
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 15.11.90-2
+- 为 Magic 3.0 重建
+
 * Mon Dec 07 2015 Jan Grulich <jgrulich@redhat.com> - 15.11.90-1
 - Update to 15.11.90
 

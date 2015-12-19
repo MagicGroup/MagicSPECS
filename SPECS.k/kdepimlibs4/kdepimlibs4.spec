@@ -10,10 +10,10 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 4.14.3
-Release: 3%{?dist}
+Version: 4.14.10
+Release: 1%{?dist}
 %define rversion %version
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/applications/15.04.3/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -24,7 +24,7 @@ Patch100: kdepimlibs-4.5.0-kxmlrpcclient-compability-datetime-query.patch
 BuildRequires: boost-devel openldap-devel
 BuildRequires: cyrus-sasl-devel
 BuildRequires: gpgme-devel
-BuildRequires: libkdelibs4-devel >= %{version}
+BuildRequires: libkdelibs4-devel >= 4.14.14
 BuildRequires: qt4-devel >= 4.4.3
 BuildRequires: libXpm-devel libXtst-devel
 BuildRequires: akonadi-devel >= 1.13.0
@@ -40,7 +40,7 @@ BuildRequires: graphviz
 BuildRequires: qt4-doc
 %endif
 
-Requires: kdelibs4 >= %{version}
+Requires: kdelibs4 >= 4.14.14
 Requires: libkdepimlibs4 >= %{version}
 
 
@@ -124,7 +124,7 @@ format for easy browsing.
 #%patch1 -p1
 #%patch2 -p1
 
-%patch100 -p0
+#%patch100 -p0
 
 %build
 
@@ -303,6 +303,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %endif
 
 %changelog
+* Wed Dec 16 2015 Liu Di <liudidi@gmail.com> - 15.08.3-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
 - 为 Magic 3.0 重建
 

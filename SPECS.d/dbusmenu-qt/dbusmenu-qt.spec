@@ -5,7 +5,7 @@
 Summary: A Qt implementation of the DBusMenu protocol 
 Name:    dbusmenu-qt
 Version: 0.9.3
-Release: 0.10.%{snapshot}%{?dist}
+Release: 0.11.%{snapshot}%{?dist}
 
 License: LGPLv2+
 URL: https://launchpad.net/libdbusmenu-qt/
@@ -149,6 +149,9 @@ xvfb-run -a dbus-launch --exit-with-session make -C %{_target_platform} check AR
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 0.9.3-0.11.20150604
+- 为 Magic 3.0 重建
+
 * Thu Jun 25 2015 Rex Dieter <rdieter@fedoraproject.org> - 0.9.3-0.10.20150604
 - consolidate dbusmenu-qt5 here (instead of using a separate module)
 - fresh(er) 20150604 snapshot

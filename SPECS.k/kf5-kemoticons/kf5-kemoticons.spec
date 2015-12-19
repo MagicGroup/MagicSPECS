@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        KDE Frameworks 5 Tier 3 module with support for emoticons and emoticons themes
 
 License:        GPLv2+ and LGPLv2+
@@ -80,6 +80,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.17.0-1
 - KDE Frameworks 5.17.0
 

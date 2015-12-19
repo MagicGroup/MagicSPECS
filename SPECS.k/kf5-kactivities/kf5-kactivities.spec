@@ -5,7 +5,7 @@
 Name:           kf5-%{framework}
 Summary:        A KDE Frameworks 5 Tier 3 to organize user work into separate activities
 Version:        5.17.0
-Release:        0%{?dist}
+Release:        1%{?dist}
 
 License:        GPLv2+ and LGPLv2+
 URL:            http://www.kde.org
@@ -120,6 +120,9 @@ rm -rf %{buildroot}/%{_kf5_datadir}/kf5/kactivitymanagerd
 
 
 %changelog
+* Fri Dec 18 2015 Liu Di <liudidi@gmail.com> - 5.17.0-1
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.16.0-1
 - KDE Frameworks 5.16.0
 

@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        KDE Frameworks 5 Tier 4 module with porting aid from KDELibs 4
 License:        GPLv2+ and LGPLv2+ and BSD
 URL:            https://projects.kde.org/projects/frameworks/kdelibs4support
@@ -52,7 +52,6 @@ BuildRequires:  kf5-kxmlgui-devel >= %{version}
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       ca-certificates
-Requires:       kde-settings
 Requires:       kf5-filesystem >= %{version}
 
 %description
@@ -184,6 +183,12 @@ rm -fv %{buildroot}%{_kf5_sysconfdir}/xdg/kdebugrc
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.16.0-1
 - KDE Frameworks 5.16.0
 

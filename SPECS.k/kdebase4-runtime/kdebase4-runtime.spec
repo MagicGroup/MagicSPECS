@@ -9,10 +9,10 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.14.3
+Version: 15.08.3
 Release: 4%{?dist}
 %define rversion %version
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/applications/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 Source1: im.png
 Source2: extract_rpm.desktop
 Source3: magic-kde4soundtheme.tar.gz

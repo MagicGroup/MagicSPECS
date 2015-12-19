@@ -2,7 +2,7 @@
 
 Name:           kf5-%{framework}
 Version:        5.17.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        KDE Frameworks 5 Tier 1 addon with advanced configuration system
 
 License:        GPLv2+ and LGPLv2+ and MIT
@@ -49,7 +49,6 @@ developing applications that use %{name}.
 
 %package        core
 Summary:        Non-GUI part of KConfig framework
-Requires:       kde-settings
 
 %description    core
 KConfigCore provides access to the configuration files themselves. It features
@@ -115,6 +114,9 @@ make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 
 %changelog
+* Thu Dec 17 2015 Liu Di <liudidi@gmail.com> - 5.17.0-2
+- 为 Magic 3.0 重建
+
 * Tue Dec 08 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.17.0-1
 - KDE Frameworks 5.17.0
 
