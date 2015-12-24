@@ -122,9 +122,12 @@ Install this package if you want to compile apps with ffmpeg support.
 %ifarch mips64el
     --arch=mips64el \
     --cpu=mips3 \
-    --disable-mips32r2 \
+    --disable-mips32r5 \
+    --disable-mips64r6 \
     --disable-mipsdspr1 \
     --disable-mipsdspr2 \
+    --disable-msa \
+    --disable-mipsfpu \
 %endif
 %ifarch ppc
     %{?_without_altivec: --disable-altivec} \
