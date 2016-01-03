@@ -9,8 +9,8 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 15.08.3
-Release: 4%{?dist}
+Version: 15.12.0
+Release: 2%{?dist}
 %define rversion %version
 Source0: http://download.kde.org/stable/applications/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 Source1: im.png
@@ -100,8 +100,8 @@ Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 Summary: The KDE Runtime Components: Build Environment
 Summary(zh_CN.UTF-8): %{name} 的开发包
-Requires: kdepimlibs4 >= %{version} libkdelibs4-devel
-Requires: libkdepimlibs4 >= %{version}
+Requires: kdepimlibs4 >= 4.14.10 kdelibs4-devel
+Requires: libkdepimlibs4 >= 4.14.10
 Requires: kdebase4-runtime >= %{version}
 
 %description devel
@@ -318,6 +318,12 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 # 需要进一步处理
 %changelog
+* Sun Dec 20 2015 Liu Di <liudidi@gmail.com> - 15.12.0-2
+- 为 Magic 3.0 重建
+
+* Sun Dec 20 2015 Liu Di <liudidi@gmail.com> - 15.12.0-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.14.3-4
 - 为 Magic 3.0 重建
 

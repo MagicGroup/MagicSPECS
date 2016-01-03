@@ -3,7 +3,7 @@
 %define jobs		$((`/usr/bin/getconf _NPROCESSORS_ONLN` + 1))
 
 %define git 1
-%define vcsdate 20151030
+%define vcsdate 20140604
 %define kde4_enable_final_bool OFF
 
 Name: 			kde4-%{realname}
@@ -85,12 +85,6 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20151030.6
-- 为 Magic 3.0 重建
-
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20151030.5
-- 更新到 20151030 日期的仓库源码
-
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.0.60-0.git20140604.4
 - 为 Magic 3.0 重建
 

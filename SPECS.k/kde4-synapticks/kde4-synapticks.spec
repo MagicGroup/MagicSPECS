@@ -3,6 +3,8 @@
 %define with_xinput2 1
 #define kde4_enable_final_bool OFF
 
+%define debug_package %{nil}
+
 Name: kde4-synaptiks
 Summary: synaptiks is a touchpad service for KDE 4
 Summary(zh_CN.UTF-8): synaptiks 是个 KDE4 触摸板服务

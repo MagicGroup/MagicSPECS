@@ -1,6 +1,6 @@
 Name:      scim
 Version:   1.4.15
-Release:   8%{?dist}
+Release:   9%{?dist}
 Summary:   Smart Common Input Method platform
 Summary(zh_CN.UTF-8): 智能输入法框架
 
@@ -290,6 +290,9 @@ fi
 
 
 %changelog
+* Fri Jan 01 2016 Liu Di <liudidi@gmail.com> - 1.4.15-9
+- 为 Magic 3.0 重建
+
 * Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.4.15-8
 - 为 Magic 3.0 重建
 

@@ -1,4 +1,4 @@
-%define rversion %{kde4_kdelibs_version}
+%define rversion 4.14.3
 #define svn_number rc1
 %define real_name kapman
 

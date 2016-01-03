@@ -1,8 +1,10 @@
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 %define real_name kde-workspace
+%define real_ver 4.11.22
 
 %define build_wallpaper_smallsize 1
+
 
 Name: kdebase4-workspace
 Summary: The KDE Workspace Components
@@ -13,7 +15,7 @@ Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
 Version: 4.14.3
 Release: 6%{?dist}
-Source0: http://download.kde.org/stable/4.14.2/src/%{real_name}-4.11.13.tar.xz
+Source0: http://download.kde.org/stable/applications/15.08.0/src/%{real_name}-%{real_ver}.tar.xz
 Source1: extras.tar.gz
 # magic logo for kwin decoration
 Source2: magic.png
@@ -177,8 +179,6 @@ BuildRequires: libggadget-devel >= 0.11.0
 BuildRequires: libggadget-qt-devel >= 0.11.0
 # plasma qedje 部件支持
 BuildRequires: eet-devel >= 1.1.0
-BuildRequires: qzion-devel >= 0.4.0
-BuildRequires: qedje-devel >= 0.4.0
 # policykit 整合
 BuildRequires: polkit-qt-1-devel >= 0.9.2
 BuildRequires: libqalculate-devel
@@ -243,7 +243,7 @@ Requires: kdebase4-runtime
 %description -n kde4-kdm
 This package contains kdm, the login and session manager for KDE.
 
-%description -n kde4-kdm
+%description -n kde4-kdm -l zh_CN.UTF-8
 KDE 的登录和显示管理器。
 
 %if 0
@@ -382,7 +382,7 @@ Summary: Performance monitor daemon
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 %prep
-%setup -q -n %{real_name}-4.11.13
+%setup -q -n %{real_name}-%{real_ver}
 
 %patch60 -p1
 

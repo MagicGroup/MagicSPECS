@@ -10,8 +10,8 @@ License: GPL v2 or Later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org
-Version: 15.04.0
-Release: 1%{?dist}
+Version: 4.14.3
+Release: 2%{?dist}
 Source0: http://carroll.aset.psu.edu/pub/kde/stable/applications/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -96,6 +96,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.a
 
 %changelog
+* Wed Dec 23 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.14.3-3
 - 为 Magic 3.0 重建
 

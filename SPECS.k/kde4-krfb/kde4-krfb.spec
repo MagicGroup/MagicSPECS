@@ -66,8 +66,8 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicetypesdir}/*
 #%{kde4_configdir}/*
 %{kde4_htmldir}/en/*
-#%{kde4_dbus_servicesdir}/*
-#%{kde4_datadir}/telepathy/clients/krfb_rfb_handler.client
+%{kde4_dbus_servicesdir}/*
+%{kde4_datadir}/telepathy/clients/krfb_rfb_handler.client
 
 %changelog
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.14.3-4

@@ -135,32 +135,20 @@ rm -rf %{buildroot}
 
 make install/fast  DESTDIR=%{buildroot} -C %{_target_platform}
 magic_rpm_clean.sh
-%find_lang plasma_applet_org.kde.networkmanagement
-%find_lang plasmanetworkmanagement-kded
-%find_lang kde-nm-connection-editor
-%find_lang libplasmanetworkmanagement-editor
-%find_lang plasmanetworkmanagement_vpncui
-%find_lang plasmanetworkmanagement_openvpnui
-%find_lang plasmanetworkmanagement_openconnectui
-%find_lang plasmanetworkmanagement_openswanui
-%find_lang plasmanetworkmanagement_strongswanui
-%find_lang plasmanetworkmanagement_l2tpui
-%find_lang plasmanetworkmanagement_pptpui
+%find_lang plasma_applet_org.kde.networkmanagement || :
+%find_lang plasmanetworkmanagement-kded || :
+%find_lang kde-nm-connection-editor || :
+%find_lang libplasmanetworkmanagement-editor || :
+%find_lang plasmanetworkmanagement_vpncui || :
+%find_lang plasmanetworkmanagement_openvpnui || :
+%find_lang plasmanetworkmanagement_openconnectui || :
+%find_lang plasmanetworkmanagement_openswanui || :
+%find_lang plasmanetworkmanagement_strongswanui || :
+%find_lang plasmanetworkmanagement_l2tpui || :
+%find_lang plasmanetworkmanagement_pptpui || :
 
 # migrate to nm plasmoid
 install -m644 -p -D %{SOURCE10} %{buildroot}%{_kde4_appsdir}/plasma-desktop/updates/01-fedora-plasma-nm.js
-
-# clean unpackaged VPN related files in RHEL
-%if 0%{?rhel}
-rm -fv %{buildroot}%{_kde4_libdir}/kde4/networkmanagement_open*
-rm -fv %{buildroot}%{_kde4_libdir}/kde4/networkmanagement_vpnc*
-rm -fv %{buildroot}%{_kde4_libdir}/kde4/networkmanagement_l2tp*
-rm -fv %{buildroot}%{_kde4_libdir}/kde4/networkmanagement_pptp*
-rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_open*
-rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_vpnc*
-rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_l2tp*
-rm -fv %{buildroot}%{_kde4_datadir}/kde4/services/networkmanagement_pptp*
-%endif
 
 %post
 touch --no-create %{_kde4_iconsdir}/oxygen &> /dev/null || :
@@ -174,7 +162,7 @@ touch --no-create %{_kde4_iconsdir}/oxygen &> /dev/null || :
 gtk-update-icon-cache %{_kde4_iconsdir}/oxygen &> /dev/null || :
 fi
 
-%files -f plasma_applet_org.kde.networkmanagement.lang -f plasmanetworkmanagement-kded.lang -f kde-nm-connection-editor.lang -f libplasmanetworkmanagement-editor.lang
+%files -f plasma_applet_org.kde.networkmanagement.lang -f kde-nm-connection-editor.lang
 %defattr(-,root,root,-)
 # kde-nm-connection-editor
 %{_kde4_bindir}/kde-nm-connection-editor
@@ -206,8 +194,7 @@ fi
 
 %files mobile
 
-%if 0%{?fedora} || 0%{?epel}
-%files openvpn -f plasmanetworkmanagement_openvpnui.lang
+%files openvpn 
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_openvpnui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_openvpnui.desktop
 
@@ -215,26 +202,25 @@ fi
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_vpncui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_vpncui.desktop
 
-%files openconnect -f plasmanetworkmanagement_openconnectui.lang
+%files openconnect 
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_openconnectui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_openconnectui.desktop
 
-%files openswan -f plasmanetworkmanagement_openswanui.lang
+%files openswan 
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_openswanui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_openswanui.desktop
 
-%files strongswan -f plasmanetworkmanagement_strongswanui.lang
+%files strongswan
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_strongswanui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_strongswanui.desktop
 
-%files l2tp -f plasmanetworkmanagement_l2tpui.lang
+%files l2tp 
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_l2tpui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_l2tpui.desktop
 
-%files pptp -f plasmanetworkmanagement_pptpui.lang
+%files pptp 
 %{_kde4_libdir}/kde4/plasmanetworkmanagement_pptpui.so
 %{_kde4_datadir}/kde4/services/plasmanetworkmanagement_pptpui.desktop
-%endif
 
 %changelog
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.3.5-7

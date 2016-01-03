@@ -2,7 +2,7 @@ Summary:        Taglib support for other formats
 Summary(zh_CN.UTF-8): 支持其它格式的 Taglib
 Name:           taglib-extras
 Version:        1.0.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 
 Group:          Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -89,6 +89,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 01 2016 Liu Di <liudidi@gmail.com> - 1.0.1-9
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.0.1-8
 - 为 Magic 3.0 重建
 

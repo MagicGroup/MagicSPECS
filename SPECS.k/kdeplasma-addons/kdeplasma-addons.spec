@@ -26,8 +26,6 @@ BuildRequires: python >= 2.5
 %endif
 # 相框自动根据 exif 元数据旋转支持
 BuildRequires: kde4-libkexiv2-devel >= %{version}
-BuildRequires: eigen2 >= 2.0.3
-BuildConflicts: eigen2-devel < 2.0.3
 # marble 世界地图桌面背景
 BuildRequires: libkdeedu4-devel
 BuildRequires: attica-devel
@@ -818,13 +816,13 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %files wallpaper-plugins
 %defattr(-,root,root)
-%{kde4_plugindir}/plasma_wallpaper_mandelbrot.so
+#%{kde4_plugindir}/plasma_wallpaper_mandelbrot.so
 %{kde4_plugindir}/plasma_wallpaper_pattern.so
 %{kde4_plugindir}/plasma_wallpaper_virus.so
 %{kde4_plugindir}/plasma_wallpaper_weather.so
 %{kde4_appsdir}/plasma_wallpaper_pattern
 %config %{kde4_configdir}/virus_wallpaper.knsrc
-%{kde4_servicesdir}/plasma-wallpaper-mandelbrot.desktop
+#%{kde4_servicesdir}/plasma-wallpaper-mandelbrot.desktop
 %{kde4_servicesdir}/plasma-wallpaper-pattern.desktop
 %{kde4_servicesdir}/plasma-wallpaper-virus.desktop
 %{kde4_servicesdir}/plasma-wallpaper-weather.desktop

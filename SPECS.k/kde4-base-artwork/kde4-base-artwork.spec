@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 #define svn_number rc1
 %define real_name kde-base-artwork
 

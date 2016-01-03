@@ -13,7 +13,7 @@ URL: http://ktorrent.org
 Version: 4.14.3
 Release: 4%{?dist}
 %define rversion %version
-Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/applications/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -72,6 +72,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_libdir}/*.so
 
 %changelog
+* Mon Dec 21 2015 Liu Di <liudidi@gmail.com> - 4.14.3-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 4.14.3-4
 - 为 Magic 3.0 重建
 

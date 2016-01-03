@@ -10,8 +10,7 @@ Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
 Version: 4.7.2
 Release: 3%{?dist}
-Source0: http://mirror.bjtu.edu.cn/kde/stable/kdevelop/%{version}/src/%{real_name}-%{version}.tar.xz
-
+Source0: http://mirrors.ustc.edu.cn/kde/stable/kdevelop/%{version}/src/%{real_name}-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: libkdelibs4-devel >= 4.1.60

@@ -13,11 +13,11 @@ License: LGPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 4.14.14
-Release: 3%{?dist}
+Version: 4.14.15
+Release: 2%{?dist}
 %define rversion %version
 #Source0: http://download.kde.org/stable/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
-Source0: http://download.kde.org/stable/applications/15.08.3/src/%{real_name}-%{rversion}.tar.xz
+Source0: http://download.kde.org/stable/applications/15.12.0/src/%{real_name}-%{rversion}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -509,6 +509,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Sun Dec 20 2015 Liu Di <liudidi@gmail.com> - 4.14.15-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 22 2015 Liu Di <liudidi@gmail.com> - 4.14.14-3
 - 为 Magic 3.0 重建
 

@@ -2,8 +2,8 @@ Name:    kde4-kmplayer
 %define realname kmplayer
 Summary: A simple front-end for MPlayer/FFMpeg/Phonon
 Summary(zh_CN): 一个 Mplayer/FFMpeg/Phonon 的简单前端
-Version: 0.11.3d
-Release: 3%{?dist}
+Version: 0.11.4
+Release: 1%{?dist}
 Group:   Applications/Multimedia
 Group(zh_CN):	应用程序/多媒体
 # The documentation is GFDL.
@@ -47,7 +47,7 @@ on a movie file, the movie is played inside Konqueror.
 它可以播放 DVD/VCD 影片。
 
 %prep
-%setup -q -n %{realname}-%{version}%{?beta}
+%setup -q -n %{realname}
 %patch4 -p1 -b .kmplayerrc_phonon_default
 #%patch5 -p1
 

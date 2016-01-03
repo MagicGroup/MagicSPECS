@@ -4,7 +4,7 @@
 Summary: Library for accessing MusicBrainz servers
 Name: libmusicbrainz5
 Version: 5.0.1
-Release: 13%{?dist}
+Release: 14%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 URL: http://www.musicbrainz.org/
@@ -82,6 +82,9 @@ rm -f docs/installdox
 
 
 %changelog
+* Mon Dec 21 2015 Liu Di <liudidi@gmail.com> - 5.0.1-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.0.1-13
 - 为 Magic 3.0 重建
 

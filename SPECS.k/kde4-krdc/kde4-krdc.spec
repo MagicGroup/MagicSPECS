@@ -77,6 +77,8 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_servicesdir}/*
 %{kde4_servicetypesdir}/*
 %{kde4_htmldir}/en/*
+%{kde4_datadir}/dbus-1/services/org.freedesktop.Telepathy.Client.krdc_rfb_*.service
+%{kde4_datadir}/telepathy/clients/krdc_rfb_*.client
 
 %files devel
 %defattr(-,root,root,-)

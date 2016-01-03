@@ -5,8 +5,8 @@
 %global _unpackaged_files_terminate_build	0
 %endif
 Name:	 kde4-digikam
-Version: 4.9.0
-Release: 3%{?dist}
+Version: 4.14.0
+Release: 1%{?dist}
 Summary: A digital camera accessing & photo management application
 Summary(zh_CN.UTF-8): 一个数码相机访问和照片管理程序
 
@@ -300,21 +300,6 @@ update-desktop-database -q &> /dev/null
 %{_kde4_libdir}/libkface.so
 %{_kde4_libdir}/cmake/Kface-3.5.0/*.cmake
 %{_libdir}/pkgconfig/libkface.pc
-
-%post -n libkgeomap -p /sbin/ldconfig
-%postun -n libkgeomap -p /sbin/ldconfig
-
-%files -n libkgeomap 
-#%{_kde4_bindir}/libkgeomap_demo
-%{_kde4_appsdir}/libkgeomap/
-%{_kde4_libdir}/libkgeomap.so.*
-%{kde4_localedir}/zh_*/LC_MESSAGES/libkgeomap.mo
-
-%files -n libkgeomap-devel
-#%{_kde4_includedir}/libkgeomap/
-%{_kde4_libdir}/libkgeomap.so
-%{_kde4_appsdir}/cmake/modules/FindKGeoMap.cmake
-%{_libdir}/pkgconfig/libkgeomap.pc
 
 %post -n libmediawiki -p /sbin/ldconfig
 %postun -n libmediawiki -p /sbin/ldconfig

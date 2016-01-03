@@ -91,6 +91,8 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{kde4_plugindir}/plugins/grantlee/0.4/kdev_filters.so
 %{kde4_configdir}/kdevappwizard.knsrc
 %{kde4_configdir}/kdevfiletemplates.knsrc
+%{kde4_libdir}/kde4/imports/org/kde/kdevplatform/libkdevelopdashboarddeclarativeplugin.so
+%{kde4_libdir}/kde4/imports/org/kde/kdevplatform/qmldir
 
 %changelog
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 1.7.2-2}

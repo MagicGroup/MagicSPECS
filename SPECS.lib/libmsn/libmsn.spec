@@ -3,7 +3,7 @@ Name:		libmsn
 Summary:	Library for connecting to the MSN Messenger service
 Summary(zh_CN.UTF-8): 连接 MSN 信息服务的库
 Version:	4.2.1
-Release:	7%{?dist}
+Release:	8%{?dist}
 
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -81,6 +81,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 21 2015 Liu Di <liudidi@gmail.com> - 4.2.1-8
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 4.2.1-7
 - 为 Magic 3.0 重建
 

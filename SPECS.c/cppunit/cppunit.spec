@@ -1,6 +1,6 @@
 Name: cppunit
 Version: 1.12.1
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 Summary: C++ unit testing framework
 Summary(zh_CN.UTF-8): C++ 单元测试框架
@@ -113,6 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc doc/html
 
 %changelog
+* Wed Dec 23 2015 Liu Di <liudidi@gmail.com> - 1.12.1-9
+- 为 Magic 3.0 重建
+
 * Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.12.1-8
 - 为 Magic 3.0 重建
 

@@ -8,8 +8,8 @@ License: GPL v2 or later
 Group: System/GUI/KDE
 Group(zh_CN.UTF-8): 系统/GUI/KDE
 URL: http://www.kde.org/
-Version: 15.08.3
-Release: 2%{?dist}
+Version: 15.12.0
+Release: 1%{?dist}
 %define rversion %version
 Source0: http://mirrors.ustc.edu.cn/kde/stable/applications/%{rversion}/src/%{real_name}-%{rversion}.tar.xz
 
@@ -450,6 +450,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 
 %changelog
+* Sun Dec 20 2015 Liu Di <liudidi@gmail.com> - 15.12.0-1
+- 为 Magic 3.0 重建
+
 * Wed Dec 16 2015 Liu Di <liudidi@gmail.com> - 15.08.3-2
 - 为 Magic 3.0 重建
 

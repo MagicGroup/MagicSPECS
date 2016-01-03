@@ -1,6 +1,6 @@
 Name:	keybinder
 Version:	0.3.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	A library for registering global keyboard shortcuts
 Summary(zh_CN.UTF-8): 注册全局键盘快捷方式的库
 Group:	Development/Libraries
@@ -51,9 +51,6 @@ Summary(zh_CN.UTF-8): %{name} 的 Python 绑定
 Requires:	%{name} = %{version}-%{release}
 Requires:	pygtk2 pygobject2
 
-%filter_provides_in %{python_sitearch}.*\.so$
-%filter_setup
-
 %description -n python-%{name}
 This package contains python bindings for keybinder.
 
@@ -75,7 +72,7 @@ make install DESTDIR=%{buildroot}
 
 rm -rf %{buildroot}/%{_libdir}/libkeybinder.la
 rm -rf %{buildroot}/%{_libdir}/lua/5.1/keybinder.la
-rm -rf %{python_sitearch}/%{name}/_keybinder.la
+rm -rf %{buildroot}/%{python_sitearch}/%{name}/_keybinder.la
 
 %clean
 rm -rf %{buildroot}
@@ -104,6 +101,9 @@ rm -rf %{buildroot}
 %doc COPYING
 
 %changelog
+* Fri Jan 01 2016 Liu Di <liudidi@gmail.com> - 0.3.0-8
+- 为 Magic 3.0 重建
+
 * Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.3.0-7
 - 为 Magic 3.0 重建
 

@@ -1,4 +1,4 @@
-
+%define debug_package %{nil}
 # handle the difference between kde4 konsole and kde3 konsole parameters  --- nihui
 %define kde4 1
 

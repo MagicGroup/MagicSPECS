@@ -9,9 +9,9 @@
 Name: openbabel
 Version: 2.3.90
 %if 0%{?git}
-Release: 0.git%{vcsdate}%{?dist}.8
+Release: 0.git%{vcsdate}%{?dist}.9
 %else
-Release: 12%{?dist}
+Release: 13%{?dist}
 %endif
 Summary: Chemistry software file format converter
 Summary(zh_CN.UTF-8): 化学软件文件格式转换器
@@ -305,6 +305,9 @@ make test
 
 
 %changelog
+* Mon Dec 21 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20151120.9
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.3.90-0.git20151101.8
 - 为 Magic 3.0 重建
 

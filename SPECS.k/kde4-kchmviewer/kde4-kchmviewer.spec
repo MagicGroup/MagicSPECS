@@ -1,12 +1,12 @@
 %define real_name      kchmviewer
-%define betatag    beta1
+%define betatag    %{nil}
 %define prefix     /usr
 %define sysconfdir /etc
 
 Summary:	A CHM viewer program for KDE.
 Summary(zh_CN.UTF-8):	KDE下的一个CHM查看程序
 Name:	kde4-%{real_name}
-Version:	7.3
+Version:	7.5
 Release:	3%{?dist}
 License:	GPL
 Group:		Applications/File

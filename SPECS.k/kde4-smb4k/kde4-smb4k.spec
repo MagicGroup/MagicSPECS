@@ -74,7 +74,7 @@ rm -rf $RPM_BUILD_ROOT
 %{kde4_iconsdir}/*
 %{kde4_plugindir}/*
 %{kde4_libdir}/libsmb4k*so*
-%{kde4_libdir}/libkdeinit4_smb4k.so
+#%{kde4_libdir}/libkdeinit4_smb4k.so
 %{kde4_servicesdir}/plasma-applet-smb4k-qml.desktop
 %{kde4_kcfgdir}/*
 %{kde4_xdgappsdir}/*.desktop
@@ -82,6 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 %{kde4_dbus_system_servicesdir}/*
 %{_sysconfdir}/dbus-1/system.d/*.smb4k.mounthelper.conf
 %{kde4_auth_policy_filesdir}/*.smb4k.mounthelper.policy
+%{_datadir}/appdata/smb4k.appdata.xml
 
 %files devel
 %defattr(-, root, root)
