@@ -3,7 +3,7 @@
 Summary:      LASH Audio Session Handler
 Name:         lash
 Version:      0.5.4
-Release:      22%{?dist}
+Release:      23%{?dist}
 License:      GPLv2+
 Group:        System Environment/Libraries
 URL:          http://www.nongnu.org/lash/
@@ -15,6 +15,8 @@ Patch0:       lash-0.5.3-no-static-lib.patch
 Patch1:       lash-linking.patch
 # Fix build against gcc-4.7
 Patch2:       lash-gcc47.patch
+# Modernize texi2html arguments for texi2html-5.0
+Patch3:       lash-Modernize-texi2html-arguments.patch
 
 BuildRequires: alsa-lib-devel
 BuildRequires: desktop-file-utils
@@ -61,6 +63,7 @@ LASH.
 %patch0 -p0
 %patch1 -p1 -b .linking
 %patch2 -p1 -b .gcc47
+%patch3 -p1 -b .texi2html
 
 # Hack to build against newer swig
 sed -i 's|1.3.31|3.0.0|g' configure*
@@ -161,14 +164,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{python_sitearch}/lash.py*
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.5.4-22
-- 为 Magic 3.0 重建
+* Mon Sep 21 2015 Jitka Plesnikova <jplesnik@redhat.com> - 0.5.4-23
+- Modernize texi2html arguments
 
-* Fri Oct 30 2015 Liu Di <liudidi@gmail.com> - 0.5.4-21
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-22
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Fri Jun 06 2014 Liu Di <liudidi@gmail.com> - 0.5.4-20
-- 为 Magic 3.0 重建
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-21
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
 * Wed Apr 23 2014 Jaromir Capik <jcapik@redhat.com> - 0.5.4-19
 - Fixing FTBFS caused by the swig upgrade 2.0.12 -> 3.0.0 (#1090111)
@@ -275,10 +281,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Fri Jul 14 2006 Anthony Green <green@redhat.com> 0.5.1-6
 - The devel package must Require e2fsprogs-devel.
 
-* Sun Jun 26 2006 Anthony Green <green@redhat.com> 0.5.1-5
+* Mon Jun 26 2006 Anthony Green <green@redhat.com> 0.5.1-5
 - Use || : is %%post(un) scripts.
 
-* Sun Jun 26 2006 Anthony Green <green@redhat.com> 0.5.1-4
+* Mon Jun 26 2006 Anthony Green <green@redhat.com> 0.5.1-4
 - Fix files reference to %%{_datadir}/xml/lash.
 - Don't use update-desktop-database.
 - Use %%{version} in Source0.
@@ -328,7 +334,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 * Thu Nov  6 2003 Fernando Lopez-Lezcano <nando@ccrma.stanford.edu> 0.4.0-1
 - updated to 0.4.0
 - patched to build under gcc2.96 (patch1)
-* Wed Feb 11 2003 Fernando Lopez-Lezcano <nando@ccrma.stanford.edu> 0.3.0-1
+* Wed Feb 12 2003 Fernando Lopez-Lezcano <nando@ccrma.stanford.edu> 0.3.0-1
 - updated to 0.3.0
 - added 7.2 workaround for gtk2 configuration problem
 * Mon Jan 13 2003  Fernando Lopez-Lezcano <nando@ccrma.stanford.edu> 0.2-1
