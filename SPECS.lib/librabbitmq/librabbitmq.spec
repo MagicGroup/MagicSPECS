@@ -10,8 +10,8 @@
 Name:      librabbitmq
 Summary:   Client library for AMQP
 Summary(zh_CN.UTF-8): AMQP 的客户端库
-Version: 0.7.1
-Release: 3%{?dist}
+Version:   0.5.0
+Release:   4%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -142,12 +142,6 @@ make check
 
 
 %changelog
-* Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.7.1-3
-- 为 Magic 3.0 重建
-
-* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 0.7.1-2
-- 更新到 0.7.1
-
 * Wed Jul 30 2014 Liu Di <liudidi@gmail.com> - 0.5.0-4
 - 为 Magic 3.0 重建
 
