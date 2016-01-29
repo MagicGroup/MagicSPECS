@@ -7,6 +7,7 @@ Group:	System Environment/Libraries
 License: GPLv2+
 Source: http://downloads.sourceforge.net/libofx/%{name}-%{version}.tar.gz
 Patch0: fix-ftbfs-gcc4.7.diff
+Patch1: libofx-0.9.8-cout.patch
 
 BuildRequires: opensp-devel
 BuildRequires: curl-devel
@@ -39,8 +40,9 @@ for building applications that use libofx.
 %prep
 %setup -q
 %patch0 -p1 -b .gcc47
+%patch1 -p1 -b .cout
 
-rm -rf ./doc/ofx_sample_files/CVS
+find . -name "*~" -delete
 chmod 644 ./doc/ofx_sample_files/*
 
 %build

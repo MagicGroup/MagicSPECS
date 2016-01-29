@@ -1,6 +1,6 @@
 Name: libteam
-Version: 1.11
-Release: 4%{?dist}
+Version: 1.23
+Release: 1%{?dist}
 Summary: Library for controlling team network device
 Group: System Environment/Libraries
 License: LGPLv2+

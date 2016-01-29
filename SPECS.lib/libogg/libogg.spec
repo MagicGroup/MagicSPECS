@@ -53,7 +53,7 @@ Documentation for developing applications with libogg
 
 
 %build
-sed -i "s/-O20/$RPM_OPT_FLAGS/" configure
+sed -i "s!-O20!$RPM_OPT_FLAGS!" configure
 sed -i "s/-ffast-math//" configure
 %configure --disable-static
 make %{?_smp_mflags}

@@ -1,8 +1,8 @@
 Name:           librsvg2
 Summary:        An SVG library based on cairo
 Summary(zh_CN.UTF-8): 基于 cairo 的 SVG 库
-Version:	2.40.11
-Release: 3%{?dist}
+Version:	2.40.13
+Release: 1%{?dist}
 
 License:        LGPLv2+
 Group:          System Environment/Libraries
@@ -10,9 +10,6 @@ Group(zh_CN.UTF-8): 系统环境/库
 #VCS:           git:git://git.gnome.org/librsvg
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source:         http://download.gnome.org/sources/librsvg/%{majorver}/librsvg-%{version}.tar.xz
-
-# build with vala 0.18
-Patch0: librsvg-vala.patch
 
 Requires(post):   gdk-pixbuf2
 Requires(postun): gdk-pixbuf2
@@ -75,7 +72,6 @@ This package provides extra utilities based on the librsvg library.
 
 %prep
 %setup -q -n librsvg-%{version}
-%patch0 -p1
 
 autoreconf -fisv
 
@@ -88,7 +84,8 @@ export enable_pixbuf_loader
 %configure --disable-static  \
         --disable-gtk-doc \
         --disable-gtk-theme \
-        --enable-introspection
+        --enable-introspection \
+	--enable-vala
 make %{?_smp_mflags}
 
 %install

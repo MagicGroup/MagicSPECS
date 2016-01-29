@@ -88,10 +88,10 @@ rm %{buildroot}%{_libdir}/*.la
 %_libdir/*.so.*
 
 %files devel
-%doc doc/html
 %_includedir/*
 %_libdir/*.so
 %_libdir/pkgconfig/*.pc
+%_docdir/*
 
 %files devel-static
 %_libdir/*.a

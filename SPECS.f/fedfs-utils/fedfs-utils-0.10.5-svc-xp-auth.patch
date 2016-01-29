@@ -1,0 +1,27 @@
+fedfsd: xp_auth field was moved
+
+From: Chuck Lever <chuck.lever@oracle.com>
+
+A recent version of libtirpc changed an undocumented interface.
+Add some compatibility measures.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ src/fedfsd/gss.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/fedfsd/gss.c b/src/fedfsd/gss.c
+index c63f42f..f762466 100644
+--- a/src/fedfsd/gss.c
++++ b/src/fedfsd/gss.c
+@@ -175,6 +175,10 @@ fedfsd_get_gss_cred(struct svc_req *rqstp)
+ {
+ 	SVCAUTH *auth;
+ 
++#if defined(SVC_XP_AUTH)
++	auth = &SVC_XP_AUTH(rqstp->rq_xprt);
++#else
+ 	auth = rqstp->rq_xprt->xp_auth;
++#endif
+ 	return svcauth_gss_get_principal(auth);
+ }

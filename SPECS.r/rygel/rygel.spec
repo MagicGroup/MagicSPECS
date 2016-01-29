@@ -1,7 +1,7 @@
 %define libver 2.6
 Name:          rygel
 Version:	0.28.1
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:       A collection of UPnP/DLNA services
 Summary(zh_CN.UTF-8): UPnP/DLNA 服务的集合
 
@@ -150,6 +150,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/vala/vapi/rygel*.vapi
 
 %changelog
+* Sat Jan 23 2016 Liu Di <liudidi@gmail.com> - 0.28.1-4
+- 为 Magic 3.0 重建
+
 * Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 0.28.1-3
 - 为 Magic 3.0 重建
 

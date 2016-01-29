@@ -2,7 +2,7 @@
 
 Name:           libcutl
 Version:        1.9.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        C++ utility library from Code Synthesis
 
 Group:          System Environment/Libraries
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Jan 16 2016 Liu Di <liudidi@gmail.com> - 1.9.0-9
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.9.0-8
 - 为 Magic 3.0 重建
 

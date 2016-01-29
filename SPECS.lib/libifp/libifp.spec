@@ -11,6 +11,11 @@ URL:            http://ifp-driver.sourceforge.net/
 Source0:        http://dl.sourceforge.net/ifp-driver/%{name}-%{version}.tar.gz
 Source1:        libifp.hotplug
 Source2:        10-libifp.rules
+# autoconf-2.69 breaks configure.in (likely configure.in is the broken part)
+# Upstream is dead, so fix it here:
+Patch0:         libifp-1.0.0.2-fix-broken-configure.in.diff
+Patch1:         libifp-1.0.0.2-fix-broken-configure-again.diff
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libusb-devel doxygen
@@ -42,9 +47,10 @@ libifp.
 这个包包含了使用libifo开发应用所需要的头文件和库。
 
 %prep
-%setup -q
+%autosetup 
 
 %build
+autoreconf -fisv
 %configure --with-libusb --disable-static
 make %{?_smp_mflags}
 

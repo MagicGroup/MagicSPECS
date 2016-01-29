@@ -1,8 +1,8 @@
 %define _root_libdir    %{_libdir}
 
 Name:		   libtirpc
-Version: 0.3.2
-Release: 3%{?dist}
+Version: 1.0.1
+Release: 1%{?dist}
 Summary:		Transport Independent RPC Library
 Summary(zh_CN.UTF-8): 独立运行的 RPC 库
 Group:		  	System Environment/Libraries
@@ -13,7 +13,7 @@ URL:  			http://nfsv4.bullopensource.org/
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source0:	http://downloads.sourceforge.net/libtirpc/libtirpc-%{version}.tar.bz2
 
-Patch001: libtirpc-0.2.5-rc3.patch
+Patch001: libtirpc-1.0.2-rc1.patch
 
 BuildRequires:		automake, autoconf, libtool, pkgconfig
 BuildRequires:		libgssglue-devel
@@ -109,36 +109,8 @@ rm -rf %{buildroot}
 %{_root_libdir}/libtirpc.so
 %{_libdir}/pkgconfig/libtirpc.pc
 %{_includedir}/tirpc/netconfig.h
-%{_includedir}/tirpc/rpc/auth.h
-%{_includedir}/tirpc/rpc/auth_des.h
-%{_includedir}/tirpc/rpc/auth_gss.h
-%{_includedir}/tirpc/rpc/auth_kerb.h
-%{_includedir}/tirpc/rpc/auth_unix.h
-%{_includedir}/tirpc/rpc/clnt.h
-%{_includedir}/tirpc/rpc/clnt_soc.h
-%{_includedir}/tirpc/rpc/clnt_stat.h
-%{_includedir}/tirpc/rpc/des.h
-%{_includedir}/tirpc/rpc/des_crypt.h
-%{_includedir}/tirpc/rpc/nettype.h
-%{_includedir}/tirpc/rpc/pmap_clnt.h
-%{_includedir}/tirpc/rpc/pmap_prot.h
-%{_includedir}/tirpc/rpc/pmap_rmt.h
-%{_includedir}/tirpc/rpc/raw.h
-%{_includedir}/tirpc/rpc/rpc.h
-%{_includedir}/tirpc/rpc/rpc_com.h
-%{_includedir}/tirpc/rpc/rpc_msg.h
-%{_includedir}/tirpc/rpc/rpcb_clnt.h
-%{_includedir}/tirpc/rpc/rpcb_prot.h
-%{_includedir}/tirpc/rpc/rpcb_prot.x
-%{_includedir}/tirpc/rpc/rpcent.h
-%{_includedir}/tirpc/rpc/svc.h
-%{_includedir}/tirpc/rpc/svc_auth.h
-%{_includedir}/tirpc/rpc/svc_dg.h
-%{_includedir}/tirpc/rpc/svc_soc.h
-%{_includedir}/tirpc/rpc/types.h
-%{_includedir}/tirpc/rpc/xdr.h
-%{_includedir}/tirpc/rpcsvc/crypt.h
-%{_includedir}/tirpc/rpcsvc/crypt.x
+%{_includedir}/tirpc/rpc/*
+%{_includedir}/tirpc/rpcsvc/*
 %{_mandir}/*/*
 
 %changelog

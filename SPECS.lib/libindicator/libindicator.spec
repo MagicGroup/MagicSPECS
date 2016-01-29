@@ -1,6 +1,6 @@
 Name:		libindicator
 Version:	12.10.1
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Shared functions for Ayatana indicators
 Summary(zh_CN.UTF-8): Ayatana 指标的共享函数
 
@@ -195,6 +195,9 @@ find %{buildroot} -type f -name '*.la' -delete
 %{_libexecdir}/indicator-loader3
 
 %changelog
+* Fri Jan 29 2016 Liu Di <liudidi@gmail.com> - 12.10.1-6
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.10.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

@@ -1,25 +1,37 @@
-%global gitrev 5bd9589
-%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -rrbconfig -e 'puts RbConfig::CONFIG["vendorarchdir"] ')}
-%filter_provides_in %{perl_vendorarch}/.*\.so$
-%filter_provides_in %{python_sitearch}/.*\.so$
-%filter_provides_in %{ruby_vendorarch}/.*\.so$
-%filter_setup
+%{!?ruby_vendorarch: %global ruby_vendorarch %(ruby -r rbconfig -e "puts RbConfig::CONFIG['vendorarchdir'].nil? ? RbConfig::CONFIG['sitearchdir'] : RbConfig::CONFIG['vendorarchdir']")}
+%bcond_without python3
+%global _cmake_opts \\\
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \\\
+            -DENABLE_PERL=1 \\\
+            -DENABLE_PYTHON=1 \\\
+            -DENABLE_RUBY=1 \\\
+            -DUSE_VENDORDIRS=1 \\\
+            -DFEDORA=1 \\\
+            -DENABLE_DEBIAN=1 \\\
+            -DENABLE_ARCHREPO=1 \\\
+            -DENABLE_LZMA_COMPRESSION=1 \\\
+            -DMULTI_SEMANTICS=1 \\\
+            -DENABLE_COMPLEX_DEPS=1 \\\
+            %{nil}
 
 Name:		libsolv
-Version:	0.6.4
-Release:	4%{?dist}
+Version:	0.6.15
+Release:	5%{?dist}
 License:	BSD
 Url:		https://github.com/openSUSE/libsolv
-# git clone https://github.com/openSUSE/libsolv.git
-# git archive %{gitrev} --prefix=libsolv/ | xz > libsolv-%{gitrev}.tar.xz
-Source:		libsolv-%{gitrev}.tar.xz
-Patch0:		libsolv-rubyinclude.patch
+Source:		https://github.com/openSUSE/libsolv/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Patch0:		0001-ruby-make-compatible-with-ruby-2.2.patch
+Patch1:		0002-Revert-Rework-multiversion-orphaned-handling.patch
+
 Group:		Development/Libraries
 Summary:	Package dependency solver
-Summary(zh_CN.UTF-8): 包依赖解决器
 BuildRequires:	cmake libdb-devel expat-devel rpm-devel zlib-devel
-BuildRequires:	swig perl perl-devel ruby ruby-devel python2-devel
-BuildRequires:  xz-devel
+BuildRequires:	swig
+BuildRequires:	perl perl-devel ruby ruby-devel python2-devel
+%if %{with python3}
+BuildRequires:	python3-devel
+%endif
+BuildRequires:  xz-devel bzip2-devel
 %description
 A free package dependency solver using a satisfiability algorithm. The
 library is based on two major, but independent, blocks:
@@ -30,14 +42,9 @@ library is based on two major, but independent, blocks:
 - Using satisfiability, a well known and researched topic, for
   resolving package dependencies.
 
-%description -l zh_CN.UTF-8
-包依赖解决器。
-
 %package devel
 Summary:	A new approach to package dependency solving
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:		Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires:	libsolv-tools%{?_isa} = %{version}-%{release}
 Requires:	libsolv%{?_isa} = %{version}-%{release}
 Requires:	rpm-devel%{?_isa}
@@ -45,9 +52,6 @@ Requires:	cmake
 
 %description devel
 Development files for libsolv,
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %package tools
 Summary:	A new approach to package dependency solving
@@ -69,53 +73,76 @@ Applications demoing the libsolv library.
 %package -n ruby-solv
 Summary:	Ruby bindings for the libsolv library
 Group:		Development/Languages
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n ruby-solv
 Ruby bindings for sat solver.
 
-%package -n python-solv
+%package -n python2-solv
 Summary:	Python bindings for the libsolv library
 Group:		Development/Languages
-Requires:	python
+Requires:	python2
+Requires:	libsolv%{?_isa} = %{version}-%{release}
+%{?python_provide:%python_provide python2-solv}
 
-%description -n python-solv
+%description -n python2-solv
 Python bindings for sat solver.
+
+%if %{with python3}
+%package -n python3-solv
+Summary:	Python 3 bindings for the libsolv library
+Group:		Development/Languages
+Requires:	python3
+Requires:	libsolv%{?_isa} = %{version}-%{release}
+%{?python_provide:%python_provide python3-solv}
+
+%description -n python3-solv
+Python 3 bindings for sat solver.
+%endif
 
 %package -n perl-solv
 Summary:	Perl bindings for the libsolv library
 Group:		Development/Languages
 Requires:	perl
+Requires:	libsolv%{?_isa} = %{version}-%{release}
 
 %description -n perl-solv
 Perl bindings for sat solver.
 
 %prep
-%setup -q -n libsolv
-%patch0 -p1 -b .rubyinclude
+%autosetup -p1
+
+%if %{with python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif
+
+%build
+%cmake %_cmake_opts \
+        -DPythonLibs_FIND_VERSION=2 -DPythonLibs_FIND_VERSION_MAJOR=2 \
+        -DENABLE_BZIP2_COMPRESSION=1 -DMAN_INSTALL_DIR=%{_mandir}
+make %{?_smp_mflags}
+
+%if %{with python3}
+pushd %{py3dir}/
+  %cmake %_cmake_opts -DENABLE_PYTHON=1 \
+        -DPythonLibs_FIND_VERSION=3 -DPythonLibs_FIND_VERSION_MAJOR=3 \
+        -DENABLE_BZIP2_COMPRESSION=1 -DMAN_INSTALL_DIR=%{_mandir}
+make %{?_smp_mflags}
+popd
+%endif
+
+%install
+%make_install
+
+%if %{with python3}
+pushd %{py3dir}/
+  %make_install
+popd
+%endif
 
 %check
 make ARGS="-V" test
-
-%build
-%cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-       -DENABLE_PERL=1 \
-       -DENABLE_PYTHON=1 \
-       -DENABLE_RUBY=1 \
-       -DUSE_VENDORDIRS=1 \
-       -DFEDORA=1 \
-       -DENABLE_DEBIAN=1 \
-       -DENABLE_ARCHREPO=1 \
-       -DENABLE_LZMA_COMPRESSION=1 \
-       -DINSTALL_MANDIR=%{_mandir} \
-       -DMULTI_SEMANTICS=1
-
-make %{?_smp_mflags}
-
-%install
-make DESTDIR=$RPM_BUILD_ROOT install
-rm $RPM_BUILD_ROOT/usr/bin/testsolv
-mv %{buildroot}/usr/man %{buildroot}%{_datadir}/
-magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -139,15 +166,17 @@ magic_rpm_clean.sh
 %_bindir/rpmdb2solv
 %_bindir/rpmmd2solv
 %_bindir/rpms2solv
+%_bindir/testsolv
 %_bindir/updateinfoxml2solv
 
 %files devel
-%doc examples/solv.c
+%doc examples/solv/
 %_libdir/libsolv.so
 %_libdir/libsolvext.so
 %_includedir/solv
 %_datadir/cmake/Modules/FindLibSolv.cmake
 %{_mandir}/man?/*
+%{_libdir}/pkgconfig/%{name}.pc
 
 %files demo
 %_bindir/solv
@@ -160,9 +189,15 @@ magic_rpm_clean.sh
 %doc examples/rbsolv
 %{ruby_vendorarch}/*
 
-%files -n python-solv
+%files -n python2-solv
 %doc examples/pysolv
-%{python_sitearch}/*
+%{python2_sitearch}/*
+
+%if %{with python3}
+%files -n python3-solv
+%doc examples/pysolv
+%{python3_sitearch}/*
+%endif
 
 %changelog
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.6.4-4

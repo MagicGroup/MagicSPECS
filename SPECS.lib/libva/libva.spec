@@ -2,8 +2,8 @@
 #需要细分包
 
 Name:      libva
-Version: 1.6.1
-Release: 3%{?dist}
+Version: 1.6.2
+Release: 1%{?dist}
 Summary:   Video Acceleration (VA) API for Linux
 Summary(zh_CN.UTF-8): Linux 下的视频加速 (VA) API
 Group:     System Environment/Libraries
@@ -95,6 +95,7 @@ rm -rf %{buildroot}
 %{_bindir}/mpeg2vldemo
 %{_bindir}/putsurface
 %{_bindir}/avcenc
+%{_bindir}/jpegenc
 %{_bindir}/loadjpeg
 %{_bindir}/mpeg2vaenc
 %{_bindir}/putsurface_wayland

@@ -1,0 +1,11 @@
+--- libXp-1.0.0/configure.ac.proto-check	2006-08-18 13:41:35.000000000 -0400
++++ libXp-1.0.0/configure.ac	2006-08-18 13:41:49.000000000 -0400
+@@ -36,7 +36,7 @@
+ AC_PROG_LIBTOOL
+ 
+ # Check for X and print proto
+-PKG_CHECK_MODULES(XPRINT, x11 xext xextproto xau printproto)
++PKG_CHECK_MODULES(XPRINT, x11 xext xextproto xau)
+ 
+ AC_SUBST(XPRINT_CFLAGS)
+ AC_SUBST(XPRINT_LIBS)

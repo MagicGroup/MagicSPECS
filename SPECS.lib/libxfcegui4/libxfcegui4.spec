@@ -104,7 +104,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/glade3/catalogs/*
 %{_datadir}/glade3/pixmaps/hicolor/*x*/actions/widget-xfce4-xfce-*.png
 
-
 %changelog
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 4.10.0-5
 - 为 Magic 3.0 重建

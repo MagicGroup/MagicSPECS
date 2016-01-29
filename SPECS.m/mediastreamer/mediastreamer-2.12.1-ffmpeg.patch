@@ -1,0 +1,25 @@
+diff -ur mediastreamer-2.12.1.orig/src/videofilters/videoenc.c mediastreamer-2.12.1/src/videofilters/videoenc.c
+--- mediastreamer-2.12.1.orig/src/videofilters/videoenc.c	2016-01-29 10:23:11.449244848 +0800
++++ mediastreamer-2.12.1/src/videofilters/videoenc.c	2016-01-29 10:23:30.460244361 +0800
+@@ -400,7 +400,9 @@
+ 	// assume video size is CIF or QCIF
+ 	if (context->width == 352 && context->height == 288) header->b_wptr[1] = 0x60;
+ 	else header->b_wptr[1] = 0x40;
++	#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(56, 60, 100)
+ 	if (context->coded_frame->pict_type != FF_I_TYPE) header->b_wptr[1] |= 0x10;
++	#endif
+ 	header->b_wptr += 4;
+ 	header->b_cont = *packet;
+ 	*packet = header;
+@@ -836,9 +838,11 @@
+ 		if (s->framenum==1){
+ 			ms_video_starter_first_frame(&s->starter, f->ticker->time);
+ 		}
++		#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(56, 60, 100)
+ 		if (c->coded_frame->pict_type==FF_I_TYPE){
+ 			ms_message("Emitting I-frame");
+ 		}
++		#endif
+ 		comp_buf->b_wptr+=packet.size;
+ 		split_and_send(f,s,comp_buf);
+ 	}

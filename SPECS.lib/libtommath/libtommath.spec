@@ -12,19 +12,10 @@ Patch0:         %{name}-makefile.patch
 BuildRequires:  ghostscript
 BuildRequires:  libtool
 
-%if 0%{?rhel} == 6
-BuildRequires:  libtiff
-%else
 BuildRequires:  libtiff-tools
-%endif
 
-%if 0%{?fedora} || 0%{?rhel} >= 7
 BuildRequires:  tex(dvips)
 BuildRequires:  tex(latex)
-%else
-BuildRequires:  tetex-dvips
-BuildRequires:  tetex-latex
-%endif
 
 %description
 A free open source portable number theoretic multiple-precision integer library

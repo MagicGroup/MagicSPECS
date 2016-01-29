@@ -1,6 +1,6 @@
 Name:           libsidplayfp
-Version: 1.8.2
-Release: 3%{?dist}
+Version: 1.8.3
+Release: 1%{?dist}
 Summary:        SID chip music module playing library
 Group:          System Environment/Libraries
 License:        GPLv2+
@@ -78,8 +78,8 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 %files
 %doc AUTHORS COPYING NEWS README TODO
-%{_libdir}/libsidplayfp.so.3*
-%{_libdir}/libstilview.so.0*
+%{_libdir}/libsidplayfp.so.*
+%{_libdir}/libstilview.so.*
 
 %files devel
 %{_libdir}/libsidplayfp.so

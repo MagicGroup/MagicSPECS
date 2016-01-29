@@ -9,8 +9,6 @@ Group(zh_CN.UTF-8): 开发/库
 License:        LGPLv2+
 URL:            http://www.unifont.org/lasi/
 Source0:        http://downloads.sourceforge.net/lasi/libLASi-%{version}.tar.gz
-Patch0:         lasi-multilib.patch
-Patch1:		lasi-freetype.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  pango-devel, cmake
@@ -54,8 +52,6 @@ Requires:       pango-devel
 
 %prep
 %setup -q -n libLASi-%{version}
-%patch0 -p1 -b .multilib
-%patch1 -p0 -b .freetype2
 
 %build
 mkdir magic
@@ -90,7 +86,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING README
 %{_libdir}/libLASi.so.*
 
 

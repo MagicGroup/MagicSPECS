@@ -14,6 +14,7 @@ Obsoletes:      xsd-devel <= 0:4.0.0-9
 # Sent suggestion to upstream via e-mail 20090707
 # http://anonscm.debian.org/cgit/collab-maint/xsd.git/tree/debian/patches/0001-xsd_xsdcxx-rename.patch
 Patch0:         xsd-3.3.0-xsdcxx-rename.patch
+Patch1:		xsd-Fix_bug_C++_Parser_Expat_Support.patch
 
 BuildRequires: m4, xerces-c-devel, libcutl-devel
 BuildRequires: boost-devel
@@ -44,6 +45,7 @@ This package contains API documentation for %{name}.
 %prep
 %setup -q -n xsd-%{version}+dep
 %patch0 -p1 -b .xsdcxx-rename
+%patch1 -p0
 
 ##Unbundle libcutl
 rm -rf libcutl

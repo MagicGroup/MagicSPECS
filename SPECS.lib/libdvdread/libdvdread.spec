@@ -59,7 +59,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING ChangeLog README
+%doc AUTHORS COPYING ChangeLog README NEWS TODO
 %{_libdir}/libdvdread.so.*
 
 %files devel

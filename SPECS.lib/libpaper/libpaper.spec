@@ -75,7 +75,7 @@ for i in cs da de es fr gl hu it ja nl pt_BR sv tr uk vi; do
 	msgfmt debian/po/$i.po -o $RPM_BUILD_ROOT%{_datadir}/locale/$i/LC_MESSAGES/%{name}.mo;
 done
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -84,7 +84,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun -p /sbin/ldconfig
 
-%files -f %{name}.lang
+%files 
 %defattr(-, root, root, -)
 %doc COPYING ChangeLog README
 %config(noreplace) %{_sysconfdir}/papersize

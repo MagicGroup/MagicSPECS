@@ -1,0 +1,95 @@
+--- libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/configure.ac.moduledir	2015-05-26 01:14:45.000000000 +0900
++++ libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/configure.ac	2015-06-01 16:59:15.758431997 +0900
+@@ -117,12 +117,14 @@ if test x"$ac_with_gtk" != xno; then
+       LIBFM_GTK_LTLIBRARIES=libfm-gtk3.la
+       LIBFM_GTK_PC=libfm-gtk3.pc
+       ac_with_gtk="3.0"
++      LIBFM_GTK_MODULE_DIR_SUFFIX="gtk3"
+       ;;
+     *)
+       pkg_modules="$gio_modules gtk+-2.0 >= 2.18.0 pango >= 1.16.0 cairo >= 1.8.0"
+       LIBFM_GTK_LTLIBRARIES=libfm-gtk.la
+       LIBFM_GTK_PC=libfm-gtk.pc
+       ac_with_gtk="2.0"
++      LIBFM_GTK_MODULE_DIR_SUFFIX="gtk"
+       ;;
+   esac
+   PKG_CHECK_MODULES(GTK, [$pkg_modules])
+@@ -134,6 +136,7 @@ else
+   LIBFM_GTK_LTLIBRARIES=
+   LIBFM_GTK_PC=
+   ac_with_gtk="none"
++  LIBFM_GTK_MODULE_DIR_SUFFIX=""
+   LIBFM_PREF_APPS=
+ fi
+ AC_SUBST(GTK_CFLAGS)
+@@ -141,6 +144,7 @@ AC_SUBST(GTK_LIBS)
+ AC_SUBST(LIBFM_GTK_LTLIBRARIES)
+ AC_SUBST(LIBFM_PREF_APPS)
+ AC_SUBST(LIBFM_GTK_PC)
++AC_SUBST(LIBFM_GTK_MODULE_DIR_SUFFIX)
+ AM_CONDITIONAL([ENABLE_GTK], [test x$ac_with_gtk != xnone])
+ 
+ dnl pango_modules="pango >= 1.16.0"
+--- libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/src/Makefile.am.moduledir	2015-05-26 01:14:45.000000000 +0900
++++ libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/src/Makefile.am	2015-06-01 16:59:15.759431997 +0900
+@@ -313,6 +313,7 @@ libfm_gtk_la_CFLAGS = \
+ 	-I$(srcdir)/gtk \
+ 	-DPACKAGE_UI_DIR=\""$(datadir)/libfm/ui"\" \
+ 	-DPACKAGE_THEME_DIR=\""$(datadir)/libfm/images"\" \
++	-DPACKAGE_MODULES_GTK_DIR=\""$(libdir)/@PACKAGE@/modules/@LIBFM_GTK_MODULE_DIR_SUFFIX@"\" \
+ 	$(GTK_CFLAGS) \
+ 	$(MENU_CACHE_CFLAGS) \
+ 	$(NULL)
+--- libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/src/fm-gtk.c.moduledir	2015-06-01 17:04:33.951498868 +0900
++++ libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/src/fm-gtk.c	2015-06-01 17:04:59.933504328 +0900
+@@ -57,6 +57,7 @@ gboolean fm_gtk_init(FmConfig* config)
+        if no theme was selected and GTK fallback isn't available then no icons
+        are shown - we should add folder and file icons as fallbacks theme */
+     gtk_icon_theme_append_search_path(gtk_icon_theme_get_default(), PACKAGE_THEME_DIR);
++    fm_modules_add_directory(PACKAGE_MODULES_GTK_DIR);
+     _fm_icon_pixbuf_init();
+     _fm_thumbnail_init();
+     _fm_file_properties_init();
+--- libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/src/modules/Makefile.am.moduledir	2015-05-26 01:14:45.000000000 +0900
++++ libfm-8f38f90e04b648637509f2fa2d4208027ae59b5c/src/modules/Makefile.am	2015-06-01 16:59:15.759431997 +0900
+@@ -18,6 +18,7 @@ LIBS += $(top_builddir)/src/libfm.la
+ 
+ # change default and put modules below usual place
+ pkglibdir = $(libdir)/@PACKAGE@/modules
++pkggtklibdir = $(libdir)/@PACKAGE@/modules/@LIBFM_GTK_MODULE_DIR_SUFFIX@
+ 
+ # modules to compile
+ pkglib_LTLIBRARIES = \
+@@ -25,11 +26,14 @@ pkglib_LTLIBRARIES = \
+ 	vfs-search.la \
+ 	$(NULL)
+ 
++pkggtklib_LTLIBRARIES = \
++	$(NULL)
++
+ if ENABLE_GTK
+ if HAVE_ACTIONS
+-pkglib_LTLIBRARIES += gtk-menu-actions.la
++pkggtklib_LTLIBRARIES += gtk-menu-actions.la
+ endif
+-pkglib_LTLIBRARIES += \
++pkggtklib_LTLIBRARIES += \
+ 	gtk-fileprop-x-desktop.la \
+ 	gtk-fileprop-x-shortcut.la \
+ 	gtk-menu-trash.la \
+@@ -39,10 +43,14 @@ endif
+ # install only .so files, we don't need .la files
+ install-exec-hook:
+ 	rm -f $(DESTDIR)$(pkglibdir)/*.la
++	rm -f $(DESTDIR)$(pkggtklibdir)/*.la
+ 
+ PLUGINS_INSTALLED = $(pkglib_LTLIBRARIES:.la=.so)
++PLUGINS_GTK_INSTALLED = $(pkggtklib_LTLIBRARIES:.la=.so)
++
+ uninstall-hook:
+ 	cd $(DESTDIR)$(pkglibdir) && rm -f $(PLUGINS_INSTALLED) || true
++	test -n "$(PLUGINS_GTK_INSTALLED)" && cd $(DESTDIR)$(pkggtklibdir) && rm -f $(PLUGINS_GTK_INSTALLED) || true
+ 
+ # module-specific parameters
+ vfs_menu_la_CFLAGS = $(MENU_CACHE_CFLAGS) -I$(top_srcdir)/src/extra

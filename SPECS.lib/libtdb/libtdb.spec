@@ -5,8 +5,8 @@
 %{!?python_version: %global python_version %(%{__python} -c "from distutils.sysconfig import get_python_version; print(get_python_version())")}
 
 Name: libtdb
-Version: 1.3.7
-Release: 3%{?dist}
+Version: 1.3.8
+Release: 1%{?dist}
 Group: System Environment/Daemons
 Group(zh_CN.UTF-8): 系统环境/服务
 Summary: The tdb library
@@ -120,7 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -n python-tdb
 %defattr(-,root,root,-)
 %{python_sitearch}/tdb.so
-%{python_sitearch}/_tdb_text.py
+%{python_sitearch}/_tdb_text.py*
 
 %post -p /sbin/ldconfig
 

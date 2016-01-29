@@ -16,17 +16,6 @@ URL: https://fedorahosted.org/abrt/
 Source: https://fedorahosted.org/released/abrt/%{name}-%{version}.tar.gz
 Source1: autogen.sh
 
-Patch1:  0001-ureport-implement-attaching-of-user-comments.patch
-Patch2:  0002-gui-make-preferences-dialogue-modal-for-parents.patch
-Patch3:  0003-gui-select-the-first-in-the-configuration-list.patch
-Patch4:  0004-gui-wrap-lines-for-human-readable-files.patch
-Patch5:  0005-wizard-fix-help-text-for-screencasting.patch
-Patch6:  0006-gui-support-Enter-2Click-in-Preferences-list.patch
-Patch7:  0007-gui-apply-configuration-dialogues-changes-on-Enter-k.patch
-Patch8:  0008-gui-close-ask-dialogues-on-Enter-key.patch
-Patch9:  0001-json-include-json.h-accordingly-to-json-c-CFLAGS.patch
-Patch10: 0001-ureport-include-json.h-accordingly-to-json-c-CFLAGS.patch
-
 # git is need for '%%autosetup -S git' which automatically applies all the
 # patches above. Please, be aware that the patches must be generated
 # by 'git format-patch'
@@ -179,6 +168,26 @@ Requires: libreport-web = %{version}-%{release}
 %description plugin-kerneloops
 This package contains plugin which sends kernel crash information to specified
 server, usually to kerneloops.org.
+
+%package plugin-mantisbt
+Summary: %{name}'s mantisbt plugin
+Group: System Environment/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-web = %{version}-%{release}
+
+%description plugin-mantisbt
+Plugin to report bugs into the mantisbt.
+
+%package centos
+Summary: %{name}'s CentOS Bug Tracker workflow
+Group: System Environment/Libraries
+Requires: %{name} = %{version}-%{release}
+Requires: libreport-web = %{version}-%{release}
+Requires: libreport-plugin-mantisbt = %{version}-%{release}
+
+%description centos
+Workflows to report issues into the CentOS Bug Tracker.
+
 
 %package plugin-logger
 Summary: %{name}'s logger reporter plugin
@@ -418,15 +427,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun web -p /sbin/ldconfig
 
-
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc README COPYING
+%config(noreplace) %{_sysconfdir}/%{name}/libreport.conf
 %config(noreplace) %{_sysconfdir}/%{name}/report_event.conf
 %config(noreplace) %{_sysconfdir}/%{name}/forbidden_words.conf
 %config(noreplace) %{_sysconfdir}/%{name}/ignored_words.conf
+%{_datadir}/%{name}/conf.d/libreport.conf
 %{_libdir}/libreport.so.*
 %{_libdir}/libabrt_dbus.so.*
+%{_mandir}/man5/libreport.conf.5*
 %{_mandir}/man5/report_event.conf.5*
 %{_mandir}/man5/forbidden_words.conf.5*
 %{_mandir}/man5/ignored_words.conf.5*
@@ -451,11 +462,18 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libreport/dump_dir.h
 %{_includedir}/libreport/event_config.h
 %{_includedir}/libreport/problem_data.h
+%{_includedir}/libreport/problem_report.h
 %{_includedir}/libreport/report.h
 %{_includedir}/libreport/run_event.h
 %{_includedir}/libreport/file_obj.h
 %{_includedir}/libreport/config_item_info.h
 %{_includedir}/libreport/workflow.h
+%{_includedir}/libreport/problem_details_widget.h
+%{_includedir}/libreport/problem_details_dialog.h
+%{_includedir}/libreport/problem_utils.h
+%{_includedir}/libreport/ureport.h
+%{_includedir}/libreport/reporters.h
+%{_includedir}/libreport/global_configuration.h
 # Private api headers:
 %{_includedir}/libreport/internal_abrt_dbus.h
 %{_includedir}/libreport/internal_libreport.h
@@ -483,6 +501,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %files python3
 %defattr(-,root,root,-)
 %{python3_sitearch}/report/*
+%{python3_sitearch}/reportclient/*
 
 %files cli
 %defattr(-,root,root,-)
@@ -520,8 +539,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/libreport/events/report_Logger.conf
 %{_mandir}/man5/report_Logger.conf.5.*
 %{_datadir}/%{name}/events/report_Logger.xml
+%{_datadir}/%{name}/workflows/workflow_Logger.xml
+%{_datadir}/%{name}/workflows/workflow_LoggerCCpp.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/print_event.conf
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_logger.conf
 %{_mandir}/man5/print_event.conf.5.*
+%{_mandir}/man5/report_logger.conf.5.*
 %{_bindir}/reporter-print
 %{_mandir}/man*/reporter-print.*
 
@@ -531,9 +554,13 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{name}/conf.d/plugins/mailx.conf
 %{_datadir}/%{name}/events/report_Mailx.xml
 %{_datadir}/dbus-1/interfaces/com.redhat.problems.configuration.mailx.xml
+%{_datadir}/%{name}/workflows/workflow_Mailx.xml
+%{_datadir}/%{name}/workflows/workflow_MailxCCpp.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/mailx_event.conf
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_mailx.conf
 %{_mandir}/man5/mailx.conf.5.*
 %{_mandir}/man5/mailx_event.conf.5.*
+%{_mandir}/man5/report_mailx.conf.5.*
 %{_mandir}/man*/reporter-mailx.*
 %{_bindir}/reporter-mailx
 
@@ -553,7 +580,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{name}/conf.d/plugins/bugzilla.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_formatdup.conf
-%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_libreport.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_analyzer_libreport.conf
 %config(noreplace) %{_sysconfdir}/libreport/plugins/bugzilla_format_kernel.conf
 %{_datadir}/%{name}/events/report_Bugzilla.xml
 %{_datadir}/%{name}/events/watch_Bugzilla.xml
@@ -567,9 +594,43 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/bugzilla.conf.5.*
 %{_mandir}/man5/bugzilla_format.conf.5.*
 %{_mandir}/man5/bugzilla_formatdup.conf.5.*
-%{_mandir}/man5/bugzilla_format_libreport.conf.5.*
+%{_mandir}/man5/bugzilla_format_analyzer_libreport.conf.5.*
 %{_mandir}/man5/bugzilla_format_kernel.conf.5.*
 %{_bindir}/reporter-bugzilla
+
+%files plugin-mantisbt
+%defattr(-,root,root,-)
+%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt.conf
+%{_datadir}/%{name}/conf.d/plugins/mantisbt.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_format.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_formatdup.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_format_analyzer_libreport.conf
+%config(noreplace) %{_sysconfdir}/libreport/plugins/mantisbt_formatdup_analyzer_libreport.conf
+%{_bindir}/reporter-mantisbt
+%{_mandir}/man1/reporter-mantisbt.1.gz
+%{_mandir}/man5/mantisbt.conf.5.*
+%{_mandir}/man5/mantisbt_format.conf.5.*
+%{_mandir}/man5/mantisbt_formatdup.conf.5.*
+%{_mandir}/man5/mantisbt_format_analyzer_libreport.conf.5.*
+%{_mandir}/man5/mantisbt_formatdup_analyzer_libreport.conf.5.*
+
+%files centos
+%{_datadir}/%{name}/workflows/workflow_CentOSCCpp.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSKerneloops.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSPython.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSPython3.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSVmcore.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSXorg.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSLibreport.xml
+%{_datadir}/%{name}/workflows/workflow_CentOSJava.xml
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_centos.conf
+%{_mandir}/man5/report_centos.conf.5.*
+%{_datadir}/%{name}/events/report_CentOSBugTracker.xml
+%config(noreplace) %{_sysconfdir}/libreport/events/report_CentOSBugTracker.conf
+%{_mandir}/man5/report_CentOSBugTracker.conf.5.*
+# report_CentOSBugTracker events are shipped by libreport package
+%config(noreplace) %{_sysconfdir}/libreport/events.d/centos_report_event.conf
+%{_mandir}/man5/centos_report_event.conf.5.*
 
 %files plugin-rhtsupport
 %defattr(-,root,root,-)
@@ -596,8 +657,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/%{name}/events/report_Uploader.xml
 %config(noreplace) %{_sysconfdir}/libreport/events.d/uploader_event.conf
 %{_datadir}/%{name}/workflows/workflow_Upload.xml
+%{_datadir}/%{name}/workflows/workflow_UploadCCpp.xml
 %config(noreplace) %{_sysconfdir}/libreport/plugins/upload.conf
+%config(noreplace) %{_sysconfdir}/libreport/workflows.d/report_uploader.conf
 %{_datadir}/%{name}/conf.d/plugins/upload.conf
+%{_mandir}/man5/report_uploader.conf.5.*
 
 %if 0%{?fedora}
 %files fedora
@@ -661,6 +725,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_mandir}/man5/bugzilla_anaconda_event.conf.5.*
 %{_mandir}/man5/bugzilla_format_anaconda.conf.5.*
 %{_mandir}/man5/bugzilla_formatdup_anaconda.conf.5.*
+
 
 
 %changelog

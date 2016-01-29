@@ -2,11 +2,11 @@
 # workaround bugs #1224945, #1228570
 %undefine _hardened_build
 %endif
-%global bootstrap 1
+%global bootstrap 0
 
 Name:           mono
 Version:        4.2.1
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Cross-platform, Open Source, .NET development framework
 
 Group:          Development/Languages
@@ -46,8 +46,8 @@ BuildRequires: mono-core >= 4.0
 ExclusiveArch: %mono_arches
 
 %global _use_internal_dependency_generator 0
-%global __find_provides env sh -c 'filelist=($(cat)) && { printf "%s\\n" "${filelist[@]}" | /usr/lib/rpm/redhat/find-provides && printf "%s\\n" "${filelist[@]}" | prefix=%{buildroot}%{_prefix} %{buildroot}%{_bindir}/mono-find-provides; } | sort | uniq'
-%global __find_requires env sh -c 'filelist=($(cat)) && { printf "%s\\n" "${filelist[@]}" | /usr/lib/rpm/redhat/find-requires && printf "%s\\n" "${filelist[@]}" | prefix=%{buildroot}%{_prefix} %{buildroot}%{_bindir}/mono-find-requires; } | sort | uniq | grep ^...'
+%global __find_provides env sh -c 'filelist=($(cat)) && { printf "%s\\n" "${filelist[@]}" | /usr/lib/rpm/magic/find-provides && printf "%s\\n" "${filelist[@]}" | prefix=%{buildroot}%{_prefix} %{buildroot}%{_bindir}/mono-find-provides; } | sort | uniq'
+%global __find_requires env sh -c 'filelist=($(cat)) && { printf "%s\\n" "${filelist[@]}" | /usr/lib/rpm/magic/find-requires && printf "%s\\n" "${filelist[@]}" | prefix=%{buildroot}%{_prefix} %{buildroot}%{_bindir}/mono-find-requires; } | sort | uniq | grep ^...'
 
 %description
 The Mono runtime implements a JIT engine for the ECMA CLI
@@ -732,6 +732,15 @@ mkdir -p %{buildroot}%{_datadir}/gdb/auto-load%{_bindir}
 %{_libdir}/pkgconfig/monodoc.pc
 
 %changelog
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 4.2.1-9
+- 为 Magic 3.0 重建
+
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 4.2.1-8
+- 为 Magic 3.0 重建
+
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 4.2.1-7
+- 为 Magic 3.0 重建
+
 * Mon Jan 04 2016 Timotheus Pokorra <timotheus.pokorra@solidcharity.com> - 4.2.1-6
 - another fix for gdb/auto-load mono-gdb.py. directory is owned by GDB
 

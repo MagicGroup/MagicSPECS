@@ -68,7 +68,7 @@ mkdir -p ex2/examples
 cp -p examples/{ftpconf.c,ftp.conf,simple.c,simple.conf,reread.c,reread.conf} \
     ex2/examples/
 magic_rpm_clean.sh
-%find_lang confuse
+%find_lang confuse || :
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -80,7 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 
-%files -f confuse.lang
+%files
 %defattr(-,root,root,-)
 %doc AUTHORS NEWS README
 %doc doc/html

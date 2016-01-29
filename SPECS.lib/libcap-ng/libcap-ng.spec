@@ -53,6 +53,23 @@ and can be used by python applications.
 %description python -l zh_CN.UTF-8
 %{name} 的 Python 绑定。
 
+%package python3
+Summary: Python3 bindings for libcap-ng library
+Summary(zh_CN.UTF-8): %{name} 的 Python3 绑定
+License: LGPLv2+
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+BuildRequires: python3-devel swig
+Requires: %{name} = %{version}-%{release}
+
+%description python3
+The libcap-ng-python package contains the bindings so that libcap-ng
+and can be used by python applications.
+
+%description python3 -l zh_CN.UTF-8
+%{name} 的 Python 绑定。
+
+
 %package utils
 Summary: Utilities for analysing and setting file capabilities
 Summary(zh_CN.UTF-8): 分析和设置文件能力的工具
@@ -125,8 +142,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files python
 %defattr(-,root,root,-)
-%attr(755,root,root) /%{_libdir}/python?.?/site-packages/_capng.so
+%attr(755,root,root) /%{_libdir}/python2.7/site-packages/_capng.so
 %{python_sitearch}/capng.py*
+
+%files python3
+%defattr(-,root,root,-)
+%attr(755,root,root) /%{_libdir}/python3.4/site-packages/_capng.so
+%{python3_sitearch}/*
 
 %files utils
 %defattr(-,root,root,-)

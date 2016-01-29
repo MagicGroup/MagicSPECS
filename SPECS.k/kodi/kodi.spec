@@ -12,9 +12,9 @@
 Name: kodi
 Version:	15.2
 %if %{git}
-Release:	3%{?dist}
+Release:	4%{?dist}
 %else
-Release:	3%{?dist}
+Release:	4%{?dist}
 %endif
 URL: http://www.xbmc.org
 %if %{git}
@@ -464,6 +464,9 @@ fi
 %{_includedir}/kodi/xbmcclient.h
 
 %changelog
+* Sun Jan 17 2016 Liu Di <liudidi@gmail.com> - 15.2-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 15.2-3
 - 为 Magic 3.0 重建
 

@@ -3,8 +3,8 @@
 Summary: Direct Rendering Manager runtime library
 Summary(zh_CN.UTF-8): 直接渲染管理运行库
 Name: libdrm
-Version: 2.4.65
-Release: 3%{?dist}
+Version: 2.4.66
+Release: 1%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -15,6 +15,7 @@ Source0: %{name}-%{gitdate}.tar.bz2
 Source0: http://dri.freedesktop.org/libdrm/%{name}-%{version}.tar.bz2
 %endif
 Source1: make-git-snapshot.sh
+Source2: 91-drm-modeset.rules
 
 Requires: udev
 
@@ -29,8 +30,6 @@ BuildRequires: libudev-devel
 BuildRequires: libatomic_ops-devel
 BuildRequires: libpciaccess-devel
 BuildRequires: libxslt docbook-style-xsl
-
-Source2: 91-drm-modeset.rules
 
 # hardcode the 666 instead of 660 for device nodes
 Patch3: libdrm-make-dri-perms-okay.patch
@@ -79,13 +78,14 @@ Utility programs for the kernel DRM interface.  Will void your warranty.
 %patch5 -p1 -b .check
 
 %build
-autoreconf -v --install || exit 1
+autoreconf -fisv
 %configure \
 %ifarch %{arm}
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
 	--enable-omap-experimental-api \
 %endif
+	--enable-install-test-programs \
 	--enable-udev
 make %{?_smp_mflags}
 pushd tests
@@ -97,7 +97,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 pushd tests
 mkdir -p $RPM_BUILD_ROOT%{_bindir}
 for foo in $(make check-programs) ; do
- install -m 0755 .libs/$foo $RPM_BUILD_ROOT%{_bindir}
+ install -m 0755 $foo $RPM_BUILD_ROOT%{_bindir}
 done
 popd
 # SUBDIRS=libdrm
@@ -152,6 +152,14 @@ magic_rpm_clean.sh
 %{_bindir}/openclose
 %{_bindir}/setversion
 %{_bindir}/updatedraw
+%{_bindir}/amdgpu_test
+%{_bindir}/drmdevice
+%{_bindir}/kms-steal-crtc
+%{_bindir}/kms-universal-planes
+%{_bindir}/kmstest
+%{_bindir}/modeprint
+%{_bindir}/modetest
+%{_bindir}/vbltest
 %exclude %{_bindir}/exynos*
 %exclude %{_bindir}/drmsl
 %exclude %{_bindir}/hash
@@ -189,7 +197,7 @@ magic_rpm_clean.sh
 %{_includedir}/libdrm/radeon_cs_int.h
 %{_includedir}/libdrm/radeon_surface.h
 %{_includedir}/libdrm/r600_pci_ids.h
-%{_includedir}/libdrm/nouveau.h
+%{_includedir}/libdrm/nouveau/*
 %{_includedir}/libdrm/*_drm.h
 %{_includedir}/libkms
 %{_libdir}/libdrm.so

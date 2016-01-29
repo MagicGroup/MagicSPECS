@@ -3,12 +3,9 @@
 # python-gpod should not advertise _gpod.so in its Provides
 %define __provides_exclude_from %{python_sitearch}/.*\.so$
 
-%ifarch %ix86 x86_64 ppc ppc64 ia64 %{arm} sparcv9 alpha s390x
+%ifarch %ix86 x86_64 ppc ppc64 ia64 %{arm} sparcv9 alpha s390x mips64el
 %global with_mono 1
 %else
-%global with_mono 0
-%endif
-%if 0%{?rhel}
 %global with_mono 0
 %endif
 
@@ -16,7 +13,7 @@ Summary: Library to access the contents of an iPod
 Summary(zh_CN.UTF-8): 访问 iPod 内容的库
 Name: libgpod
 Version: 0.8.3
-Release: 5%{?dist}
+Release: 7%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -24,8 +21,9 @@ URL: http://www.gtkpod.org/libgpod.html
 Source0: http://downloads.sourceforge.net/gtkpod/%{name}-%{version}.tar.bz2
 
 # upstreamable patch: reduce pkgconfig-related overlinking
-# 
-Patch50:  libgpod-0.8.2-pkgconfig_overlinking.patch
+Patch0:  libgpod-0.8.2-pkgconfig_overlinking.patch
+Patch1:  libgpod-fixswig.patch
+Patch2:  libgpod-0.8.3-mono4.patch
 
 BuildRequires: automake libtool
 BuildRequires: docbook-style-xsl
@@ -146,15 +144,15 @@ libgpod-sharp.
 %prep
 %setup -q
 
-%patch50 -p1 -b .pkgconfig_overlinking
-
-#autoreconf -f
+%patch0 -p1 -b .pkgconfig_overlinking
+%patch1 -p1 -b .swig
+%patch2 -p1 -b .mono4
 
 # remove execute perms on the python examples as they'll be installed in %%doc
 chmod -x bindings/python/examples/*.py
 
-
 %build
+autoreconf -fisv
 %configure --without-hal --enable-udev --with-temp-mount-dir=%{_localstatedir}/run/%{name}
 make %{?_smp_mflags}
 
@@ -177,12 +175,10 @@ chmod -x %{buildroot}/%{_libdir}/%{name}/*.dll.config
 rm -f %{buildroot}/%{_libdir}/pkgconfig/%{name}-sharp.pc
 %endif
 
-%if 0%{?fedora} >= 15
 # Setup tmpfiles.d config
 mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
 echo "D /var/run/%{name} 0755 root root -" > \
     %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
-%endif
 
 
 %post -p /sbin/ldconfig
@@ -192,9 +188,7 @@ echo "D /var/run/%{name} 0755 root root -" > \
 %files -f %{name}.lang
 %defattr(-, root, root, 0755)
 %doc AUTHORS ChangeLog COPYING NEWS README*
-%if 0%{?fedora} >= 15
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
-%endif
 %{_bindir}/*
 %{_libdir}/*.so.*
 %dir %{_localstatedir}/run/%{name}
@@ -236,6 +230,12 @@ echo "D /var/run/%{name} 0755 root root -" > \
 %endif
 
 %changelog
+* Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 0.8.3-7
+- 为 Magic 3.0 重建
+
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 0.8.3-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.8.3-5
 - 为 Magic 3.0 重建
 

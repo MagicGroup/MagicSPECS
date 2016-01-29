@@ -1,6 +1,6 @@
 Name: libunistring
-Version: latest
-Release: 3%{?dist}
+Version: 0.9.6
+Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Summary: GNU Unicode string library
@@ -79,12 +79,6 @@ if [ $1 = 0 ]; then
 fi
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - latest-3
-- 为 Magic 3.0 重建
-
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - latest-2
-- 更新到 latest
-
 * Fri Aug 01 2014 Liu Di <liudidi@gmail.com> - 0.9.3-4
 - 为 Magic 3.0 重建
 

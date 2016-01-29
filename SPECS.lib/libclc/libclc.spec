@@ -1,12 +1,12 @@
-%global commit e822ae33c3547e0dcc8a32da97f987427b8bfe1d
-%global commitdate 20140901
+%global commit 4346c30bae8b1a64acba564f6775cb0bacd026e4
+%global commitdate 20150918
 %global checkout %{commitdate}git%{shortcommit}
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 %global shortname clc
 
-#临时措施
-%define debug_package %{nil}
+# this stop us generating an empty debuginfo
+%global debug_package %{nil}
 
 Name:           libclc
 Version:        0.0.1
@@ -19,7 +19,7 @@ URL:            http://libclc.llvm.org/
 # created using:
 # $ export PKG=libclc-$(date +%Y%m%d)git$(git describe --always)
 # $ git archive --prefix $PKG/ --format tar HEAD | xz > $PKG.tar.xz
-Source0:        https://github.com/llvm-mirror/%{name}/archive/%{commit}/%{name}-%{checkout}.tar.xz
+Source0:        https://github.com/llvm-mirror/%{name}/archive/%{commit}/%{name}-%{checkout}.tar.gz
 
 # Only builds on x86
 ExclusiveArch:	%{ix86} x86_64
@@ -73,7 +73,7 @@ developing applications that use %{name}.
 %{name} 的开发包。
 
 %prep
-%setup -q -n "%{name}-%{commitdate}git%{shortcommit}"
+%setup -q -n "%{name}-%{commit}"
 
 %build
 CFLAGS="%{optflags} -D__extern_always_inline=inline"

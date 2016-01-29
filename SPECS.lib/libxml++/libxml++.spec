@@ -3,8 +3,8 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           libxml++
-Version:	2.91.2
-Release: 3%{?dist}
+Version:	2.40.1
+Release: 2%{?dist}
 Summary:        C++ wrapper for the libxml2 XML parser library
 Summary(zh_CN.UTF-8): libxml2 XML 解析库的 C++ 接口
 
@@ -69,8 +69,8 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -name "*.la" -o -name '*.a' | xargs rm -f
 # fix wrong base path in devhelp index file
-sed -i "s#$RPM_BUILD_ROOT##g" \
-    $RPM_BUILD_ROOT%{_datadir}/devhelp/books/%{name}-%{api_ver}/%{name}-%{api_ver}.devhelp2
+#sed -i "s#$RPM_BUILD_ROOT##g" \
+#    $RPM_BUILD_ROOT%{_datadir}/devhelp/books/%{name}-%{api_ver}/%{name}-%{api_ver}.devhelp2
 magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
@@ -97,11 +97,8 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.91.2-3
+* Mon Jan 25 2016 Liu Di <liudidi@gmail.com> - 2.40.1-2
 - 为 Magic 3.0 重建
-
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.91.2-2
-- 更新到 2.91.2
 
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 2.37.1-1
 - 更新到 2.37.1

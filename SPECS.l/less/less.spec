@@ -10,8 +10,7 @@ Source: http://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
 Source1: lesspipe.sh
 Source2: less.sh
 Source3: less.csh
-Patch1:	less-444-Foption.v2.patch
-Patch2: less-394-search.patch
+Patch1: less-444-Foption.v2.patch
 Patch4: less-394-time.patch
 Patch5: less-418-fsync.patch
 Patch6: less-436-manpage-add-old-bot-option.patch
@@ -20,7 +19,6 @@ Patch8: less-458-lessecho-usage.patch
 Patch9: less-458-less-filters-man.patch
 Patch10: less-458-lesskey-usage.patch
 Patch11: less-458-old-bot-in-help.patch
-Patch12: less-458-outdated-unicode-data.patch
 URL: http://www.greenwoodsoftware.com/less/
 Requires: groff-base
 BuildRequires: ncurses-devel
@@ -43,8 +41,7 @@ files, and you'll use it frequently.
 
 %prep
 %setup -q
-%patch1 -p1 -b .Foption
-%patch2 -p1 -b .search
+%patch1 -p2 -b .Foption
 %patch4 -p1 -b .time
 %patch5 -p1 -b .fsync
 %patch6 -p1 -b .manpage-add-old-bot-option
@@ -53,13 +50,10 @@ files, and you'll use it frequently.
 %patch9 -p1 -b .less-filters-man
 %patch10 -p1 -b .lesskey-usage
 %patch11 -p1 -b .old-bot
-%patch12 -p1 -b .outdated-unicode-data
-autoreconf
-
-chmod -R a+w *
-chmod 644 *.c *.h LICENSE README
 
 %build
+rm -f ./configure
+autoreconf -fiv
 %configure
 make CC="gcc $RPM_OPT_FLAGS -D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64" datadir=%{_docdir}
 

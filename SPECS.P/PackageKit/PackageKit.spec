@@ -6,8 +6,8 @@
 
 Summary:   Package management service
 Name:      PackageKit
-Version: 1.0.10
-Release: 3%{?dist}
+Version: 1.0.11
+Release: 1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.freedesktop.org/software/PackageKit/
 Source0:   http://www.freedesktop.org/software/PackageKit/releases/%{name}-%{version}.tar.xz
@@ -248,7 +248,7 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %config(noreplace) %{_sysconfdir}/PackageKit/Vendor.conf
 %config %{_sysconfdir}/dbus-1/system.d/*
 %dir %{_datadir}/PackageKit/helpers/test_spawn
-%{_datadir}/PackageKit/icons
+#%{_datadir}/PackageKit/icons
 %{_datadir}/PackageKit/helpers/test_spawn/*
 %{_datadir}/man/man1/pkcon.1.gz
 %{_datadir}/man/man1/pkmon.1.gz
@@ -290,7 +290,7 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 
 %files gstreamer-plugin
 %{_libexecdir}/pk-gstreamer-install
-%{_libexecdir}/gst-install-plugins-helper
+#%{_libexecdir}/gst-install-plugins-helper
 
 %files gtk3-module
 %{_libdir}/gtk-2.0/modules/*.so
@@ -310,6 +310,7 @@ systemctl disable packagekit-offline-update.service > /dev/null 2>&1 || :
 %{_includedir}/PackageKit/packagekit-glib*/*.h
 %{_datadir}/gir-1.0/PackageKitGlib-1.0.gir
 %{_datadir}/gtk-doc/html/PackageKit
+%{_datadir}/vala/vapi/packagekit-glib2.vapi
 
 %changelog
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.0.10-3

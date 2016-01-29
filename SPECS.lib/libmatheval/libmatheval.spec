@@ -1,5 +1,5 @@
 Name:           libmatheval
-Version: 1.0.0
+Version: 1.1.11
 Release:        3%{?dist}
 Summary:        Library for parsing and evaluating symbolic expressions input as text
 Summary(zh_CN.UTF-8): 用户于解析和计算符号表达式输入文本的库
@@ -95,9 +95,6 @@ fi
 
 
 %changelog
-* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.0.0-3
-- 更新到 1.0.0
-
 * Fri Jul 18 2014 Liu Di <liudidi@gmail.com> - 1.1.11-2
 - 为 Magic 3.0 重建
 

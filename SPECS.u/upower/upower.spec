@@ -2,7 +2,7 @@ Summary:        Power Management Service
 Summary(zh_CN.UTF-8): 电源管理服务
 Name:           upower
 Version:	0.99.3
-Release:	3%{?dist}
+Release:	5%{?dist}
 License:        GPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -122,6 +122,12 @@ magic_rpm_clean.sh
 %{_datadir}/gtk-doc/html/UPower/*
 
 %changelog
+* Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 0.99.3-5
+- 为 Magic 3.0 重建
+
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 0.99.3-4
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 0.99.3-3
 - 为 Magic 3.0 重建
 

@@ -12,7 +12,10 @@ Group(zh_CN.UTF-8): 开发/调试器
 Source: http://download.savannah.gnu.org/releases/libunwind/libunwind-%{version}.tar.gz
 #Fedora specific patch
 Patch1: libunwind-disable-setjmp.patch
-Patch2: libunwind-install-ptrace.patch
+Patch2: libunwind-aarch64.patch
+Patch3: libunwind-fix-ppc64_test_altivec.patch
+Patch4: libunwind-arm-default-to-exidx.patch
+Patch5: libunwind-1.1-fix-CVE-2015-3239.patch
 URL: http://savannah.nongnu.org/projects/libunwind
 ExclusiveArch: %{arm} hppa ia64 mips ppc ppc64 %{ix86} x86_64 mips64el
 
@@ -46,6 +49,9 @@ libunwind.
 %setup -q
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1 -b .default-to-exidx
+%patch5 -p1 -b .CVE-2015-3239
 
 %build
 aclocal
@@ -91,6 +97,7 @@ echo ====================TESTSUITE DISABLED=========================
 %defattr(-,root,root,-)
 %{_libdir}/libunwind*.so
 %{_libdir}/libunwind-ptrace.a
+%{_libdir}/pkgconfig/*.pc
 %{_mandir}/*/*
 # <unwind.h> does not get installed for REMOTE_ONLY targets - check it.
 %{_includedir}/unwind.h

@@ -2,7 +2,7 @@ Name:  librfm
 Summary: Rodent file manager basic library functionality
 Summary(zh_CN.UTF-8): Rodent 文件管理器的基本库
 Version: 5.3.16
-Release: 10%{?dist}
+Release: 11%{?dist}
 Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv3+
@@ -101,6 +101,9 @@ gtk-update-icon-cache %{_datadir}/icons/rfm &>/dev/null || :
 %{_libdir}/librodent.so
 
 %changelog
+* Thu Jan 28 2016 Liu Di <liudidi@gmail.com> - 5.3.16-11
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 5.3.16-10
 - 为 Magic 3.0 重建
 

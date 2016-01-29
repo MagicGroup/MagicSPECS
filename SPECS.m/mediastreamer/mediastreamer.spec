@@ -7,15 +7,15 @@
 Summary:	Audio/Video real-time streaming
 Summary(zh_CN.UTF-8): 音频/视频实时流
 Name:		mediastreamer
-Version: 2.11.2
-Release: 2%{?dist}
+Version: 2.12.1
+Release: 1%{?dist}
 License:	GPL v2+
 Group:		Libraries
 Source0:	http://download-mirror.savannah.gnu.org/releases/linphone/mediastreamer/%{name}-%{version}.tar.gz
 # Source0-md5:	5a4e7545e212068534b56fdf41c961e9
 URL:		http://www.linphone.org/eng/documentation/dev/mediastreamer2.html
 %{?with_opengl:BuildRequires:	mesa-libGL-devel}
-Patch1:		mediastreamer-2.11.2-mbedtls.patch
+Patch1:		mediastreamer-2.12.1-ffmpeg.patch 
 BuildRequires:	SDL-devel >= 1.2.0
 BuildRequires:	alsa-lib-devel
 BuildRequires:	autoconf >= 2.53
@@ -149,9 +149,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/msaudiocmp
 %{?with_pcap:%attr(755,root,root) %{_bindir}/pcap_playback}
 %attr(755,root,root) %{_libdir}/libmediastreamer_base.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmediastreamer_base.so.4
+%attr(755,root,root) %ghost %{_libdir}/libmediastreamer_base.so.6
 %attr(755,root,root) %{_libdir}/libmediastreamer_voip.so.*.*
-%attr(755,root,root) %ghost %{_libdir}/libmediastreamer_voip.so.4
+%attr(755,root,root) %ghost %{_libdir}/libmediastreamer_voip.so.6
 %dir %{_libdir}/mediastreamer
 %dir %{_libdir}/mediastreamer/plugins
 %{_datadir}/images/*

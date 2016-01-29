@@ -1,7 +1,7 @@
 %global multilib_arches %{ix86} ppc %{power64} s390 s390x x86_64
 
 Name:		libffi
-Version: 3.2.1
+Version: 3.1
 Release:	8%{?dist}
 Summary:	A portable foreign function interface library
 Summary(zh_CN.UTF-8): 可移植的外部函数接口库

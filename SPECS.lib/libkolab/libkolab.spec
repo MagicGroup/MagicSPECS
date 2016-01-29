@@ -2,17 +2,9 @@
 %{!?php_extdir: %global php_extdir %{_libdir}/php/modules}
 %{!?php_apiver: %global php_apiver  %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)}
 
-# Filter out private python and php libs. Does not work on EPEL5,
-# therefor we use it conditionally
-%{?filter_setup:
-%filter_provides_in %{python_sitearch}/.*\.so$
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-
 Name:           libkolab
 Version: 0.5.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Kolab Object Handling Library
 Summary(zh_CN.UTF-8): Kolab 对象处理库
 
@@ -34,7 +26,7 @@ BuildRequires:  libkolabxml-devel >= 1.0
 BuildRequires:  php >= 5.3
 BuildRequires:  php-devel >= 5.3
 BuildRequires:  python-devel
-BuildRequires:  qt-devel
+BuildRequires:  qt4-devel
 
 %description
 The libkolab library is an advanced library to  handle Kolab objects.
@@ -179,6 +171,9 @@ popd
 %{python_sitearch}/kolab/shared.py*
 
 %changelog
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 0.5.3-5
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.5.3-4
 - 为 Magic 3.0 重建
 

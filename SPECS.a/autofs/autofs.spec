@@ -9,7 +9,7 @@ Summary: A tool for automatically mounting and unmounting filesystems
 Summary(zh_CN.UTF-8): 自动挂载和删除文件系统的工具
 Name: autofs
 Version: 5.1.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 License: GPLv2+
 Group: System Environment/Daemons
@@ -156,6 +156,9 @@ fi
 %dir /etc/auto.master.d
 
 %changelog
+* Fri Jan 22 2016 Liu Di <liudidi@gmail.com> - 1:5.1.1-2
+- 为 Magic 3.0 重建
+
 * Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1:5.1.0-13
 - 为 Magic 3.0 重建
 

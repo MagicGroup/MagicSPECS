@@ -59,7 +59,7 @@ Documentation for developing applications with libvorbis.
 
 %setup -q
 %patch0 -p1 -b .needed
-sed -i "s/-O20/$RPM_OPT_FLAGS/" configure
+sed -i "s!-O20!$RPM_OPT_FLAGS!" configure
 sed -i "s/-ffast-math//" configure
 sed -i "s/-mcpu=750//" configure
 

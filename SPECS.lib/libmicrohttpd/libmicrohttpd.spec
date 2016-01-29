@@ -1,7 +1,7 @@
 Summary: Lightweight library for embedding a webserver in applications
 Summary(zh_CN.UTF-8): 在程序中嵌入网页服务的轻量级库
 Name: libmicrohttpd
-Version: 0.9.44
+Version: 0.9.48
 Release: 3%{?dist}
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
@@ -121,9 +121,6 @@ fi
 %defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/libmicrohttpd.so.*
-%{_bindir}/demo
-%{_bindir}/microspdy2http
-%{_libdir}/libmicrospdy.so.*
 
 
 %files devel
@@ -131,18 +128,12 @@ fi
 %{_includedir}/microhttpd.h
 %{_libdir}/libmicrohttpd.so
 %{_libdir}/pkgconfig/libmicrohttpd.pc
-%{_libdir}/pkgconfig/libmicrospdy.pc
-%{_includedir}/microspdy.h
-%{_libdir}/libmicrospdy.so
 
 %files doc
 %defattr(-,root,root,-)
 %{_mandir}/man3/libmicrohttpd.3.gz
 %{_infodir}/libmicrohttpd.info.gz
 %{_infodir}/libmicrohttpd-tutorial.info.gz
-%doc AUTHORS README ChangeLog
-%doc examples
-%doc html
 
 %changelog
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.44-3

@@ -3,7 +3,7 @@ Summary(zh_CN.UTF-8): NSF 工具和支持内核NFS服务的客户端、守护程
 Name: nfs-utils
 URL: http://sourceforge.net/projects/nfs
 Version: 1.3.2
-Release: 0.2%{?dist}
+Release: 0.3%{?dist}
 Epoch: 1
 
 # group all 32bit related archs
@@ -236,27 +236,6 @@ fi
 
 /bin/systemctl --system daemon-reload >/dev/null 2>&1 || :
 
-%triggerun -- nfs-utils < 1:1.2.4-2
-/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
-if /sbin/chkconfig --level 3 nfs ; then
-	/bin/systemctl enable nfs-server.service >/dev/null 2>&1 || :
-fi
-
-%triggerin -- nfs-utils < 1:1.3.0-0.2
-/bin/systemctl restart nfs-config >/dev/null 2>&1 || :
-
-%triggerin -- nfs-utils < 1:1.3.0-7.1
-/bin/systemctl stop rpc-svcgssd  >/dev/null 2>&1 || :
-
-%triggerin -- nfs-utils < 1:1.3.1-4.0
-# reset configuration files and running daemons
-if [ $1 -eq 2 ] ; then
-	/bin/systemctl enable nfs-client.target >/dev/null 2>&1 || :
-	/bin/systemctl restart nfs-config  >/dev/null 2>&1 || :
-	/bin/systemctl restart nfs-client.target  >/dev/null 2>&1 || :
-fi
-
-%files
 %defattr(-,root,root,-)
 %config(noreplace) /etc/sysconfig/nfs
 %config(noreplace) /etc/nfsmount.conf
@@ -302,6 +281,9 @@ fi
 /sbin/umount.nfs4
 
 %changelog
+* Fri Jan 22 2016 Liu Di <liudidi@gmail.com> - 1:1.3.2-0.3
+- 为 Magic 3.0 重建
+
 * Thu Feb 12 2015 Liu Di <liudidi@gmail.com> - 1:1.3.2-0.2
 - 为 Magic 3.0 重建
 

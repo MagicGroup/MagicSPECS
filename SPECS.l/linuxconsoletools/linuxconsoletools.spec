@@ -1,5 +1,7 @@
+%global udevdir %(pkg-config --variable=udevdir udev)
+
 Name: linuxconsoletools
-Version: 1.4.8
+Version: 1.4.9
 Release: 5%{?dist}
 Summary: Tools for connecting joysticks & legacy devices to the kernel's input subsystem
 Summary(zh_CN.UTF-8): 连接游戏摇杆和过时设备到内核输入子系统的工具
@@ -45,6 +47,9 @@ mv -f %{buildroot}%{_prefix}/share/joystick/* %{buildroot}%{_libexecdir}/joystic
 
 # fixing man permissions
 chmod -x %{buildroot}%{_mandir}/man1/*
+
+# fixing udev dir
+mv -f %{buildroot}/lib %{buildroot}/usr/
 magic_rpm_clean.sh
 
 %files
@@ -63,6 +68,8 @@ magic_rpm_clean.sh
 %{_libexecdir}/joystick/extract
 %{_libexecdir}/joystick/filter
 %{_libexecdir}/joystick/ident
+
+%{udevdir}/js-set-enum-leds
 
 %{_mandir}/man1/*
 

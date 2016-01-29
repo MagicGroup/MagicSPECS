@@ -20,30 +20,6 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 %endif
 
-# Filter out private python and php libs. Does not work on EPEL5,
-# therefor we use it conditionally
-%if 0%{?with_php} > 0
-%if 0%{?with_python} > 0
-%{?filter_setup:
-%filter_provides_in %{python_sitearch}/.*\.so$
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%else
-%{?filter_setup:
-%filter_provides_in %{php_extdir}/.*\.so$
-%filter_setup
-}
-%endif
-%else
-%if 0%{?with_python} > 0
-%{?filter_setup:
-%filter_provides_in %{python_sitearch}/.*\.so$
-%filter_setup
-}
-%endif
-%endif
-
 Name:           libkolabxml
 Version: 1.0.3
 Release:        14%{?dist}

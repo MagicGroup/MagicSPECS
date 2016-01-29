@@ -1,0 +1,24 @@
+diff -ur libvpx-v1.3.0.orig/nestegg/halloc/src/align.h libvpx-v1.3.0/nestegg/halloc/src/align.h
+--- libvpx-v1.3.0.orig/nestegg/halloc/src/align.h	2016-01-24 17:31:30.478443544 +0800
++++ libvpx-v1.3.0/nestegg/halloc/src/align.h	2016-01-24 17:31:53.922442943 +0800
+@@ -30,7 +30,7 @@
+ 	void (*q)(void);
+ };
+ 
+-typedef union max_align max_align_t;
++typedef union max_align max_align_tv;
+ 
+ #endif
+ 
+diff -ur libvpx-v1.3.0.orig/nestegg/halloc/src/halloc.c libvpx-v1.3.0/nestegg/halloc/src/halloc.c
+--- libvpx-v1.3.0.orig/nestegg/halloc/src/halloc.c	2016-01-24 17:31:30.478443544 +0800
++++ libvpx-v1.3.0/nestegg/halloc/src/halloc.c	2016-01-24 17:32:04.394442675 +0800
+@@ -30,7 +30,7 @@
+ #endif
+ 	hlist_item_t  siblings; /* 2 pointers */
+ 	hlist_head_t  children; /* 1 pointer  */
+-	max_align_t   data[1];  /* not allocated, see below */
++	max_align_tv   data[1];  /* not allocated, see below */
+ 	
+ } hblock_t;
+ 

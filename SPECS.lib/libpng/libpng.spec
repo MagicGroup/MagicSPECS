@@ -2,8 +2,8 @@ Summary: A library of functions for manipulating PNG image format files
 Summary(zh_CN.UTF-8): 处理 PNG 图像格式文件的库
 Name: libpng
 Epoch: 2
-Version: 1.6.18
-Release: 3%{?dist}
+Version: 1.6.21
+Release: 1%{?dist}
 License: zlib
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -12,10 +12,9 @@ URL: http://www.libpng.org/pub/png/
 # Note: non-current tarballs get moved to the history/ subdirectory,
 # so look there if you fail to retrieve the version you want
 Source0: ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/libpng-%{version}.tar.xz
-
-Source1: pngusr.dfa
-
-Patch0: libpng-multilib.patch
+Source1:       pngusr.dfa
+Patch0:        libpng-multilib.patch
+Patch1:        libpng-fix-arm-neon.patch
 
 BuildRequires: zlib-devel, pkgconfig, libtool
 BuildRequires: autoconf >= 2.65
@@ -88,10 +87,10 @@ PNG 图像格式文件库的工具。
 cp -p %{SOURCE1} .
 
 %patch0 -p1
+%patch1 -p1 -b .arm
 
 %build
-autoreconf -vi
-
+autoreconf -fvis
 %configure
 make %{?_smp_mflags} DFA_XTRA=pngusr.dfa
 

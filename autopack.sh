@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 # 返回值 
 # 1 = 无法准备源码，即不能下载源码或其它问题
 # 2 = spec 格式错误
@@ -17,6 +17,7 @@ if [ -z "$1" ] ; then
         echo "使用方法：$0 包名（不带.spec）"
         exit 5
 fi
+set -o pipefail
 #进入脚本所在的目录
 pushd $(dirname $0)
 # 变量设置
@@ -121,7 +122,7 @@ function debug_runsh ()
 	if [ $DEBUG = "1" ];then
 		sh $1
 	else
-		sh $1 > "$LOGFILE" 2>&1
+		sh $1 2>&1 | tee "$LOGFILE"
 	fi
 }
 function debug_run ()
@@ -129,7 +130,7 @@ function debug_run ()
 	if [ $DEBUG = "1" ];then
 		"$@"
 	else	
-		"$@" >> "$LOGFILE" 2>&1
+		"$@" 2>&1  | tee -a "$LOGFILE"
 	fi
 }
 

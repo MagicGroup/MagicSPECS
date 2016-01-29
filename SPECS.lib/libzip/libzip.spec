@@ -80,9 +80,9 @@ magic_rpm_clean.sh
 %doc AUTHORS NEWS README THANKS TODO
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
-%{_bindir}/ziptorrent
-%{_libdir}/libzip.so.2*
+%{_libdir}/libzip.so.*
 %{_mandir}/man1/*zip*
+%{_mandir}/man3/ZIP_SOURCE_GET_ARGS.3*
 
 %files devel
 %{_includedir}/zip.h

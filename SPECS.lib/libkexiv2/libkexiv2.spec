@@ -9,8 +9,8 @@
 
 Name:    libkexiv2
 Summary: An Exiv2 wrapper library
-Version: 15.08.3
-Release: 1%{?dist}
+Version:	15.12.1
+Release:	2%{?dist}
 
 License: GPLv2+
 URL:     https://projects.kde.org/projects/kde/kdegraphics/libs/libkexiv2
@@ -89,6 +89,12 @@ make -C %{_target_platform}/tests
 
 
 %changelog
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 15.12.1-2
+- 为 Magic 3.0 重建
+
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 15.08.3-2
+- 为 Magic 3.0 重建
+
 * Sat Dec 05 2015 Rex Dieter <rdieter@fedoraproject.org> - 15.08.3-1
 - 15.08.3
 

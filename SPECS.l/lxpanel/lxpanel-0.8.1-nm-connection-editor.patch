@@ -1,0 +1,11 @@
+--- lxpanel-0.8.1/plugins/netstatus/netstatus.c.network	2014-09-22 19:00:03.000000000 +0900
++++ lxpanel-0.8.1/plugins/netstatus/netstatus.c	2015-05-24 16:07:20.786855538 +0900
+@@ -118,7 +118,7 @@
+         tmp = "eth0";
+     ns->iface = g_strdup(tmp);
+     if (!config_setting_lookup_string(settings, "configtool", &tmp))
+-        tmp = "network-admin --configure %i";
++        tmp = "nm-connection-editor";
+     ns->config_tool = g_strdup(tmp);
+ 
+     iface = netstatus_iface_new(ns->iface);

@@ -5,7 +5,7 @@ Summary: Intel Processor Trace Decoder Library
 Summary(zh_CN.UTF-8): Intel 处理器跟踪信息解码库
 License: BSD
 URL: https://github.com/01org/processor-trace
-Source0: https://github.com/01org/processor-trace/archive/v1.4.2.tar.gz
+Source0: https://github.com/01org/processor-trace/archive/v%{version}.tar.gz
 BuildRequires: cmake
 ExclusiveArch: %{ix86} x86_64
 

@@ -1,6 +1,6 @@
 Name:          usbmuxd
 Version:       1.1.0
-Release:       8%{?dist}
+Release:       10%{?dist}
 Summary:       Daemon for communicating with Apple's iOS devices
 Summary(zh_CN.UTF-8): 和苹果 iOS 设备通信的服务
 
@@ -73,6 +73,12 @@ exit 0
 %{_datadir}/man/man1/usbmuxd.1.gz
 
 %changelog
+* Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 1.1.0-10
+- 为 Magic 3.0 重建
+
+* Fri Jan 15 2016 Liu Di <liudidi@gmail.com> - 1.1.0-9
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.1.0-8
 - 为 Magic 3.0 重建
 

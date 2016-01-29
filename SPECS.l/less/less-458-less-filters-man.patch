@@ -1,9 +1,9 @@
-diff -upr less-458_orig/less.nro less-458_work/less.nro
---- less-458_orig/less.nro	2013-05-07 14:20:52.237332235 +0200
-+++ less-458_work/less.nro	2013-05-07 14:22:23.142708098 +0200
-@@ -1228,6 +1228,18 @@ Similarly, if the first two characters o
+diff -up less-466/less.nro.filters-man less-466/less.nro
+--- less-466/less.nro.filters-man	2014-09-18 14:32:32.124111631 +0200
++++ less-466/less.nro	2014-09-18 14:32:39.548177152 +0200
+@@ -1234,6 +1234,18 @@ Similarly, if the first two characters o
  the input pipe is used on standard input as well as other files.
- Again, in this case the dash is not considered to be part of 
+ Again, in this case the dash is not considered to be part of
  the input pipe command.
 +.PP
 +There are used following files to set up default preprocessor:

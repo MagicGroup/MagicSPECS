@@ -2,8 +2,8 @@
 
 Summary: A library of handy utility functions
 Name: glib2
-Version:	2.47.3
-Release: 1%{?dist}
+Version:	2.47.4
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.gtk.org
@@ -188,6 +188,7 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_datadir}/gdb/auto-load%{_libdir}/libglib-2.0.so.*-gdb.py*
 %{_datadir}/gdb/auto-load%{_libdir}/libgobject-2.0.so.*-gdb.py*
 %{_datadir}/systemtap/tapset/*.stp
+%{_mandir}/man1/*
 
 %files doc
 %doc %{_datadir}/gtk-doc/html/*
@@ -207,6 +208,9 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules
 %{_datadir}/installed-tests
 
 %changelog
+* Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 2.47.4-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 2.47.1-3
 - 为 Magic 3.0 重建
 

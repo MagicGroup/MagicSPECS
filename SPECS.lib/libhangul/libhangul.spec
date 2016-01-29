@@ -51,7 +51,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 rm $RPM_BUILD_ROOT%{_libdir}/%{name}.la
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 
 %post -p /sbin/ldconfig
@@ -60,7 +60,7 @@ magic_rpm_clean.sh
 %postun -p /sbin/ldconfig
 
 
-%files -f %{name}.lang
+%files 
 %defattr(-, root, root)
 %doc AUTHORS COPYING ChangeLog NEWS README
 %{_libdir}/lib*.so.*

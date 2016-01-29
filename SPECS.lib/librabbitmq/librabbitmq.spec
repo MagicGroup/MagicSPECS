@@ -10,19 +10,14 @@
 Name:      librabbitmq
 Summary:   Client library for AMQP
 Summary(zh_CN.UTF-8): AMQP 的客户端库
-Version:   0.5.0
-Release:   4%{?dist}
+Version: 0.7.1
+Release: 1%{?dist}
 License:   MIT
 Group:     System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:       https://github.com/alanxz/rabbitmq-c
 
 Source0:   https://github.com/alanxz/rabbitmq-c/releases/download/v%{version}/rabbitmq-c-%{version}.tar.gz
-
-# for revert, switch from 0.5.0 to 0.5.1-pre
-Patch0:    %{name}-ver.patch
-# Missing function
-Patch1:    %{name}-170.patch
 
 BuildRequires: libtool
 BuildRequires: openssl-devel
@@ -83,31 +78,22 @@ amqp-publish        在 AMQP 服务器上发布消息
 %prep
 %setup -q -n rabbitmq-c-%{version}
 
-%patch0 -p1 -R
-%patch1 -p1
-
 # Copy sources to be included in -devel docs.
 cp -pr examples Examples
 
 
 %build
-autoreconf -i
-%configure \
-   --enable-tools \
-   --enable-docs  \
-   --with-ssl=openssl
-
-# rpath removal
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+# static lib required for tests
+%cmake \
+  -DBUILD_TOOLS_DOCS:BOOL=ON \
+  -DBUILD_STATIC_LIBS:BOOL=ON
 
 make %{_smp_mflags}
-
 
 %install
 make install  DESTDIR="%{buildroot}"
 
-rm %{buildroot}%{_libdir}/%{name}.la
+rm %{buildroot}%{_libdir}/%{name}.a
 magic_rpm_clean.sh
 
 %check
@@ -126,7 +112,7 @@ make check
 
 %files
 %doc AUTHORS README.md THANKS TODO LICENSE-MIT
-%{_libdir}/%{name}.so.1*
+%{_libdir}/%{name}.so.*
 
 
 %files devel
@@ -137,7 +123,7 @@ make check
 
 %files tools
 %{_bindir}/amqp-*
-%doc %{_mandir}/man1/amqp-*.1*
+%doc %{_mandir}/man1/amqp-*.*
 %doc %{_mandir}/man7/librabbitmq-tools.7.gz
 
 

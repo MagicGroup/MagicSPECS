@@ -7,7 +7,7 @@
 
 Name:          libimobiledevice
 Version: 1.2.0
-Release:       2%{?dist}
+Release:       4%{?dist}
 Summary:       Library for connecting to mobile devices
 Summary(zh_CN.UTF-8): 连接移动设备的库
 
@@ -25,7 +25,6 @@ BuildRequires: libtasn1-devel
 BuildRequires: libusbx-devel
 BuildRequires: libxml2-devel
 BuildRequires: readline-devel
-BuildRequires: usbmuxd-devel
 BuildRequires: python-devel
 BuildRequires: Cython
 BuildRequires: swig
@@ -103,6 +102,12 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %endif
 
 %changelog
+* Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 1.2.0-4
+- 为 Magic 3.0 重建
+
+* Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 1.2.0-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.2.0-2
 - 更新到 1.2.0
 

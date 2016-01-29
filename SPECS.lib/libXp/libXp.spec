@@ -12,8 +12,8 @@
 Summary: X.Org X11 libXp runtime library
 Summary(zh_CN.UTF-8): X.Org X11 libXp 运行库
 Name: libXp
-Version: 1.0.3
-Release: 3%{?dist}
+Version: 1.0.2
+Release: 4%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -57,8 +57,7 @@ X.Org X11 libXp development package
 
 %prep
 %setup -q
-
-%patch0 -p1 -b .add-proto-files
+%patch0 -p1 
 
 %build
 CPPFLAGS="$CPPFLAGS -I$RPM_BUILD_ROOT%{_includedir}"
@@ -118,12 +117,6 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.3-3
-- 为 Magic 3.0 重建
-
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.0.3-2
-- 更新到 1.0.3
-
 * Fri Aug 08 2014 Liu Di <liudidi@gmail.com> - 1.0.2-2
 - 为 Magic 3.0 重建
 

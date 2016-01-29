@@ -8,10 +8,9 @@ Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL: https://github.com/sahlberg/%{name}
 
-Source: https://github.com/downloads/sahlberg/%{name}/%{name}-%{version}.tar.gz
-Patch12: 0012-bump-soname.patch
+Source: https://github.com/sahlberg/libiscsi/archive/%{version}.tar.gz
+
 Patch13: 0013-disable-ld_iscsi.patch
-Patch20: 0020-reconnect-fix.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -37,9 +36,7 @@ iSCSI 客户端库。
 
 %prep
 %setup -q
-%patch12 -p1
 %patch13 -p1
-%patch20 -p1
 
 %build
 sh autogen.sh
@@ -82,7 +79,8 @@ to iSCSI servers without having to set up the Linux iSCSI initiator.
 %{_bindir}/iscsi-inq
 %{_bindir}/iscsi-readcapacity16
 %{_bindir}/iscsi-swp
-#%{_bindir}/iscsi-test-cu
+%{_bindir}/iscsi-perf
+%{_bindir}/iscsi-test-cu
 %{_mandir}/man1/iscsi-ls.1.gz
 %{_mandir}/man1/iscsi-inq.1.gz
 %{_mandir}/man1/iscsi-swp.1.gz

@@ -1,4 +1,3 @@
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 Name:		libftdi
 Version:	1.2
 Release:	3%{?dist}
@@ -17,7 +16,7 @@ BuildRequires:	cmake
 BuildRequires:	doxygen
 BuildRequires:	libconfuse-devel
 BuildRequires:	libusbx-devel
-BuildRequires:	python-devel
+BuildRequires:	python3-devel
 BuildRequires:	swig
 Requires:	systemd
 
@@ -145,7 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %files python
 %defattr(-, root, root, -)
 %doc AUTHORS ChangeLog COPYING.LIB README
-%{python_sitearch}/*
+%{python3_sitearch}/*
 
 %files c++
 %defattr(-, root, root, -)

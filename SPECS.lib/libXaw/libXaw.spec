@@ -2,14 +2,13 @@ Summary: X Athena Widget Set
 Summary(zh_CN.UTF-8): X 的部件集
 Name: libXaw
 Version: 1.0.13
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MIT
 URL: http://www.x.org
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 
 Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
-Patch0: libXaw-1.0.12-format-security.patch
 
 BuildRequires: pkgconfig(xproto) pkgconfig(x11) pkgconfig(xt)
 BuildRequires: pkgconfig(xmu) pkgconfig(xpm) pkgconfig(xext)
@@ -40,7 +39,6 @@ X.Org X11 libXaw development package
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS -Os"
@@ -84,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Jan 25 2016 Liu Di <liudidi@gmail.com> - 1.0.13-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.0.13-3
 - 为 Magic 3.0 重建
 

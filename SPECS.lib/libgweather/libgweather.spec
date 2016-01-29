@@ -12,6 +12,8 @@ URL:            http://www.gnome.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://download.gnome.org/sources/libgweather/%{majorver}/%{name}-%{version}.tar.xz
 
+Patch1:		libgweather-fix-glibc218.patch
+
 BuildRequires:  dbus-devel
 BuildRequires:  glade-devel
 BuildRequires:  gtk3-devel >= 2.90.0
@@ -52,6 +54,7 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
+%patch1 -p1
 
 %build
 %configure --disable-static --disable-gtk-doc

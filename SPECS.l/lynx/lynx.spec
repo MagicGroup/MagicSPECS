@@ -1,7 +1,7 @@
 Summary: A text-based Web browser
 Summary(zh_CN.UTF-8): 文本界面的网页浏览器
 Name: lynx
-Version: 2.8.8rel.2
+Version: 2.8.8
 Release: 5%{?dist}
 License: GPLv2
 Group: Applications/Internet
@@ -142,12 +142,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace,missingok) %{_sysconfdir}/lynx-site.cfg
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.8.8rel.2-5
-- 为 Magic 3.0 重建
-
-* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.8.8rel.2-4
-- 更新到 2.8.8rel.2
-
 * Sun Sep 20 2015 Liu Di <liudidi@gmail.com> - 2.8.8-3
 - 为 Magic 3.0 重建
 

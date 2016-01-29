@@ -1,6 +1,6 @@
 Name:           libevdev
-Version: 1.4.4
-Release:        3%{?dist}
+Version: 1.4.6
+Release:        1%{?dist}
 Summary:        Kernel Evdev Device Wrapper Library
 Summary(zh_CN.UTF-8): 内核 Evdev 设备接口库
 
@@ -52,6 +52,7 @@ magic_rpm_clean.sh
 %files
 %doc COPYING 
 %{_libdir}/libevdev.so.*
+%{_bindir}/*
 
 %files devel
 %dir %{_includedir}/libevdev-1.0/

@@ -1,7 +1,7 @@
 Summary: Run-time libraries and programs
 Name: motif
 Version: 2.3.4
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Source: http://downloads.sf.net/motif/motif-%{version}-src.tgz
@@ -14,9 +14,7 @@ Requires: xorg-x11-xinit
 
 BuildRequires: automake, libtool, autoconf, flex
 # flex static libs have been part of flex for RHEL <= 6 and Fedora <= 12
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
 BuildRequires: flex-static
-%endif
 BuildRequires: byacc, pkgconfig
 BuildRequires: libjpeg-devel libpng-devel
 BuildRequires: libXft-devel libXmu-devel libXp-devel libXt-devel libXext-devel
@@ -123,6 +121,9 @@ rm -rf %{buildroot}
 %{_libdir}/lib*.a
 
 %changelog
+* Sun Jan 03 2016 Liu Di <liudidi@gmail.com> - 2.3.4-11
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.4-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

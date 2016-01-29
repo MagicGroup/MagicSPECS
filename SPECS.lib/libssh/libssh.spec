@@ -9,7 +9,7 @@ Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0:        https://red.libssh.org/attachments/download/87/libssh-%{version}.tar.xz
+Source0:        https://red.libssh.org/attachments/download/177/libssh-%{version}.tar.xz
 
 BuildRequires:  cmake
 BuildRequires:  doxygen
@@ -86,8 +86,9 @@ rm -rf %{buildroot}
 %{_includedir}/libssh/server.h
 %{_includedir}/libssh/sftp.h
 %{_includedir}/libssh/ssh2.h
-%{_libdir}/cmake/libssh-config-version.cmake
-%{_libdir}/cmake/libssh-config.cmake
+%{_includedir}/libssh/libsshpp.hpp
+%{_libdir}/cmake/libssh/libssh-config-version.cmake
+%{_libdir}/cmake/libssh/libssh-config.cmake
 %{_libdir}/pkgconfig/libssh.pc
 %{_libdir}/pkgconfig/libssh_threads.pc
 %{_libdir}/libssh.so

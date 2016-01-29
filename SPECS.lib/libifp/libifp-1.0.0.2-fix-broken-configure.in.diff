@@ -1,0 +1,70 @@
+--- configure.in.orig	2005-08-21 19:46:01.000000000 -0700
++++ configure.in	2013-04-27 15:59:33.668866955 -0700
+@@ -6,54 +6,53 @@
+ CFLAGS="-g -O2 -Wall -W -Wno-unused-parameter"
+ ##CFLAGS="-g -O2 -Wall -W"
+ 
+ AM_INIT_AUTOMAKE(libifp, 1.0.0.2)
+ AC_PROG_CC
+ AC_PROG_INSTALL
+ AC_PROG_LIBTOOL
+ AC_C_BIGENDIAN
+ AC_SUBST(LIBTOOL_DEPS)
+ 
+ dnl AC_DEFINE(IFP_AUTOCONF)
+ 
+ #-----------------------------------------------------------------------
+ build_userland=no
+ dnl --with-libusb=PATH
+ LIBUSB=""
+ AC_MSG_CHECKING([libusb])
+ AC_ARG_WITH(libusb,
+ 	AC_HELP_STRING([--with-libusb=PATH],[libusb path (default /usr)]),
+ 	ac_libusb=$enableval, ac_libusb=no)
+-if test "x${ac_libusb}" != "xno" ; then
+-		case ${with_libusb} in
+-			"" | "yes" | "YES")
+-				;;
+-			"no" | "NO")
+-				use_libusb=false
+-				;;
+-			*)
+-				CFLAGS="$CFLAGS -I${with_libusb}/include"
+-				CPPFLAGS="$CPPFLAGS -I${with_libusb}/include"
+-				LDFLAGS="$LDFLAGS -L${with_libusb}/lib"
+-				;;
+-		esac
+-fi
++case ${with_libusb} in
++    "" | "yes" | "YES")
++        ac_libusb=yes
++        ;;
++    "no" | "NO")
++        use_libusb=false
++        ;;
++    *)
++        CFLAGS="$CFLAGS -I${with_libusb}/include"
++        CPPFLAGS="$CPPFLAGS -I${with_libusb}/include"
++        LDFLAGS="$LDFLAGS -L${with_libusb}/lib"
++        ;;
++esac
+ AC_MSG_RESULT(done)
+ 
+ dnl check if libusb is available
+ if test "x${ac_libusb}" != "xno" ; then
+ 	build_userland=yes
+ 	AC_CHECK_HEADERS(usb.h, [],
+ 		[ AC_MSG_WARN([usb.h not found, use --with-libusb=PATH]) ]; 
+ 		build_userland=no )
+ 
+ 	ac_save_LIBS="$LIBS"
+ 	AC_CHECK_LIB(usb, usb_init, [LIBUSB="$LIBUSB -lusb"],
+ 		[ AC_MSG_WARN([libusb not found]) ]; build_userland=no )
+ 
+ dnl misc headers needed by the userland library
+ 
+ 	AC_CHECK_FUNC(strncasecmp, [], [ AC_MSG_WARN([strncasecmp not found, not building userland library]) ];
+ 		build_userland=no )
+ 
+ 	AC_CHECK_HEADERS(inttypes.h stdio.h sys/types.h wchar.h string.h time.h fts.h iconv.h,
+ 		[], [ AC_MSG_WARN([missing header, not building useland library]) ]; build_userland=no)

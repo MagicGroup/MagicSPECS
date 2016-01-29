@@ -1,12 +1,12 @@
 Summary: Library for error values used by GnuPG components
 Summary(zh_CN.UTF-8): GnuPG 组件使用的错误值
 Name: libgpg-error
-Version: 1.20
+Version: 1.21
 Release: 3%{?dist}
 URL: ftp://ftp.gnupg.org/gcrypt/libgpg-error/
 Source0: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2
 Source1: ftp://ftp.gnupg.org/gcrypt/libgpg-error/%{name}-%{version}.tar.bz2.sig
-Patch1: libgpg-error-1.19-multilib.patch
+Patch1: libgpg-error-1.20-multilib.patch
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+

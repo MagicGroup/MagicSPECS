@@ -1,6 +1,6 @@
 # Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
-%global         usegtk3     1
+%global         usegtk3     0
 
 Name:           lxpanel
 Version:	0.8.1
@@ -15,8 +15,18 @@ URL:            http://lxde.org/
 #VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.xz
 
-#gtk3 的补丁
-Patch0:		lxpanel-0.8.0-gtk3.patch 
+# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=746063
+Patch0:         lxpanel-0.8.1-Fix-pager-scroll.patch
+
+## distro specific patches
+# use nm-connection-editor to edit network connections
+Patch101:       lxpanel-0.8.1-nm-connection-editor.patch
+# http://sourceforge.net/p/lxde/bugs/758
+# http://git.lxde.org/gitweb/?p=lxde/lxpanel.git;a=patch;h=4d922895a%description -l zh_CN.UTF-8f81586308bffaea9ff7e0106eba48
+Patch200:       lxpanel-0.8.1-fix-rightclick-segv.patch
+# https://sourceforge.net/p/lxde/bugs/753/
+# http://git.lxde.org/gitweb/?p=lxde/lxpanel.git;a=patch;h=7129a2f9be9cfd97476bc6d06969183e4d7ed6a4
+Patch201:       lxpanel-0.8.1-panel-size-at-left.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -27,6 +37,8 @@ BuildRequires:  gtk3-devel
 %else
 BuildRequires:  gtk2-devel >= 2.16.0
 %endif
+BuildRequires:  libfm-gtk2-devel
+BuildRequires:  libindicator-devel
 BuildRequires:  intltool
 BuildRequires:  pkgconfig(xpm)
 BuildRequires:  pkgconfig(libstartup-notification-1.0)
@@ -66,42 +78,45 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1
-autoreconf -fisv
+%patch0 -p1 -b .revert
+
+%patch101 -p1 -b .system-config-network
+
+%patch200 -p1 -b .rightclick
+%patch201 -p1 -b .sizeleft
+
+sed -i 's|id=fedora-|id=|' data/default/panels/panel.in \
+    data/two_panels/panels/bottom.in \
+    data/two_panels/panels/top.in
 
 %build
+autoreconf -fisv
 %configure \
-%if %{usegtk3}
-	--enable-gtk3
-%endif
-
-
-make %{?_smp_mflags} V=1
+	--enable-indicator-support \
+	--disable-silent-rules \
+	%{nil}
+make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 magic_rpm_clean.sh
-%find_lang %{name}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+%find_lang %{name} || :
 
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING README
+%config(noreplace)	%{_sysconfdir}/xdg/lxpanel/
+
 %{_bindir}/lxpanel*
 %{_datadir}/lxpanel/
 %{_libdir}/lxpanel/
 %{_mandir}/man1/lxpanel*
-%{_sysconfdir}/xdg/lxpanel/*
 
 %files devel
-%defattr(-,root,root,-)
 %{_includedir}/lxpanel/
 %{_libdir}/pkgconfig/lxpanel.pc
+
 
 %changelog
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.8.1-3

@@ -115,16 +115,13 @@ rm -rf %{buildroot}
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS ChangeLog COPYING README NEWS
 %{_libdir}/libssh2.so.1
 %{_libdir}/libssh2.so.1.*
 
 %files docs
-%doc HACKING
 %{_mandir}/man3/libssh2_*.3*
 
 %files devel
-%doc example/
 %{_includedir}/libssh2.h
 %{_includedir}/libssh2_publickey.h
 %{_includedir}/libssh2_sftp.h

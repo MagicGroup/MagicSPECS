@@ -84,7 +84,7 @@ install -pDm 0644 libdwarf/libdwarf.h      %{buildroot}%{_includedir}/libdwarf/l
 install -pDm 0755 libdwarf/libdwarf.so     %{buildroot}%{_libdir}/%{sofullname}
 ln      -s        %{sofullname}            %{buildroot}%{_libdir}/%{soname}
 ln      -s        %{sofullname}            %{buildroot}%{_libdir}/libdwarf.so
-install -pDm 0755 dwarfdump2/dwarfdump     %{buildroot}%{_bindir}/dwarfdump
+install -pDm 0755 dwarfdump/dwarfdump      %{buildroot}%{_bindir}/dwarfdump
 magic_rpm_clean.sh
 
 %post -n libdwarf -p /sbin/ldconfig
@@ -92,7 +92,6 @@ magic_rpm_clean.sh
 %postun -n libdwarf -p /sbin/ldconfig
 
 %files
-%doc libdwarf/ChangeLog libdwarf/README libdwarf/COPYING libdwarf/LIBDWARFCOPYRIGHT libdwarf/LGPL.txt
 %{_libdir}/libdwarf.so.*
 
 %files static
@@ -104,7 +103,6 @@ magic_rpm_clean.sh
 %{_libdir}/libdwarf.so
 
 %files tools
-%doc dwarfdump2/README dwarfdump2/ChangeLog dwarfdump2/COPYING dwarfdump2/DWARFDUMPCOPYRIGHT dwarfdump2/GPL.txt
 %{_bindir}/dwarfdump
 
 %changelog

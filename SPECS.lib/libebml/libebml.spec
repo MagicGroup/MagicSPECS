@@ -44,19 +44,14 @@ mv ChangeLog.tmp ChangeLog
 
 
 %build
-CXXFLAGS="$RPM_OPT_FLAGS" make -C make/linux %{?_smp_mflags}
+%configure --disable-static
+make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make -C make/linux \
-  prefix=$RPM_BUILD_ROOT%{_prefix} \
-  libdir=$RPM_BUILD_ROOT%{_libdir} \
-  INSTALL="install -p" \
-  install
-rm $RPM_BUILD_ROOT%{_libdir}/%{name}.a
-# Needed for proper stripping of the library (still in 0.7.6)
-chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}.so.*
+%make_install
+find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+
 magic_rpm_clean.sh
 
 %clean
@@ -77,7 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,0755)
 %{_includedir}/ebml/
 %{_libdir}/%{name}.so
-
+%{_libdir}/pkgconfig/libebml.pc
 
 %changelog
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.3.3-3

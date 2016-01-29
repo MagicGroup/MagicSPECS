@@ -84,7 +84,7 @@ fi
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS COPYING README* THANKS VERSION
+%doc AUTHORS COPYING README* THANKS 
 %{_libdir}/libksba.so.8*
 
 %files devel

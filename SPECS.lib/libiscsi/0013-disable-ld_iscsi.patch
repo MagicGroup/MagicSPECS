@@ -2,12 +2,12 @@ diff --git a/configure.ac b/configure.ac
 index e1d01c6..72a5019 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -9,7 +9,7 @@ LT_INIT
+@@ -118,7 +118,7 @@
+ fi
+ AM_CONDITIONAL(ISCSITEST, [test "$ac_cv_have_cunit" = yes -a "$enable_shared" = "yes"])
  
- AC_CANONICAL_HOST
- AM_CONDITIONAL(LD_ISCSI,
--               [expr "$host_os" : linux > /dev/null 2>&1])
-+               [false])
- AM_PROG_CC_C_O
+-AM_CONDITIONAL(LD_ISCSI, [expr "(" "$host_os" : "linux" ")" "&" "$enable_shared" "=" "yes"])
++AM_CONDITIONAL(LD_ISCSI, [false])
  
- enable_write_strings="yes"
+ AC_CHECK_MEMBER([struct CU_SuiteInfo.pSetUpFunc],
+ 		[AC_DEFINE([HAVE_CU_SUITEINFO_PSETUPFUNC], 1,

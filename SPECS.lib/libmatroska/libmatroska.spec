@@ -43,20 +43,15 @@ will use the Matroska container format.
 %prep
 %setup -q
 
-
 %build
-CXXFLAGS="$RPM_OPT_FLAGS" make -C make/linux %{?_smp_mflags}
+%configure --disable-static
+make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make -C make/linux \
-  prefix=$RPM_BUILD_ROOT%{_prefix} \
-  libdir=$RPM_BUILD_ROOT%{_libdir} \
-  install
-rm $RPM_BUILD_ROOT%{_libdir}/%{name}.a
-# Needed for proper stripping of the library (still in 0.8.0)
-chmod +x $RPM_BUILD_ROOT%{_libdir}/%{name}.so.*
+%make_install
+rm %{buildroot}%{_libdir}/%{name}.la
+
 magic_rpm_clean.sh
 
 %clean
@@ -77,7 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_includedir}/matroska/
 %{_libdir}/%{name}.so
-
+%{_libdir}/pkgconfig/libmatroska.pc
 
 %changelog
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.4.4-2

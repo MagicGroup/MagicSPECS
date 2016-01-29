@@ -1,5 +1,6 @@
+%undefine 	 _hardened_build
 Name:           ortp
-Version:	0.24.2
+Version:	0.25.0
 Release:        3%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Summary(zh_CN.UTF-8): RTP 协议的 C 库实现

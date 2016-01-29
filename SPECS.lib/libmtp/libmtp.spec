@@ -92,8 +92,6 @@ touch -r configure.ac \
       $RPM_BUILD_ROOT%{_includedir}/*.h \
       $RPM_BUILD_ROOT%{_libdir}/pkgconfig/*.pc \
 
-mkdir -p %{buildroot}/usr/lib
-mv -f %{buildroot}/lib/udev %{buildroot}/usr/lib
 magic_rpm_clean.sh
 
 %clean
@@ -106,6 +104,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root,root,-)
 %{_libdir}/libmtp.so.9*
 /usr/lib/udev/rules.d/*
+/usr/lib/udev/hwdb.d/*
 /usr/lib/udev/mtp-probe
 
 %files examples

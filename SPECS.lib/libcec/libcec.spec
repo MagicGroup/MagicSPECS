@@ -1,9 +1,7 @@
-%define git 1
-%define vcsdate 20151031
 
 Name:		libcec
-Version:	2.1.4
-Release:	6%{?dist}
+Version:	2.2.0
+Release:	1%{?dist}
 Summary:	Library and utilities for HDMI-CEC device control
 Summary(zh_CN.UTF-8): HDMI-CEC 设备控制的库和工具
 
@@ -11,7 +9,7 @@ License:	GPLv2+
 Group:         System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:		http://libcec.pulse-eight.com/
-Source0:	%{name}-%{gitdate}.tar.xz
+Source0:	%{name}-%{version}.tar.bz2
 Source1:	make_libcec_git_package.sh
 BuildRequires:	pkgconfig(libudev)
 
@@ -39,7 +37,7 @@ will use libcec.
 %{name} 的开发包。
 
 %prep
-%setup -q -n %{name}-%{gitdate}
+%setup -q -n %{name}-%{version}
 
 %build
 autoreconf -ifv
@@ -64,7 +62,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %{_bindir}/cec-client
-%{_bindir}/cec-config
 %{_libdir}/%{name}.so.*
 
 %files devel
@@ -74,9 +71,6 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.4-6
-- 更新到 20151031 日期的仓库源码
-
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 2.1.4-5
 - 为 Magic 3.0 重建
 

@@ -9,7 +9,7 @@ Group(zh_CN.UTF-8): 系统环境/库
 URL: http://www.x.org
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Source0: http://www.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
+Source0: ftp://ftp.x.org/pub/individual/lib/%{name}-%{version}.tar.bz2
 
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: pkgconfig(randrproto) >= 1.3.0

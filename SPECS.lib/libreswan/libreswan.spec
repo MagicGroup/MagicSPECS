@@ -17,8 +17,8 @@
 Name: libreswan
 Summary: IPsec implementation with IKEv1 and IKEv2 keying protocols
 Summary(zh_CN.UTF-8): 带有 IKEv1 和 IKEv2 协议的 IPsec 实现
-Version: 3.15
-Release: 3%{?dist}
+Version: 3.16
+Release: 1%{?dist}
 License: GPLv2
 Url: https://www.libreswan.org/
 Source: https://download.libreswan.org/%{name}-%{version}%{?prever}.tar.gz
@@ -169,8 +169,8 @@ rm -fr %{buildroot}%{_sysconfdir}/rc.d/rc*
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/sysconfig/pluto
 %attr(0600,root,root) %config(noreplace) %{_sysconfdir}/ipsec.secrets
 %attr(0700,root,root) %dir %{_sysconfdir}/ipsec.d
-%attr(0700,root,root) %dir %{_sysconfdir}/ipsec.d/cacerts
-%attr(0700,root,root) %dir %{_sysconfdir}/ipsec.d/crls
+#%attr(0700,root,root) %dir %{_sysconfdir}/ipsec.d/cacerts
+%attr(0700,root,root) %config(noreplace) %{_sysconfdir}/ipsec.d/v6neighbor-hole.conf
 %attr(0700,root,root) %dir %{_sysconfdir}/ipsec.d/policies
 %attr(0644,root,root) %config(noreplace) %{_sysconfdir}/ipsec.d/policies/*
 %attr(0700,root,root) %dir %{_localstatedir}/log/pluto/peer

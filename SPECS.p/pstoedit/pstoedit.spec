@@ -1,6 +1,6 @@
 Name:           pstoedit
 Version:	3.70
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Translates PostScript and PDF graphics into other vector formats
 Summary(zh_CN.UTF-8): 转换 PostScript 和 PDF 图像到其它向量格式
 
@@ -92,6 +92,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Thu Jan 28 2016 Liu Di <liudidi@gmail.com> - 3.70-3
+- 为 Magic 3.0 重建
+
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 3.70-2
 - 为 Magic 3.0 重建
 

@@ -1,0 +1,595 @@
+From c336b40705bdc1857376b3b3224b684ac696c186 Mon Sep 17 00:00:00 2001
+From: Michal Luscon <mluscon@redhat.com>
+Date: Fri, 18 Dec 2015 12:28:58 +0100
+Subject: [PATCH] Revert "Rework multiversion orphaned handling"
+
+---
+ src/rules.c                                  | 106 +++++++++++++++------------
+ src/solver.c                                 |  16 ++--
+ test/testcases/distupgrade/dup_multiversion1 |  91 -----------------------
+ test/testcases/distupgrade/dup_multiversion2 | 106 ---------------------------
+ test/testcases/distupgrade/dup_multiversion3 |  88 ----------------------
+ 5 files changed, 64 insertions(+), 343 deletions(-)
+ delete mode 100644 test/testcases/distupgrade/dup_multiversion1
+ delete mode 100644 test/testcases/distupgrade/dup_multiversion2
+ delete mode 100644 test/testcases/distupgrade/dup_multiversion3
+
+diff --git a/src/rules.c b/src/rules.c
+index 248b1cd..1fe21e1 100644
+--- a/src/rules.c
++++ b/src/rules.c
+@@ -1157,19 +1157,17 @@ finddistupgradepackages(Solver *solv, Solvable *s, Queue *qs, int allow_all)
+   if (!qs->count)
+     {
+       if (allow_all)
+-        return 0;		/* orphaned, don't create feature rule */
++        return 0;	/* orphaned, don't create feature rule */
+       /* check if this is an orphaned package */
+       policy_findupdatepackages(solv, s, qs, 1);
+       if (!qs->count)
+-	return 0;		/* orphaned, don't create update rule */
++	return 0;	/* orphaned, don't create update rule */
+       qs->count = 0;
+       return -SYSTEMSOLVABLE;	/* supported but not installable */
+     }
+   if (allow_all)
+     return s - pool->solvables;
+   /* check if it is ok to keep the installed package */
+-  if (solv->dupmap.size && MAPTST(&solv->dupmap,  s - pool->solvables))
+-    return s - pool->solvables;
+   for (i = 0; i < qs->count; i++)
+     {
+       Solvable *ns = pool->solvables + qs->elements[i];
+@@ -1180,7 +1178,6 @@ finddistupgradepackages(Solver *solv, Solvable *s, Queue *qs, int allow_all)
+   return -SYSTEMSOLVABLE;
+ }
+ 
+-#if 0
+ /* add packages from the dup repositories to the update candidates
+  * this isn't needed for the global dup mode as all packages are
+  * from dup repos in that case */
+@@ -1204,7 +1201,6 @@ addduppackages(Solver *solv, Solvable *s, Queue *qs)
+     }
+   queue_free(&dupqs);
+ }
+-#endif
+ 
+ /*-------------------------------------------------------------------
+  *
+@@ -1222,15 +1218,18 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+   Id p, d;
+   Queue qs;
+   Id qsbuf[64];
+-  int isorphaned = 0;
+ 
+   queue_init_buffer(&qs, qsbuf, sizeof(qsbuf)/sizeof(*qsbuf));
+   p = s - pool->solvables;
+   /* find update candidates for 's' */
+-  if (solv->dupmap_all || (solv->dupinvolvedmap.size && MAPTST(&solv->dupinvolvedmap, p)))
++  if (solv->dupmap_all)
+     p = finddistupgradepackages(solv, s, &qs, allow_all);
+   else
+-    policy_findupdatepackages(solv, s, &qs, allow_all);
++    {
++      policy_findupdatepackages(solv, s, &qs, allow_all);
++      if (!allow_all && solv->dupinvolvedmap.size && MAPTST(&solv->dupinvolvedmap, p))
++        addduppackages(solv, s, &qs);
++    }
+ 
+ #ifdef ENABLE_LINKED_PKGS
+   if (solv->instbuddy && solv->instbuddy[s - pool->solvables - solv->installed->start])
+@@ -1238,7 +1237,7 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+       const char *name = pool_id2str(pool, s->name);
+       if (strncmp(name, "pattern:", 8) == 0 || strncmp(name, "application:", 12) == 0)
+ 	{
+-	  /* a linked pseudo package. As it is linked, we do not need an update/feature rule */
++	  /* a linked pseudo package. As it is linked, we do not need an update rule */
+ 	  /* nevertheless we set specialupdaters so we can update */
+ 	  solver_addrule(solv, 0, 0, 0);
+ 	  if (!allow_all && qs.count)
+@@ -1255,14 +1254,11 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+     }
+ #endif
+ 
+-  if (!allow_all && !p)		/* !p implies qs.count == 0 */
++  if (!allow_all && !p && solv->dupmap_all)
+     {
+       queue_push(&solv->orphaned, s - pool->solvables);		/* an orphaned package */
+       if (solv->keep_orphans && !(solv->droporphanedmap_all || (solv->droporphanedmap.size && MAPTST(&solv->droporphanedmap, s - pool->solvables - solv->installed->start))))
+ 	p = s - pool->solvables;	/* keep this orphaned package installed */
+-      queue_free(&qs);
+-      solver_addrule(solv, p, 0, 0);
+-      return;
+     }
+ 
+   if (!allow_all && qs.count && solv->multiversion.size)
+@@ -1275,7 +1271,7 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+       if (i < qs.count)
+ 	{
+ 	  /* filter out all multiversion packages as they don't update */
+-	  d = pool_queuetowhatprovides(pool, &qs);	/* save qs away */
++	  d = pool_queuetowhatprovides(pool, &qs);
+ 	  for (j = i; i < qs.count; i++)
+ 	     {
+ 	      if (MAPTST(&solv->multiversion, qs.elements[i]))
+@@ -1294,25 +1290,19 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+ 		}
+ 	      qs.elements[j++] = qs.elements[i];
+ 	    }
+-	  if (j < qs.count)		/* filtered at least one package? */
++	  if (j < qs.count)
+ 	    {
+-	      if (j == 0 && p == -SYSTEMSOLVABLE)
++	      if (d && solv->installed && s->repo == solv->installed &&
++		  (solv->updatemap_all || (solv->updatemap.size && MAPTST(&solv->updatemap, s - pool->solvables - solv->installed->start))))
+ 		{
+-		  /* this is a multiversion orphan */
+-		  queue_push(&solv->orphaned, s - pool->solvables);
+ 		  if (!solv->specialupdaters)
+ 		    solv->specialupdaters = solv_calloc(solv->installed->end - solv->installed->start, sizeof(Id));
+ 		  solv->specialupdaters[s - pool->solvables - solv->installed->start] = d;
+-		  if (solv->keep_orphans && !(solv->droporphanedmap_all || (solv->droporphanedmap.size && MAPTST(&solv->droporphanedmap, s - pool->solvables - solv->installed->start))))
+-		    {
+-		      /* we need to keep the orphan */
+-		      queue_free(&qs);
+-		      solver_addrule(solv, s - pool->solvables, 0, 0);
+-		      return;
+-		    }
+-		  /* we can drop it as long as we update */
+-		  isorphaned = 1;
+-		  j = qs.count;		/* force the update */
++		}
++	      if (j == 0 && p == -SYSTEMSOLVABLE && solv->dupmap_all)
++		{
++		  queue_push(&solv->orphaned, s - pool->solvables);	/* also treat as orphaned */
++		  j = qs.count;
+ 		}
+ 	      qs.count = j;
+ 	    }
+@@ -1320,13 +1310,11 @@ solver_addupdaterule(Solver *solv, Solvable *s, int allow_all)
+ 	    {
+ 	      /* could fallthrough, but then we would do pool_queuetowhatprovides twice */
+ 	      queue_free(&qs);
+-	      solver_addrule(solv, s - pool->solvables, 0, d);	/* allow update of s */
++	      solver_addrule(solv, p, 0, d);	/* allow update of s */
+ 	      return;
+ 	    }
+ 	}
+     }
+-  if (!isorphaned && p == -SYSTEMSOLVABLE && solv->dupmap.size)
+-    p = s - pool->solvables;		/* let the dup rules sort it out */
+   if (qs.count && p == -SYSTEMSOLVABLE)
+     p = queue_shift(&qs);
+   if (qs.count > 1)
+@@ -1804,6 +1792,29 @@ solver_freedupmaps(Solver *solv)
+    * policy's priority pruning code. sigh. */
+ }
+ 
++static int
++is_multiversion_orphan(Solver *solv, Id p)
++{
++  Pool *pool = solv->pool;
++  Solvable *s = pool->solvables + p;
++  Rule *r = solv->rules + solv->updaterules + (p - solv->installed->start);
++  Id l, pp;
++  if (!r->p)
++    return 0;
++  FOR_RULELITERALS(l, pp, r)
++    {
++      Solvable *ps = pool->solvables + l;
++      /* see multiversion code in solver_addupdaterule */
++      if (!MAPTST(&solv->multiversion, l))
++	return 0;
++      if (solv->keepexplicitobsoletes && ps->name != s->name)
++	return 0;
++      if (ps->name == s->name && ps->evr == s->evr && ps->arch == s->arch)
++	return 0;
++    }
++  return 1;
++}
++
+ void
+ solver_addduprules(Solver *solv, Map *addedmap)
+ {
+@@ -1812,7 +1823,6 @@ solver_addduprules(Solver *solv, Map *addedmap)
+   Id p, pp;
+   Solvable *s, *ps;
+   int first, i;
+-  Rule *r;
+ 
+   solv->duprules = solv->nrules;
+   for (i = 1; i < pool->nsolvables; i++)
+@@ -1849,22 +1859,24 @@ solver_addduprules(Solver *solv, Map *addedmap)
+ 		      if (is->evr == ps->evr && solvable_identical(ps, is))
+ 			break;
+ 		    }
+-		  if (ip)
+-		    {
+-		      /* ok, found a good one. we may keep this package. */
+-		      MAPSET(&solv->dupmap, p);		/* for best rules processing */
+-		      continue;
+-		    }
+-		  r = solv->rules + solv->updaterules + (p - installed->start);
+-		  if (!r->p)
+-		      r = solv->rules + solv->featurerules + (p - installed->start);
+-		  if (r->p && solv->specialupdaters && solv->specialupdaters[p - installed->start])
++		  if (!ip && solv->keep_orphans)
+ 		    {
+-		      /* this is a multiversion orphan, we're good if an update is installed */
+-		      solver_addrule(solv, -p, 0, solv->specialupdaters[p - installed->start]);
+-		      continue;
++		      /* is this an orphan we should keep? */
++		      Rule *r = solv->rules + solv->featurerules + (p - installed->start);
++		      if (!r->p)
++			r += solv->updaterules - solv->featurerules;
++		      if (r->p == p && !r->d)
++			ip = p;
++		      else if (solv->dupmap_all && solv->multiversion.size)
++			{
++			  if (is_multiversion_orphan(solv, p))
++			    ip = p;
++			}
+ 		    }
+-		  solver_addrule(solv, -p, 0, 0);	/* no match, sorry */
++		  if (!ip)
++		    solver_addrule(solv, -p, 0, 0);	/* no match, sorry */
++		  else
++		    MAPSET(&solv->dupmap, p);		/* for best rules processing */
+ 		}
+ 	    }
+ 	  else if (!MAPTST(&solv->dupmap, p))
+diff --git a/src/solver.c b/src/solver.c
+index 2e28b7d..c7b21d9 100644
+--- a/src/solver.c
++++ b/src/solver.c
+@@ -225,7 +225,7 @@ autouninstall(Solver *solv, Id *problem)
+ 	      if (v > lastfeature)
+ 		lastfeature = v;
+ 	      /* prefer orphaned packages in dup mode */
+-	      if (solv->keep_orphans)
++	      if (solv->dupmap_all && solv->keep_orphans)
+ 		{
+ 		  r = solv->rules + v;
+ 		  if (!r->d && r->p == (solv->installed->start + (v - solv->updaterules)))
+@@ -2725,7 +2725,7 @@ solver_run_sat(Solver *solv, int disablerules, int doweak)
+ 
+       if (!solv->decisioncnt_orphan)
+         solv->decisioncnt_orphan = solv->decisionq.count;
+-      if (solv->installed && (solv->orphaned.count || solv->brokenorphanrules))
++      if (solv->dupmap_all && solv->installed)
+ 	{
+ 	  int installedone = 0;
+ 
+@@ -3632,9 +3632,7 @@ solver_solve(Solver *solv, Queue *job)
+ 	      if (how & SOLVER_FORCEBEST)
+ 		solv->bestupdatemap_all = 1;
+ 	    }
+-	  if ((how & SOLVER_TARGETED) != 0)
+-	    needduprules = 1;
+-	  if (!solv->dupmap_all || solv->allowuninstall || solv->allowuninstall_all || solv->allowuninstallmap.size || solv->keep_orphans)
++	  if (!solv->dupmap_all || solv->allowuninstall || solv->allowuninstall_all || solv->allowuninstallmap.size)
+ 	    needduprules = 1;
+ 	  break;
+ 	default:
+@@ -3749,13 +3747,9 @@ solver_solve(Solver *solv, Queue *job)
+ 	   * check for and remove duplicate
+ 	   */
+ 	  r = solv->rules + solv->nrules - 1;           /* r: update rule */
+-	  sr = r - (installed->end - installed->start); /* sr: feature rule */
+           if (!r->p)
+-	    {
+-	      if (sr->p)
+-	        memset(sr, 0, sizeof(*sr));		/* no feature rules without update rules */
+-	      continue;
+-	    }
++	    continue;
++	  sr = r - (installed->end - installed->start); /* sr: feature rule */
+ 	  /* it's also orphaned if the feature rule consists just of the installed package */
+ 	  if (!solv->dupmap_all && sr->p == i && !sr->d && !sr->w2)
+ 	    queue_push(&solv->orphaned, i);
+diff --git a/test/testcases/distupgrade/dup_multiversion1 b/test/testcases/distupgrade/dup_multiversion1
+deleted file mode 100644
+index 326de7a..0000000
+--- a/test/testcases/distupgrade/dup_multiversion1
++++ /dev/null
+@@ -1,91 +0,0 @@
+-# test dup with multiversion packages
+-#
+-# part 1: simple update
+-repo system 0 testtags <inline>
+-#>=Pkg: a 1 1 i686
+-repo available 0 testtags <inline>
+-#>=Pkg: a 2 1 i686
+-system i686 * system
+-
+-job multiversion name a
+-job distupgrade all packages
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-nextjob
+-
+-job multiversion name a
+-job distupgrade repo available
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-### same with keeporphans
+-
+-nextjob
+-
+-solverflags keeporphans
+-job multiversion name a
+-job distupgrade all packages
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-nextjob
+-
+-solverflags keeporphans
+-job multiversion name a
+-job distupgrade repo available
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-### same with allowuninstall
+-
+-nextjob
+-
+-solverflags allowuninstall
+-job multiversion name a
+-job distupgrade all packages
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-nextjob
+-
+-solverflags allowuninstall
+-job multiversion name a
+-job distupgrade repo available
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-### same with allowuninstall and keeporphans
+-
+-nextjob
+-
+-solverflags allowuninstall keeporphans
+-job multiversion name a
+-job distupgrade all packages
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-nextjob
+-
+-solverflags allowuninstall keeporphans
+-job multiversion name a
+-job distupgrade repo available
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-
+-
+-
+diff --git a/test/testcases/distupgrade/dup_multiversion2 b/test/testcases/distupgrade/dup_multiversion2
+deleted file mode 100644
+index 18909eb..0000000
+--- a/test/testcases/distupgrade/dup_multiversion2
++++ /dev/null
+@@ -1,106 +0,0 @@
+-# test dup with multiversion packages
+-# same as with dup_multiversion1, but we can't keep the orphan
+-
+-#
+-# part 1: simple update
+-repo system 0 testtags <inline>
+-#>=Pkg: a 1 1 i686
+-#>=Pkg: b 1 1 i686
+-repo available 0 testtags <inline>
+-#>=Pkg: a 2 1 i686
+-#>=Pkg: b 2 1 i686
+-#>=Con: a = 1-1
+-system i686 * system
+-
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-#>install a-2-1.i686@available
+-#>upgrade b-1-1.i686@system b-2-1.i686@available
+-
+-nextjob
+-
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-#>install a-2-1.i686@available
+-#>upgrade b-1-1.i686@system b-2-1.i686@available
+-
+-
+-### same with keeporphans, this will result in problems as we cannot keep the orphan
+-
+-nextjob
+-
+-solverflags keeporphans
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-#>problem 4d4de423 info package b-2-1.i686 conflicts with a = 1-1 provided by a-1-1.i686
+-#>problem 4d4de423 solution 2cf4745c erase a-1-1.i686@system
+-#>problem 4d4de423 solution 2cf4745c replace a-1-1.i686@system a-2-1.i686@available
+-#>problem 4d4de423 solution 5a433aff allow b-1-1.i686@system
+-#>problem 4d4de423 solution ce4305f2 erase b-1-1.i686@system
+-
+-nextjob
+-
+-solverflags keeporphans
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>install a-2-1.i686@available
+-#>problem 4d4de423 info package b-2-1.i686 conflicts with a = 1-1 provided by a-1-1.i686
+-#>problem 4d4de423 solution 2cf4745c erase a-1-1.i686@system
+-#>problem 4d4de423 solution 2cf4745c replace a-1-1.i686@system a-2-1.i686@available
+-#>problem 4d4de423 solution 5a433aff allow b-1-1.i686@system
+-#>problem 4d4de423 solution ce4305f2 erase b-1-1.i686@system
+-
+-### same with allowuninstall
+-
+-nextjob
+-
+-solverflags allowuninstall
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-#>install a-2-1.i686@available
+-#>upgrade b-1-1.i686@system b-2-1.i686@available
+-
+-nextjob
+-
+-solverflags allowuninstall
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-#>install a-2-1.i686@available
+-#>upgrade b-1-1.i686@system b-2-1.i686@available
+-
+-
+-### same with allowuninstall and keeporphans
+-
+-nextjob
+-
+-solverflags allowuninstall keeporphans
+-job multiversion name a
+-job distupgrade all packages
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>erase b-1-1.i686@system
+-#>install a-2-1.i686@available
+-
+-
+-nextjob
+-
+-solverflags allowuninstall keeporphans
+-job multiversion name a
+-job distupgrade repo available
+-# a-1-1 is treated as orphaned and stays behind
+-result transaction,problems <inline>
+-#>erase b-1-1.i686@system
+-#>install a-2-1.i686@available
+-
+-
+diff --git a/test/testcases/distupgrade/dup_multiversion3 b/test/testcases/distupgrade/dup_multiversion3
+deleted file mode 100644
+index 8be3190..0000000
+--- a/test/testcases/distupgrade/dup_multiversion3
++++ /dev/null
+@@ -1,88 +0,0 @@
+-# test dup with multiversion packages where we cannot install the
+-# target. Should give problems except for allowuninstall.
+-#
+-# part 1: simple update
+-repo system 0 testtags <inline>
+-#>=Pkg: a 1 1 i686
+-repo available 0 testtags <inline>
+-#>=Pkg: a 2 1 i686
+-#>=Req: c
+-system i686 * system
+-
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>problem 251f1f35 info nothing provides c needed by a-2-1.i686
+-#>problem 251f1f35 solution 2f2d254c allow a-1-1.i686@system
+-
+-nextjob
+-
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-#>problem 251f1f35 info nothing provides c needed by a-2-1.i686
+-#>problem 251f1f35 solution 2f2d254c allow a-1-1.i686@system
+-
+-### same with keeporphans
+-
+-nextjob
+-
+-solverflags keeporphans
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>problem 771581fd info nothing provides c needed by a-2-1.i686
+-#>problem 771581fd solution 179b72ed allow a-1-1.i686@system
+-#>problem 771581fd solution 2cf4745c erase a-1-1.i686@system
+-
+-nextjob
+-
+-solverflags keeporphans
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>problem 771581fd info nothing provides c needed by a-2-1.i686
+-#>problem 771581fd solution 179b72ed allow a-1-1.i686@system
+-#>problem 771581fd solution 2cf4745c erase a-1-1.i686@system
+-
+-### same with allowuninstall
+-
+-nextjob
+-
+-solverflags allowuninstall
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-
+-
+-nextjob
+-
+-solverflags allowuninstall
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-
+-
+-### same with allowuninstall and keeporphans
+-
+-nextjob
+-
+-solverflags allowuninstall keeporphans
+-job multiversion name a
+-job distupgrade all packages
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-
+-
+-nextjob
+-
+-solverflags allowuninstall keeporphans
+-job multiversion name a
+-job distupgrade repo available
+-result transaction,problems <inline>
+-#>erase a-1-1.i686@system
+-
+-
+-- 
+2.4.3
+

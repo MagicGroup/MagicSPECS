@@ -1,13 +1,5 @@
 # -*- rpm-spec -*-
 
-# If neither fedora nor rhel was defined, try to guess them from %{dist}
-%if !0%{?rhel} && !0%{?fedora}
-%{expand:%(echo "%{?dist}" | \
-  sed -ne 's/^\.el\([0-9]\+\).*/%%define rhel \1/p')}
-%{expand:%(echo "%{?dist}" | \
-  sed -ne 's/^\.fc\?\([0-9]\+\).*/%%define fedora \1/p')}
-%endif
-
 # Default to skipping autoreconf.  Distros can change just this one line
 # (or provide a command-line override) if they backport any patches that
 # touch configure.ac or Makefile.am.
@@ -20,13 +12,6 @@
 %{!?client_only:%define client_only 0}
 
 # Now turn off server build in certain cases
-
-# RHEL-5 builds are client-only for s390, ppc
-%if 0%{?rhel} == 5
-    %ifnarch %{ix86} x86_64 ia64
-        %define client_only        1
-    %endif
-%endif
 
 # Disable all server side drivers if client only build requested
 %if %{client_only}
@@ -55,15 +40,7 @@
 
 %define with_qemu_tcg      %{with_qemu}
 # Change if we ever provide qemu-kvm binaries on non-x86 hosts
-%if 0%{?fedora} >= 18
-    %if 0%{?fedora} >= 20
-        %define qemu_kvm_arches    %{ix86} x86_64 ppc64 s390x %{arm}
-    %else
-        %define qemu_kvm_arches    %{ix86} x86_64 ppc64 s390x
-    %endif
-%else
-    %define qemu_kvm_arches    %{ix86} x86_64
-%endif
+%define qemu_kvm_arches    %{ix86} x86_64 ppc64 s390x %{arm} mips64el
 
 %ifarch %{qemu_kvm_arches}
     %define with_qemu_kvm      %{with_qemu}
@@ -89,21 +66,9 @@
 %define with_storage_iscsi    0%{!?_without_storage_iscsi:%{server_drivers}}
 %define with_storage_disk     0%{!?_without_storage_disk:%{server_drivers}}
 %define with_storage_mpath    0%{!?_without_storage_mpath:%{server_drivers}}
-%if 0%{?fedora} >= 16
-    %define with_storage_rbd      0%{!?_without_storage_rbd:%{server_drivers}}
-%else
-    %define with_storage_rbd      0
-%endif
-%if 0%{?fedora} >= 17
-    %define with_storage_sheepdog 0%{!?_without_storage_sheepdog:%{server_drivers}}
-%else
-    %define with_storage_sheepdog 0
-%endif
-%if 0%{?fedora} >= 19 || 0%{?rhel} >= 6
-    %define with_storage_gluster 0%{!?_without_storage_gluster:%{server_drivers}}
-%else
-    %define with_storage_gluster 0
-%endif
+%define with_storage_rbd      0%{!?_without_storage_rbd:%{server_drivers}}
+%define with_storage_sheepdog 0%{!?_without_storage_sheepdog:%{server_drivers}}
+%define with_storage_gluster 0%{!?_without_storage_gluster:%{server_drivers}}
 %define with_numactl          0%{!?_without_numactl:%{server_drivers}}
 %define with_selinux          0
 
@@ -156,100 +121,28 @@
     %define with_numactl 0
 %endif
 
-# libgfapi is built only on x86_64 on rhel
-%ifnarch x86_64
-    %if 0%{?rhel} >= 6
-        %define with_storage_gluster 0
-    %endif
-%endif
-
-# RHEL doesn't ship OpenVZ, VBox, UML, PowerHypervisor,
-# VMWare, libxenserver (xenapi), libxenlight (Xen 4.1 and newer),
-# or HyperV.
-%if 0%{?rhel}
-    %define with_openvz 0
-    %define with_vbox 0
-    %define with_uml 0
-    %define with_phyp 0
-    %define with_vmware 0
-    %define with_xenapi 0
-    %define with_libxl 0
-    %define with_hyperv 0
-    %define with_parallels 0
-%endif
-
 # Fedora 17 / RHEL-7 are first where we use systemd. Although earlier
 # Fedora has systemd, libvirt still used sysvinit there.
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
-    %define with_systemd 1
-    %define with_systemd_daemon 1
-    %define with_pm_utils 0
-%endif
+%define with_systemd 1
+%define with_systemd_daemon 1
+%define with_pm_utils 0
 
 # Fedora 18 / RHEL-7 are first where firewalld support is enabled
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
-    %define with_firewalld 1
-%endif
+%define with_firewalld 1
 
-# RHEL-5 has restricted QEMU to x86_64 only and is too old for LXC
-%if 0%{?rhel} == 5
-    %define with_qemu_tcg 0
-    %ifnarch x86_64
-        %define with_qemu 0
-        %define with_qemu_kvm 0
-    %endif
-    %define with_lxc 0
-%endif
-
-# RHEL-6 has restricted QEMU to x86_64 only, stopped including Xen
-# on all archs. Other archs all have LXC available though
-%if 0%{?rhel} >= 6
-    %define with_qemu_tcg 0
-    %ifnarch x86_64
-        %define with_qemu 0
-        %define with_qemu_kvm 0
-    %endif
-    %define with_xen 0
-%endif
-
-# Fedora doesn't have any QEMU on ppc64 until FC16 - only ppc
-%if 0%{?fedora} && 0%{?fedora} < 16
-    %ifarch ppc64
-        %define with_qemu 0
-    %endif
-%endif
-
-# Fedora doesn't have new enough Xen for libxl until F18
-%if 0%{?fedora} && 0%{?fedora} < 18
-    %define with_libxl 0
-%endif
-
-# PolicyKit was introduced in Fedora 8 / RHEL-6 or newer
-%if 0%{?fedora} >= 8 || 0%{?rhel} >= 6
-    %define with_polkit    0%{!?_without_polkit:1}
-%endif
+%define with_polkit    0%{!?_without_polkit:1}
 
 # libcapng is used to manage capabilities in Fedora 12 / RHEL-6 or newer
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-    %define with_capng     0%{!?_without_capng:1}
-%endif
+%define with_capng     0%{!?_without_capng:1}
 
 # fuse is used to provide virtualized /proc for LXC
-%if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
-    %define with_fuse      0%{!?_without_fuse:1}
-%endif
+%define with_fuse      0%{!?_without_fuse:1}
 
 # netcf is used to manage network interfaces in Fedora 12 / RHEL-6 or newer
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-    %define with_netcf     0%{!?_without_netcf:%{server_drivers}}
-%endif
+%define with_netcf     0%{!?_without_netcf:%{server_drivers}}
 
 # udev is used to manage host devices in Fedora 12 / RHEL-6 or newer
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-    %define with_udev     0%{!?_without_udev:%{server_drivers}}
-%else
-    %define with_hal       0%{!?_without_hal:%{server_drivers}}
-%endif
+%define with_udev     0%{!?_without_udev:%{server_drivers}}
 
 # interface requires netcf
 %if ! 0%{?with_netcf}
@@ -257,30 +150,17 @@
 %endif
 
 # Enable yajl library for JSON mode with QEMU
-%if 0%{?fedora} >= 13 || 0%{?rhel} >= 6
-    %define with_yajl     0%{!?_without_yajl:%{server_drivers}}
-%endif
+%define with_yajl     0%{!?_without_yajl:%{server_drivers}}
 
 # Enable sanlock library for lock management with QEMU
 # Sanlock is available only on x86_64 for RHEL
-%if 0%{?fedora} >= 16
-    %define with_sanlock 0%{!?_without_sanlock:%{server_drivers}}
-%endif
-%if 0%{?rhel} >= 6
-    %ifarch x86_64
-        %define with_sanlock 0%{!?_without_sanlock:%{server_drivers}}
-    %endif
-%endif
+%define with_sanlock 0%{!?_without_sanlock:%{server_drivers}}
 
 # Enable libssh2 transport for new enough distros
-%if 0%{?fedora} >= 17
-    %define with_libssh2 0%{!?_without_libssh2:1}
-%endif
+%define with_libssh2 0%{!?_without_libssh2:1}
 
 # Enable wireshark plugins for all distros shipping libvirt 1.2.2 or newer
-%if 0%{?fedora} >= 21
-    %define with_wireshark 0%{!?_without_wireshark:1}
-%endif
+%define with_wireshark 0%{!?_without_wireshark:1}
 
 # Disable some drivers when building without libvirt daemon.
 # The logic is the same as in configure.ac
@@ -323,15 +203,11 @@
 
 %define with_audit    0
 
-%if 0%{?fedora} >= 13 || 0%{?rhel} >= 6
-    %define with_dtrace 1
-%endif
+%define with_dtrace 1
 
 # Pull in cgroups config system
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-    %if %{with_qemu} || %{with_lxc}
-        %define with_cgconfig 0%{!?_without_cgconfig:1}
-    %endif
+%if %{with_qemu} || %{with_lxc}
+    %define with_cgconfig 0%{!?_without_cgconfig:1}
 %endif
 
 %if %{with_udev} || %{with_hal}
@@ -348,42 +224,20 @@
 
 
 # Force QEMU to run as non-root
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
-    %define qemu_user  qemu
-    %define qemu_group  qemu
-%else
-    %define qemu_user  root
-    %define qemu_group  root
-%endif
+%define qemu_user  qemu
+%define qemu_group  qemu
 
 
 # The RHEL-5 Xen package has some feature backports. This
 # flag is set to enable use of those special bits on RHEL-5
-%if 0%{?rhel} == 5
-    %define with_rhel5  1
-%else
-    %define with_rhel5  0
-%endif
+%define with_rhel5  0
 
-%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
-    %define with_systemd_macros 1
-%else
-    %define with_systemd_macros 0
-%endif
-
-
-# RHEL releases provide stable tool chains and so it is safe to turn
-# compiler warning into errors without being worried about frequent
-# changes in reported warnings
-%if 0%{?rhel}
-    %define enable_werror --enable-werror
-%endif
-
+%define with_systemd_macros 1
 
 Summary: Library providing a simple virtualization API
 Name: libvirt
-Version: 1.2.21-rc1
-Release: 2%{?dist}%{?extra_release}
+Version: 1.3.1
+Release: 1%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -462,28 +316,19 @@ BuildRequires: readline-devel
 BuildRequires: ncurses-devel
 BuildRequires: gettext
 BuildRequires: libtasn1-devel
-%if (0%{?rhel} && 0%{?rhel} < 7) || (0%{?fedora} && 0%{?fedora} < 19)
-BuildRequires: libgcrypt-devel
-%endif
 BuildRequires: gnutls-devel
 BuildRequires: libattr-devel
 %if %{with_libvirtd}
 # For pool-build probing for existing pools
 BuildRequires: libblkid-devel >= 2.17
 %endif
-%if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 # for augparse, optionally used in testing
 BuildRequires: augeas
-%endif
 %if %{with_hal}
 BuildRequires: hal-devel
 %endif
 %if %{with_udev}
-    %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 BuildRequires: systemd-devel >= 185
-    %else
-BuildRequires: libudev-devel >= 145
-    %endif
 BuildRequires: libpciaccess-devel >= 0.10.9
 %endif
 %if %{with_yajl}
@@ -492,21 +337,13 @@ BuildRequires: yajl-devel
 %if %{with_sanlock}
 # make sure libvirt is built with new enough sanlock on
 # distros that have it; required for on_lockfailure
-    %if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
 BuildRequires: sanlock-devel >= 2.4
-    %else
-BuildRequires: sanlock-devel >= 1.8
-    %endif
 %endif
 %if %{with_libpcap}
 BuildRequires: libpcap-devel
 %endif
 %if %{with_libnl}
-    %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 BuildRequires: libnl3-devel
-    %else
-BuildRequires: libnl-devel
-    %endif
 %endif
 %if %{with_avahi}
 BuildRequires: avahi-devel
@@ -531,11 +368,7 @@ BuildRequires: module-init-tools
 BuildRequires: cyrus-sasl-devel
 %endif
 %if %{with_polkit}
-    %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 BuildRequires: polkit-devel >= 0.93
-    %else
-BuildRequires: PolicyKit-devel >= 0.6
-    %endif
 %endif
 %if %{with_storage_fs}
 # For mount/umount in FS driver
@@ -561,31 +394,17 @@ BuildRequires: iscsi-initiator-utils
 %if %{with_storage_disk}
 # For disk driver
 BuildRequires: parted-devel
-    %if 0%{?rhel} == 5
-# Broken RHEL-5 parted RPM is missing a dep
-BuildRequires: e2fsprogs-devel
-    %endif
 %endif
 %if %{with_storage_mpath} || %{with_storage_disk}
 # For Multipath support
-    %if 0%{?rhel} == 5
-# Broken RHEL-5 packaging has header files in main RPM :-(
-BuildRequires: device-mapper
-    %else
 BuildRequires: device-mapper-devel
-    %endif
 %endif
 %if %{with_storage_rbd}
 BuildRequires: ceph-devel
 %endif
 %if %{with_storage_gluster}
-    %if 0%{?rhel} >= 6
-BuildRequires: glusterfs-api-devel >= 3.4.0
-BuildRequires: glusterfs-devel >= 3.4.0
-    %else
 BuildRequires: glusterfs-api-devel >= 3.4.1
 BuildRequires: glusterfs-devel >= 3.4.1
-    %endif
 %endif
 %if %{with_numactl}
 # For QEMU/LXC numa info
@@ -602,22 +421,10 @@ BuildRequires: libssh2-devel >= 1.3.0
 %endif
 
 %if %{with_netcf}
-    %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 BuildRequires: netcf-devel >= 0.2.2
-    %else
-        %if 0%{?fedora} >= 16 || 0%{?rhel} >= 6
-BuildRequires: netcf-devel >= 0.1.8
-        %else
-BuildRequires: netcf-devel >= 0.1.4
-        %endif
-    %endif
 %endif
 %if %{with_esx}
-    %if 0%{?fedora} >= 9 || 0%{?rhel} >= 6
 BuildRequires: libcurl-devel
-    %else
-BuildRequires: curl-devel
-    %endif
 %endif
 %if %{with_hyperv}
 BuildRequires: libwsman-devel >= 2.2.3
@@ -687,18 +494,10 @@ Requires: module-init-tools
 # for /sbin/ip & /sbin/tc
 Requires: iproute
     %if %{with_avahi}
-        %if 0%{?rhel} == 5
-Requires: avahi
-        %else
 Requires: avahi-libs
-        %endif
     %endif
     %if %{with_polkit}
-        %if 0%{?fedora} >= 12 || 0%{?rhel} >=6
 Requires: polkit >= 0.93
-        %else
-Requires: PolicyKit >= 0.6
-        %endif
     %endif
     %if %{with_cgconfig}
 Requires: libcgroup
@@ -799,11 +598,7 @@ Requires: libvirt-daemon = %{version}-%{release}
 Requires: hal
             %endif
             %if %{with_udev}
-                %if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 Requires: systemd >= 185
-                %else
-Requires: udev >= 145
-                %endif
             %endif
 
 %description daemon-driver-nodedev
@@ -818,7 +613,7 @@ capabilities.
 Summary: Interface driver plugin for the libvirtd daemon
 Group: Development/Libraries
 Requires: libvirt-daemon = %{version}-%{release}
-            %if %{with_netcf} && (0%{?fedora} >= 18 || 0%{?rhel} >= 7)
+            %if %{with_netcf} 
 Requires: netcf-libs >= 0.2.2
             %endif
 
@@ -849,9 +644,7 @@ Requires: nfs-utils
 # For mkfs
 Requires: util-linux
 # For glusterfs
-                %if 0%{?fedora} >= 11
 Requires: glusterfs-client >= 2.0.1
-                %endif
             %endif
             %if %{with_storage_lvm}
 # For LVM drivers
@@ -1185,11 +978,7 @@ Include header files & development libraries for the libvirt C library.
 %package lock-sanlock
 Summary: Sanlock lock manager plugin for QEMU driver
 Group: Development/Libraries
-    %if 0%{?fedora} >= 17 || 0%{?rhel} >= 6
 Requires: sanlock >= 2.4
-    %else
-Requires: sanlock >= 1.8
-    %endif
 #for virt-sanlock-cleanup require augeas
 Requires: augeas
 Requires: %{name}-daemon = %{version}-%{release}
@@ -1409,11 +1198,7 @@ driver
 %endif
 
 %if %{with_selinux}
-    %if 0%{?fedora} >= 17 || 0%{?rhel} >= 7
         %define with_selinux_mount --with-selinux-mount="/sys/fs/selinux"
-    %else
-        %define with_selinux_mount --with-selinux-mount="/selinux"
-    %endif
 %endif
 
 # place macros above and build commands below this comment
@@ -1491,10 +1276,8 @@ rm -fr %{buildroot}
 # on RHEL 5, thus we need to expand it here.
 make install DESTDIR=%{?buildroot} SYSTEMD_UNIT_DIR=%{_unitdir}
 
-for i in object-events dominfo domsuspend hellolibvirt openauth xml/nwfilter systemtap dommigrate
-do
-  (cd examples/$i ; make clean ; rm -rf .deps .libs Makefile Makefile.in)
-done
+make -C examples distclean
+
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_libdir}/libvirt/lock-driver/*.la
@@ -1587,7 +1370,6 @@ fi
     %if ! %{with_driver_modules}
         %if %{with_qemu}
 %pre daemon
-            %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 # We want soft static allocation of well-known ids, as disk images
 # are commonly shared across NFS mounts by id rather than name; see
 # https://fedoraproject.org/wiki/Packaging:UsersAndGroups
@@ -1601,7 +1383,6 @@ if ! getent passwd qemu >/dev/null; then
   fi
 fi
 exit 0
-            %endif
         %endif
     %endif
 
@@ -1658,19 +1439,6 @@ if [ $1 -eq 1 ] ; then
     /bin/systemctl enable virtlockd.socket libvirtd.service >/dev/null 2>&1 || :
 fi
         %endif
-    %else
-        %if %{with_cgconfig}
-# Starting with Fedora 16/RHEL-7, systemd automounts all cgroups,
-# and cgconfig is no longer a necessary service.
-            %if (0%{?rhel} && 0%{?rhel} < 7) || (0%{?fedora} && 0%{?fedora} < 16)
-if [ "$1" -eq "1" ]; then
-/sbin/chkconfig cgconfig on
-fi
-            %endif
-        %endif
-
-/sbin/chkconfig --add libvirtd
-/sbin/chkconfig --add virtlockd
     %endif
 
 %preun daemon
@@ -1742,7 +1510,6 @@ fi
     %if %{with_driver_modules}
         %if %{with_qemu}
 %pre daemon-driver-qemu
-            %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
 # We want soft static allocation of well-known ids, as disk images
 # are commonly shared across NFS mounts by id rather than name; see
 # https://fedoraproject.org/wiki/Packaging:UsersAndGroups
@@ -1756,7 +1523,6 @@ if ! getent passwd qemu >/dev/null; then
   fi
 fi
 exit 0
-            %endif
         %endif
     %endif
 %endif # %{with_libvirtd}
@@ -1838,17 +1604,26 @@ exit 0
 
     %if %{with_systemd}
 %{_unitdir}/libvirtd.service
+%{_unitdir}/libvirtd.socket
+%{_unitdir}/virtlogd.service
+%{_unitdir}/virtlogd.socket
 %{_unitdir}/virtlockd.service
 %{_unitdir}/virtlockd.socket
     %else
 %{_sysconfdir}/rc.d/init.d/libvirtd
+%{_sysconfdir}/rc.d/init.d/virtlogd
 %{_sysconfdir}/rc.d/init.d/virtlockd
     %endif
 %doc daemon/libvirtd.upstart
 %config(noreplace) %{_sysconfdir}/sysconfig/libvirtd
+%config(noreplace) %{_sysconfdir}/sysconfig/virtlogd
 %config(noreplace) %{_sysconfdir}/sysconfig/virtlockd
 %config(noreplace) %{_sysconfdir}/libvirt/libvirtd.conf
+%config(noreplace) %{_sysconfdir}/libvirt/virtlogd.conf
 %config(noreplace) %{_sysconfdir}/libvirt/virtlockd.conf
+    %if 0%{?fedora} || 0%{?rhel} >= 6
+%config(noreplace) %{_prefix}/lib/sysctl.d/60-libvirtd.conf
+    %endif
 
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd
 %dir %{_datadir}/libvirt/
@@ -1866,6 +1641,8 @@ exit 0
 
 %{_datadir}/augeas/lenses/libvirtd.aug
 %{_datadir}/augeas/lenses/tests/test_libvirtd.aug
+%{_datadir}/augeas/lenses/virtlogd.aug
+%{_datadir}/augeas/lenses/tests/test_virtlogd.aug
 %{_datadir}/augeas/lenses/virtlockd.aug
 %{_datadir}/augeas/lenses/tests/test_virtlockd.aug
 %{_datadir}/augeas/lenses/libvirt_lockd.aug
@@ -1874,9 +1651,10 @@ exit 0
     %endif
 
     %if %{with_polkit}
-        %if 0%{?fedora} >= 12 || 0%{?rhel} >= 6
+        %if 0%{?fedora} || 0%{?rhel} >= 6
 %{_datadir}/polkit-1/actions/org.libvirt.unix.policy
 %{_datadir}/polkit-1/actions/org.libvirt.api.policy
+%{_datadir}/polkit-1/rules.d/50-libvirt.rules
         %else
 %{_datadir}/PolicyKit/policy/org.libvirt.unix.policy
         %endif
@@ -1891,9 +1669,11 @@ exit 0
     %endif
 
 %attr(0755, root, root) %{_sbindir}/libvirtd
+%attr(0755, root, root) %{_sbindir}/virtlogd
 %attr(0755, root, root) %{_sbindir}/virtlockd
 
 %{_mandir}/man8/libvirtd.8*
+%{_mandir}/man8/virtlogd.8*
 %{_mandir}/man8/virtlockd.8*
 
     %if ! %{with_driver_modules}
@@ -1922,9 +1702,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd.qemu
 %dir %attr(0700, root, root) %{_localstatedir}/log/libvirt/qemu/
 %ghost %dir %attr(0700, root, root) %{_localstatedir}/run/libvirt/qemu/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
-#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/
-#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/target/
+%dir %attr(0751, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
 %dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/cache/libvirt/qemu/
 %{_datadir}/augeas/lenses/libvirtd_qemu.aug
 %{_datadir}/augeas/lenses/tests/test_libvirtd_qemu.aug
@@ -1946,14 +1724,21 @@ exit 0
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/uml/
         %endif
         %if %{with_libxl}
+%config(noreplace) %{_sysconfdir}/libvirt/libxl.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd.libxl
+%config(noreplace) %{_sysconfdir}/libvirt/libxl-lockd.conf
 %dir %attr(0700, root, root) %{_localstatedir}/log/libvirt/libxl/
 %ghost %dir %{_localstatedir}/run/libvirt/libxl/
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/libxl/
+%{_datadir}/augeas/lenses/libvirtd_libxl.aug
+%{_datadir}/augeas/lenses/tests/test_libvirtd_libxl.aug
         %endif
         %if %{with_xen}
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/xen/
         %endif
     %endif # ! %{with_driver_modules}
+
+%doc examples/polkit/*.rules
 
     %if %{with_network}
 %files daemon-config-network
@@ -2024,9 +1809,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/libvirt/qemu-lockd.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd.qemu
 %ghost %dir %attr(0700, root, root) %{_localstatedir}/run/libvirt/qemu/
-%dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
-#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/
-#dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/channel/target/
+%dir %attr(0751, %{qemu_user}, %{qemu_group}) %{_localstatedir}/lib/libvirt/qemu/
 %dir %attr(0750, %{qemu_user}, %{qemu_group}) %{_localstatedir}/cache/libvirt/qemu/
 %{_datadir}/augeas/lenses/libvirtd_qemu.aug
 %{_datadir}/augeas/lenses/tests/test_libvirtd_qemu.aug
@@ -2067,6 +1850,11 @@ exit 0
         %if %{with_libxl}
 %files daemon-driver-libxl
 %defattr(-, root, root)
+%config(noreplace) %{_sysconfdir}/libvirt/libxl.conf
+%config(noreplace) %{_sysconfdir}/logrotate.d/libvirtd.libxl
+%config(noreplace) %{_sysconfdir}/libvirt/libxl-lockd.conf
+%{_datadir}/augeas/lenses/libvirtd_libxl.aug
+%{_datadir}/augeas/lenses/tests/test_libvirtd_libxl.aug
 %dir %attr(0700, root, root) %{_localstatedir}/log/libvirt/libxl/
 %ghost %dir %{_localstatedir}/run/libvirt/libxl/
 %dir %attr(0700, root, root) %{_localstatedir}/lib/libvirt/libxl/
@@ -2117,6 +1905,9 @@ exit 0
     %if %{with_qemu}
 %config(noreplace) %{_sysconfdir}/libvirt/qemu-sanlock.conf
     %endif
+    %if %{with_libxl}
+%config(noreplace) %{_sysconfdir}/libvirt/libxl-sanlock.conf
+    %endif
 %attr(0755, root, root) %{_libdir}/libvirt/lock-driver/sanlock.so
 %{_datadir}/augeas/lenses/libvirt_sanlock.aug
 %{_datadir}/augeas/lenses/tests/test_libvirt_sanlock.aug
@@ -2131,16 +1922,6 @@ exit 0
 %doc COPYING COPYING.LESSER
 
 %config(noreplace) %{_sysconfdir}/libvirt/libvirt.conf
-%config(noreplace) %{_sysconfdir}/libvirt/libxl-lockd.conf
-%config(noreplace) %{_sysconfdir}/libvirt/libxl-sanlock.conf
-%config(noreplace) %{_sysconfdir}/libvirt/libxl.conf
-%{_sysconfdir}/logrotate.d/libvirtd.libxl
-/usr/lib/sysctl.d/60-libvirtd.conf
-/usr/lib/systemd/system/libvirtd.socket
-%{_libdir}/libvirt-admin.so.*
-%{_datadir}/augeas/lenses/libvirtd_libxl.aug
-%{_datadir}/augeas/lenses/tests/test_libvirtd_libxl.aug
-%{_datadir}/polkit-1/rules.d/50-libvirt.rules
 %{_mandir}/man1/virsh.1*
 %{_mandir}/man1/virt-xml-validate.1*
 %{_mandir}/man1/virt-pki-validate.1*
@@ -2152,6 +1933,12 @@ exit 0
 %{_libdir}/libvirt.so.*
 %{_libdir}/libvirt-qemu.so.*
 %{_libdir}/libvirt-lxc.so.*
+%{_libdir}/libvirt-admin.so.*
+
+%{_sysconfdir}/libvirt/libvirt-admin.conf
+%{_bindir}/virt-admin
+%{_libdir}/libvirt-admin.so
+%{_mandir}/man1/virt-admin.1*
 
 %if %{with_dtrace}
 %{_datadir}/systemtap/tapset/libvirt_probes*.stp
@@ -2165,8 +1952,8 @@ exit 0
 %{_datadir}/libvirt/schemas/basictypes.rng
 %{_datadir}/libvirt/schemas/capability.rng
 %{_datadir}/libvirt/schemas/domain.rng
-%{_datadir}/libvirt/schemas/domaincommon.rng
 %{_datadir}/libvirt/schemas/domaincaps.rng
+%{_datadir}/libvirt/schemas/domaincommon.rng
 %{_datadir}/libvirt/schemas/domainsnapshot.rng
 %{_datadir}/libvirt/schemas/interface.rng
 %{_datadir}/libvirt/schemas/network.rng
@@ -2213,8 +2000,22 @@ exit 0
 %{_libdir}/libvirt-qemu.so
 %{_libdir}/libvirt-lxc.so
 %dir %{_includedir}/libvirt
-%{_includedir}/libvirt/*.h
-%{_libdir}/libvirt-admin.so
+%{_includedir}/libvirt/virterror.h
+%{_includedir}/libvirt/libvirt.h
+%{_includedir}/libvirt/libvirt-common.h
+%{_includedir}/libvirt/libvirt-domain.h
+%{_includedir}/libvirt/libvirt-domain-snapshot.h
+%{_includedir}/libvirt/libvirt-event.h
+%{_includedir}/libvirt/libvirt-host.h
+%{_includedir}/libvirt/libvirt-interface.h
+%{_includedir}/libvirt/libvirt-network.h
+%{_includedir}/libvirt/libvirt-nodedev.h
+%{_includedir}/libvirt/libvirt-nwfilter.h
+%{_includedir}/libvirt/libvirt-secret.h
+%{_includedir}/libvirt/libvirt-storage.h
+%{_includedir}/libvirt/libvirt-stream.h
+%{_includedir}/libvirt/libvirt-qemu.h
+%{_includedir}/libvirt/libvirt-lxc.h
 %{_libdir}/pkgconfig/libvirt.pc
 %{_libdir}/pkgconfig/libvirt-qemu.pc
 %{_libdir}/pkgconfig/libvirt-lxc.pc
@@ -2233,12 +2034,10 @@ exit 0
 %doc examples/dommigrate
 %doc examples/openauth
 %doc examples/xml
+%doc examples/rename
 %doc examples/systemtap
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
-- 更新到 1.2.21-rc1
-
 * Thu Oct 22 2015 Liu Di <liudidi@gmail.com> - 1.2.20-3
 - 为 Magic 3.0 重建
 

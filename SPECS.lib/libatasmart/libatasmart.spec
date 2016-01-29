@@ -1,5 +1,5 @@
 Name: libatasmart
-Version: 匹配到二进制文件
+Version: 0.19
 Release: 5%{?dist}
 Summary: ATA S.M.A.R.T. Disk Health Monitoring Library
 Summary(zh_CN.UTF-8): ATA S.M.A.R.T. 磁盘健康监视库
@@ -64,9 +64,6 @@ magic_rpm_clean.sh
 %doc blob-examples/SAMSUNG* blob-examples/ST* blob-examples/Maxtor* blob-examples/WDC* blob-examples/FUJITSU* blob-examples/INTEL* blob-examples/TOSHIBA* blob-examples/MCC*
 
 %changelog
-* Sat Oct 31 2015 Liu Di <liudidi@gmail.com>
-- 更新到 匹配到二进制文件 index.html
-
 * Thu Jul 10 2014 Liu Di <liudidi@gmail.com> - 0.19-4
 - 为 Magic 3.0 重建
 

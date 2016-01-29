@@ -85,6 +85,8 @@ fi
 %{_libdir}/pkgconfig/libmatekbdui.pc
 %{_libdir}/libmatekbdui.so
 %{_libdir}/libmatekbd.so
+%{_libdir}/girepository-1.0/Matekbd-1.0.typelib
+%{_datadir}/gir-1.0/Matekbd-1.0.gir
 
 %changelog
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3

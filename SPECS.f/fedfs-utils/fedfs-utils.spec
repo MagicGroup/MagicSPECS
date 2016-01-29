@@ -1,6 +1,6 @@
 Name:           fedfs-utils
 Version: 0.10.5
-Release: 1%{?dist}
+Release: 3%{?dist}
 Summary:        Utilities for mounting and managing FedFS
 Summary(zh_CN.UTF-8): 挂载和管理 FedFS 的工具
 
@@ -16,6 +16,8 @@ BuildRequires:  python2-devel
 BuildRequires:  systemd systemd-units
 
 Source0:        http://oss.oracle.com/projects/%{name}/dist/files/%{name}-%{version}.tar.gz
+Patch100:       fedfs-utils-0.10.5-svc-xp-auth.patch
+
 
 %global _hardened_build 1
 %global unit_name rpcfedfsd
@@ -48,6 +50,7 @@ FedFS may support other network file system protocols in the future.
 
 %prep
 %setup -q -n %{name}-%{version}
+%patch100 -p1
 
 %build
 ./autogen.sh
@@ -433,6 +436,12 @@ FedFS may support other network file system protocols in the future.
 %{_mandir}/man8/nsdb-*
 
 %changelog
+* Fri Jan 22 2016 Liu Di <liudidi@gmail.com> - 0.10.5-3
+- 为 Magic 3.0 重建
+
+* Fri Jan 22 2016 Liu Di <liudidi@gmail.com> - 0.10.5-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.10.4-3
 - 为 Magic 3.0 重建
 

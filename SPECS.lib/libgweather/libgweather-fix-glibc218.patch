@@ -1,0 +1,12 @@
+diff -ur libgweather-3.18.1.orig/libgweather/weather-metar.c libgweather-3.18.1/libgweather/weather-metar.c
+--- libgweather-3.18.1.orig/libgweather/weather-metar.c	2016-01-15 15:06:48.349959030 +0800
++++ libgweather-3.18.1/libgweather/weather-metar.c	2016-01-15 15:07:01.534958692 +0800
+@@ -64,7 +64,7 @@
+ 
+     /* mktime() assumes value is local, not UTC.  Use tm_gmtoff to compensate */
+ #ifdef HAVE_TM_TM_GMOFF
+-    return tm.tm_gmtoff + mktime (&tm);
++    return tm.__tm_gmtoff + mktime (&tm);
+ #elif defined HAVE_TIMEZONE
+     return timezone + mktime (&tm);
+ #endif

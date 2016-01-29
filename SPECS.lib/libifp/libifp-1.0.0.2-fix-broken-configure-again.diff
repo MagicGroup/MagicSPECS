@@ -1,0 +1,11 @@
+--- libifp-1.0.0.2/configure.in~        2015-06-18 14:21:58.997203024 -0400
++++ libifp-1.0.0.2/configure.in 2015-06-18 14:27:05.871746393 -0400
+@@ -3,7 +3,7 @@
+ #The automake documentation says this is a no-no, but I don't understand
+ #what the alternative is.
+ #Commented out until I can find out what the portable alternative is.
+-CFLAGS="-g -O2 -Wall -W -Wno-unused-parameter"
++#CFLAGS="-g -O2 -Wall -W -Wno-unused-parameter"
+ ##CFLAGS="-g -O2 -Wall -W"
+ 
+ AM_INIT_AUTOMAKE(libifp, 1.0.0.2)

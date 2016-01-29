@@ -12,6 +12,8 @@ Source0:        ftp://ftp.ibr.cs.tu-bs.de/pub/local/libsmi/%{name}-%{version}.ta
 Source1:        smi.conf
 Patch0:		libsmi-0.4.8-wget111.patch
 Patch1:		libsmi-0.4.8-CVE-2010-2891.patch
+Patch2:     libsmi-0.4.8-symbols-clash.patch
+Patch3:     libsmi-0.4.8-format-security-fix.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  libtool
@@ -53,6 +55,8 @@ libsmi-based applications.
 %setup -q
 %patch0 -p1 -b .wget111
 %patch1 -p1 -b .CVE-2010-2891
+%patch2 -p1 -b .clash
+%patch3 -p1 -b .format-security
 
 %build
 %configure \

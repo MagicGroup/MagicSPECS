@@ -50,7 +50,6 @@ libdvdnav library.
  --libdir=%{_libdir} \
  --prefix=%{_prefix} \
  --shlibdir=%{_libdir} \
- --with-dvdread-config="pkg-config dvdread" \
 
 %{__make} %{?_smp_mflags}
 pushd doc

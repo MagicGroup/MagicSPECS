@@ -76,7 +76,7 @@ make check
 # License is covered in README, upstream notified about COPYING files
 # will be fixed in next release
 %doc README AUTHORS
-%{_libdir}/libusbmuxd.so.2*
+%{_libdir}/libusbmuxd.so.*
 
 %files utils
 %{_bindir}/iproxy

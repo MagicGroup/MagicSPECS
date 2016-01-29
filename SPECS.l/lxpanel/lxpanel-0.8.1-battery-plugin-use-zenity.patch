@@ -1,0 +1,20 @@
+--- lxpanel-0.8.1/plugins/batt/batt.c.zenity	2015-05-07 04:44:51.000000000 +0900
++++ lxpanel-0.8.1/plugins/batt/batt.c	2015-05-24 16:13:42.978367802 +0900
+@@ -512,7 +512,7 @@
+ 
+     /* Apply more default options */
+     if (! lx_b->alarmCommand)
+-        lx_b->alarmCommand = g_strconcat("xmessage ", _("Battery low"), NULL);
++        lx_b->alarmCommand = g_strconcat("zenity --warning --text='", _("Battery low"), "'", NULL);
+     if (! lx_b->backgroundColor)
+         lx_b->backgroundColor = g_strdup("black");
+     if (! lx_b->chargingColor1)
+@@ -641,7 +641,7 @@
+         gtk_widget_hide(user_data);
+ 
+     if (b->alarmCommand == NULL)
+-        b->alarmCommand = g_strconcat("xmessage ", _("Battery low"), NULL);
++        b->alarmCommand = g_strconcat("zenity --warning --text='", _("Battery low"), "'", NULL);
+ 
+     /* update tooltip */
+     set_tooltip_text(b);

@@ -11,7 +11,7 @@
 
 Summary: Enhanced system logging and kernel message trapping daemon
 Name: rsyslog
-Version:	8.14.0
+Version:	8.12.0
 Release:	3%{?dist}
 License: (GPLv3+ and ASL 2.0)
 Group: System Environment/Daemons
@@ -506,12 +506,6 @@ done
 %{_libdir}/rsyslog/omudpspoof.so
 
 %changelog
-* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 8.14.0-3
-- 为 Magic 3.0 重建
-
-* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 8.14.0-2
-- 更新到 8.14.0
-
 * Fri Sep 18 2015 Liu Di <liudidi@gmail.com> - 8.12.0-2
 - 为 Magic 3.0 重建
 

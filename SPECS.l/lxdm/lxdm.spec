@@ -17,8 +17,8 @@
 # git archive --format=tar --prefix=%{name}/ %{git_short} | bzip2 > %{name}-%{?git_version}.tar.bz2
 
 Name:           lxdm
-Version:        0.4.1
-Release:        7%{?git_version:.%{?git_version}}%{?dist}
+Version:	0.5.3
+Release:	2%{?dist}
 Summary:        Lightweight X11 Display Manager
 Summary(zh_CN.UTF-8): 轻量级的 X11 登录管理器
 
@@ -30,59 +30,27 @@ URL:            http://lxde.org
 %if 0%{?git_snapshot}
 Source0:        %{name}-%{?git_version}.tar.bz2
 %else
-Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
+Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.xz
 %endif
 
 # systemd service file and preset
 Source1:        lxdm.service
 Source2:        lxdm.preset
 
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=19f82a20
-Patch0:         lxdm-0.4.1-null-pointer.patch
+# Fedora pam setting
+Source10:		pam.lxdm
 
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=bed2fed7
-Patch1:         lxdm-0.4.1-missing-semicolons.patch
+# Shell script to create tarball from git scm
+Source100:      create-tarball-from-git.sh
 
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=14b6c103
-Patch2:         lxdm-0.4.1-spelling-mistake.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=794478
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=d4e41ecb
-Patch3:         lxdm-0.4.1-softlockup.patch
-
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=13a92c1d
-Patch4:        lxdm-0.4.1-tcp-listen.patch
-
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=f11ae65e
-Patch5:         lxdm-0.4.1-exec-dbus.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=635897
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=a8db292c
-Patch6:         lxdm-0.4.1-xauth.patch
-
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=9dc81f33
-Patch7:         lxdm-0.4.1-no-password.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=758484
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=bd278369
-Patch8:         lxdm-0.4.1-GDK_KEY_Escape.patch
-
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=0c6d56ba
-Patch9:         lxdm-0.4.1-LXSESSION-variable.patch
-
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=commit;h=d3a85803
-Patch10:         lxdm-0.4.1-old-plymouth.patch
-
-# http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxdm;a=patch;h=8c71ffc87
-Patch11:        lxdm-0.4.1-restart-xserver-on-logout.patch
+## Patches needing discussion with the upstream
 
 ## Distro specific patches ##
 
 # Distro artwork, start on vt1
 Patch50:        lxdm-0.4.1-config.patch
+Patch60:        lxdm-0.5.1-ssh-agent-on-start.patch
 
-# SELinux, permit graphical root login etc.
-Patch51:        lxdm-0.4.1-pam.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  pkgconfig(gtk+-2.0) >= 2.12.0
@@ -95,12 +63,10 @@ Requires:       /sbin/shutdown
 # needed for anaconda to boot into runlevel 5 after install
 Provides:       service(graphical-login) = lxdm
 
-%if 0%{?fedora} >= 18
 BuildRequires:  systemd
 Requires(post):   systemd
 Requires(preun):  systemd
 Requires(postun): systemd
-%endif
 
 
 %description
@@ -113,22 +79,13 @@ LXDE 下的一个轻量级的登录管理器，类似 GDM 或 KDM。
 
 %prep
 %setup -q %{?git_version:-n %{name}}
-%patch0 -p1 -b .null-pointer
-%patch1 -p1 -b .missing-semicolons
-%patch2 -p1 -b .spelling-mistake
-%patch3 -p1 -b .softlockup
-%patch4 -p1 -b .tcp-listen
-%patch5 -p1 -b .exec-dbus
-%patch6 -p1 -b .xauth
-%patch7 -p1 -b .no-password
-%patch8 -p1 -b .GDK_KEY_Escape
-%patch9 -p1 -b .LXSESSION-variable
-%patch10 -p1 -b .old-plymouth
-%patch11 -p1 -b .restart-xserver
-
 %patch50 -p1 -b .config
-#patch51 -p1 -b .orig
+%patch60 -p1 -b .ssh_agent
 
+sed -i.reset data/lxdm.conf.in \
+	-e '\@reset@s|^.*$|reset=1|' 
+
+install -cpm 644  %{SOURCE10} pam/lxdm
 
 cat << EOF > tempfiles.lxdm.conf
 d %{_localstatedir}/run/%{name} 0755 root root
@@ -136,11 +93,13 @@ EOF
 
 %build
 %{?git_version:sh autogen.sh}
-%configure CFLAGS="-Wno-error=format-security"
-make %{?_smp_mflags} V=1 
+%configure \
+	--disable-silent-rules \
+	--disable-consolekit \
+	%{nil}
+make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make install DESTDIR=%{buildroot} INSTALL='install -p'
 magic_rpm_clean.sh
 %find_lang %{name}
@@ -151,21 +110,12 @@ mkdir -p %{buildroot}%{_localstatedir}/run/%{name}
 mkdir -p %{buildroot}%{_localstatedir}/lib/%{name}
 touch %{buildroot}%{_localstatedir}/lib/%{name}.conf
 
-%if 0%{?fedora} >= 15
 install -Dpm 644 tempfiles.lxdm.conf %{buildroot}%{_prefix}/lib/tmpfiles.d/lxdm.conf
-%endif
 
-%if 0%{?fedora} >= 18
 install -Dpm 644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
 install -m644 -p -D %{SOURCE2} %{buildroot}%{_unitdir}-preset/83-fedora-lxdm.preset
-%endif
 
 
-%clean
-rm -rf %{buildroot}
-
-
-%if 0%{?fedora} >= 18
 %post
 %systemd_post %{name}.service
 
@@ -176,12 +126,10 @@ rm -rf %{buildroot}
 
 %postun
 %systemd_postun
-%endif
 
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
-# FIXME add ChangeLog and NEWS if not empty
+# FIXME a%description -l zh_CN.UTF-8 ChangeLog and NEWS if not empty
 %doc AUTHORS COPYING README TODO gpl-2.0.txt lgpl-2.1.txt
 %dir %{_sysconfdir}/%{name}
 %ghost %config(noreplace,missingok) %{_sysconfdir}/%{name}/xinitrc
@@ -201,28 +149,23 @@ rm -rf %{buildroot}
 %{_libexecdir}/lxdm-greeter-gtk
 %{_libexecdir}/lxdm-greeter-gdk
 %{_libexecdir}/lxdm-numlock
+%{_libexecdir}/lxdm-session
 %{_datadir}/%{name}/
 
-%if 0%{?fedora} >= 15
 %config(noreplace) %{_prefix}/lib/tmpfiles.d/lxdm.conf
-%endif
 
-%if 0%{?fedora} >= 18
 %{_unitdir}/lxdm.service
 %{_unitdir}-preset/83-fedora-lxdm.preset
-%endif
 
-%if 0%{?fedora} >= 15
 %ghost %dir %{_localstatedir}/run/%{name}
-%else
-%dir %{_localstatedir}/run/%{name}
-%endif
 
 %dir %{_localstatedir}/lib/%{name}
 %ghost %{_localstatedir}/lib/%{name}.conf
 
-
 %changelog
+* Fri Jan 29 2016 Liu Di <liudidi@gmail.com> - 0.5.3-2
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.4.1-7
 - 为 Magic 3.0 重建
 

@@ -1,8 +1,8 @@
 Summary:   Library for AppStream metadata
 Summary(zh_CN.UTF-8): 应用程序流元数据的库
 Name:      libappstream-glib
-Version: 0.5.2
-Release: 3%{?dist}
+Version: 0.5.5
+Release: 1%{?dist}
 License:   LGPLv2+
 URL:       http://people.freedesktop.org/~hughsient/appstream-glib/
 Source0:   http://people.freedesktop.org/~hughsient/appstream-glib/releases/appstream-glib-%{version}.tar.xz
@@ -97,9 +97,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %__rm -f %{buildroot}%{_libdir}/libappstream-glib*.la
 %__rm -f %{buildroot}%{_libdir}/libappstream-builder*.la
-%__rm -f %{buildroot}%{_libdir}/asb-plugins-2/*.la
+%__rm -f %{buildroot}%{_libdir}/asb-plugins-4/*.la
 magic_rpm_clean.sh
-#find_lang appstream-glib
+%find_lang appstream-glib || :
 
 %post -p /sbin/ldconfig
 %post builder -p /sbin/ldconfig
@@ -107,13 +107,12 @@ magic_rpm_clean.sh
 %postun -p /sbin/ldconfig
 %postun builder -p /sbin/ldconfig
 
-#files -f appstream-glib.lang
-%files
+%files -f appstream-glib.lang
 %doc README.md AUTHORS NEWS COPYING
-%{_libdir}/libappstream-glib.so.7*
+%{_libdir}/libappstream-glib.so.*
 %{_libdir}/girepository-1.0/*.typelib
 %{_bindir}/appstream-util
-%{_bindir}/appdata-validate
+#%{_bindir}/appdata-validate
 %dir %{_datadir}/bash-completion/completions/
 %{_datadir}/bash-completion/completions/appstream-util
 %{_mandir}/man1/appstream-util.1.gz
@@ -129,15 +128,13 @@ magic_rpm_clean.sh
 %{_datadir}/installed-tests/appstream-glib/*.test
 
 %files builder
-%doc COPYING
 %{_bindir}/appstream-builder
 %{_datadir}/bash-completion/completions/appstream-builder
-%{_libdir}/asb-plugins-2/*.so
-%{_libdir}/libappstream-builder.so.7*
+%{_libdir}/asb-plugins-4/*.so
+%{_libdir}/libappstream-builder.so.*
 %{_mandir}/man1/appstream-builder.1.gz
 
 %files builder-devel
-%doc COPYING
 %{_libdir}/libappstream-builder.so
 %{_libdir}/pkgconfig/appstream-builder.pc
 %dir %{_includedir}/libappstream-builder

@@ -1,21 +1,16 @@
 %define git 1
-%define vcsdate 20151031
+%define vcsdate 20150413
 %global gitrev f9ca1a4
 # gitrev is output of: git rev-parse --short HEAD
 
-%if 0%{?rhel} != 0 && 0%{?rhel} <= 7
-# Do not build bindings for python3 for RHEL <= 7
-%bcond_with python3
-%else
 %bcond_without python3
-%endif
 
 Name:           librepo
 Version:        1.7.14
 %if 0%{git}
-Release:        0.git%{vcsdate}%{?dist}.4
+Release:        0.git%{vcsdate}%{?dist}.5
 %else
-Release:	5%{?dist}
+Release:	6%{?dist}
 %endif
 Summary:        Repodata downloading library
 Summary(zh_CN.UTF-8): Repo 数据下载库
@@ -44,13 +39,6 @@ BuildRequires:  gpgme-devel
 BuildRequires:  libattr-devel
 BuildRequires:  libcurl-devel
 BuildRequires:  openssl-devel
-
-# prevent provides from nonstandard paths:
-%filter_provides_in %{python_sitearch}/.*\.so$
-%if %{with python3}
-%filter_provides_in %{python3_sitearch}/.*\.so$
-%endif
-%filter_setup
 
 %description
 A library providing C and Python (libcURL like) API to downloading repository
@@ -175,6 +163,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Tue Jan 19 2016 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20150413.5
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.7.14-0.git20151031.4
 - 为 Magic 3.0 重建
 

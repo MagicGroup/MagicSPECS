@@ -7,7 +7,7 @@
 Summary: X.Org X11 Protocol headers
 Name: xorg-x11-proto-devel
 Version: 7.7
-Release: 15%{?dist}
+Release: 16%{?dist}
 License: MIT
 Group: Development/System
 URL: http://www.x.org
@@ -26,7 +26,7 @@ Source8:  http://xorg.freedesktop.org/archive/individual/proto/glproto-1.4.17.ta
 Source9:  http://xorg.freedesktop.org/archive/individual/proto/inputproto-2.3.1.tar.bz2
 Source10: http://xorg.freedesktop.org/archive/individual/proto/kbproto-1.0.6.tar.bz2
 Source32: http://xorg.freedesktop.org/archive/individual/proto/presentproto-1.0.tar.bz2
-Source13: http://xorg.freedesktop.org/archive/individual/proto/randrproto-1.4.0.tar.bz2
+Source13: http://xorg.freedesktop.org/archive/individual/proto/randrproto-1.5.0.tar.bz2
 Source14: http://xorg.freedesktop.org/archive/individual/proto/recordproto-1.14.2.tar.bz2
 Source15: http://xorg.freedesktop.org/archive/individual/proto/renderproto-0.11.1.tar.bz2
 Source16: http://xorg.freedesktop.org/archive/individual/proto/resourceproto-1.2.0.tar.bz2
@@ -287,6 +287,9 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/*/*.{html,svg}
 %{_datadir}/pkgconfig/xproxymngproto.pc
 
 %changelog
+* Wed Jan 27 2016 Liu Di <liudidi@gmail.com> - 7.7-16
+- 为 Magic 3.0 重建
+
 * Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 7.7-15
 - 为 Magic 3.0 重建
 

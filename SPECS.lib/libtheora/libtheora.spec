@@ -96,7 +96,7 @@ cp /usr/lib/rpm/config.* .
 
 
 %build
-./autogen.sh
+./autogen.sh 
 %configure --enable-shared --disable-static
 # Don't use rpath!
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool

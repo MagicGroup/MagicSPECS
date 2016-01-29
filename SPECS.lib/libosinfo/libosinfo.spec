@@ -4,16 +4,12 @@
 # a security audit at very least
 %define with_plugin 0
 
-%define with_gir 0
-
-%if 0%{?fedora} >= 15 || 0%{?rhel} >= 7
 %define with_gir 1
-%endif
 
 Summary: A library for managing OS information for virtualization
 Summary(zh_CN.UTF-8): 为虚拟化管理系统信息的库
 Name: libosinfo
-Version: 0.2.12
+Version: 0.3.0
 Release: 3%{?dist}%{?extra_release}
 License: LGPLv2+
 Group: Development/Libraries
@@ -98,6 +94,7 @@ rm -fr %{buildroot}
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
 magic_rpm_clean.sh
+%find_lang %{name} || :
 
 %check
 make check
@@ -109,7 +106,7 @@ rm -fr %{buildroot}
 
 %postun -p /sbin/ldconfig
 
-%files
+%files -f %{name}.lang
 %defattr(-, root, root)
 %doc AUTHORS ChangeLog COPYING.LIB NEWS README
 %{_bindir}/osinfo-detect
@@ -119,29 +116,22 @@ rm -fr %{buildroot}
 %dir %{_datadir}/libosinfo/
 %dir %{_datadir}/libosinfo/db/
 %dir %{_datadir}/libosinfo/schemas/
-%{_datadir}/libosinfo/db/usb.ids
-%{_datadir}/libosinfo/db/pci.ids
-%{_datadir}/libosinfo/db/devices
-%{_datadir}/libosinfo/db/oses
-%{_datadir}/libosinfo/db/hypervisors
-%{_datadir}/libosinfo/db/install-scripts
-%{_datadir}/libosinfo/db/datamaps/windows-lang.xml
-%{_datadir}/libosinfo/db/datamaps/x11-keyboard.xml
+%{_datadir}/libosinfo/db/*
 %{_datadir}/libosinfo/schemas/libosinfo.rng
 %{_mandir}/man1/osinfo-db-validate.1*
 %{_mandir}/man1/osinfo-detect.1*
 %{_mandir}/man1/osinfo-query.1*
 %{_mandir}/man1/osinfo-install-script.1*
 %{_libdir}/%{name}-1.0.so.*
-/lib/udev/rules.d/95-osinfo.rules
+#/lib/udev/rules.d/95-osinfo.rules
 %if %{with_gir}
 %{_libdir}/girepository-1.0/Libosinfo-1.0.typelib
 %endif
 
 %files devel
 %defattr(-, root, root)
-%doc examples/demo.js
-%doc examples/demo.py
+#%doc examples/demo.js
+#%doc examples/demo.py
 %{_libdir}/%{name}-1.0.so
 %dir %{_includedir}/%{name}-1.0/
 %dir %{_includedir}/%{name}-1.0/osinfo/

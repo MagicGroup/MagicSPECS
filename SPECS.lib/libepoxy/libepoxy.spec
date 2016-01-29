@@ -12,7 +12,7 @@ License: MIT
 URL: http://github.com/anholt/libepoxy
 # github url - generated archive
 #ource0: https://github.com/anholt/libepoxy/archive/%{commit}/%{name}-%{commit}.tar.gz
-Source0: https://github.com/anholt/libepoxy/archive/%{commit}/v%{version}.tar.gz
+Source0: https://github.com/anholt/libepoxy/releases/download/v%{version}/libepoxy-%{version}.tar.bz2
 
 BuildRequires: automake autoconf libtool
 BuildRequires: mesa-libGL-devel

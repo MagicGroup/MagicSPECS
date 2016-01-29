@@ -15,6 +15,7 @@ Source0:		http://webm.googlecode.com/files/%{name}-v%{version}.tar.bz2
 # Thanks to debian.
 Source2:		libvpx.ver
 Patch0:			Bug-fix-in-ssse3-quantize-function.patch
+Patch1:			libvpx-gcc511.patch
 URL:			http://www.webmproject.org/tools/vp8-sdk/
 %ifarch %{ix86} x86_64
 BuildRequires:		yasm
@@ -60,6 +61,7 @@ VP8 工具。
 %prep
 %setup -q -n %{name}-v%{version}
 %patch0 -p1 -b .patch0
+%patch1 -p1
 
 %build
 %ifarch %{ix86}

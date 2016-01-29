@@ -9,7 +9,7 @@ Group(zh_CN.UTF-8): 系统环境/库
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Source: https://www.openfabrics.org/downloads/management/%{name}-%{version}.tar.gz
 Url: http://openfabrics.org/
-BuildRequires: libibumad-devel = 1.3.7, libtool, glibc-static
+BuildRequires: libibumad-devel >= 1.3.10.2, libtool, glibc-static
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 ExcludeArch: s390 s390x

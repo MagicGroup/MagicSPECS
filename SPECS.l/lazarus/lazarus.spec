@@ -1,6 +1,6 @@
 Name:           lazarus
-Version:	1.2.2
-Release:        1
+Version:	1.4.4
+Release:        1%{?dist}
 Summary:        Lazarus Component Library and IDE
 Summary(zh_CN.UTF-8): Lazarus 组件库和 IDE
 
@@ -8,7 +8,7 @@ Group:          Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
 License:        GPL and modified LGPL
 URL:            http://www.lazarus.freepascal.org/
-Source0:        http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}-%{release}.tar.gz
+Source0:        http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}-0.tar.gz
 patch0:         Makefile_patch.diff
 patch1:         Desktop_patch.diff
 
@@ -45,8 +45,8 @@ cd tools
 find install -depth -type d ! \( -path "install/linux/*" -o -path "install/linux" -o -path "install" \) -exec rm -rf '{}' \;
 cd ..
 # Remove patch-backup files
-rm Makefile.fpc.orig
-rm install/lazarus.desktop.orig
+rm -f Makefile.fpc.orig
+rm -f install/lazarus.desktop.orig
 
 export FPCDIR=%{_datadir}/fpcsrc/
 fpcmake -Tall
@@ -92,6 +92,10 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/%{name}-ide
 %{_bindir}/startlazarus
 %{_bindir}/lazbuild
+%{_bindir}/lazres
+%{_bindir}/lrstolfm
+%{_bindir}/updatepofiles
+%{_datadir}/icons/hicolor/48x48/mimetypes/*.png
 %{_datadir}/pixmaps/lazarus.png
 %{_datadir}/applications/*%{name}.desktop
 %{_datadir}/mime/packages/lazarus.xml
