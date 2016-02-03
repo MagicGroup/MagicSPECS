@@ -2,7 +2,7 @@
 %global rel_build 1
 
 # This is needed, because src-url contains branched part of versioning-scheme.
-#global branch 1.9
+%global branch 1.12
 
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit c1ca209172a8b3a0751ac0a1e2dbec33c1894290}
@@ -13,37 +13,39 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Summary:  Text editor for the MATE desktop
-Summary(zh_CN.UTF-8): MATE 桌面的文本编辑器
 Name:     pluma
-Version: 1.11.0
-Release: 3%{?dist}
-#Release: 1%{?dist}
+Version:  %{branch}.1
+%if 0%{?rel_build}
+Release:  1%{?dist}
+%else
+Release:  0.1%{?git_rel}%{?dist}
+%endif
 License:  GPLv2+ and LGPLv2+
 Group:    Applications/Editors
-Group(zh_CN.UTF-8): 应用程序/编辑器
 URL:      http://mate-desktop.org
 
 # for downloading the tarball use 'spectool -g -R pluma.spec'
 # Source for release-builds.
-%define branch %(echo %{version} | awk -F. '{print $1"."$2}')
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
 # Source for snapshot-builds.
 %{!?rel_build:Source0:    http://git.mate-desktop.org/%{name}/snapshot/%{name}-%{commit}.tar.xz#/%{git_tar}}
 
+# disable non working python plugins for gtk3
+Patch1:        pluma_diasable-python-plugins.patch
+
 BuildRequires: desktop-file-utils
 BuildRequires: enchant-devel
 BuildRequires: libsoup-devel
-BuildRequires: gtk2-devel
-BuildRequires: gtksourceview2-devel
+BuildRequires: gtk3-devel
+BuildRequires: gtksourceview3-devel
 BuildRequires: iso-codes-devel
 BuildRequires: libSM-devel
 BuildRequires: mate-common
-BuildRequires: pygobject2-devel
+BuildRequires: pygobject3-devel
 BuildRequires: pygtksourceview-devel
 BuildRequires: python2-devel
 BuildRequires: rarian-compat
 BuildRequires: yelp-tools
-BuildRequires: mate-desktop-devel
 
 Requires: %{name}-data = %{version}-%{release}
 Requires: pygtk2
@@ -56,9 +58,11 @@ Requires: caja-schemas
 # the run-command plugin uses zenity
 Requires: zenity
 
+%if 0%{?fedora} && 0%{?fedora} > 19
 Provides:  mate-text-editor%{?_isa} = %{version}-%{release}
 Provides:  mate-text-editor = %{version}-%{release}
 Obsoletes: mate-text-editor < %{version}-%{release}
+%endif
 
 %description
 mate-text-editor is a small, but powerful text editor designed specifically for
@@ -71,46 +75,44 @@ mate-text-editor is extensible through a plugin system, which currently includes
 support for spell checking, comparing files, viewing CVS ChangeLogs, and
 adjusting indentation levels.
 
-%description -l zh_CN.UTF-8
-MATE 桌面的文本编辑器。
-
 %package data
 Summary:   Data files for pluma
-Summary(zh_CN.UTF-8): %{name} 的数据文件
 Group:     Applications/Editors
-Group(zh_CN.UTF-8): 应用程序/编辑器
 BuildArch: noarch
 Requires:  %{name} = %{version}-%{release}
 
 %description data
 This package contains shared data needed for pluma.
 
-%description data -l zh_CN.UTF-8
-%{name} 的数据文件。
-
 %package devel
 Summary:   Support for developing plugins for the mate-text-editor text editor
-Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:     Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 Requires:  %{name}%{?_isa} = %{version}-%{release}
 Requires:  gtksourceview3-devel
 Requires:  pygtk2-devel
+%if 0%{?fedora} && 0%{?fedora} > 19
 Provides:  mate-text-editor-devel%{?_isa} = %{version}-%{release}
 Provides:  mate-text-editor-devel = %{version}-%{release}
 Obsoletes: mate-text-editor-devel < %{version}-%{release}
+%endif
 
 %description devel
 Development files for mate-text-editor
 
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
-
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
 
-# needed for git snapshots
+%patch1 -p1 -b .diasable-python-plugins
+
+NOCONFIGURE=1 ./autogen.sh
+
+%if 0%{?rel_build}
+# for releases
 #NOCONFIGURE=1 ./autogen.sh
+%else
+# needed for git snapshots
+NOCONFIGURE=1 ./autogen.sh
+%endif
 
 # Fix debug permissions with messy hack 
 find ./*/* -type f -exec chmod 644 {} \;
@@ -122,9 +124,10 @@ find ./*/*/* -type f -exec chmod 644 {} \;
         --disable-static          \
         --enable-gtk-doc-html     \
         --enable-gvfs-metadata    \
-        --enable-python           \
+        --disable-python           \
         --disable-schemas-compile \
-        --with-gtk=2.0
+        --with-gtk=3.0            \
+        --without-matedesktop
 
 make %{?_smp_mflags} V=1
 
@@ -142,7 +145,7 @@ find %{buildroot} -name '*.a' -exec rm -f {} ';'
 
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/pluma.convert
-magic_rpm_clean.sh
+
 %find_lang %{name} --with-gnome --all-name
 
 
@@ -176,10 +179,10 @@ fi
 %{_libdir}/pluma/
 %{_libexecdir}/pluma/
 %{_datadir}/applications/pluma.desktop
+%{_datadir}/appdata/pluma.appdata.xml
 %{_datadir}/glib-2.0/schemas/org.mate.pluma.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.mate.pluma.plugins.filebrowser.gschema.xml
 %{_datadir}/glib-2.0/schemas/org.mate.pluma.plugins.time.gschema.xml
-%{_datadir}/appdata/pluma.appdata.xml
 
 %files data -f %{name}.lang
 %doc README COPYING AUTHORS
@@ -191,18 +194,47 @@ fi
 %{_libdir}/pkgconfig/pluma.pc
 %{_datadir}/gtk-doc/html/pluma/
 
+
 %changelog
-* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3
-- 为 Magic 3.0 重建
+* Fri Dec 04 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.12.1-1
+- update to 1.12.1 release
 
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
-- 更新到 1.11.0
+* Sat Nov 21 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.12.0-2
+- build with gtk3
+- disable python plugins for the moment
 
-* Fri Jul 24 2015 Liu Di <liudidi@gmail.com> - 1.10.2-1
-- 更新到 1.10.2
+* Fri Nov 06 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.12.0-1
+- update to 1.12.0 release
 
-* Mon Aug 11 2014 Liu Di <liudidi@gmail.com> - 1.9.0-2
-- 为 Magic 3.0 重建
+* Thu Oct 22 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.11.0-1
+- update to 1.11.0 release
+
+* Tue Jul 14 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.10.2.1
+- update to 1.10.2 release
+
+* Thu Jul 02 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.10.1-2
+- version bump to fix f21 build
+
+* Thu Jun 18 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.10.1-1
+- update to 1.10.1 release
+- remove upstreamed patches
+
+* Thu May 07 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.10.0-2
+- fix translations in gsettings
+- fix size of statusbar (gtk3)
+
+* Thu May 07 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.10.0-1
+- update to 1.10.0 release
+- add patch to fix f23 build
+
+* Mon Apr 06 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.90-1
+- update to 1.9.90 release
+
+* Thu Jan 22 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.1-1
+- update to 1.9.1 release
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
 * Tue Jul 15 2014 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.9.0-1
 - update to 1.9.0 release
