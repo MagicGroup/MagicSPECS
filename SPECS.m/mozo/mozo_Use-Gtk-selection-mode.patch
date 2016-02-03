@@ -1,0 +1,13 @@
+diff --git a/Mozo/MainWindow.py b/Mozo/MainWindow.py
+index 048bb76..077d130 100644
+--- a/Mozo/MainWindow.py
++++ b/Mozo/MainWindow.py
+@@ -176,6 +176,7 @@ def setupMenuTree(self):
+ 		menus.append_column(column)
+ 		menus.enable_model_drag_source(gtk.gdk.BUTTON1_MASK, self.dnd_menus, gtk.gdk.ACTION_COPY)
+ 		menus.enable_model_drag_dest(self.dnd_both, gtk.gdk.ACTION_PRIVATE)
++		menus.get_selection().set_mode(gtk.SELECTION_BROWSE)
+ 
+ 	def setupItemTree(self):
+ 		items = self.tree.get_object('item_tree')
+
