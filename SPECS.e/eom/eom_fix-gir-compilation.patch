@@ -1,0 +1,27 @@
+diff --git a/configure.ac b/configure.ac
+index 9b829d0..b3d398f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -142,6 +142,8 @@ else
+ 	have_introspection=no
+ fi
+ 
++AM_CONDITIONAL(HAVE_INTROSPECTION, test "x$have_introspection" = xyes)
++
+ # ***************
+ # ZLIB (required)
+ # ***************
+diff --git a/src/main.c b/src/main.c
+index cc999e2..f1b92f7 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -30,7 +30,7 @@
+ #include <dbus/dbus-glib-bindings.h>
+ #include <gdk/gdkx.h>
+ #endif
+-#ifdef HAVE_INSTROSPECTION
++#ifdef HAVE_INTROSPECTION
+ #include <girepository.h>
+ #endif
+ 
+
