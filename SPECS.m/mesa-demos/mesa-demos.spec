@@ -1,22 +1,18 @@
-%global gitdate 20121218
-%global gitcommit 6eef979a5488dab01088412f88374b2ea9d615cd
+%global gitdate 20151203
+%global gitcommit f941f6b60dea9bb446b97985a9afb6b1b839e81f
 %global shortcommit %(c=%{gitcommit}; echo ${c:0:7})
-%global tarball mesa-demos
 %global xdriinfo xdriinfo-1.0.4
 %global demodir %{_libdir}/mesa
 
 Summary: Mesa demos
 Name: mesa-demos
-Version: 8.1.0
-Release: 6%{?dist}
+Version: 8.3.0
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
-# git clone http://anongit.freedesktop.org/git/mesa/demos.git
-# mv demos mesa-demos-6eef979a5488dab01088412f88374b2ea9d615cd
-# tar --exclude-vcs -cjf mesa-demos-6eef979.tar.bz2 mesa-demos-6eef979a5488dab01088412f88374b2ea9d615cd
-# Source0: %{tarball}-%{shortcommit}.tar.bz2
-Source0: ftp://ftp.freedesktop.org/pub/mesa/demos/8.1.0/%{tarball}-%{version}.tar.bz2
+Source0: ftp://ftp.freedesktop.org/pub/mesa/demos/%{version}/%{name}-%{version}.tar.bz2
+#Source0: mesa-demos-%{gitdate}.tar.bz2
 Source1: http://www.x.org/pub/individual/app/%{xdriinfo}.tar.bz2
 Source2: mesad-git-snapshot.sh
 # Patch pointblast/spriteblast out of the Makefile for legal reasons
@@ -24,10 +20,12 @@ Patch0: mesa-demos-8.0.1-legal.patch
 Patch1: mesa-demos-as-needed.patch
 BuildRequires: pkgconfig autoconf automake libtool
 BuildRequires: freeglut-devel
-BuildRequires: libGL-devel
+BuildRequires: mesa-libGL-devel
+BuildRequires: mesa-libEGL-devel
+BuildRequires: mesa-libGLES-devel
+BuildRequires: mesa-libgbm-devel
 BuildRequires: libGLU-devel
 BuildRequires: glew-devel
-Group: Development/Libraries
 
 %description
 This package provides some demo applications for testing Mesa.
@@ -40,8 +38,16 @@ Provides: glxinfo glxinfo%{?__isa_bits}
 %description -n glx-utils
 The glx-utils package provides the glxinfo and glxgears utilities.
 
+%package -n egl-utils
+Summary: EGL utilities
+Group: Development/Libraries
+Provides: eglinfo es2_info
+
+%description -n egl-utils
+The egl-utils package provides the eglinfo and es2_info utilities.
+
 %prep
-%setup -q -n %{tarball}-%{version} -b1
+%setup -q -n %{name}-%{version} -b1
 %patch0 -p1 -b .legal
 %patch1 -p1 -b .asneeded
 
@@ -50,7 +56,7 @@ rm -rf src/demos/pointblast.c
 rm -rf src/demos/spriteblast.c
 
 %build
-autoreconf -i
+autoreconf -vfi
 %configure --bindir=%{demodir} --with-system-data-files
 make %{?_smp_mflags}
 
@@ -72,6 +78,9 @@ install -m 0755 src/xdemos/glxinfo %{buildroot}%{_bindir}
 install -m 0755 src/xdemos/glxinfo %{buildroot}%{_bindir}/glxinfo%{?__isa_bits}
 %endif
 
+install -m 0755 src/egl/opengl/eglinfo %{buildroot}%{_bindir}
+install -m 0755 src/egl/opengles2/es2_info %{buildroot}%{_bindir}
+
 %check
 
 %files
@@ -84,15 +93,42 @@ install -m 0755 src/xdemos/glxinfo %{buildroot}%{_bindir}/glxinfo%{?__isa_bits}
 %{_bindir}/xdriinfo
 %{_datadir}/man/man1/xdriinfo.1*
 
+%files -n egl-utils
+%{_bindir}/eglinfo
+%{_bindir}/es2_info
+
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 8.1.0-6
-- 为 Magic 3.0 重建
+* Thu Jan 14 2016 Adam Jackson <ajax@redhat.com> - 8.3.0-2
+- Rebuild for glew 1.13
 
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 8.1.0-5
-- 为 Magic 3.0 重建
+* Fri Dec 18 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 8.3.0-1
+- 8.3.0
 
-* Fri Jun 20 2014 Liu Di <liudidi@gmail.com> - 8.1.0-4
-- 为 Magic 3.0 重建
+* Thu Dec 03 2015 Adam Jackson <ajax@redhat.com> 8.2.0-5
+- New git snap
+- Add EGL/GLES buildreqs and egl-utils subpackage
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat Feb 21 2015 Till Maas <opensource@till.name> - 8.2.0-3
+- Rebuilt for Fedora 23 Change
+  https://fedoraproject.org/wiki/Changes/Harden_all_packages_with_position-independent_code
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.2.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jul 05 2014 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 8.2.0-1
+- 8.2.0 upstream release
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.1.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Sun Nov 17 2013 Dave Airlie <airlied@redhat.com> - 8.1.0-5
+- rebuilt for glew 1.10
+
+* Sat Aug 03 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.1.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
 * Wed Mar 27 2013 Adam Jackson <ajax@redhat.com> 8.1.0-3
 - Build with --as-needed so glxinfo doesn't needlessly drag in GLEW
