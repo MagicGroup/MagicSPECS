@@ -1,15 +1,18 @@
 %?mingw_package_header
 
-%global snapshot_date 20140124
-%global snapshot_rev 6475
+%global snapshot_date 20151224
+%global snapshot_rev 5e2e73b7754fca77ef7635cf52c73a3885110603
+%global snapshot_rev_short %(echo %snapshot_rev | cut -c1-6)
 %global branch trunk
+
+#%%global pre rc3
 
 # Run the testsuite
 %global enable_tests 0
 
 Name:           mingw-winpthreads
-Version:        3.1.999
-Release:        0.3.%{branch}.r%{snapshot_rev}.%{snapshot_date}%{?dist}
+Version:        4.9.999
+Release:        0.1.%{branch}.git%{snapshot_rev_short}.%{snapshot_date}%{?dist}
 Summary:        MinGW pthread library
 # The main license of winpthreads is MIT, but parts of this library
 # are derived from the "Posix Threads library for Microsoft Windows"
@@ -19,14 +22,14 @@ Group:          Development/Libraries
 
 URL:            http://mingw-w64.sourceforge.net/
 %if 0%{?snapshot_date}
-# To regerenate a snapshot:
-# Use your regular webbrowser to open http://sourceforge.net/p/mingw-w64/code/%{snapshot_rev}/tarball?path=/trunk
+# To regenerate a snapshot:
+# Use your regular webbrowser to open https://sourceforge.net/p/mingw-w64/mingw-w64/ci/%{snapshot_rev}/tarball
 # This triggers the SourceForge instructure to generate a snapshot
 # After that you can pull in the archive with:
-# spectool -g mingw-winpthreads.spec
-Source0:        http://sourceforge.net/code-snapshots/svn/m/mi/mingw-w64/code/mingw-w64-code-%{snapshot_rev}-%{branch}.zip
+# spectool -g mingw-headers.spec
+Source0:        http://sourceforge.net/code-snapshots/git/m/mi/mingw-w64/mingw-w64.git/mingw-w64-mingw-w64-%{snapshot_rev}.zip
 %else
-Source0:        http://downloads.sourceforge.net/mingw-w64/mingw-w64-v%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/mingw-w64/mingw-w64-v%{version}%{?pre:-%{pre}}.tar.bz2
 %endif
 
 
@@ -126,9 +129,9 @@ rm -rf mingw-w64-v%{version}
 mkdir mingw-w64-v%{version}
 cd mingw-w64-v%{version}
 unzip %{S:0}
-%setup -q -D -T -n mingw-w64-v%{version}/mingw-w64-code-%{snapshot_rev}-%{branch}
+%setup -q -D -T -n mingw-w64-v%{version}/mingw-w64-mingw-w64-%{snapshot_rev}
 %else
-%setup -q -n mingw-w64-v%{version}
+%setup -q -n mingw-w64-v%{version}%{?pre:-%{pre}}
 %endif
 
 
@@ -206,8 +209,59 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
 
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.1.999-0.3.trunk.r6475.20140124
-- 为 Magic 3.0 重建
+* Thu Dec 24 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.9.999-0.1.trunk.git.5e2e73.20151224
+- Update to 20151224 snapshot (git rev 5e2e73)
+
+* Wed Aug  5 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.4-1
+- Update to 4.0.4
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Apr 24 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.2-1
+- Update to 4.0.2
+
+* Sun Mar 29 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.1-1
+- Update to 4.0.1
+
+* Sat Mar 21 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.0-1
+- Update to 4.0.0
+
+* Sat Mar  7 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0-0.2.rc3
+- Update to 4.0rc3
+
+* Mon Jan 26 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0-0.1.rc1
+- Update to 4.0rc1
+
+* Mon Dec 22 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.5.trunk.git.f7337b.20141222
+- Update to 20141222 snapshot (git rev f7337b)
+
+* Tue Dec  9 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.4.trunk.git.dadc8f.20141209
+- Update to 20141209 snapshot (git rev dadc8f)
+
+* Wed Dec  3 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.2.trunk.git.a5c151.20141203
+- Update to 20141203 snapshot (git rev a5c151)
+
+* Fri Sep 12 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.1.trunk.git.b08afb.20140912
+- Update to 20140912 snapshot (git rev b08afb)
+- Bump version as upstream released mingw-w64 v3.2.0 recently (which is not based on the trunk branch)
+
+* Wed Jul 30 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.1.999-0.7.trunk.gitec1ff7.20140730
+- Update to 20140730 snapshot (git rev ec1ff7)
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.999-0.6.trunk.git502c72.20140524
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Wed May 28 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.1.999-0.5.trunk.git502c72.20140524
+- Update to 20140524 snapshot (git rev 502c72)
+- Upstream has switched from SVN to Git
+
+* Mon Apr  7 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.1.999-0.4.trunk.r6560.20140407
+- Update to r6560 (20140407 snapshot)
+- Fixes potential deadlock
+
+* Mon Feb 24 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.1.999-0.3.trunk.r6497.20140224
+- Update to r6497 (20140224 snapshot)
 
 * Fri Jan 24 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.1.999-0.2.trunk.r6460.20140124
 - Update to r6460 (20140124 snapshot)
