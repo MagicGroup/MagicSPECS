@@ -1,7 +1,9 @@
-%global snapshot_date 20140912
-%global snapshot_rev b08afbb5768898ae9c6d0d2798aaccf4f21de361
+%global snapshot_date 20151224
+%global snapshot_rev 5e2e73b7754fca77ef7635cf52c73a3885110603
 %global snapshot_rev_short %(echo %snapshot_rev | cut -c1-6)
 %global branch trunk
+
+#%%global pre rc3
 
 # The mingw-w64-headers provide the headers pthread_time.h
 # and pthread_unistd.h by default and are dummy headers.
@@ -19,8 +21,8 @@
 %endif
 
 Name:           mingw-headers
-Version:        3.9.999
-Release:        0.4.%{branch}.git.%{snapshot_rev_short}.%{snapshot_date}%{?dist}
+Version:        4.9.999
+Release:        0.1.%{branch}.git%{snapshot_rev_short}.%{snapshot_date}%{?dist}
 Summary:        Win32/Win64 header files
 
 License:        Public Domain and LGPLv2+ and ZPLv2.1
@@ -35,7 +37,7 @@ URL:            http://mingw-w64.sourceforge.net/
 # spectool -g mingw-headers.spec
 Source0:        http://sourceforge.net/code-snapshots/git/m/mi/mingw-w64/mingw-w64.git/mingw-w64-mingw-w64-%{snapshot_rev}.zip
 %else
-Source0:        http://downloads.sourceforge.net/mingw-w64/mingw-w64-v%{version}.tar.bz2
+Source0:        http://downloads.sourceforge.net/mingw-w64/mingw-w64-v%{version}%{?pre:-%{pre}}.tar.bz2
 %endif
 
 # Our RPM macros automatically set the environment variable WIDL
@@ -86,7 +88,7 @@ cd mingw-w64-v%{version}
 unzip %{S:0}
 %setup -q -D -T -n mingw-w64-v%{version}/mingw-w64-mingw-w64-%{snapshot_rev}
 %else
-%setup -q -n mingw-w64-v%{version}
+%setup -q -n mingw-w64-v%{version}%{?pre:-%{pre}}
 %endif
 
 %patch0 -p0 -b .idl
@@ -124,14 +126,53 @@ rm -f $RPM_BUILD_ROOT%{mingw64_includedir}/pthread_unistd.h
 
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.9.999-0.4.trunk.git.b08afb.20140912
-- 为 Magic 3.0 重建
+* Thu Dec 24 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.9.999-0.1.trunk.git.5e2e73.20151224
+- Update to 20151224 snapshot (git rev 5e2e73)
 
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 3.9.999-0.3.trunk.git.b08afb.20140912
-- 为 Magic 3.0 重建
+* Fri Aug 14 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.4-3
+- Backport more commits which are required to build wine-gecko 2.40
 
-* Mon Oct 13 2014 Liu Di <liudidi@gmail.com> - 3.9.999-0.2.trunk.git.b08afb.20140912
-- 为 Magic 3.0 重建
+* Fri Aug  7 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.4-2
+- Backport commit 5f5e2c (duplicate defines in activscp.h)
+  as it is required by mingw-qt5-qtactiveqt 5.5.0
+
+* Wed Aug  5 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.4-1
+- Update to 4.0.4
+- Backport various commits which are required by wine-gecko 2.40-beta1
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Fri Apr 24 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.2-1
+- Update to 4.0.2
+- Backport fix for shlobj.h regression (RHBZ #1213843)
+
+* Sun Mar 29 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.1-1
+- Update to 4.0.1
+
+* Sat Mar 21 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0.0-1
+- Update to 4.0.0
+
+* Sat Mar  7 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0-0.3.rc3
+- Update to 4.0rc3
+
+* Wed Jan 28 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0-0.2.rc1
+- Fix localtime_s and asctime_s compatibility issue
+
+* Mon Jan 26 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.0-0.1.rc1
+- Update to 4.0rc1
+
+* Mon Dec 22 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.5.trunk.git.f7337b.20141222
+- Update to 20141222 snapshot (git rev f7337b)
+
+* Tue Dec  9 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.4.trunk.git.dadc8f.20141209
+- Update to 20141209 snapshot (git rev dadc8f)
+
+* Fri Dec  5 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.3.trunk.git.63dba2.20141205
+- Update to 20141205 snapshot (git rev 63dba2)
+
+* Wed Dec  3 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.2.trunk.git.a5c151.20141203
+- Update to 20141203 snapshot (git rev a5c151)
 
 * Fri Sep 12 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 3.9.999-0.1.trunk.git.b08afb.20140912
 - Update to 20140912 snapshot (git rev b08afb)
