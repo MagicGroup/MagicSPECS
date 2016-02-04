@@ -1,14 +1,12 @@
 %global run_testsuite 1
 
 Name:           mingw-binutils
-Version:        2.24
-Release:        4%{?dist}
+Version:        2.25
+Release:        2%{?dist}
 Summary:        Cross-compiled version of binutils for Win32 and Win64 environments
-Summary(zh_CN.UTF-8): 交叉编译 Win32 和 Win64 程序用的二进制工具
 
 License:        GPLv2+ and LGPLv2+ and GPLv3+ and LGPLv3+
 Group:          Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
 
 URL:            http://www.gnu.org/software/binutils/
 Source0:        http://ftp.gnu.org/gnu/binutils/binutils-%{version}.tar.bz2
@@ -26,32 +24,20 @@ BuildRequires:  sharutils
 %endif
 Provides:       bundled(libiberty)
 
-# Resolve build failure on PPC
-# Contributed by Kai Tietz
-Patch0:         bfd_doc.txt
 
 %description
 Cross compiled binutils (utilities like 'strip', 'as', 'ld') which
 understand Windows executables and DLLs.
 
-%description -l zh_CN.UTF-8
-交叉编译 Win32 和 Win64 程序用的二进制工具，如 strip, as, ld 等。
-
 %package -n mingw-binutils-generic
 Summary:        Utilities which are needed for both the Win32 and Win64 toolchains
-
-Summary(zh_CN.UTF-8): Win32 和 Win64 工具链都需要的工具
 
 %description -n mingw-binutils-generic
 Utilities (like strip and objdump) which are needed for
 both the Win32 and Win64 toolchains
 
-%description -n mingw-binutils-generic -l zh_CN.UTF-8
-Win32 和 Win64 工具链都需要的工具。
-
 %package -n mingw32-binutils
 Summary:        Cross-compiled version of binutils for the Win32 environment
-Summary(zh_CN.UTF-8): Win32 环境需要的交叉编译工具
 Requires:       mingw-binutils-generic = %{version}-%{release}
 
 # NB: This must be left in.
@@ -61,12 +47,8 @@ Requires:       mingw32-filesystem >= 95
 Cross compiled binutils (utilities like 'strip', 'as', 'ld') which
 understand Windows executables and DLLs.
 
-%description -n mingw32-binutils -l zh_CN.UTF-8
-Win32 环境需要的交叉编译工具。
-
 %package -n mingw64-binutils
 Summary:        Cross-compiled version of binutils for the Win64 environment
-Summary(zh_CN.UTF-8): Win64 环境需要的交叉编译工具
 Requires:       mingw-binutils-generic = %{version}-%{release}
 
 # NB: This must be left in.
@@ -76,12 +58,9 @@ Requires:       mingw64-filesystem >= 95
 Cross compiled binutils (utilities like 'strip', 'as', 'ld') which
 understand Windows executables and DLLs.
 
-%description -n mingw64-binutils -l zh_CN.UTF-8
-Win64 环境需要的交叉编译工具。
 
 %prep
 %setup -q -n binutils-%{version}
-%patch0 -p0
 
 
 %build
@@ -191,7 +170,7 @@ mv $RPM_BUILD_ROOT/multilib%{_bindir}/%{mingw64_strip} $RPM_BUILD_ROOT%{_bindir}
 mv $RPM_BUILD_ROOT/multilib%{_bindir}/%{mingw64_objdump} $RPM_BUILD_ROOT%{_bindir}/%{mingw_objdump}
 mv $RPM_BUILD_ROOT/multilib%{_bindir}/%{mingw64_objcopy} $RPM_BUILD_ROOT%{_bindir}/%{mingw_objcopy}
 rm -rf $RPM_BUILD_ROOT/multilib
-magic_rpm_clean.sh
+
 
 %files -n mingw-binutils-generic
 %doc COPYING
@@ -268,14 +247,28 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.24-4
-- 为 Magic 3.0 重建
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.25-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 2.24-3
-- 为 Magic 3.0 重建
+* Tue Dec 23 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 2.25-1
+- Update to 2.25
 
-* Sat Oct 04 2014 Liu Di <liudidi@gmail.com> - 2.24-2
-- 为 Magic 3.0 重建
+* Tue Dec 23 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 2.24-5
+- Fix CVE-2014-8501 (RHBZ #1162578 #1162583)
+- Fix CVE-2014-8502 (RHBZ #1162602)
+- Fix CVE-2014-8503 (RHBZ #1162612)
+- Fix CVE-2014-8504 (RHBZ #1162626)
+- Fix CVE-2014-8737 (RHBZ #1162660)
+- Fix CVE-2014-8738 (RHBZ #1162673)
+
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.24-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
+* Fri May 30 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 2.24-2
+- Fix FTBFS against gcc 4.9
 
 * Sat Jan 11 2014 Erik van Pienbroek <epienbro@fedoraproject.org> - 2.24-1
 - Update to 2.24
