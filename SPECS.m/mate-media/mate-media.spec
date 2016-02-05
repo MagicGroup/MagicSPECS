@@ -1,6 +1,6 @@
 Name:           mate-media
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 Summary:        MATE media programs
 Summary(zh_CN.UTF-8): MATE 媒体程序
 License:        GPLv2+ and LGPLv2+

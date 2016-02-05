@@ -13,8 +13,8 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:          engrampa
-Version: 1.11.0
-Release: 3%{?dist}
+Version: 1.12.0
+Release: 2%{?dist}
 #Release: 1%{?dist}
 Summary:       MATE Desktop file archiver
 Summary(zh_CN.UTF-8): MATE 桌面的文件归档管理器
@@ -112,6 +112,9 @@ fi
 %{_datadir}/dbus-1/services/org.mate.Engrampa.service
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 1.11.0-3
 - 为 Magic 3.0 重建
 

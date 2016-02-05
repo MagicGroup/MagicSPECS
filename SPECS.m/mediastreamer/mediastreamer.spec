@@ -8,7 +8,7 @@ Summary:	Audio/Video real-time streaming
 Summary(zh_CN.UTF-8): 音频/视频实时流
 Name:		mediastreamer
 Version: 2.12.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License:	GPL v2+
 Group:		Libraries
 Source0:	http://download-mirror.savannah.gnu.org/releases/linphone/mediastreamer/%{name}-%{version}.tar.gz

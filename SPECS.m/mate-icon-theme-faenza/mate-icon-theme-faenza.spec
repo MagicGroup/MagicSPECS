@@ -1,9 +1,9 @@
 #%%global _internal_version  c147867
 
 Name:           mate-icon-theme-faenza
-Version:        1.8.0
-Release:        4%{?dist}
-#Release:        0.1.git%{_internal_version}%{?dist}
+Version: 1.12.0
+Release: 3%{?dist}
+#Release: 1%{?dist}
 Summary:        Extra set of icon themes for MATE Desktop
 Summary(zh_CN.UTF-8): MATE 桌面的额外图标集合
 License:        GPLv2+
@@ -32,7 +32,7 @@ MATE 桌面的额外图标集合。
 #%setup -q -n %{name}-%{_internal_version}
 
 # nedded for git snapshots
-#NOCONFIGURE=1 ./autogen.sh
+NOCONFIGURE=1 ./autogen.sh
 
 
 %build
@@ -80,6 +80,12 @@ fi
 
 
 %changelog
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.0-3
+- 为 Magic 3.0 重建
+
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.8.0-4
 - 为 Magic 3.0 重建
 

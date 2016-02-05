@@ -3,6 +3,7 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support in SDLAudio
 #
+%undefine _hardened_build
 Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(zh_CN.UTF-8):	MPEG4IP - 编码，发布和播放 MPEG-4 音频/视频的系统
 Name:		mpeg4ip

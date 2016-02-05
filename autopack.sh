@@ -408,7 +408,11 @@ function autobumpspec ()
 {
         DIR=`ls -d SPECS.*/$1`
         SPECNAME=$(ls $DIR/*.spec)
-	rpmdev-bumpspec -c "为 Magic 3.0 重建" $SPECNAME
+	if [ -z "$2" ]; then
+		rpmdev-bumpspec -c "为 Magic 3.0 重建" $SPECNAME
+	else
+		rpmdev-bumpspec -c "$2" $SPECNAME
+	fi
 	#spec 有更新，所以需要重新复制
         cp -f $SPECNAME $TOPDIR/SOURCES || exit 12
 }
@@ -451,17 +455,17 @@ if [ $AUTOBUMP = "1" ]; then
 			elif [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
                                 echo "暂不更新 release "     
 			else
-				autobumpspec $1
+				autobumpspec $1 $2
 			fi
 		elif [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
                         echo "暂不更新 release "
 		else     
-			autobumpspec $1
+			autobumpspec $1 $2
 		fi
 	elif  [ -f $DIR/buildfail ] || [ -f $DIR/downfail ] || [ -f $DIR/hasupdate ] ; then
 		echo "暂不更新 release"
 	else
-		autobumpspec $1
+		autobumpspec $1 $2
 	fi
 else
         if [ $AUTOUPDATE = "1" ]; then

@@ -1,6 +1,6 @@
 Name:           mate-sensors-applet
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 Summary:        MATE panel applet for hardware sensors
 Summary(zh_CN.UTF-8): 硬件传感器的 MATE 面板小部件
 Group:          User Interface/Desktops
@@ -9,8 +9,6 @@ License:        GPLv2+
 URL:            http://mate-desktop.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
-
-Patch0:         mate-sensors-applet_fix-german-translation.patch
 
 BuildRequires:  dbus-glib-devel
 BuildRequires:  libatasmart-devel
@@ -50,8 +48,6 @@ developing applications that use mate-sensors-applet.
 
 %prep
 %setup -q
-
-%patch0 -p1 -b .translation
 
 %build
 %configure \

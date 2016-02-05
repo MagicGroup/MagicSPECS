@@ -1,5 +1,5 @@
 %define _sysconfdir /etc
-%define date 2015-11-01
+%define date 2016-02-04
 %define with_gui 1
 %define with_vdpau 1
 
@@ -10,7 +10,7 @@
 Summary: MPlayer, the Movie Player for Linux.
 Summary(zh_CN.UTF-8): MPlayer, Linux 下的媒体播放器
 Name: mplayer
-Version: 1.0svn20151021
+Version: 1.0svn20160204
 License: GPL
 Release: 3%{?dist}
 Group: Applications/Multimedia

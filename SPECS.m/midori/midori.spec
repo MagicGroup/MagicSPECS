@@ -13,10 +13,6 @@ URL:		http://midori-browser.org/
 
 Source0:        http://midori-browser.org/downloads/midori_%{version}_all_.tar.bz2
 
-## Magic-pecific: Set the default homepage to start.fedoraproject.org
-## instead of search page.
-Patch0: 	midori-0.5.7-homepage.patch
-
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:	desktop-file-utils
@@ -57,8 +53,7 @@ implemented, and some are still quite incomplete.
 一个轻量级的网页浏览器，基于 webkitgtk。
 
 %prep
-%setup -q -c
-%patch0 -p1 -b .fedora-homepage
+%setup -q 
 
 %build
 #cmake -DCMAKE_INSTALL_SYSCONFDIR=/etc -DUSE_APIDOCS=1 -DUSE_ZEITGEIST=OFF -DHALF_BRO_INCOM_WEBKIT2=ON .
@@ -110,9 +105,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/applications/%{name}-private.desktop
 %{_datadir}/icons/*/*/apps/%{name}.*
 %{_datadir}/icons/*/*/categories/extension.*
-%{_datadir}/icons/*/*/status/internet-news-reader.*
+%{_datadir}/icons/*/*/status/*.*
 %{_datadir}/%{name}/
-%{_libdir}/%{name}/
 %{_sysconfdir}/xdg/%{name}/
 %{_datadir}/gtk-doc/html/%{name}*
 %{_datadir}/appdata/%{name}.appdata.xml

@@ -1,0 +1,22 @@
+--- a/src/libXNVCtrl/Makefile.orig	2015-01-16 15:29:38.678963363 +0100
++++ b/src/libXNVCtrl/Makefile	2015-01-16 15:32:50.571028309 +0100
+@@ -38,7 +38,7 @@
+ LIBXNVCTRL_VERSION := $(NVIDIA_VERSION)
+ 
+ CFLAGS += -I .
+-CFLAGS += -fPIC
++CFLAGS += -fPIC $(OPTFLAGS)
+ CFLAGS += -I $(OUTPUTDIR)
+ CFLAGS += -DPROGRAM_NAME=\"$(LIBXNVCTRL_PROGRAM_NAME)\"
+ 
+--- a/src/libXNVCtrl/utils.mk.orig	2015-01-16 15:29:43.918964321 +0100
++++ b/src/libXNVCtrl/utils.mk	2015-01-16 15:32:23.298020384 +0100
+@@ -31,7 +31,7 @@
+ # only set these warnings and optimizations if CFLAGS is unset
+ CFLAGS                ?= -Wall -O2
+ # always set these -f CFLAGS
+-CFLAGS                += -fno-strict-aliasing -fno-omit-frame-pointer -Wformat=2
++CFLAGS                += $(OPTFLAGS)
+ CC_ONLY_CFLAGS        ?=
+ LDFLAGS               ?=
+ BIN_LDFLAGS           ?=

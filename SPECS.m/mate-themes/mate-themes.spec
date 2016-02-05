@@ -1,12 +1,12 @@
 Name:           mate-themes
-Version: gtk3.14-1.11.0
-Release: 2%{?dist}
+Version: 1.12.2
+Release: 1%{?dist}
 Summary:        MATE Desktop themes
 Summary(zh_CN.UTF-8): MATE 桌面主题
 License:        GPLv2+
 URL:            http://mate-desktop.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
-Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
+Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-gtk3.18-%{version}.tar.xz
 
 BuildRequires:  icon-naming-utils mate-common mate-desktop-devel mate-icon-theme-devel
 BuildRequires:  pkgconfig(gtk-engines-2)
@@ -22,7 +22,7 @@ MATE Desktop themes
 MATE 桌面主题。
 
 %prep
-%setup -q
+%setup -q -n %{name}-gtk3.18-%{version}
 NOCONFIGURE=1 ./autogen.sh
 
 %build
@@ -94,17 +94,15 @@ done
 %{_datadir}/themes/GreenLaguna/
 %{_datadir}/themes/Menta/
 %{_datadir}/themes/BlueMenta/
-%{_datadir}/themes/BlackMenta/
 %{_datadir}/themes/BlackMATE/
-%{_datadir}/themes/Fog/
-%{_datadir}/themes/Reverse/
 %{_datadir}/themes/Shiny/
 %{_datadir}/themes/TraditionalOk/
 %{_datadir}/themes/TraditionalGreen/
 %{_datadir}/themes/TraditionalOkTest/
 %{_datadir}/themes/ContrastHigh/
+%{_datadir}/themes/Blue-Submarine/
+%{_datadir}/themes/Green-Submarine/
 %{_datadir}/icons/ContrastHigh/
-%{_datadir}/icons/Fog/
 %{_datadir}/icons/mate/cursors/
 
 %changelog

@@ -1,6 +1,6 @@
 Name:           mate-system-monitor
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 Summary:        Process and resource monitor
 Summary(zh_CN.UTF-8): 进程和资源监视器
 
@@ -68,6 +68,7 @@ fi
 %{_datadir}/applications/mate-system-monitor.desktop
 %{_datadir}/pixmaps/mate-system-monitor/
 %{_datadir}/glib-2.0/schemas/org.mate.system-monitor.*.xml
+%{_datadir}/appdata/mate-system-monitor.appdata.xml
 %{_mandir}/man1/*
 
 

@@ -1,6 +1,6 @@
 Name:           mate-utils
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.0
+Release: 1%{?dist}
 Summary:        MATE utility programs
 Summary(zh_CN.UTF-8): MATE 工具程序
 
@@ -214,6 +214,7 @@ fi
 %{_datadir}/mate-utils/
 %{_datadir}/glib-2.0/schemas/org.mate.system-log.gschema.xml
 %{_datadir}/applications/mate-system-log.desktop
+%{_datadir}/icons/hicolor/*/apps/mate-system-log*
 %{_mandir}/man1/mate-system-log.1.*
 
 %files -n mate-screenshot
@@ -224,6 +225,7 @@ fi
 %{_mandir}/man1/mate-screenshot.1.*
 %{_mandir}/man1/mate-panel-screenshot.1.gz
 %{_datadir}/glib-2.0/schemas/org.mate.screenshot.gschema.xml
+%{_datadir}/appdata/mate-screenshot.appdata.xml
 
 %files -n mate-dictionary -f mate-dictionary.lang
 %doc mate-dictionary/AUTHORS
@@ -238,6 +240,7 @@ fi
 %{_datadir}/glib-2.0/schemas/org.mate.dictionary.gschema.xml
 %{_datadir}/mate-panel/applets/org.mate.DictionaryApplet.mate-panel-applet
 %{_datadir}/dbus-1/services/org.mate.panel.applet.DictionaryAppletFactory.service
+%{_datadir}/appdata/mate-dictionary.appdata.xml
 
 %files -n mate-search-tool -f mate-search-tool.lang
 %{_bindir}/mate-search-tool
@@ -245,6 +248,7 @@ fi
 %{_mandir}/man1/mate-search-tool.1.*
 %{_datadir}/glib-2.0/schemas/org.mate.search-tool.gschema.xml
 %{_datadir}/pixmaps/mate-search-tool/
+%{_datadir}/appdata/mate-search-tool.appdata.xml
 
 %files -n mate-disk-usage-analyzer -f mate-disk-usage-analyzer.lang
 %doc baobab/AUTHORS
@@ -255,7 +259,7 @@ fi
 %{_mandir}/man1/mate-disk-usage-analyzer.1.*
 %{_datadir}/glib-2.0/schemas/org.mate.disk-usage-analyzer.gschema.xml
 %{_datadir}/icons/hicolor/*/apps/mate-disk-usage-analyzer.*
-
+%{_datadir}/appdata/mate-disk-usage-analyzer.appdata.xml
 
 %changelog
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2

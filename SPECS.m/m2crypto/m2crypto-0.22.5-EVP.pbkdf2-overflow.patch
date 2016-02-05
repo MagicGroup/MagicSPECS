@@ -1,0 +1,44 @@
+From 9a30b846fc6fd9d31002714d68e0de4ec2aa6c2a Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miloslav=20Trma=C4=8D?= <mitr@redhat.com>
+Date: Mon, 2 Nov 2015 21:14:22 +0100
+Subject: [PATCH] Fix buffer overflow in pkcs5_pbkdf2_hmac_sha1
+
+The underlying PKCS5_PBKDF2_HMAC_SHA1 can generate output of any size,
+so a fixed on-stack buffer is insufficient.
+
+Resolves https://bugzilla.redhat.com/show_bug.cgi?id=1270318 .
+---
+ SWIG/_evp.i | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/SWIG/_evp.i b/SWIG/_evp.i
+index e78000c..85382db 100644
+--- a/SWIG/_evp.i
++++ b/SWIG/_evp.i
+@@ -168,7 +168,7 @@ PyObject *pkcs5_pbkdf2_hmac_sha1(PyObject *pass,
+                                  PyObject *salt,
+                                  int iter,
+                                  int keylen) {
+-    unsigned char key[EVP_MAX_KEY_LENGTH];
++    unsigned char *key;
+     unsigned char *saltbuf;
+     char *passbuf;
+     PyObject *ret;
+@@ -181,10 +181,14 @@ PyObject *pkcs5_pbkdf2_hmac_sha1(PyObject *pass,
+                                     &saltlen) == -1)
+         return NULL;
+ 
++    key = PyMem_Malloc(keylen);
++    if (key == NULL)
++	return PyErr_NoMemory();
+     PKCS5_PBKDF2_HMAC_SHA1(passbuf, passlen, saltbuf, saltlen, iter,
+                            keylen, key);
+     ret = PyString_FromStringAndSize((char*)key, keylen);
+     OPENSSL_cleanse(key, keylen);
++    PyMem_Free(key);
+     return ret;
+ }
+ 
+-- 
+2.4.3
+

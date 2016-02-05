@@ -13,8 +13,8 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-panel
-Version: 1.11.1
-Release: 2%{?dist}
+Version: 1.12.2
+Release: 1%{?dist}
 #Release: 1%{?dist}
 Summary:        MATE Desktop panel and applets
 Summary(zh_CN.UTF-8): MATE 桌面面板和小部件

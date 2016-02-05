@@ -1,5 +1,5 @@
 Name:           mate-menus
-Version: 1.11.0
+Version: 1.12.0
 Release: 2%{?dist}
 Summary:        Displays menus for MATE Desktop
 Summary(zh_CN.UTF-8): MATE 桌面的显示菜单
@@ -7,7 +7,6 @@ License:        GPLv2+ and LGPLv2+
 URL:            http://mate-desktop.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
-Source1:        mate-preferences-categories.menu
 
 BuildRequires:  chrpath
 BuildRequires:  gobject-introspection-devel
@@ -15,12 +14,6 @@ BuildRequires:  mate-common
 BuildRequires:  python-devel
 
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
-
-# we don't want to provide private python extension libs
-%{?filter_setup:
-%filter_provides_in %{python_sitearch}/.*\.so$
-%filter_setup
-}
 
 %description
 Displays menus for MATE Desktop
@@ -38,17 +31,6 @@ Shared libraries for mate-menus
 
 %description libs -l zh_CN.UTF-8
 mate-menus 的运行库。
-
-%package preferences-category-menu
-Summary: Categories for the preferences menu
-Summary(zh_CN.UTF-8): 参数菜单的分类
-Requires:	%{name}-libs%{?_isa} = %{version}-%{release}
-
-%description preferences-category-menu
-Categories for the preferences menu
-
-%description preferences-category-menu -l zh_CN.UTF-8
-参数菜单的分类。
 
 %package devel
 Summary: Development files for mate-menus
@@ -82,7 +64,6 @@ make %{?_smp_mflags} V=1
 %install
 %{make_install}
 
-install -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/xdg/menus
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 find %{buildroot} -name '*.a' -exec rm -f {} ';'
 chrpath --delete $RPM_BUILD_ROOT%{python_sitearch}/matemenu.so
@@ -107,9 +88,6 @@ magic_rpm_clean.sh
 %{_libdir}/libmate-menu.so.2.4.9
 %{python_sitearch}/matemenu.so
 
-%files preferences-category-menu
-%config %{_sysconfdir}/xdg/menus/mate-preferences-categories.menu
-
 %files devel
 %{_datadir}/gir-1.0/MateMenu-2.0.gir
 %{_libdir}/libmate-menu.so
@@ -118,6 +96,12 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
+* Mon Feb 01 2016 Liu Di <liudidi@gmail.com> - 1.12.1-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

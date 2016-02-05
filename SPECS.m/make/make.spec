@@ -11,15 +11,26 @@ Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/make/
 Source: ftp://ftp.gnu.org/gnu/make/make-%{version}.tar.bz2
 
-Patch1: make-4.0-noclock_gettime.patch
-Patch2: make-4.0-j8k.patch
-Patch3: make-4.0-getcwd.patch
+Patch0: make-4.0-getcwd.patch
+Patch1: make-4.0-newlines.patch
+
+# Assume we don't have clock_gettime in configure, so that
+# make is not linked against -lpthread (and thus does not
+# limit stack to 2MB).
+Patch2: make-4.0-noclock_gettime.patch
+
+# BZs #142691, #17374
+Patch3: make-4.0-j8k.patch
+
+# make sure errno for error reporting is not lost accross _() calls
 Patch4: make-4.0-err-reporting.patch
 
 # Upstream: https://savannah.gnu.org/bugs/?30748
-Patch6: make-4.0-weird-shell.patch
+# The default value of .SHELL_FLAGS is -c.
+Patch5: make-4.0-weird-shell.patch
 
-Patch7: make-4.0-newlines.patch
+# make seg faults when run with no arguments
+Patch6: make-4.1-rh1277968.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
@@ -51,17 +62,18 @@ The make-devel package contains gnumake.h.
 
 %prep
 %setup -q
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 %patch6 -p1
-%patch7 -p1
 
 rm -f tests/scripts/features/parallelism.orig
 
 %build
-%configure
+%configure  --with-guile
 make %{?_smp_mflags}
 
 %install

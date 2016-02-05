@@ -1,6 +1,6 @@
 Name:           mailcap
 Version: 2.1.45
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary:        Helper application and MIME type associations for file types
 Summary(zh_CN.UTF-8): 文件类型关联的帮助程序
 
@@ -38,7 +38,9 @@ by several applications e.g. to determine MIME types for filenames.
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT sysconfdir=%{_sysconfdir} mandir=%{_mandir}
+rm -rf $RPM_BUILD_ROOT%{_sysconfdir}/nginx/
 magic_rpm_clean.sh
+
 
 %check
 make check
@@ -55,8 +57,10 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/mime.types
 %{_mandir}/man4/mailcap.*
 
-
 %changelog
+* Fri Jan 29 2016 Liu Di <liudidi@gmail.com> - 2.1.45-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 2.1.45-3
 - 为 Magic 3.0 重建
 

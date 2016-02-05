@@ -1,0 +1,188 @@
+diff -ur myget-0.1.2.orig/configure.in myget-0.1.2/configure.in
+--- myget-0.1.2.orig/configure.in	2016-02-05 12:28:58.669810927 +0800
++++ myget-0.1.2/configure.in	2016-02-05 12:29:28.770810156 +0800
+@@ -24,9 +24,79 @@
+ 
+ # Checks for libraries.
+ AC_CHECK_LIB(pthread, pthread_create, , AC_MSG_ERROR([ pthread is not found ]))
+-PKG_CHECK_MODULES(OPENSSL, openssl, AC_DEFINE([ HAVE_SSL ]), AC_MSG_RESULT([ openssl is not installed, so the protocol https will not be supported ]))
+-AC_SUBST([ OPENSSL_CFLAGS ])
+-AC_SUBST([ OPENSSL_LIBS ])
++
++AC_ARG_WITH(openssl,
++        [ --with-openssl=PATH      Specify the root of the openssl installation],
++        [
++            case $withval in
++                no|yes)
++                    ;;
++                *)
++                openssl="$withval"
++                    ;;
++            esac
++        ])
++
++if test "${openssl}" != ""; then
++    PKG_CONFIG_PATH=${openssl}/lib/pkgconfig
++    export PKG_CONFIG_PATH
++fi
++
++AC_MSG_CHECKING([OpenSSL CFLAGS])
++if test "$OPENSSL_CFLAGS" = ""; then
++    if pkg-config openssl --exists > /dev/null 2>&1 ; then
++	AC_DEFINE([ HAVE_SSL ])
++        OPENSSL_CFLAGS="`pkg-config openssl --cflags`"
++    fi
++fi
++AC_MSG_RESULT([using '$OPENSSL_CFLAGS'])
++CFLAGS="${CFLAGS} ${OPENSSL_CFLAGS}"
++
++AC_MSG_CHECKING([OpenSSL INCLUDES])
++if test "$OPENSSL_INCLUDES" = ""; then
++    if pkg-config openssl --exists > /dev/null 2>&1 ; then
++        OPENSSL_INCLUDES="`pkg-config openssl --cflags-only-I`"
++    elif test -r "${openssl}/include/openssl/ssl.h" ; then
++        OPENSSL_INCLUDES="-I ${openssl}/include"
++    fi
++fi
++AC_MSG_RESULT([using '$OPENSSL_INCLUDES'])
++CPPFLAGS="${CPPFLAGS} ${OPENSSL_INCLUDES}"
++AC_TRY_COMPILE([#include <openssl/ssl.h>],
++               [SSL_library_init();],,
++               [AC_MSG_ERROR([Unable to compile with SSL])])
++
++AC_MSG_CHECKING([OpenSSL LDFLAGS])
++if test "$OPENSSL_LDFLAGS" = ""; then
++    if pkg-config openssl --exists > /dev/null 2>&1 ; then
++        OPENSSL_LDFLAGS="`pkg-config openssl --libs`"
++    else
++        OPENSSL_LDFLAGS="-L${openssl}/lib"
++    fi
++fi
++AC_MSG_RESULT([using '$OPENSSL_LDFLAGS'])
++LDFLAGS="${LDFLAGS} ${OPENSSL_LDFLAGS}"
++
++AC_MSG_CHECKING([OpenSSL LIBS])
++if test "$OPENSSL_LIBS" = ""; then
++    if pkg-config openssl --exists > /dev/null 2>&1 ; then
++        OPENSSL_LIBS="`pkg-config openssl --libs-only-l`"
++    else
++        OPENSSL_LIBS="-lssl -lcrypto"
++    fi
++fi
++AC_MSG_RESULT([using '$OPENSSL_LIBS'])
++LIBS="${LIBS} ${OPENSSL_LIBS}"
++
++AC_TRY_LINK(
++[#include <openssl/ssl.h>],
++[SSL_library_init();], , [AC_MSG_ERROR([Unable to link with SSL])])
++
++AC_SUBST(OPENSSL_CFLAGS)
++AC_SUBST(OPENSSL_INCLUDES)
++AC_SUBST(OPENSSL_LDFLAGS)
++AC_SUBST(OPENSSL_LIBS)
++AC_SUBST(GLOBUS_FLAVOR_NAME)
+ 
+ # Checks for header files.
+ AC_HEADER_STDC
+diff -ur myget-0.1.2.orig/src/downloader.cpp myget-0.1.2/src/downloader.cpp
+--- myget-0.1.2.orig/src/downloader.cpp	2016-02-05 12:28:58.674810927 +0800
++++ myget-0.1.2/src/downloader.cpp	2016-02-05 12:29:07.100810711 +0800
+@@ -19,6 +19,12 @@
+ 
+ #include <signal.h>
+ #include <errno.h>
++#include <sys/types.h>    // For stat()
++#include <sys/stat.h>     // For stat()
++#include <cstring>
++#include <cstdio>
++#include <cstdlib>
++
+ 
+ #include "downloader.h"
+ #include "macro.h"
+diff -ur myget-0.1.2.orig/src/ftpparser.cpp myget-0.1.2/src/ftpparser.cpp
+--- myget-0.1.2.orig/src/ftpparser.cpp	2016-02-05 12:28:58.675810927 +0800
++++ myget-0.1.2/src/ftpparser.cpp	2016-02-05 12:29:07.101810711 +0800
+@@ -20,6 +20,8 @@
+ 
+ #include <iostream>
+ #include <cstring>
++#include <cstdio>
++#include <cstdlib>
+ #include <cassert>
+ 
+ #include "ftpparser.h"
+diff -ur myget-0.1.2.orig/src/ftpplugin.cpp myget-0.1.2/src/ftpplugin.cpp
+--- myget-0.1.2.orig/src/ftpplugin.cpp	2016-02-05 12:28:58.675810927 +0800
++++ myget-0.1.2/src/ftpplugin.cpp	2016-02-05 12:29:07.102810711 +0800
+@@ -19,6 +19,9 @@
+ 
+ 
+ #include <iostream>
++#include <cstring>
++#include <cstdio>
++#include <cstdlib>
+ 
+ #include "ftpplugin.h"
+ #include "ftp.h"
+diff -ur myget-0.1.2.orig/src/http.cpp myget-0.1.2/src/http.cpp
+--- myget-0.1.2.orig/src/http.cpp	2016-02-05 12:28:58.676810927 +0800
++++ myget-0.1.2/src/http.cpp	2016-02-05 12:29:07.103810711 +0800
+@@ -20,6 +20,8 @@
+ 
+ #include <iostream>
+ #include <cstring>
++#include <cstdio>
++#include <cstdlib>
+ #include <cassert>
+ 
+ #include "http.h"
+diff -ur myget-0.1.2.orig/src/httpplugin.cpp myget-0.1.2/src/httpplugin.cpp
+--- myget-0.1.2.orig/src/httpplugin.cpp	2016-02-05 12:28:58.677810927 +0800
++++ myget-0.1.2/src/httpplugin.cpp	2016-02-05 12:29:07.104810711 +0800
+@@ -20,6 +20,9 @@
+ 
+ #include <cassert>
+ #include <iostream>
++#include <cstring>
++#include <cstdio>
++#include <cstdlib>
+ 
+ #include "http.h"
+ #include "url.h"
+diff -ur myget-0.1.2.orig/src/mytget.cpp myget-0.1.2/src/mytget.cpp
+--- myget-0.1.2.orig/src/mytget.cpp	2016-02-05 12:28:58.678810927 +0800
++++ myget-0.1.2/src/mytget.cpp	2016-02-05 12:29:07.105810711 +0800
+@@ -21,6 +21,9 @@
+ #include <iostream>
+ #include <getopt.h>
+ #include <signal.h>
++#include <cstring>
++#include <cstdio>
++#include <cstdlib>
+ 
+ #include "myget.h"
+ 
+diff -ur myget-0.1.2.orig/src/url.cpp myget-0.1.2/src/url.cpp
+--- myget-0.1.2.orig/src/url.cpp	2016-02-05 12:28:58.680810927 +0800
++++ myget-0.1.2/src/url.cpp	2016-02-05 12:29:07.106810711 +0800
+@@ -20,6 +20,8 @@
+ #include <iostream>
+ #include <cstring>
+ #include <cassert>
++#include <cstdio>
++#include <cstdlib>
+ 
+ #include "url.h"
+ #include "macro.h"
+diff -ur myget-0.1.2.orig/src/utils.cpp myget-0.1.2/src/utils.cpp
+--- myget-0.1.2.orig/src/utils.cpp	2016-02-05 12:28:58.681810927 +0800
++++ myget-0.1.2/src/utils.cpp	2016-02-05 12:29:07.108810711 +0800
+@@ -21,6 +21,7 @@
+ #include <termios.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
++#include <stdio.h>
+ #include <sys/time.h>
+ #include <cassert>
+ #include <cstring>

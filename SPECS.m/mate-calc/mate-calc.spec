@@ -1,6 +1,6 @@
 Name:		mate-calc
-Version:	1.8.0
-Release:	4%{?dist}
+Version: 1.8.0
+Release: 1%{?dist}
 Summary:	MATE Desktop calculator
 Summary(zh_CN.UTF-8): MATE 桌面的计算器
 License:	GPLv2+

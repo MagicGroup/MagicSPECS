@@ -5,14 +5,13 @@ Name: myget
 Summary: A download accelerator for GNU/Linux
 Summary(zh_CN.UTF-8): GNU/Linux下的下载加速器
 Version: %{version}
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPL
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
 Url: http://myget.sourceforge.net
 Source: http://myget.sourceforge.net/release/%{name}-%{version}.tar.gz
-Patch0: myget-0.1.2-gcc44.patch
-Patch1:	myget-0.1.2-stat.patch
+Patch2: myget-0.1.2-gcc5.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{subver}-%{release}-buildroot
 Packager: kde <jack@linux.net.cn>, Magic Group
 Prefix: %{_prefix}
@@ -25,12 +24,12 @@ Myget是GNU/Linux下的下载加速器
 
 %prep
 %setup -q -n %{name}-%{version}
-%patch0 -p1
-%patch1 -p1
+%patch2 -p1
 
 %build
-%configure -q
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS"
+autoreconf -fisv
+./configure  --prefix=%{_prefix}
+make %{?_smp_mflags} 
 
 %install
 rm -rf %{buildroot}
@@ -45,10 +44,13 @@ rm -rf %{_builddir}/%{name}-%{version}
 %files
 %defattr(-,root,root)
 %doc AUTHORS BUGS COPYING INSTALL NEWS README
-%{_bindir}
+%{_bindir}/*
 
 
 %changelog
+* Fri Feb 05 2016 Liu Di <liudidi@gmail.com> - 0.1.2-6
+- 为 Magic 3.0 重建
+
 * Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.1.2-5
 - 为 Magic 3.0 重建
 

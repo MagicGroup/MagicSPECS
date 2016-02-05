@@ -8,7 +8,7 @@ Group:    Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License:  GPLv2+
 URL:      http://www.zavedil.com/mate-lock-keys-applet/
-Source:   http://www.zavedil.com/wp-content/uploads/2013/12/%{name}-%{version}.tar.gz
+Source:   http://www.zavedil.com/wp-content/uploads/2015/01/%{name}-%{version}.tar.gz
 
 BuildRequires: gettext
 BuildRequires: gtk2-devel
@@ -38,7 +38,7 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/icon-theme.cache
 rm -f $RPM_BUILD_ROOT%{_datadir}/glib-2.0/schemas/gschemas.compiled
 rm -f $RPM_BUILD_ROOT%{_docdir}/mate-applet-lockkeys/*
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -59,7 +59,7 @@ fi
 /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 
-%files -f %{name}.lang
+%files 
 %doc AUTHORS BUGS ChangeLog COPYING README TODO
 %{_libexecdir}/lockkeys_applet
 %{_datadir}/pixmaps/*.xpm

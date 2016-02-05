@@ -13,7 +13,7 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:          mate-control-center
-Version: 1.11.0
+Version: 1.12.1
 Release: 2%{?dist}
 #Release: 1%{?dist}
 Summary:       MATE Desktop control-center
@@ -46,11 +46,7 @@ BuildRequires: unique-devel
 Requires: gsettings-desktop-schemas
 Requires: hicolor-icon-theme
 # keyring support
-%if 0%{?fedora} > 19
 Requires: gnome-keyring
-%else
-Requires: mate-keyring
-%endif
 Requires: %{name}-filesystem%{?_isa} = %{version}-%{release}
 
 
@@ -149,10 +145,11 @@ fi
 %files -f %{name}.lang
 %doc AUTHORS COPYING README
 %config %{_sysconfdir}/xdg/menus/matecc.menu
+%config %{_sysconfdir}/xdg/menus/mate-preferences-categories.menu
 %{_bindir}/mate-*
 %{_libdir}/libmate-window-settings.so.*
 %{_libdir}/window-manager-settings
-%{_libdir}/libslab.so.*
+%{_libdir}/libmate-slab.so.*
 %{_sbindir}/mate-display-properties-install-systemwide
 %{_datadir}/applications/*.desktop
 %{_datadir}/desktop-directories/matecc.directory
@@ -164,9 +161,7 @@ fi
 %{_datadir}/mime/packages/mate-theme-package.xml
 %{_datadir}/thumbnailers/mate-font-viewer.thumbnailer
 %{_datadir}/polkit-1/actions/org.mate.randr.policy
-%{_mandir}/man1/mate-about-me.1.*
-%{_mandir}/man1/mate-appearance-properties.1.*
-%{_mandir}/man1/mate-default-applications-properties.1.*
+%{_mandir}/man1/mate*.1.*
 
 %files filesystem
 %dir %{_datadir}/mate-control-center
@@ -178,12 +173,15 @@ fi
 %{_libdir}/libmate-window-settings.so
 %{_libdir}/pkgconfig/mate-default-applications.pc
 %{_libdir}/pkgconfig/mate-keybindings.pc
-%{_includedir}/libslab
-%{_libdir}/libslab.so
-%{_libdir}/pkgconfig/libslab.pc
+%{_includedir}/libmate-slab
+%{_libdir}/libmate-slab.so
+%{_libdir}/pkgconfig/mate-slab.pc
 
 
 %changelog
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.1-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

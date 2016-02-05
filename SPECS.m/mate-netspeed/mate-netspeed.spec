@@ -1,6 +1,6 @@
 Name:           mate-netspeed
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.0
+Release: 1%{?dist}
 Summary:        MATE netspeed
 Summary(zh_CN.UTF-8): MATE 网络速度
 License:        GPLv2+
@@ -65,7 +65,6 @@ fi
 %{_datadir}/glib-2.0/schemas/org.mate.panel.applet.netspeed.gschema.xml
 %{_datadir}/icons/hicolor/*x*/apps/*.png
 %{_datadir}/icons/hicolor/*x*/devices/*.png
-%{_datadir}/help/*/mate_netspeed_applet
 %{_datadir}/icons/hicolor/*x*/status/*.png
 %{_datadir}/icons/hicolor/scalable/apps/mate-netspeed-applet.svg
 %{_datadir}/mate-panel/applets/org.mate.panel.NetspeedApplet.mate-panel-applet

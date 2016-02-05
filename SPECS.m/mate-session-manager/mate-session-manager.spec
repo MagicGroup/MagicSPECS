@@ -1,6 +1,6 @@
 Name:           mate-session-manager
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 Summary:        MATE Desktop session manager
 Summary(zh_CN.UTF-8): MATE 桌面的会话管理器
 License:        GPLv2+
@@ -88,6 +88,7 @@ fi
 %{_bindir}/mate-session
 %{_bindir}/mate-session-properties
 %{_bindir}/mate-session-save
+%{_bindir}/mate-session-inhibit
 %{_bindir}/mate-wm
 %{_datadir}/applications/mate-session-properties.desktop
 %{_datadir}/mate-session-manager

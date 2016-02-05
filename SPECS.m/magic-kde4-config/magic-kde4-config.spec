@@ -1,7 +1,8 @@
+%define debug_package %{nil}
 Summary: K Desktop Environment - Configuration files
 Summary(zh_CN.UTF-8): K 桌面环境(KDE4) - 配置文件
 Name: magic-kde4-config
-Version: %{kde4_kdelibs_version}
+Version: 4.10.3
 Release: 2%{?dist}
 License: GPL
 URL: http://www.magiclinux.org
@@ -50,9 +51,6 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %defattr(-,root,root)
 
 %changelog
-* Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 15.08.2-2
-- 为 Magic 3.0 重建
-
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.3.x.20090614-3
 - 为 Magic 3.0 重建
 

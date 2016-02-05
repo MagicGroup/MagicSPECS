@@ -70,10 +70,10 @@ magic_rpm_clean.sh
 %files 
 %defattr(-,root,root,-)
 %{_bindir}/vbnc*
-%{_prefix}/lib/mono/?.0/vbnc*
-%{_prefix}/lib/mono/?.0/Microsoft.VisualBasic.dll
+%{_prefix}/lib/mono/?.5/vbnc*
+%{_prefix}/lib/mono/?.5/Microsoft.VisualBasic.dll
 %{_prefix}/lib/mono/gac/Microsoft.VisualBasic
-%{_prefix}/lib/mono/?.0/Mono.Cecil.VB*dll
+%{_prefix}/lib/mono/?.5/Mono.Cecil.VB*dll
 %{_prefix}/lib/mono/gac/Mono.Cecil.VB.Mdb
 %{_prefix}/lib/mono/gac/Mono.Cecil.VB.Pdb
 %{_prefix}/lib/mono/gac/Mono.Cecil.VB

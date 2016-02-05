@@ -1,9 +1,9 @@
 #%%global _internal_version  bc54d96
 
 Name:          mate-power-manager
-Version: 1.11.0
+Version: 1.12.1
 #Release: 1%{?dist}
-Release: 2%{?dist}
+Release: 1%{?dist}
 Summary:       MATE power management service
 Summary(zh_CN.UTF-8): MATE 电源管理服务
 License:       GPLv2+
@@ -22,7 +22,6 @@ Patch0:        mate-power-manager_dbus_interface_keyboard_backlight_controls.pat
 Patch1:        mate-power-manager_avoid-levels-is-0-warning.patch
 
 # upstream fixes for upower-1.0, the order of the series is important
-%if 0%{?fedora} > 20
 # https://github.com/mate-desktop/mate-power-manager/commit/220a4e0
 Patch2:        mate-power-manager_remove-battery-recall-logic.patch
 # https://github.com/mate-desktop/mate-power-manager/commit/d59f4b8
@@ -31,7 +30,6 @@ Patch3:        mate-power-manager_port-to-upower-0.99-API.patch
 Patch4:        mate-power-manager_improve-UPower1-support.patch
 # https://github.com/mate-desktop/mate-power-manager/commit/8f734c6
 Patch5:        mate-power-manager_other-round-of-fixes-for-UPower-0.99-API-changes.patch
-%endif
 
 
 BuildRequires: cairo-devel
@@ -109,7 +107,6 @@ fi
 %files  -f %{name}.lang
 %doc AUTHORS COPYING README
 %{_mandir}/man1/mate-power-*.*
-%{_bindir}/mate-power-manager-bugreport
 %{_bindir}/mate-power-manager
 %{_bindir}/mate-power-preferences
 %{_bindir}/mate-power-statistics
@@ -119,8 +116,6 @@ fi
 %{_datadir}/mate-power-manager/
 %{_datadir}/icons/hicolor/*/apps/mate-*.*
 %{_datadir}/polkit-1/actions/org.mate.power.policy
-#%{_datadir}/mate-2.0/ui/brightness-applet-menu.xml
-#%{_datadir}/mate-2.0/ui/inhibit-applet-menu.xml
 %{_datadir}/mate-panel/applets/org.mate.BrightnessApplet.mate-panel-applet
 %{_datadir}/mate-panel/applets/org.mate.InhibitApplet.mate-panel-applet
 %{_datadir}/glib-2.0/schemas/org.mate.power-manager.gschema.xml

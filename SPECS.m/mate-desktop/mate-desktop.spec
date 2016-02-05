@@ -1,18 +1,17 @@
+# Conditional for release and snapshot builds. Uncomment for release-builds.
+%global rel_build 1
+
 Summary:        Shared code for mate-panel, mate-session, mate-file-manager, etc
 Summary(zh_CN.UTF-8): mate-panel, mate-session, mate-file-manager 等程序的共享代码
 Name:           mate-desktop
 License:        GPLv2+ and LGPLv2+ and MIT
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
 Source0:        http://pub.mate-desktop.org/releases/%{majorver}/%{name}-%{version}.tar.xz
 URL:            http://mate-desktop.org
 
-Source2:        gnu-cat.gif
-Source3:        gnu-cat_navideno_v3.png
-
-Patch0:         mate-desktop_enable_gnucat-f21.patch
-
+Source2:        mate-mimeapps.list
 
 BuildRequires:  dconf-devel
 BuildRequires:  desktop-file-utils
@@ -99,13 +98,16 @@ libmatedesktop.
 %{name} 的开发包。
 
 %prep
-%setup -q
-%patch0 -p1 -b .gnucat
-cp %SOURCE2 mate-about/gnu-cat.gif
-cp %SOURCE3 mate-about/gnu-cat_navideno_v3.png
+%setup -q%{!?rel_build:n %{name}-%{commit}}
 
-# needed for gnucat patch
-autoreconf -fi
+%if 0%{?rel_build}
+# for releases
+#NOCONFIGURE=1 ./autogen.sh
+%else
+# needed for git snapshots
+NOCONFIGURE=1 ./autogen.sh
+%endif
+
 
 %build
 %configure                                                 \
@@ -117,7 +119,8 @@ autoreconf -fi
      --enable-unique                                       \
      --enable-mpaste                                       \
      --with-pnp-ids-path="%{_datadir}/hwdata/pnp.ids"      \
-     --enable-gtk-doc-html
+     --enable-gtk-doc-html                                 \
+     --enable-introspection=yes
 
 make %{?_smp_mflags} V=1
 
@@ -133,14 +136,16 @@ desktop-file-install                                         \
         --dir=%{buildroot}%{_datadir}/applications           \
 %{buildroot}%{_datadir}/applications/mate-about.desktop
 
+desktop-file-install                                         \
+        --delete-original                                    \
+        --dir=%{buildroot}%{_datadir}/applications           \
+%{buildroot}%{_datadir}/applications/mate-color-select.desktop
+
+mkdir -p %{buildroot}%{_datadir}/applications
+install -m 644 %SOURCE2 %{buildroot}/%{_datadir}/applications/mate-mimeapps.list
+
 # remove needless gsettings convert file
 rm -f  %{buildroot}%{_datadir}/MateConf/gsettings/mate-desktop.convert
-
-# remove conflicting files with gnome
-rm -fr %{buildroot}%{_datadir}/help/*/fdl
-rm -fr %{buildroot}%{_datadir}/help/*/gpl
-rm -fr %{buildroot}%{_datadir}/help/*/lgpl
-
 magic_rpm_clean.sh
 %find_lang %{name} --with-gnome --all-name
 
@@ -153,42 +158,49 @@ if [ $1 -eq 0 ] ; then
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &> /dev/null || :
+
 %posttrans libs
 /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
     /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+    /bin/touch --no-create %{_datadir}/icons/hicolor &> /dev/null
+    /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &> /dev/null || :
 fi
 
 %posttrans
 /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+/usr/bin/ln -sf %{_datadir}/X11/xorg.conf.d/50-synaptics.conf %{_datadir}/X11/xorg.conf.d/99-synaptics-mate.conf &> /dev/null || :
+/usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &> /dev/null || :
 
 
 %files
 %doc AUTHORS COPYING COPYING.LIB NEWS README
 %{_bindir}/mate-about
-%{_bindir}/mate-gsettings-toggle
 %{_bindir}/mpaste
 %{_bindir}/mate-color-select
-%{_datadir}/applications/mate-color-select.desktop
 %{_datadir}/applications/mate-about.desktop
+%{_datadir}/applications/mate-color-select.desktop
+%{_datadir}/applications/mate-mimeapps.list
 %{_datadir}/mate-about
+%{_datadir}/icons/hicolor/*/apps/*.png
+%{_datadir}/icons/hicolor/scalable/apps/mate-symbolic.svg
 %{_mandir}/man1/*
-%{_datadir}/pixmaps/gnu-cat.gif
-%{_datadir}/pixmaps/gnu-cat_navideno_v3.png
-
 
 %files libs -f %{name}.lang
 %{_libdir}/libmate-desktop-2.so.*
 %{_datadir}/glib-2.0/schemas/org.mate.*.gschema.xml
+%{_libdir}/girepository-1.0/MateDesktop-2.0.typelib
 
 %files devel
 %{_libdir}/libmate-desktop-2.so
 %{_libdir}/pkgconfig/mate-desktop-2.0.pc
 %{_includedir}/mate-desktop-2.0
 %doc %{_datadir}/gtk-doc/html/mate-desktop
-
+%{_datadir}/gir-1.0/MateDesktop-2.0.gir
 
 %changelog
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2

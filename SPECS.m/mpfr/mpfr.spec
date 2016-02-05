@@ -1,7 +1,7 @@
 Summary: A C library for multiple-precision floating-point computations
 Summary(zh_CN.UTF-8): 一种高精度浮点计算 C 语言库
 Name: mpfr
-Version: 匹配到二进制文件
+Version: 3.1.3
 Release: 2%{?dist}
 URL: http://www.mpfr.org/
 Source0: http://www.mpfr.org/mpfr-current/%{name}-%{version}.tar.xz
@@ -96,8 +96,8 @@ fi
 %{_docdir}/mpfr/*
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
-- 更新到 匹配到二进制文件 index.html
+* Fri Feb 05 2016 Liu Di <liudidi@gmail.com> - 3.1.3-2
+- 为 Magic 3.0 重建
 
 * Thu Dec 25 2014 Liu Di <liudidi@gmail.com> - 3.1.2-5
 - 为 Magic 3.0 重建

@@ -1,5 +1,5 @@
 Name:           mate-settings-daemon
-Version: 1.11.0
+Version: 1.12.1
 Release: 2%{?dist}
 Summary:        MATE Desktop settings daemon
 Summary(zh_CN.UTF-8): MATE 桌面的设置服务
@@ -102,6 +102,7 @@ fi
 %dir %{_sysconfdir}/mate-settings-daemon/xrandr
 %config %{_sysconfdir}/dbus-1/system.d/org.mate.SettingsDaemon.DateTimeMechanism.conf
 %{_sysconfdir}/xdg/autostart/mate-settings-daemon.desktop
+%{_sysconfdir}/xrdb/*.ad
 %{_libdir}/mate-settings-daemon
 %{_libexecdir}/mate-settings-daemon
 %{_libexecdir}/msd-datetime-mechanism
@@ -109,16 +110,22 @@ fi
 %{_datadir}/dbus-1/services/org.mate.SettingsDaemon.service
 %{_datadir}/dbus-1/system-services/org.mate.SettingsDaemon.DateTimeMechanism.service
 %{_datadir}/icons/mate/*/*/*
+%{_datadir}/icons/hicolor/*/*/*
+%{_datadir}/mate-control-center/keybindings/50-accessibility.xml
 %{_datadir}/mate-settings-daemon
 %{_datadir}/glib-2.0/schemas/org.mate.*.xml
 %{_datadir}/polkit-1/actions/org.mate.settingsdaemon.datetimemechanism.policy
-%{_mandir}/man1/mate-settings-daemon.1.*
+%{_mandir}/man1/*1*
+
 
 %files devel
 %{_includedir}/mate-settings-daemon
 %{_libdir}/pkgconfig/mate-settings-daemon.pc
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 1.12.1-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

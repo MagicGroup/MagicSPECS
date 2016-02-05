@@ -13,8 +13,8 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-screensaver
-Version: 1.11.1
-Release: 2%{?dist}
+Version: 1.12.0
+Release: 1%{?dist}
 #Release: 1%{?dist}
 Summary:        MATE Screensaver
 Summary(zh_CN.UTF-8): MATE 屏幕保护
@@ -26,9 +26,6 @@ URL:            http://pub.mate-desktop.org
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
 # Source for snapshot-builds.
 %{!?rel_build:Source0:    http://git.mate-desktop.org/%{name}/snapshot/%{name}-%{commit}.tar.xz#/%{git_tar}}
-
-#https://github.com/mate-desktop/mate-screensaver/pull/51
-Patch0:         mate-screensaver_has-separator-deprecation.patch
 
 Requires:       magic-menus
 Requires:       system-logos
@@ -77,8 +74,6 @@ Development files for mate-screensaver
 
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
-
-%patch0 -p1 -b .has-separator
 
 # needed for git snapshots
 #NOCONFIGURE=1 ./autogen.sh
@@ -152,7 +147,7 @@ fi
 
 %files devel
 %{_libdir}/pkgconfig/*
-
+%{_docdir}/mate-screensaver/mate-screensaver.html
 
 %changelog
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.1-2

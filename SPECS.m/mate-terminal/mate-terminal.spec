@@ -1,8 +1,8 @@
 Summary:        Terminal emulator for MATE
 Summary(zh_CN.UTF-8): MATE 的终端模拟器
 Name:           mate-terminal
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.1
+Release: 1%{?dist}
 License:        GPLv3+
 URL:            http://mate-desktop.org
 %define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -71,6 +71,7 @@ fi
 %{_datadir}/mate-terminal/
 %{_datadir}/applications/mate-terminal.desktop
 %{_datadir}/glib-2.0/schemas/org.mate.terminal.gschema.xml
+%{_datadir}/appdata/mate-terminal.appdata.xml
 %{_mandir}/man1/*
 
 

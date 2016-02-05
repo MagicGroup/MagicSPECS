@@ -1,6 +1,6 @@
 Name:           opendbx
 Version:        1.4.6
-Release:        9%{?dist}
+Release:        10%{?dist}
 Group:          Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 Summary:        Lightweight but extensible database access library written in C
@@ -20,12 +20,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  mysql-devel, postgresql-devel, sqlite2-devel, sqlite-devel, firebird-devel, readline-devel
 BuildRequires:  freetds-devel, ncurses-devel
 BuildRequires:  doxygen, docbook2X, gettext
-
-%{?filter_setup:
-%filter_provides_in %{_libdir}/opendbx/lib.*backend\.so.*$
-%filter_requires_in %{_libdir}/opendbx/lib.*backend\.so.*$
-%filter_setup
-}
 
 %description
 Provides an abstraction layer to all supported databases with a single, clean
@@ -184,6 +178,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man1/odbx-sql.1.gz
 
 %changelog
+* Thu Feb 04 2016 Liu Di <liudidi@gmail.com> - 1.4.6-10
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.4.6-9
 - 为 Magic 3.0 重建
 

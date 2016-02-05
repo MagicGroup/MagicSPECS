@@ -16,7 +16,7 @@
 
 Name:           linphone
 Version:	3.9.1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
 License:        GPLv2+
@@ -342,6 +342,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 3.9.1-10
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 3.8.5-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:       mathjax
 Version:    2.4.0
-Release:    2%{?dist}
+Release:    3%{?dist}
 Summary:    JavaScript library to render math in the browser
 License:    ASL 2.0
 URL:        http://mathjax.org
@@ -194,6 +194,9 @@ done
 %_font_pkg -n %{name}-WinChrome MathJax_WinChrome*.otf MathJax_WinChrome*.svg
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 2.4.0-3
+- 为 Magic 3.0 重建
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

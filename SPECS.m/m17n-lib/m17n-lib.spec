@@ -13,7 +13,7 @@ License:  LGPLv2+
 URL:    http://www.nongnu.org/m17n/
 Source0:  http://download.savannah.gnu.org/releases/m17n/%{name}-%{version}.tar.gz
 Patch0:  %{name}-1.6.1-multilib.patch
-Patch1:	m17n-lib-1.6.4-aarch64.patch
+Patch1:         %{name}-1.7.0-fix-crash-in-marathi-transliteration.patch
 
 BuildRequires:  m17n-db-devel libthai
 %if %{with anthy}
@@ -77,7 +77,7 @@ m17n 图形界面库工具。
 
 %prep
 %setup -q 
-%patch0 -p0
+%patch0 -p1
 %patch1 -p1
 
 %build

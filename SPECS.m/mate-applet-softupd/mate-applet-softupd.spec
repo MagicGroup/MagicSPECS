@@ -7,8 +7,7 @@ Group:		Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
 License:	GPLv2+
 URL:		http://www.zavedil.com/mate-software-updates-applet/
-Source:		http://www.zavedil.com/wp-content/uploads/2014/04/mate-applet-softupd-%{version}.tar.gz
-Patch1:		mate-applet-softupd-0.2.10-stopclock.patch
+Source:		http://www.zavedil.com/wp-content/uploads/2015/10/mate-applet-softupd-%{version}.tar.gz
 BuildRequires:	mate-panel-devel >= 1.3.0
 BuildRequires:	libnotify-devel >= 0.7.0
 BuildRequires:	PackageKit-glib-devel
@@ -27,54 +26,35 @@ Software updates notification applet for the MATE desktop environment.
 MATE 软件更新小部件。
 
 %prep
-
 %setup -q
-%patch1 -p 1 -b .stopclock
-
-# autoreconf -i -f
-
 
 
 %build
-
 %configure --enable-notify=libnotify
 make %{?_smp_mflags}
 
-
-
 %install
-
 make install DESTDIR=$RPM_BUILD_ROOT
 
 #	Do not install doc files: they are handled as rpm doc files.
 rm -rf $RPM_BUILD_ROOT%{_docdir}
 magic_rpm_clean.sh
-%find_lang %{name}
+%find_lang %{name} || :
 
 
 %post
-
 /bin/touch --nocreate %{_datadir}/icons/hicolor &>/dev/null || :
 
-
-
 %postun
-
 if [ $1 -eq 0 ]
 then	/bin/touch --nocreate %{_datadir}/icons/hicolor &>/dev/null
 	/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null || :
 fi
 
-
-
 %posttrans
-
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
-
-
-%files -f %{name}.lang
-
+%files 
 %doc AUTHORS BUGS COPYING ChangeLog README TODO
 %{_libexecdir}/softupd_applet
 %{_datadir}/pixmaps/applet_softupd_on.png

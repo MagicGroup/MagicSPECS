@@ -15,9 +15,9 @@
 Name:          atril
 Version:       %{branch}.2
 %if 0%{?rel_build}
-Release:       1%{?dist}
+Release:       2%{?dist}
 %else
-Release:       0.1%{?git_rel}%{?dist}
+Release:       0.2%{?git_rel}%{?dist}
 %endif
 Summary:       Document viewer
 License:       GPLv2+ and LGPLv2+ and MIT
@@ -242,6 +242,9 @@ fi
 
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 1.12.2-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 27 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.12.2-1
 - update to 1.12.2 release
 

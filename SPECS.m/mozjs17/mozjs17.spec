@@ -17,8 +17,13 @@ BuildRequires:	/usr/bin/autoconf-2.13
 Patch0:		js17-build-fixes.patch
 # makes mozjs to match js from xul 21
 Patch1:		js17-jsval.patch
-Patch2:         mozbug746112-no-decommit-on-large-pages.patch
-Patch3:         mozjs17.0.0-mips64el.patch
+Patch2:		mozbug746112-no-decommit-on-large-pages.patch
+Patch3:		mozjs17-0001-Add-AArch64-support.patch
+Patch4:         0001-Make-js-config.h-multiarch-compatible.patch
+Patch5:         0001-Move-JS_BYTES_PER_WORD-out-of-config.h.patch
+Patch6:         aarch64-64k-page.patch
+Patch7:         mozjs17-perl522.patch
+Patch8:         mozjs17.0.0-mips64el.patch
 
 %description
 JavaScript is the Netscape-developed object scripting language used in millions
@@ -52,12 +57,16 @@ rm js/src/ctypes/libffi -rf
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1 -b .aarch64
+%patch6 -p1 -b .aarch64
+%patch7 -p1
 # Mips64el only
 %ifarch mips64el
-%patch3 -p1
+%patch8 -p1
 %endif
 chmod a+x configure
 (cd js/src && autoconf-2.13)
+%patch5 -p1 -b .multilib-devel
 
 %build
 %configure --disable-static --with-system-nspr --enable-threadsafe --enable-readline \

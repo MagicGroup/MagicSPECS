@@ -1,9 +1,6 @@
 # Conditional for release and snapshot builds. Uncomment for release-builds.
 %global rel_build 1
 
-# This is needed, because src-url contains branched part of versioning-scheme.
-%global branch 1.9
-
 # Settings used for build from snapshots.
 %{!?rel_build:%global commit c3b48ea39ab358b45048e300deafaa3f569748ad}
 %{!?rel_build:%global commit_date 20140211}
@@ -13,7 +10,7 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           mate-applets
-Version: 1.11.0
+Version: 1.12.1
 Release: 2%{?dist}
 #Release: 1%{?dist}
 Summary:        MATE Desktop panel applets
@@ -21,14 +18,13 @@ Summary(zh_CN.UTF-8): MATE 桌面面板小部件
 License:        GPLv2+ and LGPLv2+
 URL:            http://mate-desktop.org
 
+%define branch %(echo %{version} | awk -F. '{print $1"."$2}')
+
 # for downloading the tarball use 'spectool -g -R mate-applets.spec'
 # Source for release-builds.
 %{?rel_build:Source0:     http://pub.mate-desktop.org/releases/%{branch}/%{name}-%{version}.tar.xz}
 # Source for snapshot-builds.
 %{!?rel_build:Source0:    http://git.mate-desktop.org/%{name}/snapshot/%{name}-%{commit}.tar.xz#/%{git_tar}}
-
-#Add patch to fix cpufreq compilation (Thanks Wolfgang)
-Patch0:  cpufreq.patch
 
 BuildRequires: libgtop2-devel
 BuildRequires: libnotify-devel
@@ -66,8 +62,6 @@ MATE 桌面面板小部件
 %prep
 %setup -q%{!?rel_build:n %{name}-%{commit}}
 
-%patch0 -p1 -b .cpufreq
-# needed for cpufreq patch
 autoreconf -fi
 
 # needed for git snapshots
@@ -156,7 +150,6 @@ fi
 %{_datadir}/icons/hicolor/scalable/apps/mate-sticky-notes-applet.svg
 %{_datadir}/icons/hicolor/scalable/apps/mate-invest-applet.svg
 %{_datadir}/icons/hicolor/scalable/apps/mate-cpu-frequency-applet.svg
-%{_datadir}/icons/mate/48x48/apps/ax-applet.png
 %{_datadir}/mate/ui/accessx-status-applet-menu.xml
 %{_datadir}/mate/ui/battstat-applet-menu.xml
 %{_datadir}/mate/ui/charpick-applet-menu.xml
@@ -170,9 +163,13 @@ fi
 %{_datadir}/pixmaps/mate-accessx-status-applet
 %{_datadir}/pixmaps/mate-stickynotes
 %{_datadir}/pixmaps/mate-cpufreq-applet
+%{_mandir}/man1/*1*
 
 
 %changelog
+* Sun Jan 31 2016 Liu Di <liudidi@gmail.com> - 1.12.1-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

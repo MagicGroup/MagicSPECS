@@ -1,6 +1,7 @@
---- m17n-config.in.old	2007-11-22 12:28:52.000000000 +0530
-+++ m17n-config.in	2010-07-01 14:35:00.000000000 +0530
-@@ -64,17 +64,25 @@ else
+diff -up m17n-lib-1.6.4/m17n-config.in.multi m17n-lib-1.6.4/m17n-config.in
+--- m17n-lib-1.6.4/m17n-config.in.multi	2012-04-23 02:16:56.000000000 +0200
++++ m17n-lib-1.6.4/m17n-config.in	2013-03-14 09:17:32.061122801 +0100
+@@ -64,17 +64,15 @@ else
    LIBNAME="$LIBNAME$LIBSHELL$LIBFLT$LIBGUI"
  fi
  
@@ -17,35 +18,22 @@
 -    echo "${LIBNAME}"
 -  fi;;
 -
-+  case $platform in
-+   "i686")
-+     echo "${LIBNAME}"
-+     ;;
-+   "x86_64")
-+    echo "-L/usr/lib64 ${LIBNAME}"
-+    ;;
-+   *)
-+    echo "Unknown platform"
-+    ;;
-+  esac
++  echo "${LIBNAME}";;
 +  
  --cflags)
    if test "@includedir@" != "/usr/include"; then
      echo "-I@includedir@"
-@@ -82,7 +90,17 @@ case $1 in
+@@ -82,7 +80,14 @@ case $1 in
  
  --libtool)
    for name in $LIBTOOLNAME; do
 -    echo -n "@libdir@/lib${name}.la "
 +   case $platform in
-+    "i686")
-+      echo -n "/usr/lib/lib${name}.la "
-+      ;;
-+    "x86_64")
++    x86_64|ppc64|s390x|sparc64)
 +      echo -n "/usr/lib64/lib${name}.la "
 +      ;;
 +    *)
-+      echo "Unknown platform"
++      echo -n "/usr/lib/lib${name}.la "
 +      ;;
 +   esac
    done;

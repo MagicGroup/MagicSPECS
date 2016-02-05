@@ -2,8 +2,8 @@
 %global backends %{nil}
 
 Name: pdns
-Version:	3.4.6
-Release:	3%{?dist}
+Version:	3.4.8
+Release:	1%{?dist}
 Summary: A modern, advanced and high performance authoritative-only nameserver
 Summary(zh_CN.UTF-8): 一个现代化，先进的高性能的域名服务
 Group: System Environment/Daemons
@@ -26,7 +26,7 @@ BuildRequires: boost-devel
 BuildRequires: lua-devel
 BuildRequires: cryptopp-devel
 BuildRequires: bison
-BuildRequires: polarssl-devel
+BuildRequires: mbedtls-devel
 BuildRequires: zeromq-devel
 Provides: powerdns = %{version}-%{release}
 %global backends %{backends} bind
@@ -195,7 +195,7 @@ export CPPFLAGS="-DLDAP_DEPRECATED"
 	--disable-dependency-tracking \
 	--disable-silent-rules \
 	--with-modules='' \
-	--with-system-polarssl \
+	--with-system-mbedtls \
 	--with-lua \
 	--with-dynmodules='%{backends}' \
 	--enable-cryptopp \
@@ -274,7 +274,6 @@ exit 0
 %{_bindir}/dnsreplay
 %{_bindir}/dnsscan
 %{_bindir}/dnsscope
-%{_bindir}/dnsdist
 %{_bindir}/dnstcpbench
 %{_bindir}/dnswasher
 %{_bindir}/nproxy
@@ -284,18 +283,22 @@ exit 0
 %{_mandir}/man1/dnsscope.1.gz
 %{_mandir}/man1/dnswasher.1.gz
 %{_mandir}/man1/dnstcpbench.1.gz
-%{_mandir}/man1/dnsdist.1.gz
 
 %files backend-mysql
 %doc modules/gmysqlbackend/schema.mysql.sql
 %doc modules/gmysqlbackend/dnssec-3.x_to_3.4.0_schema.mysql.sql
 %doc modules/gmysqlbackend/nodnssec-3.x_to_3.4.0_schema.mysql.sql
+%{_docdir}/pdns/*dnssec-3.x_to_3.4.0_schema.mysql.sql
+%{_docdir}/pdns/schema.mydns.sql
+%{_docdir}/pdns/schema.mysql.sql
 %{_libdir}/%{name}/libgmysqlbackend.so
 
 %files backend-postgresql
 %doc modules/gpgsqlbackend/schema.pgsql.sql
 %doc modules/gpgsqlbackend/dnssec-3.x_to_3.4.0_schema.pgsql.sql
 %doc modules/gpgsqlbackend/nodnssec-3.x_to_3.4.0_schema.pgsql.sql
+%{_docdir}/pdns/*dnssec-3.x_to_3.4.0_schema.pgsql.sql
+%{_docdir}/pdns/schema.pgsql.sql
 %{_libdir}/%{name}/libgpgsqlbackend.so
 
 %files backend-pipe
@@ -318,6 +321,8 @@ exit 0
 %doc modules/gsqlite3backend/schema.sqlite3.sql
 %doc modules/gsqlite3backend/dnssec-3.x_to_3.4.0_schema.sqlite3.sql
 %doc modules/gsqlite3backend/nodnssec-3.x_to_3.4.0_schema.sqlite3.sql
+%{_docdir}/pdns/*dnssec-3.x_to_3.4.0_schema.sqlite3.sql
+%{_docdir}/pdns/schema.sqlite3.sql
 %{_libdir}/%{name}/libgsqlite3backend.so
 
 %files backend-opendbx

@@ -1,6 +1,6 @@
 Name:           belle-sip
 Version:	1.4.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        Linphone SIP stack
 Summary(zh_CN.UTF-8): Linphone 的 SIP 协议栈
 License:        GPLv2+
@@ -69,6 +69,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/belle-sip.pc
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 1.4.2-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 29 2016 Liu Di <liudidi@gmail.com> - 1.4.2-2
 - 为 Magic 3.0 重建
 

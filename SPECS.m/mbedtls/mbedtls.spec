@@ -1,25 +1,19 @@
-%if 0%{?fedora} || 0%{?rhel} >= 7
 %global _docdir_fmt %{name}
-%endif
 
 Name: mbedtls
-Version:	2.1.2
-Release:	2%{?dist}
+Version:	2.2.1
+Release:	1%{?dist}
 Summary: Light-weight cryptographic and SSL/TLS library
 Summary(zh_CN.UTF-8): 轻量级的加密算法和 SSL/TLS 库
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: GPLv2+ with exceptions
 URL: https://tls.mbed.org/
-Source0: https://tls.mbed.org/download/%{name}-%{version}-gpl.tgz
+Source0: https://tls.mbed.org/download/%{name}-%{version}-apache.tgz
 
 BuildRequires: cmake
 BuildRequires: doxygen
 BuildRequires: graphviz
-
-%if 0%{?rhel} == 5
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-%endif
 
 # replace polarssl with mbedtls
 
@@ -86,9 +80,7 @@ Summary:        Documentation files for %{name}
 Summary(zh_CN.UTF-8): %{name} 的文档
 Group:          Documentation
 Group(zh_CN.UTF-8): 文档
-%if 0%{?fedora} || 0%{?rhel} >= 6
 BuildArch:      noarch
-%endif
 
 %description    doc
 The %{name}-doc package contains documentation.
@@ -99,20 +91,12 @@ The %{name}-doc package contains documentation.
 %prep
 %setup -q
 
-%if 0%{?rhel} == 5
-sed -e 's/-Wlogical-op//' -i CMakeLists.txt
-%endif
-
 %build
 %cmake -D CMAKE_BUILD_TYPE:String="Release" -D USE_SHARED_MBEDTLS_LIBRARY:BOOL=1 .
 make %{?_smp_mflags} all apidoc
 
 %install
-%if 0%{?fedora} || 0%{?rhel} >= 6
 %make_install
-%else
-make DESTDIR=$RPM_BUILD_ROOT install
-%endif
 mkdir -p $RPM_BUILD_ROOT%{_libexecdir}
 mv $RPM_BUILD_ROOT%{_bindir} $RPM_BUILD_ROOT%{_libexecdir}/mbedtls
 magic_rpm_clean.sh
@@ -134,7 +118,7 @@ LD_LIBRARY_PATH=$PWD/library ctest --output-on-failure -V
 %{_libexecdir}/%{name}/
 
 %files devel
-%{_includedir}/polarssl/
+%{_includedir}/mbedtls/
 %{_libdir}/*.so
 
 %files static

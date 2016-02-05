@@ -16,9 +16,9 @@ Name:        libmatemixer
 Summary:     Mixer library for MATE desktop
 Version:     %{branch}.1
 %if 0%{?rel_build}
-Release:     1%{?dist}
+Release:     2%{?dist}
 %else
-Release:     0.1%{?git_rel}%{?dist}
+Release:     0.2%{?git_rel}%{?dist}
 %endif
 License:     GPLv2+
 URL:         http://mate-desktop.org
@@ -96,6 +96,9 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 
 %changelog
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.1-2
+- 为 Magic 3.0 重建
+
 * Fri Dec 04 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.12.1-1
 - update to 1.12.1 release
 

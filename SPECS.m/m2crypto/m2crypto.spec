@@ -6,23 +6,13 @@
 Summary: Support for using OpenSSL in python scripts
 Summary(zh_CN.UTF-8): 在 python 脚本中使用 OpenSSL 的支持
 Name: m2crypto
-Version: 0.21.1
-Release: 10%{?dist}
+Version: 0.22.5
+Release: 4%{?dist}
 Source0: http://pypi.python.org/packages/source/M/M2Crypto/M2Crypto-%{version}.tar.gz
-# https://bugzilla.osafoundation.org/show_bug.cgi?id=2341
-Patch0: m2crypto-0.21.1-timeouts.patch
 # This is only precautionary, it does fix anything - not sent upstream
-Patch1: m2crypto-0.21.1-gcc_macros.patch
-# https://bugzilla.osafoundation.org/show_bug.cgi?id=12972
-Patch2: m2crypto-0.20.2-fips.patch
-# https://bugzilla.osafoundation.org/show_bug.cgi?id=12973
-Patch3: m2crypto-0.20.2-check.patch
-# https://bugzilla.osafoundation.org/show_bug.cgi?id=13005
-Patch4: m2crypto-0.21.1-memoryview.patch
-# https://bugzilla.osafoundation.org/show_bug.cgi?id=13020
-Patch5: m2crypto-0.21.1-smime-doc.patch
-# https://bugzilla.osafoundation.org/show_bug.cgi?id=12999
-Patch6: m2crypto-0.21.1-AES_crypt.patch
+Patch0: m2crypto-0.21.1-gcc_macros.patch
+# https://gitlab.com/m2crypto/m2crypto/merge_requests/8
+Patch1: m2crypto-0.22.5-EVP.pbkdf2-overflow.patch
 License: MIT
 Group: System Environment/Libraries
 URL: http://wiki.osafoundation.org/bin/view/Projects/MeTooCrypto
@@ -40,13 +30,8 @@ This package allows you to call OpenSSL functions from python scripts.
 
 %prep
 %setup -q -n M2Crypto-%{version}
-%patch0 -p1 -b .timeouts
-%patch1 -p1 -b .gcc_macros
-%patch2 -p1 -b .fips
-%patch3 -p1 -b .check
-%patch4 -p1 -b .memoryview
-%patch5 -p0
-%patch6 -p0 -b .AES_crypt
+%patch0 -p1 -b .gcc_macros
+%patch1 -p1 -b .EVP.pbkdf2-overflow
 
 # Red Hat opensslconf.h #includes an architecture-specific file, but SWIG
 # doesn't follow the #include.
@@ -113,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/M2Crypto-*.egg-info
 
 %changelog
+* Fri Jan 29 2016 Liu Di <liudidi@gmail.com> - 0.22.5-4
+- 更新到0.22.5
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 0.21.1-10
 - 为 Magic 3.0 重建
 

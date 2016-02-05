@@ -16,7 +16,7 @@
 +AC_OUTPUT(Makefile)
 --- cryptopp-5.6.1/Makefile.am	1970-01-01 03:00:00.000000000 +0300
 +++ cryptopp-5.6.1/Makefile.am	2010-10-21 15:32:36.000000000 +0300
-@@ -0,0 +1,307 @@
+@@ -0,0 +1,308 @@
 +AUTOMAKE_OPTIONS = foreign
 +lib_LTLIBRARIES = libcryptopp.la
 +libcryptopp_la_LIBADD = -lpthread
@@ -102,6 +102,7 @@
 +	rc2.cpp \
 +	rc5.cpp \
 +	rc6.cpp \
++	rdrand.cpp \
 +	rdtables.cpp \
 +	rijndael.cpp \
 +	ripemd.cpp \

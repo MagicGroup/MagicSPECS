@@ -1,21 +1,18 @@
 Name:           cryptopp
-Version:        5.6.2
-Release:        5%{?dist}
+Version:        5.6.3
+Release:        2%{?dist}
 Summary:        C++ class library of cryptographic schemes
 Summary(zh_CN.UTF-8): 密码方案的 C++ 类库
 License:        Boost
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:            http://www.cryptopp.com/
-Source0:        http://www.cryptopp.com/cryptopp562.zip
+Source0:        http://www.cryptopp.com/cryptopp563.zip
 Source1:        cryptopp.pc
 Patch0:         cryptopp-autotools.patch
-Patch1:         cryptopp-s390.patch
 # Debian patch installs TestVectors and TestData in /usr/share/cryptopp/
 # http://groups.google.com/group/cryptopp-users/browse_thread/thread/6fe2192340f07e5d
-Patch2:         cryptopp-data-files-location.patch
-# Enable SSE2 only on x86_64
-Patch3:         cryptopp-x86-disable-sse2.patch
+Patch1:         cryptopp-data-files-location.patch
 BuildRequires:  doxygen, autoconf, libtool
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -80,9 +77,7 @@ This package contains programs for manipulating %{name} routines.
 %setup -q -c
 rm -f GNUmakefile
 %patch0 -p1
-%patch1 -p1 -b .s390
-%patch2 -p1
-%patch3
+%patch1 -p1
 autoreconf --verbose --force --install
 perl -pi -e 's/\r$//g' License.txt Readme.txt
 
@@ -134,10 +129,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libcryptopp.so
 %{_libdir}/pkgconfig/cryptopp.pc
 
-%files doc
-%defattr(0644,root,root,0755)
-%doc doc/html/*
-
 %files progs
 %defattr(0644,root,root,0755)
 %attr(0755,root,root) %{_bindir}/cryptest
@@ -145,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 04 2016 Liu Di <liudidi@gmail.com> - 5.6.3-2
+- 为 Magic 3.0 重建
+
 * Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 5.6.2-5
 - 为 Magic 3.0 重建
 

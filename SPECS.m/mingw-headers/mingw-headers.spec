@@ -22,7 +22,7 @@
 
 Name:           mingw-headers
 Version:        4.9.999
-Release:        0.1.%{branch}.git%{snapshot_rev_short}.%{snapshot_date}%{?dist}
+Release:        0.2.%{branch}.git%{snapshot_rev_short}.%{snapshot_date}%{?dist}
 Summary:        Win32/Win64 header files
 
 License:        Public Domain and LGPLv2+ and ZPLv2.1
@@ -126,6 +126,9 @@ rm -f $RPM_BUILD_ROOT%{mingw64_includedir}/pthread_unistd.h
 
 
 %changelog
+* Thu Feb 04 2016 Liu Di <liudidi@gmail.com> - 4.9.999-0.2.trunk.git5e2e73.20151224
+- 为 Magic 3.0 重建
+
 * Thu Dec 24 2015 Erik van Pienbroek <epienbro@fedoraproject.org> - 4.9.999-0.1.trunk.git.5e2e73.20151224
 - Update to 20151224 snapshot (git rev 5e2e73)
 

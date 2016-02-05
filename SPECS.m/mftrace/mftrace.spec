@@ -29,7 +29,7 @@ fonts.
 
 %prep
 %setup -q
-sed -i -e "s/-Wall -O2/$RPM_OPT_FLAGS/" GNUmakefile.in
+sed -i -e "s!-Wall -O2!$RPM_OPT_FLAGS!" GNUmakefile.in
 
 
 %build

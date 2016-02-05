@@ -1,14 +1,15 @@
 Name:           libXNVCtrl
-Version:        169.12
-Release:        11%{?dist}
+Version:        352.21
+Release:        1%{?dist}
 Summary:        Library providing the NV-CONTROL API
 Summary(zh_CN.UTF-8): 提供 NV 显卡控制 API 的库
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License:        GPLv2+
 URL:            ftp://download.nvidia.com/XFree86/nvidia-settings/
-Source0:        ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-%{version}.tar.gz
-Patch0:         libXNVCtrl-imake.patch
+Source0:        ftp://download.nvidia.com/XFree86/nvidia-settings/nvidia-settings-%{version}.tar.bz2
+Patch0:         libxnvctrl_so_0.patch
+Patch1:         libxnvctrl_optflags.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  imake libX11-devel libXext-devel
 
@@ -37,31 +38,27 @@ developing applications that use %{name}.
 %{name} 的开发包。
 
 %prep
-%setup -q -n nvidia-settings-1.0
-%patch0 -p1 -z .imake
-pushd src/%{name}
-xmkmf
-#libdir doesnt get set right on sparc64 and mips64el
-%ifarch sparc64 mips64el
-sed -i -e 's|/usr/lib|/usr/lib64|g' Makefile
-%endif
-popd
-
+%setup -q -n nvidia-settings-%{version}
+%patch0 -p1
+%patch1 -p1
 
 %build
-pushd src/%{name}
-make %{?_smp_mflags} CDEBUGFLAGS="$RPM_OPT_FLAGS"
-popd
-
+make %{?_smp_mflags} \
+   CC="gcc" \
+   NV_VERBOSE=1 \
+   OPTFLAGS="%{optflags}" \
+   -C src/%{name}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 pushd src/%{name}
-make install DESTDIR=$RPM_BUILD_ROOT INSTINCFLAGS="-p -m 644"
+install -m 0755 -d $RPM_BUILD_ROOT%{_libdir}/
+install -p -m 0755 libXNVCtrl.so.0.0.0    $RPM_BUILD_ROOT%{_libdir}/
+ln -s libXNVCtrl.so.0.0.0 $RPM_BUILD_ROOT%{_libdir}/libXNVCtrl.so.0
+ln -s libXNVCtrl.so.0 $RPM_BUILD_ROOT%{_libdir}/libXNVCtrl.so
+install -m 0755 -d $RPM_BUILD_ROOT%{_includedir}/NVCtrl/
+install -p -m 0644 {nv_control,NVCtrl,NVCtrlLib}.h $RPM_BUILD_ROOT%{_includedir}/NVCtrl/
 popd
-# imake installs these under X11/extensions, but apps expect them under NVCtrl
-mv $RPM_BUILD_ROOT%{_includedir}/X11/extensions \
-  $RPM_BUILD_ROOT%{_includedir}/NVCtrl
 magic_rpm_clean.sh
 
 %clean
@@ -75,7 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING src/%{name}/README.LIBXNVCTRL
+%doc COPYING 
 %{_libdir}/%{name}.so.0*
 
 %files devel
@@ -86,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 352.21-12
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 169.12-11
 - 为 Magic 3.0 重建
 

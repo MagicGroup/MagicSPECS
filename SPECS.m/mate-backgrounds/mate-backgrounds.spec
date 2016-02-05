@@ -1,5 +1,5 @@
 Name:		mate-backgrounds
-Version: 1.9.90
+Version: 1.12.0
 Release: 2%{?dist}
 Summary:	MATE Desktop backgrounds
 Summary(zh_CN.UTF-8): MATE 桌面背景
@@ -38,6 +38,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.9.90-2
 - 更新到 1.9.90
 

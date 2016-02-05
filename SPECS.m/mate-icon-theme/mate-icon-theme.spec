@@ -1,6 +1,6 @@
 Name:		mate-icon-theme
-Version: 1.11.0
-Release: 2%{?dist}
+Version: 1.12.0
+Release: 1%{?dist}
 Summary:	Icon theme for MATE Desktop
 Summary(zh_CN.UTF-8): MATE 桌面的图标主题
 License:	GPLv2+ and LGPLv2+
@@ -20,16 +20,6 @@ Icon theme for MATE Desktop
 
 %description -l zh_CN.UTF-8
 MATE 桌面的图标主题。
-
-%package devel
-Summary: Development files for mate-icon-theme
-Summary(zh_CN.UTF-8): %{name} 的开发包
-
-%description devel
-Development files for mate-icon-theme
-
-%description devel -l zh_CN.UTF-8
-%{name} 的开发包。
 
 %prep
 %setup -q
@@ -59,10 +49,7 @@ fi
 %files
 %doc AUTHORS COPYING README
 %{_datadir}/icons/mate/
-
-%files devel
-%{_datadir}/pkgconfig/mate-icon-theme.pc
-
+%{_datadir}/icons/menta/
 
 %changelog
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2

@@ -7,8 +7,8 @@
 Summary: Linux kernel and C library user-space interface documentation
 Summary(zh_CN.UTF-8): Linux 内核和 C 库的用户空间接口文档
 Name: man-pages
-Version: 4.02
-Release: 3%{?dist}
+Version: 4.04
+Release: 1%{?dist}
 License: GPL+ and GPLv2+ and BSD and MIT and Copyright only and IEEE
 Group: Documentation
 Group(zh_CN.UTF-8): 文档
@@ -29,9 +29,6 @@ BuildArch: noarch
 
 # Regular man pages
 # resolves: #698149
-# http://thread.gmane.org/gmane.linux.man/3413
-Patch20: man-pages-3.32-host.patch
-# resolves: #650985
 # https://bugzilla.kernel.org/show_bug.cgi?id=53781
 Patch21: man-pages-3.42-close.patch
 
@@ -44,7 +41,6 @@ A large collection of manual pages from the Linux Documentation Project (LDP).
 %prep
 %setup -q -a 1 -a 2
 
-%patch20 -p1
 %patch21 -p1
 
 # rename posix README so we don't have conflict

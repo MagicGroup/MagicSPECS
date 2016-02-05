@@ -1,5 +1,5 @@
 Name:		mate-polkit
-Version: 1.11.0
+Version: 1.12.0
 Release: 2%{?dist}
 Summary:	Integrates polkit authentication for MATE desktop
 Summary(zh_CN.UTF-8): MATE 桌面集成的 polkit 认证
@@ -73,6 +73,9 @@ find %{buildroot} -name '*.la' -exec rm -fv {} ';'
 
 
 %changelog 
+* Tue Feb 02 2016 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
 * Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

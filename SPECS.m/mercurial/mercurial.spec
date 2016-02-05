@@ -3,8 +3,8 @@
 Summary: Mercurial -- a distributed SCM
 Summary(zh_CN.UTF-8): 一个分布式版本控制系统
 Name: mercurial
-Version: 3.5.2
-Release: 3%{?dist}
+Version: 3.7.1
+Release: 1%{?dist}
 #Release: 1%{?dist}
 
 #%define upstreamversion %{version}-rc
@@ -17,7 +17,6 @@ URL: http://www.selenic.com/mercurial/
 #Source0: http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
 Source0: http://www.selenic.com/mercurial/release/%{name}-%{upstreamversion}.tar.gz
 Source1: mercurial-site-start.el
-Patch0: mercurial-i18n.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: python python-devel
 BuildRequires: emacs-nox emacs-el pkgconfig gettext python-docutils
@@ -88,7 +87,6 @@ documentation.
 %prep
 #%setup -q
 %setup -q -n %{name}-%{upstreamversion}
-%patch0 -p0
 
 %build
 make all
@@ -146,7 +144,7 @@ cacerts = /etc/pki/tls/certs/ca-bundle.crt
 EOF
 install -m 644 certs.rc $RPM_BUILD_ROOT/%{_sysconfdir}/mercurial/hgrc.d
 
-install -m 644 contrib/mergetools.hgrc $RPM_BUILD_ROOT%{_sysconfdir}/mercurial/hgrc.d/mergetools.rc
+#install -m 644 contrib/mergetools.hgrc $RPM_BUILD_ROOT%{_sysconfdir}/mercurial/hgrc.d/mergetools.rc
 
 mv $RPM_BUILD_ROOT%{python_sitearch}/mercurial/locale $RPM_BUILD_ROOT%{_datadir}/locale
 rm -rf $RPM_BUILD_ROOT%{python_sitearch}/mercurial/locale
@@ -163,7 +161,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc CONTRIBUTORS COPYING doc/README doc/hg*.txt doc/hg*.html *.cgi contrib/*.fcgi
 %doc %attr(644,root,root) %{_mandir}/man?/hg*.gz
-%doc %attr(644,root,root) contrib/*.svg contrib/sample.hgrc
+%doc %attr(644,root,root) contrib/*.svg 
 %config(noreplace) %{_sysconfdir}/bash_completion.d/mercurial.sh
 %{_datadir}/zsh/site-functions/_mercurial
 %{_bindir}/hg-ssh
@@ -174,7 +172,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/mercurial/hgrc.d
 %{python_sitearch}/mercurial
 %{python_sitearch}/hgext
-%config(noreplace) %{_sysconfdir}/mercurial/hgrc.d/mergetools.rc
 %config(noreplace) %{_sysconfdir}/mercurial/hgrc.d/certs.rc
 
 %files -n emacs-%{pkg}

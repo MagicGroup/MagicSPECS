@@ -4,8 +4,8 @@
 Summary: Tools for searching and reading man pages
 Summary(zh_CN.UTF-8): 搜索和读取手册页的工具
 Name: man-db
-Version: 2.7.4
-Release: 3%{?dist}
+Version: 2.7.5
+Release: 1%{?dist}
 # GPLv2+ .. man-db
 # GPLv3+ .. gnulib
 License: GPLv2+ and GPLv3+
@@ -16,8 +16,6 @@ URL: http://www.nongnu.org/man-db/
 Source0: http://download.savannah.gnu.org/releases/%{name}/%{name}-%{version}.tar.xz
 Source1: man-db.crondaily
 Source2: man-db.sysconfig
-
-Patch0: 1110274-Add-systemd-tmpfiles-snippet-to-clean-up-old-cat-fil.patch
 
 Obsoletes: man < 2.0
 Provides: man = %{version}
@@ -41,7 +39,6 @@ manual pages.
 
 %prep
 %setup -q
-%patch0 -p1 
 
 %build
 %configure \
@@ -57,9 +54,8 @@ make install DESTDIR=$RPM_BUILD_ROOT prefix=%{_prefix} INSTALL='install -p'
 # move the documentation to the relevant place
 mv $RPM_BUILD_ROOT%{_datadir}/doc/man-db/* ./
 
-# remove zsoelim - part of groff package
-rm $RPM_BUILD_ROOT%{_bindir}/zsoelim
-rm $RPM_BUILD_ROOT%{_datadir}/man/man1/zsoelim.1
+rm  $RPM_BUILD_ROOT%{_libexecdir}/man-db/zsoelim
+rm  $RPM_BUILD_ROOT%{_mandir}/man1/zsoelim.1
 
 # remove libtool archives
 rm $RPM_BUILD_ROOT%{_libdir}/man-db/*.la

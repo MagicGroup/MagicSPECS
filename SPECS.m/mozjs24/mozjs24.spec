@@ -15,6 +15,8 @@ BuildRequires:	/usr/bin/python
 
 Patch0:		js17-build-fixes.patch
 Patch1:		mozjs24-0001-Add-AArch64-support.patch
+Patch2:		mozjs24-hardening-flags.patch
+Patch3:		mozjs24-perl522.patch
 
 %description
 JavaScript is the Netscape-developed object scripting language used in millions
@@ -47,6 +49,8 @@ rm js/src/editline -rf
 rm js/src/ctypes/libffi -rf
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 chmod a+x configure
 
 %build

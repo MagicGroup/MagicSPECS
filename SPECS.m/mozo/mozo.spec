@@ -1,6 +1,6 @@
 Name:           mozo
 Version:        1.12.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MATE Desktop menu editor
 License:        LGPLv2+
 URL:            http://mate-desktop.org
@@ -74,6 +74,9 @@ fi
 
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 1.12.0-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 06 2015 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.12.0-1
 - update to 1.12.0 release
 - build against gtk3

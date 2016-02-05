@@ -1,6 +1,6 @@
 Name:          libmateweather
-Version:	1.11.0
-Release:       2%{?dist}
+Version:	1.12.1
+Release:       3%{?dist}
 Summary:       Libraries to allow MATE Desktop to display weather information
 Summary(zh_CN.UTF-8): 允许 MATE 桌面显示天气信息的库
 License:       GPLv2+ and LGPLv2+
@@ -112,6 +112,9 @@ fi
 
 
 %changelog
+* Wed Feb 03 2016 Liu Di <liudidi@gmail.com> - 1.12.1-3
+- 为 Magic 3.0 重建
+
 * Sat Oct 31 2015 Liu Di <liudidi@gmail.com> - 1.11.0-2
 - 更新到 1.11.0
 

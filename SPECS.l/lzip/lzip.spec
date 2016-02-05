@@ -1,5 +1,5 @@
 Name:           lzip
-Version:	1.18-pre1
+Version:	1.17
 Release:        3%{?dist}
 Summary:        LZMA compressor with integrity checking
 Summary(zh_CN.UTF-8): 带校验的 LZMA 压缩器
@@ -75,9 +75,6 @@ fi
 
 
 %changelog
-* Sat Oct 31 2015 Liu Di <liudidi@gmail.com>
-- 更新到 1.18-pre1
-
 * Tue Jul 08 2014 Liu Di <liudidi@gmail.com> - 1.15-2
 - 为 Magic 3.0 重建
 

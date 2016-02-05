@@ -1,5 +1,6 @@
 %define svn 0
 %define svndate 20120118
+#undefine _hardened_build
 Summary: Cross platform file downloader
 Summary(zh_CN.UTF-8): 跨平台的文件下载工具
 Name: multiget
@@ -37,6 +38,8 @@ Windows/Linux/BSD/MacOS 上。它使用 C++ 编程，并拥有
 
 %build
 autoreconf -fisv
+CFLAGS="$CFLAGS %{optflags} -fPIC" \
+CXXFLAGS="$CXXFLAGS %{optflags} -fPIC" \
 ./configure --prefix=%{_prefix} --disable-shared --enable-monolithic --with-gtk=2 --with-libpng=builtin --with-zlib=builtin --with-expat=builtin --with-libtiff=builtin --with-regex=builtin --with-libjpeg=builtin --enable-unicode
 %{__make} %{?_smp_mflags}
 

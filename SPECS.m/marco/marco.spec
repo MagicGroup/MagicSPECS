@@ -13,8 +13,8 @@
 %{!?rel_build:%global git_tar %{name}-%{version}-%{git_ver}.tar.xz}
 
 Name:           marco
-Version: 1.11.1
-Release: 3%{?dist}
+Version: 1.12.1
+Release: 4%{?dist}
 #Release: 1%{?dist}
 Summary:        MATE Desktop window manager
 Summary(zh_CN.UTF-8): MATE 桌面窗口管理器
@@ -34,9 +34,6 @@ Source3:        stock_maximize.png
 Source4:        stock_minimize.png
 Source5:        window.png
 
-# needed for fixing initial-setup issue, rhbz (#962009)
-Patch0:         marco_add-pixbuf-inline-icons.patch
-
 BuildRequires: desktop-file-utils
 BuildRequires: gtk2-devel
 BuildRequires: libcanberra-devel
@@ -53,11 +50,9 @@ BuildRequires: yelp-tools
 # https://bugzilla.redhat.com/962009
 Provides: firstboot(windowmanager) = marco
 
-%if 0%{?fedora} && 0%{?fedora} <= 25
 Provides: mate-window-manager%{?_isa} = %{version}-%{release}
 Provides: mate-window-manager = %{version}-%{release}
 Obsoletes: mate-window-manager < %{version}-%{release}
-%endif
 
 %description
 MATE Desktop window manager
@@ -69,11 +64,9 @@ MATE 桌面的窗口管理器。
 Summary: Development files for mate-window-manager
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Requires: %{name}%{?_isa} = %{version}-%{release}
-%if 0%{?fedora} && 0%{?fedora} <= 25
 Provides: mate-window-manager-devel%{?_isa} = %{version}-%{release}
 Provides: mate-window-manager-devel = %{version}-%{release}
 Obsoletes: mate-window-manager-devel < %{version}-%{release}
-%endif
 
 %description devel
 Development files for marco
@@ -91,7 +84,6 @@ cp %{SOURCE3} src/stock_maximize.png
 cp %{SOURCE4} src/stock_minimize.png
 cp %{SOURCE5} src/window.png
 
-%patch0 -p1 -b .inline-icons
 
 # needed for the patch and for git snapshot builds
 autoreconf -if
@@ -171,6 +163,9 @@ fi
 
 
 %changelog
+* Sun Jan 31 2016 Liu Di <liudidi@gmail.com> - 1.12.1-4
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 1.11.1-3
 - 为 Magic 3.0 重建
 
