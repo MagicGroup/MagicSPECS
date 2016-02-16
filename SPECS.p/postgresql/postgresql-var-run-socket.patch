@@ -13,10 +13,10 @@ to be updated.  (Of course, a user who dislikes this behavior can still
 override it via postgresql.conf.)
 
 diff --git a/src/backend/utils/misc/guc.c b/src/backend/utils/misc/guc.c
-index 2b6527f..8e178d4 100644
+index 9481f2d..75532c7 100644
 --- a/src/backend/utils/misc/guc.c
 +++ b/src/backend/utils/misc/guc.c
-@@ -2971,7 +2971,7 @@ static struct config_string ConfigureNamesString[] =
+@@ -3196,7 +3196,7 @@ static struct config_string ConfigureNamesString[] =
  		},
  		&Unix_socket_directories,
  #ifdef HAVE_UNIX_SOCKETS
@@ -26,10 +26,10 @@ index 2b6527f..8e178d4 100644
  		"",
  #endif
 diff --git a/src/bin/initdb/initdb.c b/src/bin/initdb/initdb.c
-index abf1586..8c01d48 100644
+index feeff9e..3e3d784 100644
 --- a/src/bin/initdb/initdb.c
 +++ b/src/bin/initdb/initdb.c
-@@ -1204,7 +1204,7 @@ setup_config(void)
+@@ -1234,7 +1234,7 @@ setup_config(void)
  
  #ifdef HAVE_UNIX_SOCKETS
  	snprintf(repltok, sizeof(repltok), "#unix_socket_directories = '%s'",
@@ -39,10 +39,10 @@ index abf1586..8c01d48 100644
  	snprintf(repltok, sizeof(repltok), "#unix_socket_directories = ''");
  #endif
 diff --git a/src/include/pg_config_manual.h b/src/include/pg_config_manual.h
-index 24c5069..aeec705 100644
+index e278fa0..9ee15d4 100644
 --- a/src/include/pg_config_manual.h
 +++ b/src/include/pg_config_manual.h
-@@ -144,7 +144,7 @@
+@@ -169,7 +169,7 @@
   * here's where to twiddle it.  You can also override this at runtime
   * with the postmaster's -k switch.
   */
@@ -50,4 +50,4 @@ index 24c5069..aeec705 100644
 +#define DEFAULT_PGSOCKET_DIR  "/var/run/postgresql"
  
  /*
-  * The random() function is expected to yield values between 0 and
+  * This is the default event source for Windows event log.
