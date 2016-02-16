@@ -2,8 +2,8 @@
 
 Name:           polkit-kde
 Summary:        PolicyKit integration for KDE Desktop
-Version:        5.3.2
-Release:        3%{?dist}
+Version: 5.5.4
+Release: 2%{?dist}
 
 License:        GPLv2+
 URL:            https://projects.kde.org/projects/kde/workspace/polkit-kde-agent-1
@@ -77,11 +77,41 @@ mv %{buildroot}/%{_libexecdir}/polkit-kde-authentication-agent-1 \
 
 
 %changelog
-* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 5.3.2-3
-- 为 Magic 3.0 重建
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 5.5.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com> - 5.3.2-2
-- 为 Magic 3.0 重建
+* Wed Jan 27 2016 Daniel Vrátil <dvratil@fedoraproject.org> - 5.5.4-1
+- Plasma 5.5.4
+
+* Thu Jan 07 2016 Daniel Vrátil <dvratil@fedoraproject.org> - 5.5.3-1
+- Plasma 5.5.3
+
+* Thu Dec 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.5.2-1
+- 5.5.2
+
+* Fri Dec 18 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.5.1-1
+- Plasma 5.5.1
+
+* Thu Dec 03 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.5.0-1
+- Plasma 5.5.0
+
+* Wed Nov 25 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.4.95-1
+- Plasma 5.4.95
+
+* Thu Nov 05 2015 Daniel Vrátil <dvratil@fedoraproject.org> - 5.4.3-1
+- Plasma 5.4.3
+
+* Thu Oct 01 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.4.2-1
+- 5.4.2
+
+* Wed Sep 09 2015 Rex Dieter <rdieter@fedoraproject.org> - 5.4.1-1
+- 5.4.1
+
+* Fri Aug 21 2015 Daniel Vrátil <dvratil@redhat.com> - 5.4.0-1
+- Plasma 5.4.0
+
+* Thu Aug 13 2015 Daniel Vrátil <dvratil@redhat.com> - 5.3.95-1
+- Plasma 5.3.95
 
 * Thu Jun 25 2015 Daniel Vrátil <dvratil@redhat.com> - 5.3.2-1
 - Plasma 5.3.2
