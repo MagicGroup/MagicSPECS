@@ -1,0 +1,44 @@
+diff -up v8-3.14.5.10/src/ia32/cpu-ia32.cc.system-valgrind v8-3.14.5.10/src/ia32/cpu-ia32.cc
+--- v8-3.14.5.10/src/ia32/cpu-ia32.cc.system-valgrind	2012-01-16 06:42:08.000000000 -0500
++++ v8-3.14.5.10/src/ia32/cpu-ia32.cc	2014-12-02 15:15:07.819525430 -0500
+@@ -28,7 +28,7 @@
+ // CPU specific code for ia32 independent of OS goes here.
+ 
+ #ifdef __GNUC__
+-#include "third_party/valgrind/valgrind.h"
++#include <valgrind/valgrind.h>
+ #endif
+ 
+ #include "v8.h"
+@@ -67,8 +67,7 @@ void CPU::FlushICache(void* start, size_
+   // solution is to run valgrind with --smc-check=all, but this comes at a big
+   // performance cost.  We can notify valgrind to invalidate its cache.
+ #ifdef VALGRIND_DISCARD_TRANSLATIONS
+-  unsigned res = VALGRIND_DISCARD_TRANSLATIONS(start, size);
+-  USE(res);
++  VALGRIND_DISCARD_TRANSLATIONS(start, size);
+ #endif
+ }
+ 
+diff -up v8-3.14.5.10/src/x64/cpu-x64.cc.system-valgrind v8-3.14.5.10/src/x64/cpu-x64.cc
+--- v8-3.14.5.10/src/x64/cpu-x64.cc.system-valgrind	2012-02-23 03:45:21.000000000 -0500
++++ v8-3.14.5.10/src/x64/cpu-x64.cc	2014-12-02 15:14:51.289621074 -0500
+@@ -28,7 +28,7 @@
+ // CPU specific code for x64 independent of OS goes here.
+ 
+ #if defined(__GNUC__) && !defined(__MINGW64__)
+-#include "third_party/valgrind/valgrind.h"
++#include <valgrind/valgrind.h>
+ #endif
+ 
+ #include "v8.h"
+@@ -67,8 +67,7 @@ void CPU::FlushICache(void* start, size_
+   // solution is to run valgrind with --smc-check=all, but this comes at a big
+   // performance cost.  We can notify valgrind to invalidate its cache.
+ #ifdef VALGRIND_DISCARD_TRANSLATIONS
+-  unsigned res = VALGRIND_DISCARD_TRANSLATIONS(start, size);
+-  USE(res);
++  VALGRIND_DISCARD_TRANSLATIONS(start, size);
+ #endif
+ }
+ 

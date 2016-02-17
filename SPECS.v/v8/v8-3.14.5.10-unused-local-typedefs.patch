@@ -1,0 +1,39 @@
+From 53b4accb6e5747b156be91a2b90f42607e33a7cc Mon Sep 17 00:00:00 2001
+From: Timothy J Fontaine <tjfontaine@gmail.com>
+Date: Mon, 4 Aug 2014 13:43:50 -0700
+Subject: [PATCH] v8: Fix compliation with GCC 4.8
+
+Supresses a very loud warning from GCC 4.8 about unused typedefs
+
+Original url https://codereview.chromium.org/69413002
+---
+ src/checks.h | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/checks.h b/src/checks.h
+index d0a0c2b..4396ada 100644
+--- a/src/checks.h
++++ b/src/checks.h
+@@ -230,6 +230,13 @@ inline void CheckNonEqualsHelper(const char* file,
+ #define CHECK_LE(a, b) CHECK((a) <= (b))
+ 
+ 
++#if defined(__clang__) || defined(__GNUC__)
++# define V8_UNUSED __attribute__((unused))                                                                                                                                                                         
++#else                                                                                                                                                                                                              
++# define V8_UNUSED                                                                                                                                                                                                 
++#endif
++
++
+ // This is inspired by the static assertion facility in boost.  This
+ // is pretty magical.  If it causes you trouble on a platform you may
+ // find a fix in the boost code.
+@@ -248,7 +255,7 @@ template <int> class StaticAssertionHelper { };
+ #define STATIC_CHECK(test)                                                    \
+   typedef                                                                     \
+     StaticAssertionHelper<sizeof(StaticAssertion<static_cast<bool>((test))>)> \
+-    SEMI_STATIC_JOIN(__StaticAssertTypedef__, __LINE__)
++    SEMI_STATIC_JOIN(__StaticAssertTypedef__, __LINE__) V8_UNUSED
+ 
+ 
+ extern bool FLAG_enable_slow_asserts;
