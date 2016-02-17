@@ -33,7 +33,7 @@ BuildRequires:  python3-pyasn1
 BuildRequires:  python3-pyasn1-modules
 BuildRequires:  python3-pyOpenSSL >= 0.12
 BuildRequires:  python3-idna
-%endif # with_python3
+%endif
 
 Requires:       python-characteristic
 Requires:       python-pyasn1
@@ -95,7 +95,6 @@ rm -rf service_identity.egg-info
 rm -rf %{py3dir}
 cp -a . %{py3dir}
 %endif # with_python3
-
 
 %build
 %{__python2} setup.py build

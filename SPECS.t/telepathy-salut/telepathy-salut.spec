@@ -1,6 +1,6 @@
 Name:           telepathy-salut
 Version:        0.8.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Link-local XMPP telepathy connection manager
 Summary(zh_CN.UTF-8): Telepathy 的本地连接 XMPP 连接管理器
 
@@ -82,6 +82,9 @@ make check
 
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 0.8.1-9
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.8.1-8
 - 为 Magic 3.0 重建
 

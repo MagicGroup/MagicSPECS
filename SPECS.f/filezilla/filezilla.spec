@@ -1,7 +1,7 @@
 #define fz_rc   rc2
 Name:           filezilla
 Version:	3.14.1
-Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.3
+Release:        1%{?fz_rc:_%{?fz_rc}}%{?dist}.4
 Summary:        FileZilla FTP, FTPS and SFTP client
 Summary(zh_CN.UTF-8): FTP, FTPS 和 SFTP 客户端
 
@@ -132,6 +132,9 @@ fi || :
 
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 3.14.1-1.4
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 3.14.1-1.3
 - 为 Magic 3.0 重建
 

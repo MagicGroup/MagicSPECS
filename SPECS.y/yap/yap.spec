@@ -33,6 +33,9 @@ Patch9:     yap-6.2.0-Remove-feature-macro.patch
 Patch10:    yap-6.2.2-Off-by-one-error-when-initializing-yap_flags.patch
 # texinfo fix
 Patch11:    yap-6.2.2-texinfo.patch
+# Fix regression with GCC 5.0
+# <https://sourceforge.net/p/yap/mailman/message/33405667/>
+Patch12:    yap-6.2.2-Friend-function-template-defined-in-a-class-cannot-b.patch
 # yap 6.2.2 does not work on PPC (bug #790625)
 ExcludeArch:    ppc ppc64
 BuildRequires:  autoconf
@@ -47,9 +50,6 @@ Requires(post):   /sbin/install-info, /sbin/ldconfig
 Requires(postun): /sbin/install-info, /sbin/ldconfig
 
 # Do not export provides and requires on private libraries
-%filter_provides_in /usr/lib64/Yap/
-%filter_from_requires /^libplstream.so(/d
-%filter_setup
 
 %description
 A high-performance Prolog compiler developed at LIACC, Universidade do
@@ -99,6 +99,7 @@ Documentation for Yap.
 %patch9 -p1 -b .remove_feature_macro
 %patch10 -p1 -b .initialization
 %patch11 -p1
+%patch12 -p1 -b .gcc5
 
 # remove redundant RPATH
 sed -i 's/-Wl,-R\(,\)\{0,1\}\\$(LIBDIR)//' configure.in

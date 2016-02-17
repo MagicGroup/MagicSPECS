@@ -1,13 +1,14 @@
-%global rev 20141205git440
-%global rev_l10n 52f378a
+%global rev 20151216git476
+%global rev_l10n 49b7fa0
 %global genericplugins attentionplugin autoreplyplugin birthdayreminderplugin captchaformsplugin chessplugin cleanerplugin clientswitcherplugin conferenceloggerplugin contentdownloaderplugin extendedmenuplugin extendedoptionsplugin gmailserviceplugin gomokugameplugin historykeeperplugin icqdieplugin imageplugin jabberdiskplugin juickplugin pepchangenotifyplugin qipxstatusesplugin screenshotplugin skinsplugin stopspamplugin storagenotesplugin translateplugin videostatusplugin watcherplugin gnupgplugin otrplugin
 %global unixplugins gnome3supportplugin
 %global devplugins pstoplugin
 
+%global qtmajor 5
 Summary:        Jabber client based on Qt
 Name:           psi-plus
 Version:        0.16
-Release:        0.23.%{rev}%{?dist}
+Release:        0.25.%{rev}%{?dist}
 Epoch:          1
 
 URL:            http://code.google.com/p/psi-dev/
@@ -24,9 +25,33 @@ Source1:        http://files.psi-plus.com/sources/%{name}-l10n-%{rev_l10n}.tar.b
 # I use this script to make tarballs with Psi+ sources and translations
 Source2:        generate-tarball.sh
 
+# https://github.com/psi-plus/main/blob/master/patches/dev/psi-plus-psimedia.patch
 Patch0:         psi-plus-psimedia.patch
+# https://github.com/psi-plus/main/blob/master/patches/dev/psi-new-history.patch
 Patch1:         psi-new-history.patch
+# https://github.com/psi-plus/main/blob/master/patches/dev/fix_historydb_qt5.diff
+Patch2:         fix_historydb_qt5.diff
 
+%if %{qtmajor} == 5
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Gui)
+BuildRequires:  pkgconfig(Qt5Widgets)
+BuildRequires:  pkgconfig(Qt5WebKit)
+BuildRequires:  pkgconfig(Qt5WebKitWidgets)
+BuildRequires:  pkgconfig(Qt5Svg)
+BuildRequires:  pkgconfig(Qt5Xml)
+BuildRequires:  pkgconfig(Qt5XmlPatterns)
+BuildRequires:  pkgconfig(Qt5Network)
+BuildRequires:  pkgconfig(Qt5Concurrent)
+BuildRequires:  pkgconfig(Qt5DBus)
+BuildRequires:  pkgconfig(Qt5Sql)
+BuildRequires:  pkgconfig(Qt5Script)
+BuildRequires:  pkgconfig(Qt5X11Extras)
+BuildRequires:  pkgconfig(Qt5Multimedia)
+BuildRequires:  pkgconfig(qca2-qt5)
+BuildRequires:  pkgconfig(qjdns-qt5)
+BuildRequires:  qt5-linguist
+%else
 BuildRequires:  pkgconfig(QtCore)
 BuildRequires:  pkgconfig(QtGui)
 BuildRequires:  pkgconfig(QtWebKit)
@@ -37,25 +62,22 @@ BuildRequires:  pkgconfig(QtNetwork)
 BuildRequires:  pkgconfig(QtDBus)
 BuildRequires:  pkgconfig(QtSql)
 BuildRequires:  pkgconfig(QtScript)
-BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(QJson)
-# qjdns ABI changes
-%if 0%{?rhel} > 7 || 0%{?fedora} > 22
+BuildRequires:  pkgconfig(qca2)
 BuildRequires:  pkgconfig(qjdns-qt4)
-%else
-BuildRequires:  pkgconfig(qjdns)
 %endif
+
+BuildRequires:  pkgconfig(zlib)
 BuildRequires:  pkgconfig(enchant)
 BuildRequires:  pkgconfig(xscrnsaver)
 BuildRequires:  pkgconfig(openssl)
 BuildRequires:  pkgconfig(minizip)
-BuildRequires:  pkgconfig(qca2)
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(libotr)
 BuildRequires:  pkgconfig(libidn)
 
 BuildRequires:  desktop-file-utils
-BuildRequires:  qconf >= 1.4-2
+BuildRequires:  qconf >= 1:2.0
 BuildRequires:  gettext
 BuildRequires:  libtidy-devel
 
@@ -63,12 +85,16 @@ Requires:       %{name}-common = %{epoch}:%{version}-%{release}
 Requires:       sox%{?_isa}
 Requires:       gnupg
 # Required for SSL/TLS connections
+%if %{qtmajor} == 5
+Requires:       qca-qt5-ossl%{?_isa}
+%else
 Requires:       qca-ossl%{?_isa}
+%endif
 
 # epel7 has no qca-gnupg package
-%if 0%{?rhel} != 7
 # Required for GnuPG encryption
-Requires:       qca-gnupg%{?_isa}
+%if %{qtmajor} == 5
+Requires:       qca-qt5-gnupg%{?_isa}
 %endif
 
 # hicolor-icon-theme is owner of themed icons folders
@@ -229,6 +255,7 @@ A front end for gpg. Allow to handle keys.
 %setup -q -n %{name}-%{version}-%{rev}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 # fix rpmlint spurious-executable-perm
 find . -name '*.cpp' -or -name '*.h' | xargs chmod 644
@@ -257,12 +284,13 @@ qconf-qt4
         --enable-webkit            \
         --enable-plugins           \
         --enable-whiteboarding     \
+        --qtselect=%{qtmajor}      \
         --psimedia-path=%{_libdir}/psi/plugins/libgstprovider.so
 
 make %{?_smp_mflags}
 
 pushd translations
-lrelease-qt4 *.ts
+lrelease-qt%{qtmajor} *.ts
 popd
 
 pushd src/plugins
@@ -290,7 +318,11 @@ done
 for dir in ${allplugins}
 do
   pushd $dir
-  %{_qt4_qmake}
+%if %{qtmajor} == 5
+  %{qmake_qt5}
+%else
+  %{qmake_qt4}
+%endif
   make %{?_smp_mflags}
   popd
 done

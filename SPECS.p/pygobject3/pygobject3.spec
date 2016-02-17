@@ -15,7 +15,8 @@ Summary:        Python bindings for GObject Introspection
 
 License:        LGPLv2+ and MIT
 URL:            https://live.gnome.org/PyGObject
-Source0:        http://ftp.gnome.org/pub/GNOME/sources/pygobject/3.18/pygobject-%{version}.tar.xz
+%define majorver %(echo %{version} | awk -F. '{print $1"."$2}')
+Source0:        http://ftp.gnome.org/pub/GNOME/sources/pygobject/%{majorver}/pygobject-%{version}.tar.xz
 
 BuildRequires:  glib2-devel >= %{glib2_version}
 BuildRequires:  gobject-introspection-devel >= %{gobject_introspection_version}

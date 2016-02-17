@@ -220,6 +220,11 @@ function downsources()
 	SPECNAME=$(ls $DIR/*.spec)
 	#spec中的源文件列表
 	SOURCELIST=`spectool -S $SPECNAME |cut -d " " -f2`
+	if [ x"$SOURCELIST" == x"" ] ;then
+		echo "请手工下载源码"
+		touch $DIR/downfail
+		exit 1
+	else
 	for source in  $SOURCELIST ;do
 		#如果以 http 或 ftp 开头，则取出最后的文件名。
 		if [[ $source =~ ^http ]] || [[ $source =~ ^ftp ]] ; then
@@ -251,6 +256,7 @@ function downsources()
 			fi
 		fi
 	done
+	fi
 }
 
 #下载补丁

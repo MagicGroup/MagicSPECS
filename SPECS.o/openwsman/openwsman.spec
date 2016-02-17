@@ -33,6 +33,7 @@ Source2:        openwsmand.service
 Source3:        owsmantestcert.sh
 Patch1:         openwsman-2.2.7-libssl.patch
 Patch2:         openwsman-2.4.0-pamsetup.patch
+Patch3:         openwsman-2.4.12-ruby-binding-build.patch
 
 %description
 Openwsman is a project intended to provide an open-source
@@ -193,9 +194,14 @@ This package provides Perl bindings to access the openwsman client API.
 %patch1 -p1 -b .libssl
 %patch2 -p1 -b .pamsetup
 
-# Fix wrong symlinks (fixed upstream, will be in 2.4.1)
-ln -sf %{_bindir}/rdoc bindings/ruby/rdoc1_9.rb 
-ln -sf %{_bindir}/rdoc bindings/ruby/rdoc2_0.rb 
+%patch3 -p1 -b .ruby-binding-build
+
+# support ruby 2.2
+pushd bindings/ruby
+cat rdoc2.1 | sed -e 's|rdoc2_1|rdoc2_2|' > rdoc2.2
+chmod 0755 rdoc2.2
+ln -sf %{_bindir}/rdoc rdoc2_2.rb
+popd
 
 %build
 # Removing executable permissions on .c and .h files to fix rpmlint warnings. 
@@ -214,7 +220,7 @@ cmake \
   -DCMAKE_VERBOSE_MAKEFILE=TRUE \
   -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_C_FLAGS_RELEASE:STRING="$RPM_OPT_FLAGS -fno-strict-aliasing" \
-  -DCMAKE_CXX_FLAGS_RELEASE:STRING="$RPM_OPT_FLAGS" \
+  -DCMAKE_CXX_FLAGS_RELEASE:STRING="$RPM_OPT_FLAGS -fPIC" \
   -DCMAKE_SKIP_RPATH=1 \
   -DPACKAGE_ARCHITECTURE=`uname -m` \
   -DLIB=%{_lib} \

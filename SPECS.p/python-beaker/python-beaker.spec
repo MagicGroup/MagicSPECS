@@ -1,16 +1,8 @@
-%if 0%{?fedora}
 %global with_python3 1
-%else
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-%endif
-
-%if 0%{?fedora} <= 16
-%{!?python3_version: %global python3_version %(%{__python3} -c 'import sys ; sys.stdout.write("%s.%s" % sys.version_info[:2])')}
-%endif
 
 Name: python-beaker
-Version:	1.7.0
-Release:	3%{?dist}
+Version:	1.5.4
+Release:	12%{?dist}
 Summary: WSGI middleware layer to provide sessions
 Summary(zh_CN.UTF-8): 提供会话的 WSGI 中间层
 
@@ -30,11 +22,7 @@ BuildRequires: python-setuptools
 BuildRequires: python-nose
 BuildRequires: python-webtest
 Requires: python-paste
-%if 0%{?fedora}
 Requires: pycryptopp
-%else
-Requires: python-crypto
-%endif
 
 %if 0%{?with_python3}
 BuildRequires: /usr/bin/2to3
@@ -42,9 +30,7 @@ BuildRequires: python3-devel
 BuildRequires: python3-setuptools
 # Needed for complete test suite
 #BuildRequires: python3-webtest
-%if 0%{?fedora} > 14
 BuildRequires: python3-nose
-%endif
 %endif # if with_python3
 
 %description
@@ -144,6 +130,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Feb 16 2016 Liu Di <liudidi@gmail.com> - 1.5.4-12
+- 为 Magic 3.0 重建
+
+* Tue Feb 16 2016 Liu Di <liudidi@gmail.com> - 1.5.4-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.7.0-3
 - 为 Magic 3.0 重建
 

@@ -97,12 +97,12 @@ install -pm 644 encodings %{buildroot}/%{_datadir}/%{name}
 install -pm 644 pot-header %{buildroot}/%{_datadir}/%{name}/
 cp -a podebconf-report-po_templates/ %{buildroot}/%{_datadir}/%{name}/templates
 magic_rpm_clean.sh
-%find_lang po-debconf --without-mo --with-man --all-name
+%find_lang po-debconf --without-mo --with-man --all-name || :
 
 %clean
 rm -rf %{buildroot}
 
-%files -f po-debconf.lang
+%files 
 %defattr(-,root,root,-)
 %doc COPYING README README-trans
 %{_mandir}/man1/*.1*

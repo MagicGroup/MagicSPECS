@@ -12,13 +12,6 @@ Source:  http://www.freedesktop.org/software/pkgconfig/releases/pkg-config-%{ver
 BuildRequires: glib2-devel
 BuildRequires: popt-devel
 
-# https://bugs.freedesktop.org/show_bug.cgi?id=66155
-Patch0: pkg-config-man-cleanup.patch
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1212956
-Patch1: pkg-config-large-fs.patch
-
-
 Provides: pkgconfig(pkg-config) = %{version}
 
 %description
@@ -32,8 +25,6 @@ pkgconfig 工具决定编译选项。它为每一个需要的库读取配置文�
 
 %prep
 %setup -n pkg-config-%{version} -q
-%patch0 -p1 -b .man-cleanup
-%patch1 -p1 -b .lfs
 
 %build
 %configure \

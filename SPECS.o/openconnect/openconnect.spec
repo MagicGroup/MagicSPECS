@@ -107,6 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libopenconnect.so
 /usr/include/openconnect.h
 %{_libdir}/pkgconfig/openconnect.pc
+%{_docdir}/openconnect/*
 
 %changelog
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 7.06-3

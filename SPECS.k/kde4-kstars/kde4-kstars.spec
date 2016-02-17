@@ -12,7 +12,7 @@ Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org
 Version: 4.14.3
 Release: 2%{?dist}
-Source0: http://carroll.aset.psu.edu/pub/kde/stable/applications/%{version}/src/%{real_name}-%{version}.tar.xz
+Source0: http://mirror.squ.edu.om//kde/stable/applications/%{version}/src/%{real_name}-%{version}.tar.xz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 

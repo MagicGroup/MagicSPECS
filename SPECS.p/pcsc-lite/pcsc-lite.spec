@@ -1,8 +1,8 @@
 %global upstream_build 4126
 
 Name:           pcsc-lite
-Version:	1.8.14
-Release:	3%{?dist}
+Version:	1.8.15
+Release:	1%{?dist}
 Summary:        PC/SC Lite smart card framework and applications
 Summary(zh_CN.UTF-8): PC/SC Lite 智能卡框架和应用程序
 
@@ -11,6 +11,8 @@ Group(zh_CN.UTF-8): 系统环境/服务
 License:        BSD
 URL:            http://pcsclite.alioth.debian.org/
 Source0:        http://alioth.debian.org/download.php/%{upstream_build}/%{name}-%{version}.tar.bz2
+Source1:	org.debian.pcsc-lite.policy
+
 
 BuildRequires:  doxygen
 BuildRequires:  graphviz
@@ -97,6 +99,9 @@ doxygen doc/doxygen.conf ; rm -f doc/api/*.{map,md5}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/polkit-1/actions/
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/polkit-1/actions/
+
 # Create empty directories
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/reader.conf.d
 mkdir -p $RPM_BUILD_ROOT%{_libdir}/pcsc/drivers
@@ -152,7 +157,8 @@ fi
 
 
 %files
-%doc AUTHORS ChangeLog* DRIVERS HELP README SECURITY TODO
+%doc AUTHORS ChangeLog* DRIVERS HELP README SECURITY TODO 
+%doc doc/README.polkit
 %dir %{_sysconfdir}/reader.conf.d/
 %{_unitdir}/pcscd.service
 %{_unitdir}/pcscd.socket
@@ -161,6 +167,7 @@ fi
 %dir %{_libdir}/pcsc/drivers/
 %{_mandir}/man5/reader.conf.5*
 %{_mandir}/man8/pcscd.8*
+%{_datadir}/polkit-1/actions/org.debian.pcsc-lite.policy
 %ghost %dir %{_localstatedir}/run/pcscd/
 
 %files libs

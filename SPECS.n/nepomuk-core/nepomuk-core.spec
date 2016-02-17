@@ -8,7 +8,7 @@
 #global tests 1
 
 Name:    nepomuk-core
-Version: 4.3
+Version: 4.14.3
 Release: 3%{?dist}
 Summary: Nepomuk Core utilities and libraries
 Summary(zh_CN.UTF-8): Nepomuk 核心工具和库
@@ -171,9 +171,6 @@ make -C %{_target_platform}/autotests/test test  ||:
 
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
-- 更新到 4.3
-
 * Wed Apr 01 2015 Liu Di <liudidi@gmail.com> - 4.14.3-2
 - 为 Magic 3.0 重建
 

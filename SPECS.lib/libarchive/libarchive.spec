@@ -1,6 +1,6 @@
 Name:           libarchive
 Version: 3.1.2
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        A library for handling streaming archive formats 
 Summary(zh_CN.UTF-8): 处理流归档格式的库
 
@@ -93,6 +93,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb 06 2016 Liu Di <liudidi@gmail.com> - 3.1.2-7
+- 为 Magic 3.0 重建
+
+* Sat Feb 06 2016 Liu Di <liudidi@gmail.com> - 3.1.2-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 3.1.2-5
 - 为 Magic 3.0 重建
 

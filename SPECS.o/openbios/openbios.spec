@@ -2,7 +2,7 @@
 %global tarver 1.0
 
 %define svn 1
-%define vcsdate 20151101
+%define vcsdate 20160216
 
 # Disable unhelpful RPM test.
 %global _binaries_in_noarch_packages_terminate_build 0
@@ -37,10 +37,6 @@ Source0:	%{name}-svn%{vcsdate}.tar.xz
 Source0:        %{name}-%{tarver}-svn%{svnrel}.tar.gz
 %endif
 Source1:	make_openbios_svn_package.sh
-
-# Use 64bit gcc for 32bit ppc + sparc
-# keep: Not suitable for upstream, change is specific to Fedora cross-gcc
-Patch0:         0001-Use-64bit-gcc-for-32bit-ppc-sparc.patch
 
 # Note that these packages build 32 bit binaries with the -m32 flag.
 BuildRequires:  gcc-powerpc64-linux-gnu
@@ -88,8 +84,6 @@ OpenBIOS 项目提供了自由开源的开放固件实现。
 %else
 %setup -q -n %{name}-%{tarver}
 %endif
-%patch0 -p1
-
 
 %build
 /bin/sh config/scripts/switch-arch ppc

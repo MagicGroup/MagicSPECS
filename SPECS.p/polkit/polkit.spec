@@ -125,7 +125,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 magic_rpm_clean.sh
-%find_lang polkit-1
+%find_lang polkit-1 || :
 
 %pre
 getent group polkitd >/dev/null || groupadd -r polkitd
@@ -150,7 +150,7 @@ exit 0
 # because a component can't handle polkitd losing state.
 %systemd_postun
 
-%files -f polkit-1.lang
+%files 
 %defattr(-,root,root,-)
 %doc COPYING NEWS README
 %{_datadir}/man/man1/*

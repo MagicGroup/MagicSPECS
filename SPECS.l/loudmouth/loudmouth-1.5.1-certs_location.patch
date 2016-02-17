@@ -1,0 +1,12 @@
+diff -up loudmouth-1.5.1/loudmouth/lm-ssl-gnutls.c.certs loudmouth-1.5.1/loudmouth/lm-ssl-gnutls.c
+--- loudmouth-1.5.1/loudmouth/lm-ssl-gnutls.c.certs	2015-11-12 19:44:11.562536061 +0100
++++ loudmouth-1.5.1/loudmouth/lm-ssl-gnutls.c	2015-11-12 19:45:25.044746540 +0100
+@@ -37,7 +37,7 @@
+ 
+ #include <gnutls/x509.h>
+ 
+-#define CA_PEM_FILE "/etc/ssl/certs/ca-certificates.crt"
++#define CA_PEM_FILE "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+ 
+ struct _LmSSL {
+     LmSSLBase base;

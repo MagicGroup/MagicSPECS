@@ -1,0 +1,144 @@
+diff -rup p7zip_15.09.orig/CPP/7zip/CMAKE/generate.sh p7zip_15.09/CPP/7zip/CMAKE/generate.sh
+--- p7zip_15.09.orig/CPP/7zip/CMAKE/generate.sh	2015-01-18 17:14:54.000000000 +0000
++++ p7zip_15.09/CPP/7zip/CMAKE/generate.sh	2015-11-05 03:55:11.789432894 +0000
+@@ -15,14 +15,14 @@ CURDIR=$PWD
+ cd $CURDIR
+ doit "Unix" "Unix Makefiles"
+ 
+-cd $CURDIR
+-doit "codeblocks" "CodeBlocks - Unix Makefiles"
++#cd $CURDIR
++#doit "codeblocks" "CodeBlocks - Unix Makefiles"
+ 
+ #cd $CURDIR
+ #doit "KDevelop3" "KDevelop3"
+ 
+-cd $CURDIR
+-doit "EclipseCDT4" "Eclipse CDT4 - Unix Makefiles"
++#cd $CURDIR
++#doit "EclipseCDT4" "Eclipse CDT4 - Unix Makefiles"
+ 
+ #cd $CURDIR
+ #doit "ninja" "Ninja"
+diff -rup p7zip_15.09.orig/CPP/7zip/CMAKE/Format7zFree/CMakeLists.txt p7zip_15.09/CPP/7zip/CMAKE/Format7zFree/CMakeLists.txt
+--- p7zip_15.09.orig/CPP/7zip/CMAKE/Format7zFree/CMakeLists.txt	2015-10-10 13:30:03.000000000 +0100
++++ p7zip_15.09/CPP/7zip/CMAKE/Format7zFree/CMakeLists.txt	2015-11-05 04:21:50.386888680 +0000
+@@ -127,8 +127,6 @@ add_library(7z MODULE
+   "../../../../CPP/7zip/Archive/PeHandler.cpp"
+   "../../../../CPP/7zip/Archive/PpmdHandler.cpp"
+   "../../../../CPP/7zip/Archive/QcowHandler.cpp"
+-  "../../../../CPP/7zip/Archive/Rar/RarHandler.cpp"
+-  "../../../../CPP/7zip/Archive/Rar/Rar5Handler.cpp"
+   "../../../../CPP/7zip/Archive/RpmHandler.cpp"
+   "../../../../CPP/7zip/Archive/SplitHandler.cpp"
+   "../../../../CPP/7zip/Archive/SquashfsHandler.cpp"
+@@ -231,9 +229,6 @@ add_library(7z MODULE
+   "../../../../CPP/7zip/Crypto/MyAesReg.cpp"
+   "../../../../CPP/7zip/Crypto/Pbkdf2HmacSha1.cpp"
+   "../../../../CPP/7zip/Crypto/RandGen.cpp"
+-  "../../../../CPP/7zip/Crypto/Rar20Crypto.cpp"
+-  "../../../../CPP/7zip/Crypto/Rar5Aes.cpp"
+-  "../../../../CPP/7zip/Crypto/RarAes.cpp"
+   "../../../../CPP/7zip/Crypto/WzAes.cpp"
+   "../../../../CPP/7zip/Crypto/ZipCrypto.cpp"
+   "../../../../CPP/7zip/Crypto/ZipStrong.cpp"
+--- p7zip_15.09.orig/CPP/7zip/Bundles/Format7zFree/makefile.list	2015-10-10 13:30:03.000000000 +0100
++++ p7zip_15.09/CPP/7zip/Bundles/Format7zFree/makefile.list	2015-11-05 13:22:50.715659911 +0000
+@@ -89,8 +89,6 @@ SRCS=\
+   ../../../../CPP/7zip/Archive/PeHandler.cpp \
+   ../../../../CPP/7zip/Archive/PpmdHandler.cpp \
+   ../../../../CPP/7zip/Archive/QcowHandler.cpp \
+-  ../../../../CPP/7zip/Archive/Rar/RarHandler.cpp \
+-  ../../../../CPP/7zip/Archive/Rar/Rar5Handler.cpp \
+   ../../../../CPP/7zip/Archive/RpmHandler.cpp \
+   ../../../../CPP/7zip/Archive/SplitHandler.cpp \
+   ../../../../CPP/7zip/Archive/SquashfsHandler.cpp \
+@@ -193,9 +191,6 @@ SRCS=\
+   ../../../../CPP/7zip/Crypto/MyAesReg.cpp \
+   ../../../../CPP/7zip/Crypto/Pbkdf2HmacSha1.cpp \
+   ../../../../CPP/7zip/Crypto/RandGen.cpp \
+-  ../../../../CPP/7zip/Crypto/Rar20Crypto.cpp \
+-  ../../../../CPP/7zip/Crypto/Rar5Aes.cpp \
+-  ../../../../CPP/7zip/Crypto/RarAes.cpp \
+   ../../../../CPP/7zip/Crypto/WzAes.cpp \
+   ../../../../CPP/7zip/Crypto/ZipCrypto.cpp \
+   ../../../../CPP/7zip/Crypto/ZipStrong.cpp \
+@@ -491,10 +486,6 @@ PpmdHandler.o : ../../../../CPP/7zip/Arc
+ 	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Archive/PpmdHandler.cpp
+ QcowHandler.o : ../../../../CPP/7zip/Archive/QcowHandler.cpp
+ 	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Archive/QcowHandler.cpp
+-RarHandler.o : ../../../../CPP/7zip/Archive/Rar/RarHandler.cpp
+-	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Archive/Rar/RarHandler.cpp
+-Rar5Handler.o : ../../../../CPP/7zip/Archive/Rar/Rar5Handler.cpp
+-	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Archive/Rar/Rar5Handler.cpp
+ RpmHandler.o : ../../../../CPP/7zip/Archive/RpmHandler.cpp
+ 	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Archive/RpmHandler.cpp
+ SplitHandler.o : ../../../../CPP/7zip/Archive/SplitHandler.cpp
+@@ -699,12 +690,6 @@ Pbkdf2HmacSha1.o : ../../../../CPP/7zip/
+ 	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Crypto/Pbkdf2HmacSha1.cpp
+ RandGen.o : ../../../../CPP/7zip/Crypto/RandGen.cpp
+ 	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Crypto/RandGen.cpp
+-Rar20Crypto.o : ../../../../CPP/7zip/Crypto/Rar20Crypto.cpp
+-	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Crypto/Rar20Crypto.cpp
+-Rar5Aes.o : ../../../../CPP/7zip/Crypto/Rar5Aes.cpp
+-	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Crypto/Rar5Aes.cpp
+-RarAes.o : ../../../../CPP/7zip/Crypto/RarAes.cpp
+-	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Crypto/RarAes.cpp
+ WzAes.o : ../../../../CPP/7zip/Crypto/WzAes.cpp
+ 	$(CXX) $(CXXFLAGS) ../../../../CPP/7zip/Crypto/WzAes.cpp
+ ZipCrypto.o : ../../../../CPP/7zip/Crypto/ZipCrypto.cpp
+@@ -877,8 +862,6 @@ OBJS=\
+  PeHandler.o \
+  PpmdHandler.o \
+  QcowHandler.o \
+- RarHandler.o \
+- Rar5Handler.o \
+  RpmHandler.o \
+  SplitHandler.o \
+  SquashfsHandler.o \
+@@ -981,9 +964,6 @@ OBJS=\
+  MyAesReg.o \
+  Pbkdf2HmacSha1.o \
+  RandGen.o \
+- Rar20Crypto.o \
+- Rar5Aes.o \
+- RarAes.o \
+  WzAes.o \
+  ZipCrypto.o \
+  ZipStrong.o \
+--- p7zip_15.09.orig/makefile	2015-10-05 09:39:57.000000000 +0100
++++ p7zip_15.09/makefile	2015-11-05 13:36:01.160793573 +0000
+@@ -70,7 +70,6 @@ depend:
+ 	$(MAKE) -C CPP/7zip/UI/Client7z           depend
+ 	$(MAKE) -C CPP/7zip/UI/Console            depend
+ 	$(MAKE) -C CPP/7zip/Bundles/Format7zFree  depend
+-	$(MAKE) -C CPP/7zip/Compress/Rar          depend
+ 	$(MAKE) -C CPP/7zip/UI/GUI                depend
+ 	$(MAKE) -C CPP/7zip/UI/FileManager        depend
+ 
+@@ -81,7 +80,6 @@ sfx: common
+ common7z:common
+ 	$(MKDIR) bin/Codecs
+ 	$(MAKE) -C CPP/7zip/Bundles/Format7zFree all
+-	$(MAKE) -C CPP/7zip/Compress/Rar         all
+ 
+ 7z: common7z
+ 	$(MAKE) -C CPP/7zip/UI/Console           all
+@@ -106,7 +104,6 @@ clean:
+ 	$(MAKE) -C CPP/7zip/UI/FileManager       clean
+ 	$(MAKE) -C CPP/7zip/UI/GUI               clean
+ 	$(MAKE) -C CPP/7zip/Bundles/Format7zFree clean
+-	$(MAKE) -C CPP/7zip/Compress/Rar         clean
+ 	$(MAKE) -C CPP/7zip/Bundles/LzmaCon      clean2
+ 	$(MAKE) -C CPP/7zip/Bundles/AloneGCOV    clean
+ 	$(MAKE) -C CPP/7zip/TEST/TestUI          clean
+diff -up p7zip_15.09.orig/DOC/License.txt p7zip_15.09/DOC/License.txt
+--- p7zip_15.09.orig/DOC/License.txt	2015-01-05 18:38:02.000000000 +0000
++++ p7zip_15.09/DOC/License.txt	2016-01-22 04:04:38.314054043 +0000
+@@ -1,3 +1,6 @@
++  Fedora package note: non-Free unrar code have been removed from the sources
++  (#190277)
++
+   7-Zip source code
+   ~~~~~~~~~~~~~~~~~
+   License for use and distribution

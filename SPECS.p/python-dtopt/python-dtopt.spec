@@ -14,7 +14,7 @@ URL:            http://pypi.python.org/pypi/dtopt/
 Source0:        http://pypi.python.org/packages/source/d/dtopt/dtopt-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-BuildRequires:  python-setuptools-devel
+BuildRequires:  python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires:  python3-devel

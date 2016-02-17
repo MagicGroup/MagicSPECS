@@ -11,7 +11,8 @@ Group:   System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 URL:     https://github.com/dcantrell/%{name}
 
-Source0: https://github.com/dcantrell/%{name}/releases/%{name}-%{version}.tar.gz
+#Source0: https://github.com/dcantrell/%{name}/releases/%{name}-%{version}.tar.gz
+Source0: https://github.com/rhinstaller/pyparted/archive/v%{version}.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: python-devel
@@ -86,7 +87,6 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS COPYING NEWS README TODO
 %{python_sitearch}/_ped.so
 %{python_sitearch}/parted
 %{python_sitearch}/%{name}-%{version}-*.egg-info
@@ -94,7 +94,6 @@ rm -rf %{buildroot}
 %if 0%{?with_python3}
 %files -n python3-pyparted
 %defattr(-,root,root,-)
-%doc AUTHORS BUGS COPYING NEWS README TODO
 %{python3_sitearch}/_ped.*.so
 %{python3_sitearch}/parted
 %{python3_sitearch}/%{name}-%{version}-*.egg-info

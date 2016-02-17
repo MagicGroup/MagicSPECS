@@ -17,7 +17,7 @@ Requires: python-nose >= 0.8.3
 BuildRequires: python-devel
 # Must have setuptools to build the package
 # The build portions moved to a subpackage in F-8
-BuildRequires: python-setuptools-devel
+BuildRequires: python-setuptools
 BuildArch: noarch
 
 %description

@@ -23,7 +23,7 @@ BuildRequires: python-devel
 BuildRequires: python-twisted-core >= 2.5
 BuildRequires: python-twisted-web >= 2.5
 # Must have setuptools to build the package
-BuildRequires: python-setuptools-devel
+BuildRequires: python-setuptools
 Buildarch: noarch
 # Fist test packages had different names
 Obsoletes: coherence < 0.2.1-2

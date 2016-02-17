@@ -12,7 +12,7 @@ Summary:	Network traffic analyzer
 Summary(zh_CN.UTF-8): 网络流量分析程序
 Name:		wireshark
 Version:	1.12.8
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+
 Group:		Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -411,6 +411,9 @@ update-mime-database %{?fedora:-n} %{_datadir}/mime &> /dev/null || :
 %{_datadir}/aclocal/*
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 1.12.8-4
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.12.8-3
 - 为 Magic 3.0 重建
 

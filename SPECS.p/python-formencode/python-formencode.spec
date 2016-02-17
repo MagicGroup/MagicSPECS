@@ -1,4 +1,4 @@
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%global with_python3 1
 
 %define srcname FormEncode
 
@@ -18,20 +18,18 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildArch:      noarch
 
 Requires: python-setuptools
+Requires: python-formencode-langpacks
 BuildRequires: python2-devel
 BuildRequires: python-setuptools
 BuildRequires: python-docutils
-# For test suite
-# Note that formencode 2.2.6 doesn't seem to ship tests in the tarball
-BuildRequires: python-nose
-BuildRequires: python-pydns
 
-# ElementTree is part of python2.5
-# This is just needed for EL-5
-%if 0%{?rhel} && 0%{?rhel} <= 5
-BuildRequires:   python-elementtree
-Requires:   python-elementtree
+%if 0%{?with_python3}
+BuildRequires: python3-devel
+BuildRequires: python3-setuptools
+BuildRequires: python3-docutils
 %endif
+
+Provides: python2-formencode
 
 %description
 FormEncode validates and converts nested structures. It allows for a 
@@ -41,21 +39,63 @@ for filling and generating forms.
 %description -l zh_CN.UTF-8
 HTML 表单校验、生成和转换包。
 
+%if 0%{?with_python3}
+%package -n python3-formencode
+Summary: HTML form validation, generation, and convertion package
+Summary(zh_CN.UTF-8): HTML 表单校验、生成和转换包
+Requires: python3-setuptools
+Requires: python-formencode-langpacks
+
+%description -n python3-formencode
+FormEncode validates and converts nested structures. It allows for a.
+declarative form of defining the validation, and decoupled processes.
+for filling and generating forms.
+
+This package contains the python3 version of the module.
+%description -n python3-formencode -l zh_CN.UTF-8
+HTML 表单校验、生成和转换包。
+%endif
+
+%package -n python-formencode-langpacks
+Summary: Locale files for the python-formencode library
+Summary(zh_CN.UTF-8): pyhton-formencode 的语言包
+
+%description -n python-formencode-langpacks
+The FormEncode library validates and converts nested structures.  This package
+contains the locale files for localizing the message strings in code within the
+library.
+
+%description -n python-formencode-langpacks -l zh_CN.UTF-8
+pyhton-formencode 的语言包。
+
 %prep
 %setup -q -n %{srcname}-%{version}
 
+%if 0%{?with_python3}
+rm -rf %{py3dir}
+cp -a . %{py3dir}
+%endif # with_python3
+
+
 %build
-%{__python} setup.py build
+%{__python2} setup.py build
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py build
+popd
+%endif # with_python3
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__python} setup.py install --skip-build --root $RPM_BUILD_ROOT
+%{__python2} setup.py install --skip-build --root $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT%{python2_sitelib}/docs/
 
 # bah.  setuptools resource badness
 # Luckily ian bicking wrote the lookup for this to correctly fallback on the
 # system catalog
-for file in $RPM_BUILD_ROOT%{python_sitelib}/formencode/i18n/* ; do
+for file in $RPM_BUILD_ROOT%{python2_sitelib}/formencode/i18n/* ; do
     if [ -d $file ] ; then
         if [ -e $file/LC_MESSAGES/%{srcname}.mo ] ; then
             mkdir -p $RPM_BUILD_ROOT%{_datadir}/locale/`basename $file`/LC_MESSAGES/
@@ -63,22 +103,52 @@ for file in $RPM_BUILD_ROOT%{python_sitelib}/formencode/i18n/* ; do
         fi
     fi
 done
-rm -rf $RPM_BUILD_ROOT%{python_sitelib}/formencode/i18n
-magic_rpm_clean.sh
+rm -rf $RPM_BUILD_ROOT%{python2_sitelib}/formencode/i18n
+
 %find_lang %{srcname}
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py install --skip-build --root=$RPM_BUILD_ROOT
+
+rm -rf $RPM_BUILD_ROOT%{python3_sitelib}/docs/
+
+# Can just delete this as the locale files built for python2 have the same
+# strings as the ones built for python3
+rm -rf $RPM_BUILD_ROOT%{python3_sitelib}/formencode/i18n
+
+popd
+%endif # with_python3
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%check
-# Seems like formencode2.2.6 doesn't ship with any tests :-(
-PYTHONPATH=$(pwd) nosetests
+#%%check
+## Note that the test suite requires all kinds of network connectivity, so we
+## can't run it in koji.
+#PYTHONPATH=$(pwd) nosetests
+#%%if 0%{?with_python3}
+#pushd %{py3dir}/build/lib
+#PYTHONPATH=$(pwd) nosetests-%{python3_version}
+#popd
+#%%endif # with_python3
 
-%files -f %{srcname}.lang
+
+%files
 %defattr(-,root,root,-)
 %doc PKG-INFO docs
-%{python_sitelib}/formencode
-%{python_sitelib}/%{srcname}-%{version}-py%{python_version}.egg-info
+%{python2_sitelib}/formencode
+%{python2_sitelib}/%{srcname}-%{version}-py%{python2_version}.egg-info
+
+%if 0%{?with_python3}
+%files -n python3-formencode
+%doc PKG-INFO docs
+%{python3_sitelib}/formencode
+%{python3_sitelib}/%{srcname}-%{version}-py%{python3_version}.egg-info
+%endif
+
+%files -n python-formencode-langpacks -f %{srcname}.lang
 
 %changelog
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.3.0-3

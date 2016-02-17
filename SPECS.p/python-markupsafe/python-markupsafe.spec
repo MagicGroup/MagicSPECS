@@ -13,7 +13,7 @@ URL: http://pypi.python.org/pypi/MarkupSafe
 Source0: http://pypi.python.org/packages/source/M/MarkupSafe/MarkupSafe-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: python-devel python-setuptools-devel
+BuildRequires: python-devel python-setuptools
 
 %if 0%{?with_python3}
 BuildRequires: python3-devel python3-setuptools

@@ -13,7 +13,7 @@ License:        MIT
 URL:            https://pypi.python.org/pypi/httplib2
 Source0:        https://pypi.python.org/packages/source/h/httplib2/httplib2-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  python-setuptools-devel
+BuildRequires:  python-setuptools
 BuildRequires:  python-devel
 BuildArch:      noarch
 

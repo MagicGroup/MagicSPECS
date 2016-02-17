@@ -1,6 +1,6 @@
 Name:           nettle
-Version: 3.1.1
-Release: 3%{?dist}
+Version: 3.2
+Release: 1%{?dist}
 Summary:        A low-level cryptographic library
 Summary(zh_CN.UTF-8): 低级的密码库
 
@@ -75,12 +75,13 @@ make check
 %{_bindir}/pkcs1-conv
 %{_bindir}/sexp-conv
 %{_bindir}/nettle-hash
+%{_bindir}/nettle-pbkdf2
 %{_libdir}/libnettle.so.*
 %{_libdir}/libhogweed.so.*
 
 
 %files devel
-%doc descore.README nettle.html nettle.pdf COPYING.LIB
+%doc descore.README nettle.html nettle.pdf 
 %{_includedir}/nettle
 %{_libdir}/libnettle.so
 %{_libdir}/libhogweed.so

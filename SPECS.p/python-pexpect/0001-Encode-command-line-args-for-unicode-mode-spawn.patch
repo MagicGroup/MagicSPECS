@@ -1,0 +1,29 @@
+From fa5ece24786d659e0bcd8423d66cbaa51b3d8d6c Mon Sep 17 00:00:00 2001
+From: Thomas Kluyver <takowl@gmail.com>
+Date: Tue, 6 Oct 2015 11:30:10 +0100
+Subject: [PATCH] Encode command line args for unicode-mode spawn
+
+Attempt to address gh-272
+---
+ pexpect/pty_spawn.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/pexpect/pty_spawn.py b/pexpect/pty_spawn.py
+index 1d9554b..7fc27fe 100644
+--- a/pexpect/pty_spawn.py
++++ b/pexpect/pty_spawn.py
+@@ -285,6 +285,11 @@ class spawn(SpawnBase):
+         if dimensions is not None:
+             kwargs['dimensions'] = dimensions
+ 
++        if self.encoding is not None:
++            # Encode command line using the specified encoding
++            self.args = [a if isinstance(a, bytes) else a.encode(self.encoding)
++                         for a in self.args]
++
+         self.ptyproc = ptyprocess.PtyProcess.spawn(self.args, env=self.env,
+                                                    cwd=self.cwd, **kwargs)
+ 
+-- 
+2.6.0
+

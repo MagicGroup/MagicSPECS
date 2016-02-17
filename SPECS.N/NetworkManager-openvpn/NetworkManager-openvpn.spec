@@ -4,7 +4,7 @@ Summary:   NetworkManager VPN plugin for OpenVPN
 Summary(zh_CN.UTF-8): NetworkManager 的 OpenVPN 插件
 Name:      NetworkManager-openvpn
 Epoch:     1
-Version:	1.0.6
+Version:	1.0.0
 Release:	3%{?dist}
 License:   GPLv2+
 URL:       http://www.gnome.org/projects/NetworkManager/

@@ -123,7 +123,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc README LICENSE doc/*.html
 %{python_sitelib}/%{module}
 %{python_sitelib}/%{module}-%{version}-*.egg-info/
 
@@ -135,7 +134,6 @@ rm -rf $RPM_BUILD_ROOT
 %if 0%{?with_python3}
 %files -n python3-pyasn1
 %defattr(-,root,root,-)
-%doc README LICENSE doc/*.html
 %{python3_sitelib}/%{module}
 %{python3_sitelib}/%{module}-%{version}-*.egg-info/
 

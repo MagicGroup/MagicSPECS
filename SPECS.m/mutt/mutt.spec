@@ -18,8 +18,8 @@
 Summary: A text mode mail user agent
 Summary(zh_CN.UTF-8): 文本模式的邮件用户代理
 Name: mutt
-Version: 1.5.23
-Release: 6%{?dist}
+Version: 1.5.24
+Release: 1%{?dist}
 Epoch: 5
 # The entire source code is GPLv2+ except
 # pgpewrap.c setenv.c sha1.c wcwidth.c which are Public Domain
@@ -34,6 +34,9 @@ Patch2: mutt-1.5.21-cabundle.patch
 Patch3: mutt-1.5.21-syncdebug.patch
 # FIXME make it to upstream
 Patch4: mutt-1.5.23-add_debug_option.patch
+Patch7: mutt-1.5.23-domainname.patch
+Patch8: mutt-1.5.23-system_certs.patch
+Patch9: mutt-1.5.23-ssl_ciphers.patch
 Url: http://www.mutt.org/
 Requires: mailcap, urlview
 BuildRequires: ncurses-devel, gettext, automake
@@ -81,6 +84,9 @@ autoreconf --install
 %patch2 -p1 -b .cabundle
 %patch3 -p1 -b .syncdebug
 %patch4 -p1 -b .add_debug_option
+%patch7 -p1 -b .domainname
+%patch8  -p1 -b .system_certs
+%patch9  -p1 -b .ssl_ciphers
 
 sed -i -r 's/`$GPGME_CONFIG --libs`/"\0 -lgpg-error"/' configure
 # disable mutt_dotlock program - remove support from mutt binary
@@ -187,6 +193,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 5:1.5.23-7
+- 为 Magic 3.0 重建
+
 * Tue Nov 10 2015 Liu Di <liudidi@gmail.com> - 5:1.5.23-6
 - 为 Magic 3.0 重建
 

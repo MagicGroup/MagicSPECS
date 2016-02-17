@@ -7,7 +7,7 @@
 
 Name:          libimobiledevice
 Version: 1.2.0
-Release:       4%{?dist}
+Release:       5%{?dist}
 Summary:       Library for connecting to mobile devices
 Summary(zh_CN.UTF-8): 连接移动设备的库
 
@@ -16,6 +16,9 @@ Group(zh_CN.UTF-8): 系统环境/库
 License:       LGPLv2+
 URL:           http://www.libimobiledevice.org/
 Source0:       http://www.libimobiledevice.org/downloads/%{name}-%{version}.tar.bz2
+
+# Fix the build with gnutls 3.4
+Patch0:        0001-Updated-cert-callback-to-gnutls3-API.patch
 
 BuildRequires: glib2-devel
 BuildRequires: gnutls-devel
@@ -62,6 +65,7 @@ Python bindings for libimobiledevice.
 
 %prep
 %setup -q
+%patch0 -p1
 
 # Fix dir permissions on html docs
 chmod +x docs/html
@@ -102,6 +106,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %endif
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 1.2.0-5
+- 为 Magic 3.0 重建
+
 * Mon Jan 18 2016 Liu Di <liudidi@gmail.com> - 1.2.0-4
 - 为 Magic 3.0 重建
 

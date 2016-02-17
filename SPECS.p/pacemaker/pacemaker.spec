@@ -51,7 +51,7 @@
 Name:          pacemaker
 Summary:       Scalable High-Availability cluster resource manager
 Version:       1.1.12
-Release:       %{pcmk_release}%{?dist}.5
+Release:       %{pcmk_release}%{?dist}.6
 License:       GPLv2+ and LGPLv2+
 Url:           http://www.clusterlabs.org
 Group:         System Environment/Daemons
@@ -512,6 +512,9 @@ exit 0
 %doc AUTHORS
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 1.1.12-2.6
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 1.1.12-2.5
 - 为 Magic 3.0 重建
 

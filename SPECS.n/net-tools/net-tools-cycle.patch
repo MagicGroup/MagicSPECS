@@ -1,6 +1,6 @@
 diff -up net-tools-2.0/lib/interface.c.cycle net-tools-2.0/lib/interface.c
---- net-tools-2.0/lib/interface.c.cycle	2014-11-11 14:38:03.000000000 +0100
-+++ net-tools-2.0/lib/interface.c	2014-11-24 14:45:46.128480980 +0100
+--- net-tools-2.0/lib/interface.c.cycle	2015-08-29 08:59:31.000000000 +0200
++++ net-tools-2.0/lib/interface.c	2015-09-15 18:09:54.089697132 +0200
 @@ -93,6 +93,7 @@ int if_list_all = 0;	/* do we have reque
  static struct interface *int_list, *int_last;
  
@@ -68,8 +68,8 @@ diff -up net-tools-2.0/lib/interface.c.cycle net-tools-2.0/lib/interface.c
  int if_readlist(void)
  {
 diff -up net-tools-2.0/man/en_US/netstat.8.cycle net-tools-2.0/man/en_US/netstat.8
---- net-tools-2.0/man/en_US/netstat.8.cycle	2014-11-11 14:38:03.000000000 +0100
-+++ net-tools-2.0/man/en_US/netstat.8	2014-11-24 14:47:36.140944944 +0100
+--- net-tools-2.0/man/en_US/netstat.8.cycle	2015-08-29 08:59:31.000000000 +0200
++++ net-tools-2.0/man/en_US/netstat.8	2015-09-15 18:09:54.090697129 +0200
 @@ -36,6 +36,7 @@ netstat \- Print network connections, ro
  .RB [ \-\-verbose | \-v ]
  .RB [ \-\-continuous | \-c]
@@ -129,21 +129,20 @@ diff -up net-tools-2.0/man/en_US/netstat.8.cycle net-tools-2.0/man/en_US/netstat
  .SH OUTPUT
  .P
 diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
---- net-tools-2.0/netstat.c.cycle	2014-11-11 14:38:03.000000000 +0100
-+++ net-tools-2.0/netstat.c	2014-11-24 14:44:24.948614445 +0100
-@@ -115,9 +115,9 @@
+--- net-tools-2.0/netstat.c.cycle	2015-08-29 08:59:31.000000000 +0200
++++ net-tools-2.0/netstat.c	2015-09-15 18:09:54.090697129 +0200
+@@ -115,8 +115,8 @@
  #endif
  
  /* prototypes for statistics.c */
--void parsesnmp(int, int, int);
-+int parsesnmp(int, int, int);
- void inittab(void);
+-void parsesnmp(int, int, int, int);
 -void parsesnmp6(int, int, int);
++int parsesnmp(int, int, int, int);
 +int parsesnmp6(int, int, int);
- void inittab6(void);
  
  typedef enum {
-@@ -342,10 +342,10 @@ static void prg_cache_clear(void)
+     SS_FREE = 0,		/* not allocated                */
+@@ -340,10 +340,10 @@ static void prg_cache_clear(void)
      prg_cache_loaded = 0;
  }
  
@@ -156,7 +155,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
  }
  
  static int extract_type_1_socket_inode(const char lname[], unsigned long * inode_p) {
-@@ -1787,6 +1787,8 @@ static int rfcomm_info(void)
+@@ -1892,6 +1892,8 @@ static int rfcomm_info(void)
  
  static int iface_info(void)
  {
@@ -165,7 +164,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
      if (skfd < 0) {
  	if ((skfd = sockets_open(0)) < 0) {
  	    perror("socket");
-@@ -1796,20 +1798,21 @@ static int iface_info(void)
+@@ -1901,20 +1903,21 @@ static int iface_info(void)
      }
      if (flag_exp < 2) {
  	ife_short = 1;
@@ -190,7 +189,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
      return 0;
  }
  
-@@ -1825,7 +1828,7 @@ static void usage(void)
+@@ -1930,7 +1933,7 @@ static void usage(void)
  {
      fprintf(stderr, _("usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}\n"));
      fprintf(stderr, _("       netstat [-vWnNcaeol] [<Socket> ...]\n"));
@@ -199,7 +198,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
  
      fprintf(stderr, _("        -r, --route              display routing table\n"));
      fprintf(stderr, _("        -i, --interfaces         display interface table\n"));
-@@ -1867,6 +1870,7 @@ int main
+@@ -1972,6 +1975,7 @@ int main
   (int argc, char *argv[]) {
      int i;
      int lop;
@@ -207,7 +206,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
      static struct option longopts[] =
      {
  	AFTRANS_OPTS,
-@@ -2049,6 +2053,12 @@ int main
+@@ -2154,6 +2158,12 @@ int main
  	    flag_sta++;
  	}
  
@@ -220,7 +219,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
      if (flag_int + flag_rou + flag_mas + flag_sta > 1)
  	usage();
  
-@@ -2078,7 +2088,7 @@ int main
+@@ -2183,7 +2193,7 @@ int main
  			     flag_not & FLAG_NUM_PORT, flag_exp);
  	    if (i || !flag_cnt)
  		break;
@@ -229,28 +228,26 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
  	}
  #else
  	ENOSUPP("netstat", "FW_MASQUERADE");
-@@ -2091,17 +2101,18 @@ int main
+@@ -2196,15 +2206,16 @@ int main
          if (!afname[0])
              safe_strncpy(afname, DFLT_AF, sizeof(afname));
  
 +        for (;;) {
          if (!strcmp(afname, "inet")) {
  #if HAVE_AFINET
-             inittab();
--            parsesnmp(flag_raw, flag_tcp, flag_udp);
-+            i = parsesnmp(flag_raw, flag_tcp, flag_udp);
+-            parsesnmp(flag_raw, flag_tcp, flag_udp, flag_sctp);
++            i = parsesnmp(flag_raw, flag_tcp, flag_udp, flag_sctp);
  #else
              ENOSUPP("netstat", "AF INET");
  #endif
          } else if(!strcmp(afname, "inet6")) {
  #if HAVE_AFINET6
-             inittab6();
 -            parsesnmp6(flag_raw, flag_tcp, flag_udp);
 +            i = parsesnmp6(flag_raw, flag_tcp, flag_udp);
  #else
              ENOSUPP("netstat", "AF INET6");
  #endif
-@@ -2109,7 +2120,11 @@ int main
+@@ -2212,7 +2223,11 @@ int main
            printf(_("netstat: No statistics support for specified address family: %s\n"), afname);
            exit(1);
          }
@@ -263,7 +260,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
      }
  
      if (flag_rou) {
-@@ -2131,7 +2146,7 @@ int main
+@@ -2234,7 +2249,7 @@ int main
  	    i = route_info(afname, options);
  	    if (i || !flag_cnt)
  		break;
@@ -272,7 +269,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
  	}
  	return (i);
      }
-@@ -2140,7 +2155,7 @@ int main
+@@ -2243,7 +2258,7 @@ int main
  	    i = iface_info();
  	    if (!flag_cnt || i)
  		break;
@@ -281,7 +278,7 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
  	}
  	return (i);
      }
-@@ -2327,7 +2342,7 @@ int main
+@@ -2430,7 +2445,7 @@ int main
  
  	if (!flag_cnt || i)
  	    break;
@@ -291,18 +288,18 @@ diff -up net-tools-2.0/netstat.c.cycle net-tools-2.0/netstat.c
      }
      return (i);
 diff -up net-tools-2.0/statistics.c.cycle net-tools-2.0/statistics.c
---- net-tools-2.0/statistics.c.cycle	2014-11-11 14:38:03.000000000 +0100
-+++ net-tools-2.0/statistics.c	2014-11-24 14:44:24.949614431 +0100
-@@ -502,7 +502,7 @@ void process6_fd(FILE *f)
- 
+--- net-tools-2.0/statistics.c.cycle	2015-08-29 08:59:31.000000000 +0200
++++ net-tools-2.0/statistics.c	2015-09-15 18:10:34.608582779 +0200
+@@ -527,7 +527,7 @@ static void process_fd2(FILE *f, const c
+     }
  }
  
--void parsesnmp(int flag_raw, int flag_tcp, int flag_udp)
-+int parsesnmp(int flag_raw, int flag_tcp, int flag_udp)
+-void parsesnmp(int flag_raw, int flag_tcp, int flag_udp, int flag_sctp)
++int parsesnmp(int flag_raw, int flag_tcp, int flag_udp, int flag_sctp)
  {
      FILE *f;
  
-@@ -511,14 +511,17 @@ void parsesnmp(int flag_raw, int flag_tc
+@@ -536,14 +536,17 @@ void parsesnmp(int flag_raw, int flag_tc
      f = proc_fopen("/proc/net/snmp");
      if (!f) {
  	perror(_("cannot open /proc/net/snmp"));
@@ -322,7 +319,7 @@ diff -up net-tools-2.0/statistics.c.cycle net-tools-2.0/statistics.c
  
      fclose(f);
  
-@@ -528,15 +531,18 @@ void parsesnmp(int flag_raw, int flag_tc
+@@ -553,8 +556,11 @@ void parsesnmp(int flag_raw, int flag_tc
      	if (process_fd(f, 1, NULL) <0)
            fprintf(stderr, _("Problem while parsing /proc/net/netstat\n"));
  
@@ -336,7 +333,10 @@ diff -up net-tools-2.0/statistics.c.cycle net-tools-2.0/statistics.c
  
          fclose(f);
      }
--    return;
+@@ -567,9 +573,10 @@ void parsesnmp(int flag_raw, int flag_tc
+ 	    fclose(f);
+ 	}
+     }
 +    return(0);
  }
  
@@ -345,7 +345,7 @@ diff -up net-tools-2.0/statistics.c.cycle net-tools-2.0/statistics.c
  {
      FILE *f;
  
-@@ -545,7 +551,7 @@ void parsesnmp6(int flag_raw, int flag_t
+@@ -578,7 +585,7 @@ void parsesnmp6(int flag_raw, int flag_t
      f = fopen("/proc/net/snmp6", "r");
      if (!f) {
          perror(_("cannot open /proc/net/snmp6"));
@@ -354,7 +354,7 @@ diff -up net-tools-2.0/statistics.c.cycle net-tools-2.0/statistics.c
      }
      process6_fd(f);
      if (ferror(f))
-@@ -555,13 +561,16 @@ void parsesnmp6(int flag_raw, int flag_t
+@@ -588,11 +595,14 @@ void parsesnmp6(int flag_raw, int flag_t
      f = fopen("/proc/net/snmp", "r");
      if (!f) {
          perror(_("cannot open /proc/net/snmp"));
@@ -371,5 +371,3 @@ diff -up net-tools-2.0/statistics.c.cycle net-tools-2.0/statistics.c
      fclose(f);
 +    return(0);
  }
- 
- void inittab(void)

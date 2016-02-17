@@ -1,0 +1,371 @@
+From ae932d179adc4c602f9a4298076cdc5a82f9351a Mon Sep 17 00:00:00 2001
+From: Jeff Quast <contact@jeffquast.com>
+Date: Tue, 6 Oct 2015 10:17:50 -0700
+Subject: [PATCH 2/2] 2 new tools: display-{fpathconf.maxcanon}.py
+
+tests/test_maxcanon.py has been deleted and turned into
+an "autodetection" tool of sorts, no longer attempting
+to assert exacting values, but determine it programmatically.
+---
+ pexpect/pty_spawn.py       |  14 ++--
+ tests/test_maxcanon.py     | 179 ---------------------------------------------
+ tools/display-fpathconf.py |  41 +++++++++++
+ tools/display-maxcanon.py  |  80 ++++++++++++++++++++
+ 4 files changed, 128 insertions(+), 186 deletions(-)
+ delete mode 100644 tests/test_maxcanon.py
+ create mode 100644 tools/display-fpathconf.py
+ create mode 100644 tools/display-maxcanon.py
+
+diff --git a/pexpect/pty_spawn.py b/pexpect/pty_spawn.py
+index 7fc27fe..299016c 100644
+--- a/pexpect/pty_spawn.py
++++ b/pexpect/pty_spawn.py
+@@ -492,9 +492,9 @@ class spawn(SpawnBase):
+ 
+         This value may be discovered using fpathconf(3)::
+ 
+-        >>> from os import fpathconf
+-        >>> print(fpathconf(0, 'PC_MAX_CANON'))
+-        256
++            >>> from os import fpathconf
++            >>> print(fpathconf(0, 'PC_MAX_CANON'))
++            256
+ 
+         On such a system, only 256 bytes may be received per line. Any
+         subsequent bytes received will be discarded. BEL (``'\a'``) is then
+@@ -505,10 +505,10 @@ class spawn(SpawnBase):
+         Canonical input processing may be disabled altogether by executing
+         a shell, then stty(1), before executing the final program::
+ 
+-        >>> bash = pexpect.spawn('/bin/bash', echo=False)
+-        >>> bash.sendline('stty -icanon')
+-        >>> bash.sendline('base64')
+-        >>> bash.sendline('x' * 5000)
++            >>> bash = pexpect.spawn('/bin/bash', echo=False)
++            >>> bash.sendline('stty -icanon')
++            >>> bash.sendline('base64')
++            >>> bash.sendline('x' * 5000)
+         '''
+ 
+         time.sleep(self.delaybeforesend)
+diff --git a/tests/test_maxcanon.py b/tests/test_maxcanon.py
+deleted file mode 100644
+index cd48cbc..0000000
+--- a/tests/test_maxcanon.py
++++ /dev/null
+@@ -1,179 +0,0 @@
+-""" Module for canonical-mode tests. """
+-# std imports
+-import sys
+-import os
+-
+-# local
+-import pexpect
+-from . import PexpectTestCase
+-
+-# 3rd-party
+-import pytest
+-
+-
+-class TestCaseCanon(PexpectTestCase.PexpectTestCase):
+-    """
+-    Test expected Canonical mode behavior (limited input line length).
+-
+-    All systems use the value of MAX_CANON which can be found using
+-    fpathconf(3) value PC_MAX_CANON -- with the exception of Linux
+-    and FreeBSD.
+-
+-    Linux, though defining a value of 255, actually honors the value
+-    of 4096 from linux kernel include file tty.h definition
+-    N_TTY_BUF_SIZE.
+-
+-    Linux also does not honor IMAXBEL. termios(3) states, "Linux does not
+-    implement this bit, and acts as if it is always set." Although these
+-    tests ensure it is enabled, this is a non-op for Linux.
+-
+-    More unsettling in regards to Linux, Fedora and Debian have different
+-    behaviours.  For this reason, **these test has been disabled entirely**.
+-
+-    FreeBSD supports neither, and instead uses a fraction (1/5) of the tty
+-    speed which is always 9600.  Therefor, the maximum limited input line
+-    length is 9600 / 5 = 1920.
+-
+-    These tests only ensure the correctness of the behavior described by
+-    the sendline() docstring. pexpect is not particularly involved in
+-    these scenarios, though if we wish to expose some kind of interface
+-    to tty.setraw, for example, these tests may be re-purposed as such.
+-
+-    Lastly, portions of these tests are skipped on Travis-CI. It produces
+-    unexpected behavior not reproduced on Debian/GNU Linux.
+-    """
+-
+-    def setUp(self):
+-        super(TestCaseCanon, self).setUp()
+-
+-        self.echo = False
+-        if sys.platform.lower().startswith('linux'):
+-            # linux is 4096, N_TTY_BUF_SIZE.
+-            self.max_input = 4096
+-            self.echo = True
+-        elif sys.platform.lower().startswith('sunos'):
+-            # SunOS allows PC_MAX_CANON + 1; see
+-            # https://bitbucket.org/illumos/illumos-gate/src/d07a59219ab7fd2a7f39eb47c46cf083c88e932f/usr/src/uts/common/io/ldterm.c?at=default#cl-1888
+-            self.max_input = os.fpathconf(0, 'PC_MAX_CANON') + 1
+-        elif sys.platform.lower().startswith('freebsd'):
+-            # http://lists.freebsd.org/pipermail/freebsd-stable/2009-October/052318.html
+-            self.max_input = 9600 / 5
+-        else:
+-            # All others (probably) limit exactly at PC_MAX_CANON
+-            self.max_input = os.fpathconf(0, 'PC_MAX_CANON')
+-
+-    @pytest.mark.skipif(
+-        sys.platform.lower().startswith('freebsd'),
+-        reason='os.write to BLOCK indefinitely on FreeBSD in this case'
+-    )
+-    def disabled_under_max_canon(self):
+-        " BEL is not sent by terminal driver at maximum bytes - 1. "
+-        # given,
+-        child = pexpect.spawn('bash', echo=self.echo, timeout=5)
+-        child.sendline('echo READY')
+-        child.sendline('stty icanon imaxbel')
+-        child.sendline('echo BEGIN; cat')
+-
+-        # some systems BEL on (maximum - 1), not able to receive CR,
+-        # even though all characters up until then were received, they
+-        # simply cannot be transmitted, as CR is part of the transmission.
+-        send_bytes = self.max_input - 1
+-
+-        # exercise,
+-        child.sendline('_' * send_bytes)
+-
+-        # fast forward beyond 'cat' command, as ^G can be found as part of
+-        # set-xterm-title sequence of $PROMPT_COMMAND or $PS1.
+-        child.expect_exact('BEGIN')
+-
+-        # verify, all input is found in echo output,
+-        child.expect_exact('_' * send_bytes)
+-
+-        # BEL is not found,
+-        with self.assertRaises(pexpect.TIMEOUT):
+-            child.expect_exact('\a', timeout=1)
+-
+-        # cleanup,
+-        child.sendeof()           # exit cat(1)
+-        child.sendline('exit 0')  # exit bash(1)
+-        child.expect(pexpect.EOF)
+-        assert not child.isalive()
+-        assert child.exitstatus == 0
+-
+-    @pytest.mark.skipif(
+-        sys.platform.lower().startswith('freebsd'),
+-        reason='os.write to BLOCK indefinitely on FreeBSD in this case'
+-    )
+-    def disabled_beyond_max_icanon(self):
+-        " a single BEL is sent when maximum bytes is reached. "
+-        # given,
+-        child = pexpect.spawn('bash', echo=self.echo, timeout=5)
+-        child.sendline('stty icanon imaxbel erase ^H')
+-        child.sendline('cat')
+-        send_bytes = self.max_input
+-
+-        # exercise,
+-        child.sendline('_' * send_bytes)
+-        child.expect_exact('\a')
+-
+-        # exercise, we must now backspace to send CR.
+-        child.sendcontrol('h')
+-        child.sendline()
+-
+-        if os.environ.get('TRAVIS', None) == 'true':
+-            # Travis-CI has intermittent behavior here, possibly
+-            # because the master process is itself, a PTY?
+-            return
+-
+-        # verify the length of (maximum - 1) received by cat(1),
+-        # which has written it back out,
+-        child.expect_exact('_' * (send_bytes - 1))
+-        # and not a byte more.
+-        with self.assertRaises(pexpect.TIMEOUT):
+-            child.expect_exact('_', timeout=1)
+-
+-        # cleanup,
+-        child.sendeof()           # exit cat(1)
+-        child.sendline('exit 0')  # exit bash(1)
+-        child.expect_exact(pexpect.EOF)
+-        assert not child.isalive()
+-        assert child.exitstatus == 0
+-
+-    @pytest.mark.skipif(
+-        sys.platform.lower().startswith('freebsd'),
+-        reason='os.write to BLOCK indefinitely on FreeBSD in this case'
+-    )
+-    def disabled_max_no_icanon(self):
+-        " may exceed maximum input bytes if canonical mode is disabled. "
+-        # given,
+-        child = pexpect.spawn('bash', echo=self.echo, timeout=5)
+-        child.sendline('stty -icanon imaxbel')
+-        child.sendline('echo BEGIN; cat')
+-        send_bytes = self.max_input + 11
+-
+-        # exercise,
+-        child.sendline('_' * send_bytes)
+-
+-        # fast forward beyond 'cat' command, as ^G can be found as part of
+-        # set-xterm-title sequence of $PROMPT_COMMAND or $PS1.
+-        child.expect_exact('BEGIN')
+-
+-        if os.environ.get('TRAVIS', None) == 'true':
+-            # Travis-CI has intermittent behavior here, possibly
+-            # because the master process is itself, a PTY?
+-            return
+-
+-        # BEL is *not* found,
+-        with self.assertRaises(pexpect.TIMEOUT):
+-            child.expect_exact('\a', timeout=1)
+-
+-        # verify, all input is found in output,
+-        child.expect_exact('_' * send_bytes)
+-
+-        # cleanup,
+-        child.sendcontrol('c')    # exit cat(1) (eof wont work in -icanon)
+-        child.sendcontrol('c')
+-        child.sendline('exit 0')  # exit bash(1)
+-        child.expect(pexpect.EOF)
+-        assert not child.isalive()
+-        assert child.exitstatus == 0
+diff --git a/tools/display-fpathconf.py b/tools/display-fpathconf.py
+new file mode 100644
+index 0000000..d40cbae
+--- /dev/null
++++ b/tools/display-fpathconf.py
+@@ -0,0 +1,41 @@
++#!/usr/bin/env python
++"""Displays os.fpathconf values related to terminals. """
++from __future__ import print_function
++import sys
++import os
++
++
++def display_fpathconf():
++    DISP_VALUES = (
++        ('PC_MAX_CANON', ('Max no. of bytes in a '
++                          'terminal canonical input line.')),
++        ('PC_MAX_INPUT', ('Max no. of bytes for which '
++                          'space is available in a terminal input queue.')),
++        ('PC_PIPE_BUF', ('Max no. of bytes which will '
++                         'be written atomically to a pipe.')),
++        ('PC_VDISABLE', 'Terminal character disabling value.')
++    )
++    FMT = '{name:<13} {value:<5} {description}'
++
++    # column header
++    print(FMT.format(name='name', value='value', description='description'))
++    print(FMT.format(name=('-' * 13), value=('-' * 5), description=('-' * 11)))
++
++    fd = sys.stdin.fileno()
++    for name, description in DISP_VALUES:
++        key = os.pathconf_names.get(name, None)
++        if key is None:
++            value = 'UNDEF'
++        else:
++            try:
++                value = os.fpathconf(fd, name)
++            except OSError as err:
++                value = 'OSErrno {0.errno}'.format(err)
++        if name == 'PC_VDISABLE':
++            value = hex(value)
++        print(FMT.format(name=name, value=value, description=description))
++    print()
++
++
++if __name__ == '__main__':
++    display_fpathconf()
+diff --git a/tools/display-maxcanon.py b/tools/display-maxcanon.py
+new file mode 100644
+index 0000000..cbd664f
+--- /dev/null
++++ b/tools/display-maxcanon.py
+@@ -0,0 +1,80 @@
++#!/usr/bin/env python
++"""
++This tool uses pexpect to test expected Canonical mode length.
++
++All systems use the value of MAX_CANON which can be found using
++fpathconf(3) value PC_MAX_CANON -- with the exception of Linux
++and FreeBSD.
++
++Linux, though defining a value of 255, actually honors the value
++of 4096 from linux kernel include file tty.h definition
++N_TTY_BUF_SIZE.
++
++Linux also does not honor IMAXBEL. termios(3) states, "Linux does not
++implement this bit, and acts as if it is always set." Although these
++tests ensure it is enabled, this is a non-op for Linux.
++
++FreeBSD supports neither, and instead uses a fraction (1/5) of the tty
++speed which is always 9600.  Therefor, the maximum limited input line
++length is 9600 / 5 = 1920.
++
++These tests only ensure the correctness of the behavior described by
++the sendline() docstring -- the values listed there, and above should
++be equal to the output of the given OS described, but no promises!
++"""
++# std import
++from __future__ import print_function
++import sys
++import os
++
++
++def detect_maxcanon():
++    import pexpect
++    bashrc = os.path.join(
++        # re-use pexpect/replwrap.py's bashrc file,
++        os.path.dirname(__file__), os.path.pardir, 'pexpect', 'bashrc.sh')
++
++    child = pexpect.spawn('bash', ['--rcfile', bashrc],
++                          echo=True, encoding='utf8', timeout=3)
++
++    child.sendline(u'echo -n READY_; echo GO')
++    child.expect_exact(u'READY_GO')
++
++    child.sendline(u'stty icanon imaxbel erase ^H; echo -n retval: $?')
++    child.expect_exact(u'retval: 0')
++
++    child.sendline(u'echo -n GO_; echo AGAIN')
++    child.expect_exact(u'GO_AGAIN')
++    child.sendline(u'cat')
++
++    child.delaybeforesend = 0
++
++    column, blocksize = 0, 64
++    ch_marker = u'_'
++
++    print('auto-detecting MAX_CANON: ', end='')
++    sys.stdout.flush()
++
++    while True:
++        child.send(ch_marker * blocksize)
++        result = child.expect([ch_marker * blocksize, u'\a'])
++        if result == 0:
++            # entire block fit without emitting bel
++            column += blocksize
++        elif result == 1:
++            # an '\a' was emitted, count the number of ch_markers
++            # found since last blocksize, determining our MAX_CANON
++            column += child.before.count(ch_marker)
++            break
++    print(column)
++
++if __name__ == '__main__':
++    try:
++        detect_maxcanon()
++    except ImportError:
++        # we'd like to use this with CI -- but until we integrate
++        # with tox, we can't determine a period in testing when
++        # the pexpect module has been installed 
++        print('warning: pexpect not in module path, MAX_CANON '
++              'could not be determined by systems test.',
++              file=sys.stderr)
+-- 
+2.6.1
+

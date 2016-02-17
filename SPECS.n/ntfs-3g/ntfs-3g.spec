@@ -27,6 +27,7 @@ Provides:	ntfsprogs-fuse = %{epoch}:%{version}-%{release}
 Obsoletes:	ntfsprogs-fuse
 Provides:	fuse-ntfs-3g = %{epoch}:%{version}-%{release}
 Patch0:		ntfs-3g_ntfsprogs-2011.10.9-RC-ntfsck-unsupported-return-0.patch
+Patch1:		CVE-2015-3202.patch
 
 %description
 NTFS-3G is a stable, open source, GPL licensed, POSIX, read/write NTFS 
@@ -85,6 +86,7 @@ NTFS 文件系统的库和工具。
 %prep
 %setup -q -n %{name}_ntfsprogs-%{version}%{?subver}
 %patch0 -p1 -b .unsupported
+%patch1 -p1
 
 %build
 CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64"
@@ -96,7 +98,8 @@ CFLAGS="$RPM_OPT_FLAGS -D_FILE_OFFSET_BITS=64"
 %endif
 	--exec-prefix=/ \
 	--enable-crypto \
-	--enable-extras 
+	--enable-extras \
+	--enable-quarantined
 make %{?_smp_mflags} LIBTOOL=%{_bindir}/libtool
 
 %install
@@ -142,8 +145,6 @@ magic_rpm_clean.sh
 %{_bindir}/ntfs-3g.secaudit
 %{_bindir}/ntfs-3g.usermap
 %{_bindir}/lowntfs-3g
-%{_bindir}/ntfs-3g
-%{_bindir}/ntfsmount
 %{_libdir}/libntfs-3g.so.*
 %{_mandir}/man8/mount.lowntfs-3g.*
 %{_mandir}/man8/mount.ntfs-3g.*
@@ -166,6 +167,7 @@ magic_rpm_clean.sh
 %{_bindir}/ntfsck
 %{_bindir}/ntfsdecrypt
 %{_bindir}/ntfsdump_logfile
+%{_bindir}/ntfsfallocate
 %{_bindir}/ntfsmftalloc
 %{_bindir}/ntfsmove
 %{_bindir}/ntfstruncate

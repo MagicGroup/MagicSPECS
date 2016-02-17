@@ -1,5 +1,6 @@
 %global with_python3 1
 
+%global modname pexpect
 #global relcand rc3
 
 Summary:	Unicode-aware Pure Python Expect-like module
@@ -12,6 +13,12 @@ Group:		Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
 URL:		https://github.com/pexpect/pexpect
 Source0:	https://pypi.python.org/packages/source/p/pexpect/pexpect-%{version}.tar.gz
+
+Patch0:         0001-Stop-asyncio-listening-to-pty-once-we-ve-found-what-.patch
+Patch1:         0001-disable-max-canon-tests-retain-file-contents.patch
+Patch2:         0002-2-new-tools-display-fpathconf.maxcanon-.py.patch
+
+
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:	noarch
@@ -19,7 +26,7 @@ BuildRequires:	python2-devel python-nose ed
 %if 0%{?with_python3}
 BuildRequires:	python3-devel python3-nose
 Provides:	pexpect = %{version}-%{release}
-Obsoletes:	pexpect <= 2.3-20
+Obsoletes:	pexpect <= 3.3-20
 %endif # if with_python3
 
 %description
@@ -39,6 +46,33 @@ pty module.
 
 %description -l zh_CN.UTF-8
 支持 Unicode 的类 Expect 纯 Python 模块。
+
+%package -n python2-pexpect
+Summary:	Unicode-aware Pure Python Expect-like module for Python 2
+BuildRequires:	python2-devel
+BuildRequires:  python2-pytest python-ptyprocess
+Requires:       python-ptyprocess
+Provides:	pexpect = %{version}-%{release}
+Obsoletes:	pexpect <= 2.3-20
+Provides:       python-pexpect = %{version}-%{release}
+Obsoletes:      python-pexpect <= 3.3-20
+%{?python_provide:%python_provide python2-%{modname}}
+
+%description -n python2-pexpect
+Pexpect is a pure Python module for spawning child applications; controlling
+them; and responding to expected patterns in their output. Pexpect works like
+Don Libes' Expect. Pexpect allows your script to spawn a child application and
+control it as if a human were typing commands. This package contains the
+python2 version of this module.
+
+Pexpect can be used for automating interactive applications such as ssh, ftp,
+passwd, telnet, etc. It can be used to automate setup scripts for duplicating
+software package installations on different servers. And it can be used for
+automated software testing. Pexpect is in the spirit of Don Libes' Expect, but
+Pexpect is pure Python. Unlike other Expect-like modules for Python, Pexpect
+does not require TCL or Expect nor does it require C extensions to be
+compiled.  It should work on any platform that supports the standard Python
+pty module.
 
 %if 0%{?with_python3}
 %package -n python3-pexpect
@@ -67,80 +101,60 @@ pty module.
 %endif # with_python3
 
 %prep
-%setup -q -n pexpect-%{version}%{?relcand}
-
+%autosetup -n %{modname}-%{version} -S git
+chmod +x ./tools/*
 #sed -i "s/0.1/10.0/g" tests/test_misc.py
 
-%if 0%{?with_python3}
 rm -rf %{py3dir}
 cp -a . %{py3dir}
 find %{py3dir} -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python3}|'
-%endif # with_python3
 
 %build
-%{__python} setup.py build
+%py2_build
 
-%if 0%{?with_python3}
 pushd %{py3dir}
-%{__python3} setup.py build
+  %py3_build
 popd
-%endif # with_python3
-
-%check
-. ./test.env
-./tools/testall.py
-
-%if 0%{?with_python3}
-pushd %{py3dir}
-    . ./test.env
-    %{_bindir}/python3 ./tools/testall.py
-popd
-%endif # with_python3
 
 %install
-rm -rf %{buildroot}
+%py2_install
+rm -rf ${buildroot}%{python2_sitelib}/setuptools/tests
+# Correct some permissions
+find examples -type f -exec chmod a-x \{\} \;
+rm -f %{buildroot}%{python2_sitelib}/%{modname}/async.py
 
-%if 0%{?with_python3}
 pushd %{py3dir}
-%{__python3} setup.py install --skip-build \
-    --root %{buildroot} --install-lib %{python3_sitelib}
-
-# Correct some permissions
-find examples -type f -exec chmod a-x \{\} \;
-
-rm -rf %{buildroot}%{python3_sitelib}/pexpect/tests
+  %py3_install
+  # Correct some permissions
+  find examples -type f -exec chmod a-x \{\} \;
+  rm -rf %{buildroot}%{python3_sitelib}/pexpect/tests
 popd
-%endif # with_python3
 
-%{__python} setup.py install --skip-build \
-    --root %{buildroot} --install-lib %{python_sitelib}
+%check
+export PYTHONIOENCODING=UTF-8
+export LC_ALL="en_US.UTF-8"
 
-rm -rf ${buildroot}%{python_sitelib}/setuptools/tests
+%{__python2} ./tools/display-sighandlers.py
+%{__python2} ./tools/display-terminalinfo.py
+PYTHONPATH=`pwd` %{__python2} ./tools/display-maxcanon.py
+py.test-2 --verbose
 
-# Correct some permissions
-find examples -type f -exec chmod a-x \{\} \;
-magic_rpm_clean.sh
+pushd %{py3dir}
+  %{__python3} ./tools/display-sighandlers.py
+  %{__python3} ./tools/display-terminalinfo.py
+  PYTHONPATH=`pwd` %{__python3} ./tools/display-maxcanon.py
+  py.test-3 --verbose
+popd
 
-%clean
-rm -rf %{buildroot}
+%files -n python2-%{modname}
+%license LICENSE
+%doc doc examples
+%{python2_sitelib}/%{modname}*
 
-%files
-%defattr(-,root,root)
-%doc doc examples LICENSE
-%{python_sitelib}/*.py*
-%{python_sitelib}/pexpect/
-%{python_sitelib}/pexpect-%{version}%{?relcand}-py?.?.egg-info
-%exclude %{python_sitelib}/pexpect/tests/
-
-%if 0%{?with_python3}
-%files -n python3-pexpect
-%doc doc examples LICENSE
-%{python3_sitelib}/*.py
-%{python3_sitelib}/__pycache__/*
-%{python3_sitelib}/pexpect/
-%{python3_sitelib}/pexpect-%{version}%{?relcand}-py?.?.egg-info
-%exclude %{python3_sitelib}/pexpect/tests/
-%endif # with_python3
+%files -n python3-%{modname}
+%license LICENSE
+%doc doc examples
+%{python3_sitelib}/%{modname}*
 
 %changelog
 * Mon Nov 02 2015 Liu Di <liudidi@gmail.com> - 4.0.1-2

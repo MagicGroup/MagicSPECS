@@ -2,7 +2,7 @@ Summary: Lightweight library for embedding a webserver in applications
 Summary(zh_CN.UTF-8): 在程序中嵌入网页服务的轻量级库
 Name: libmicrohttpd
 Version: 0.9.48
-Release: 3%{?dist}
+Release: 4%{?dist}
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2+
@@ -136,6 +136,9 @@ fi
 %{_infodir}/libmicrohttpd-tutorial.info.gz
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 0.9.48-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 0.9.44-3
 - 为 Magic 3.0 重建
 

@@ -100,7 +100,6 @@ popd
 %{python_sitelib}/zope/event/
 %exclude %{python_sitelib}/zope/event/tests.py*
 %dir %{python_sitelib}/zope/
-%{python_sitelib}/zope/__init__*
 %{python_sitelib}/zope.event-*.egg-info
 %{python_sitelib}/zope.event-*-nspkg.pth
 
@@ -112,7 +111,6 @@ popd
 %exclude %{python3_sitelib}/zope/event/tests.py*
 %exclude %{python3_sitelib}/zope/event/__pycache__/tests*
 %dir %{python3_sitelib}/zope/
-%{python3_sitelib}/zope/__init__*
 %{python3_sitelib}/zope.event-*.egg-info
 %{python3_sitelib}/zope.event-*-nspkg.pth
 %endif

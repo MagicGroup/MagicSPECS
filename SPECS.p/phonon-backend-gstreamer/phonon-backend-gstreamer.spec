@@ -16,6 +16,11 @@ Source1: phonon-gstreamer_snapshot.sh
 Source0: http://download.kde.org/stable/phonon/phonon-backend-gstreamer/%{version}/src/phonon-backend-gstreamer-%{version}.tar.xz
 %endif
 
+## upstreamable patches
+# fix FTBFS against gstreamer-1.5+ that needs >1 include dir
+Patch50: phonon-gstreamer-gst15_include_dirs.patch
+
+
 BuildRequires: automoc4
 BuildRequires: cmake
 BuildRequires: pkgconfig(gstreamer-0.10) 
@@ -59,12 +64,13 @@ Provides: phonon-qt5-backend%{?_isa} = %{phonon_version}
 Requires: gstreamer-plugins-good
 %description -n phonon-qt5-backend-gstreamer
 %{summary}.
-%description -l zh_CN.UTF-8
+%description -n phonon-qt5-backend-gstreamer -l zh_CN.UTF-8
 phonon-qt5 的 gstreamer 后端。
 
 
 %prep
 %setup -q -n phonon-backend-gstreamer-%{version}
+%patch50 -p1 -b .gst15_include_dirs
 
 %build
 mkdir -p %{_target_platform}

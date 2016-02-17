@@ -4,8 +4,8 @@ Summary:   NetworkManager VPN plugin for vpnc
 Summary(zh_CN.UTF-8): NetworkManaget 的 vpnc 插件
 Name:      NetworkManager-vpnc
 Epoch:     1
-Version:	1.0.6
-Release:	3%{?dist}
+Version:	1.0.0
+Release:	5%{?dist}
 License:   GPLv2+
 URL:       http://www.gnome.org/projects/NetworkManager/
 Group:     System Environment/Base
@@ -110,6 +110,12 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/gnome-vpn-properties/vpnc/nm-vpnc-dialog.ui
 
 %changelog
+* Mon Feb 15 2016 Liu Di <liudidi@gmail.com> - 1:1.0.0-5
+- 为 Magic 3.0 重建
+
+* Mon Feb 15 2016 Liu Di <liudidi@gmail.com> - 1:1.0.0-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 1:1.0.6-3
 - 为 Magic 3.0 重建
 

@@ -1,4 +1,5 @@
 %define real_name oxygen-icons
+%define debug_package %{nil}
 
 Name: %{real_name}
 Summary: The KDE 4 Oxygen Icon Set
@@ -7,7 +8,7 @@ License: GPL v2 or later
 Group: User Interface/Desktops
 Group(zh_CN.UTF-8): 用户界面/桌面
 URL: http://www.kde.org/
-Version: 4.3
+Version: 4.14.3
 Release: 3%{?dist}
 Source0: http://download.kde.org/stable/%{version}/src/%{real_name}-%{version}.tar.xz
 

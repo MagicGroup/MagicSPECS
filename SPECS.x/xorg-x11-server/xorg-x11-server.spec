@@ -104,6 +104,8 @@ Patch10200: 0001-xwayland-Snap-damage-reports-to-the-bounding-box.patch
 # already in master:
 Patch10300: glamor-add-shm-sync-fence-support.patch
 
+Patch10400: xserver-gcc5.patch
+
 %global moduledir	%{_libdir}/xorg/modules
 %global drimoduledir	%{_libdir}/dri
 %global sdkdir		%{_includedir}/xorg

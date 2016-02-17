@@ -2,7 +2,7 @@ Summary: Library providing support for "XML Signature" and "XML Encryption" stan
 Summary(zh_CN.UTF-8): 提供了 XML 签名和 XML 加密标准的库
 Name: xmlsec1
 Version: 1.2.20
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -223,6 +223,9 @@ rm -fr ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/xmlsec1-nss.pc
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 1.2.20-5
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1.2.20-4
 - 为 Magic 3.0 重建
 

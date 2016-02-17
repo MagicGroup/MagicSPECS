@@ -1,15 +1,16 @@
 %define binname aria2c
 
 Name:           aria2
-Version:	1.19.0
-Release:        5%{?dist}
+Version:	1.19.3
+Release:        1%{?dist}
 Summary:        High speed download utility with resuming and segmented downloading
 Summary(zh_CN): 可续传和分段下载的高速下载工具
 Group:          Applications/Internet
 Group(zh_CN):	应用程序/互联网
 License:        GPLv2
 URL:            http://aria2.sourceforge.net/
-Source0:        http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.xz
+Source0:        https://github.com/tatsuhiro-t/%{name}/releases/download/release-%{version}/%{name}-%{version}.tar.xz
+Patch0:		aria2-1.19.3-use-system-wide-crypto-policies.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  bison
 BuildRequires:  c-ares-devel cppunit-devel
@@ -42,11 +43,14 @@ Currently it has following features:
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
+autoreconf -fisv
 %configure --enable-bittorrent \
            --enable-metalink \
            --enable-epoll\
+	   --enable-threads=posix \
            --disable-rpath \
            --with-gnutls \
            --with-libcares \
@@ -81,6 +85,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb 06 2016 Liu Di <liudidi@gmail.com> - 1.19.0-8
+- 为 Magic 3.0 重建
+
+* Sat Feb 06 2016 Liu Di <liudidi@gmail.com> - 1.19.0-7
+- 为 Magic 3.0 重建
+
+* Sat Feb 06 2016 Liu Di <liudidi@gmail.com> - 1.19.0-6
+- 为 Magic 3.0 重建
+
 * Sat Nov 07 2015 Liu Di <liudidi@gmail.com> - 1.19.0-5
 - 为 Magic 3.0 重建
 

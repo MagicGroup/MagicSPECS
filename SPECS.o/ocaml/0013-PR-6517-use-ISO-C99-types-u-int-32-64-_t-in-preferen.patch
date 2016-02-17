@@ -1719,7 +1719,7 @@ index 6157157..1440baa 100755
 -                       "semantics, will use them."
 -                   echo "#undef NONSTANDARD_DIV_MOD" >> m.h;;
 -       *) wrn "Something went wrong while checking native division and modulus"\
--              "please report it at http://http://caml.inria.fr/mantis/"
+-              "please report it at http://caml.inria.fr/mantis/"
 -          echo "#define NONSTANDARD_DIV_MOD" >> m.h;;
 -     esac;;
 -esac

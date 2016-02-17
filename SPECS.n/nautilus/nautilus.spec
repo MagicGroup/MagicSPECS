@@ -10,7 +10,7 @@
 Name:           nautilus
 Summary:        File manager for GNOME
 Summary(zh_CN.UTF-8): GNOME 下的文件管理器
-Version:	3.18.1
+Version:	3.19.2
 Release:        3%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
@@ -107,7 +107,7 @@ for developing nautilus extensions.
 
 
 %build
-CFLAGS="$RPM_OPT_FLAGS -g -DNAUTILUS_OMIT_SELF_CHECK" %configure --disable-more-warnings --disable-update-mimedb
+CFLAGS="$RPM_OPT_FLAGS -g -DNAUTILUS_OMIT_SELF_CHECK" %configure --disable-more-warnings --disable-update-mimedb --disable-selinux
 
 # drop unneeded direct library deps with --as-needed
 # libtool doesn't make this easy, so we do it the hard way
@@ -148,15 +148,11 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 
 %files  -f %{name}.lang
 %doc AUTHORS COPYING COPYING.LIB NEWS README
-#%{_datadir}/nautilus
 %{_datadir}/applications/*
-%{_datadir}/mime/packages/nautilus.xml
 %{_bindir}/*
 %{_datadir}/dbus-1/services/org.gnome.Nautilus.service
 %{_datadir}/dbus-1/services/org.freedesktop.FileManager1.service
 %{_datadir}/gnome-shell/search-providers/nautilus-search-provider.ini
-#%{_datadir}/dbus-1/services/org.gnome.Nautilus.SearchProvider.service
-%{_mandir}/man1/nautilus-connect-server.1.gz
 %{_mandir}/man1/nautilus.1.gz
 %{_libexecdir}/nautilus-convert-metadata
 %{_datadir}/GConf/gsettings/nautilus.convert

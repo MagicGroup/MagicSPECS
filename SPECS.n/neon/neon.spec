@@ -2,7 +2,7 @@ Summary: An HTTP and WebDAV client library
 Summary(zh_CN.UTF-8): HTTP 和 WebDAV 客户端库
 Name: neon
 Version: 0.30.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -10,7 +10,7 @@ URL: http://www.webdav.org/neon/
 Source0: http://www.webdav.org/neon/neon-%{version}.tar.gz
 Patch0: neon-0.27.0-multilib.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: expat-devel, gnutls-devel, zlib-devel, krb5-devel, libproxy-devel
+BuildRequires: expat-devel, openssl-devel, zlib-devel, krb5-devel, libproxy-devel
 BuildRequires: pkgconfig, pakchois-devel
 Requires: ca-certificates
 
@@ -49,11 +49,9 @@ sed -ibak '/^install-docs/s/install-html//' Makefile.in
 
 %build
 export CC="%{__cc} -pthread"
-# Use standard system CA bundle:
-%define cabundle %{_sysconfdir}/pki/tls/certs/ca-bundle.crt
 %configure --with-expat --enable-shared --disable-static \
-        --enable-warnings --with-ca-bundle=%{cabundle} \
-        --with-ssl=gnutls --enable-threadsafe-ssl=posix \
+        --enable-warnings \
+        --with-ssl=openssl --enable-threadsafe-ssl=posix \
         --with-libproxy
 make %{?_smp_mflags}
 
@@ -89,6 +87,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 0.30.1-4
+- 为 Magic 3.0 重建
+
 * Wed Nov 11 2015 Liu Di <liudidi@gmail.com> - 0.30.1-3
 - 为 Magic 3.0 重建
 

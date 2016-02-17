@@ -2,7 +2,7 @@
 
 Name:           telepathy-gabble
 Version:	0.18.3
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:        A Jabber/XMPP connection manager
 Summary(zh_CN.UTF-8): Jabber/XMPP 连接管理器
 
@@ -100,6 +100,9 @@ rm -f $RPM_BUILD_ROOT%{_docdir}/%{name}/*.html
 
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 0.18.3-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 04 2015 Liu Di <liudidi@gmail.com> - 0.18.3-2
 - 为 Magic 3.0 重建
 

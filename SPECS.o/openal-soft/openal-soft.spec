@@ -1,5 +1,5 @@
 Name:           openal-soft
-Version: 1.16.0
+Version: 1.17.2
 Release: 3%{?dist}
 Summary:        Open Audio Library
 Summary(zh_CN.UTF-8): 开放音频库
@@ -68,9 +68,14 @@ magic_rpm_clean.sh
 %files
 %doc COPYING
 %{_bindir}/openal-info
-#%{_bindir}/allatency
-#%{_bindir}/alreverb
-#%{_bindir}/alstream
+%{_bindir}/allatency
+%{_bindir}/alreverb
+%{_bindir}/alstream
+%{_bindir}/alffplay
+%{_bindir}/alloopback
+%{_bindir}/alhrtf
+%{_bindir}/altonegen
+%{_bindir}/bsincgen
 %{_bindir}/alsoft-config
 %{_libdir}/libopenal.so.*
 %dir %{_sysconfdir}/openal

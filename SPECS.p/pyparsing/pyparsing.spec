@@ -1,10 +1,8 @@
-%if 0%{?fedora}
 %global with_python3 1
-%endif
 
 Name:           pyparsing
-Version:	2.0.4
-Release:	3%{?dist}
+Version:	2.1.0
+Release:	1%{?dist}
 Summary:        An object-oriented approach to text processing
 Summary(zh_CN.UTF-8): 面向对象的文本处理方法
 Group:          Development/Libraries

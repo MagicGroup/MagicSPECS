@@ -48,12 +48,6 @@ Source32: peardev.1
 Source33: pear.conf.5
 
 
-# From RHEL: ignore REST cache creation failures as non-root user (#747361)
-# TODO See https://github.com/pear/pear-core/commit/dfef86e05211d2abc7870209d69064d448ef53b3#PEAR/REST.php
-Patch0: php-pear-1.9.4-restcache.patch
-# Relocate Metadata
-Patch1: php-pear-metadata.patch
-
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: php-cli >= 5.1.0-1, php-xml, gnupg
@@ -109,9 +103,6 @@ do
                         || mv package.xml  ${file%%-*}.xml
 done
 cp %{SOURCE1} %{SOURCE30} %{SOURCE31} %{SOURCE32} %{SOURCE33} .
-
-# apply patches on used PEAR during install
-%patch1 -p0 -b .metadata
 
 sed -e 's:@BINDIR@:%{_bindir}:' \
     -e 's:@LIBDIR@:%{_localstatedir}/lib:' \
@@ -174,14 +165,6 @@ install -m 755 %{SOURCE12} $RPM_BUILD_ROOT%{_bindir}/peardev
 
 install -m 644 -D macros.pear \
            $RPM_BUILD_ROOT%{macrosdir}/macros.pear
-
-# apply patches on installed PEAR tree
-pushd $RPM_BUILD_ROOT%{peardir} 
- pushd PEAR
-  %__patch -s --no-backup --fuzz 0 -p0 < %{PATCH0}
- popd
-  %__patch -s --no-backup --fuzz 0 -p0 < %{PATCH1}
-popd
 
 # Why this file here ?
 rm -rf $RPM_BUILD_ROOT/.depdb* $RPM_BUILD_ROOT/.lock $RPM_BUILD_ROOT/.channels $RPM_BUILD_ROOT/.filemap

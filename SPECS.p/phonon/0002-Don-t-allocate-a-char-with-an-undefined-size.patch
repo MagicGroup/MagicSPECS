@@ -1,0 +1,26 @@
+From e321435ac993e5e0a280263a1c702cec2b671e7c Mon Sep 17 00:00:00 2001
+From: Sergio Martins <iamsergio@gmail.com>
+Date: Sat, 2 May 2015 23:15:00 +0100
+Subject: [PATCH 2/5] Don't allocate a char[] with an undefined size.
+
+packetSize is still undefined at this point.
+---
+ phonon/experimental/packetpool.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/phonon/experimental/packetpool.cpp b/phonon/experimental/packetpool.cpp
+index a1effe1..8ebe134 100644
+--- a/phonon/experimental/packetpool.cpp
++++ b/phonon/experimental/packetpool.cpp
+@@ -35,7 +35,7 @@ int PacketPool::unusedPackets() const { return d_ptr->ringBufferSize; }
+ 
+ PacketPoolPrivate::PacketPoolPrivate(int _packetSize, int _poolSize)
+     : freePackets(new PacketPrivate *[_poolSize]),
+-    packetMemory(new char[packetSize * _poolSize]),
++    packetMemory(new char[_packetSize * _poolSize]),
+     readPosition(0), writePosition(0),
+     ringBufferSize(_poolSize),
+     packetSize(_packetSize),
+-- 
+1.9.3
+

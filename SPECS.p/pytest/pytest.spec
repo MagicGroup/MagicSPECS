@@ -1,15 +1,9 @@
-%if 0%{?fedora} > 12
 %global with_python3 1
-%endif
-%if 0%{?rhel} && 0%{?rhel} < 6
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")}
-%endif
-
 %global pylib_version 1.4.17
 
 Name:           pytest
-Version:	2.8.2
-Release:	3%{?dist}
+Version:	2.8.7
+Release:	4%{?dist}
 Summary:        Simple powerful testing with Python
 Summary(zh_CN.UTF-8): Python 的简单强力的测试模块
 
@@ -26,11 +20,7 @@ BuildRequires:  python-setuptools
 Requires:       python-setuptools
 BuildRequires:  python-py >= %{pylib_version}
 Requires:       python-py >= %{pylib_version}
-%if 0%{?rhel} > 6 || 0%{?fedora}
 BuildRequires:  python-sphinx
-%else
-BuildRequires:  python-sphinx10
-%endif # fedora
 BuildRequires:  python-docutils
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
@@ -41,7 +31,6 @@ BuildRequires:  python3-py >= %{pylib_version}
 Conflicts:      python-py < 1.4.0
 
 # used by the testsuite, if present:
-%if 0%{?fedora}
 # if pexpect is present, the testsuite fails on F19 due to
 # http://bugs.python.org/issue17998
 #BuildRequires:  python-pexpect
@@ -51,8 +40,7 @@ BuildRequires:  python-twisted-core
 #BuildRequires:  python3-pexpect
 BuildRequires:  python3-mock
 %endif # with_python3
-%endif # fedora
-
+Provides:       python2-%{name} = %{version}-%{release}
 
 %description
 py.test provides simple, yet powerful testing for Python.
@@ -177,6 +165,9 @@ popd
 
 
 %changelog
+* Wed Feb 17 2016 Liu Di <liudidi@gmail.com> - 2.8.7-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 2.8.2-3
 - 为 Magic 3.0 重建
 

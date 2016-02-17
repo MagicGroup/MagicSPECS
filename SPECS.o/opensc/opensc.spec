@@ -79,6 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %doc COPYING NEWS README*
 %config(noreplace) %{_sysconfdir}/opensc.conf
+%{_sysconfdir}/bash_completion.d/*
 %{_bindir}/cardos-tool
 %{_bindir}/cryptoflex-tool
 %{_bindir}/eidenv
@@ -112,6 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/cryptoflex-tool.1*
 %{_mandir}/man1/eidenv.1*
 %{_mandir}/man1/netkey-tool.1*
+%{_mandir}/man1/dnie-tool.1*
 %{_mandir}/man1/opensc-explorer.*
 %{_mandir}/man1/opensc-tool.1*
 %{_mandir}/man1/piv-tool.1*

@@ -1,6 +1,6 @@
 Name:           os-prober
-Version: 1.70
-Release: 3%{?dist}
+Version: 1.71
+Release: 1%{?dist}
 Summary:        Probes disks on the system for installed operating systems
 Summary(zh_CN.UTF-8): 在驱动器上探测其它操作系统的工具
 
@@ -26,7 +26,7 @@ distributions can be added easily.
 本包来自 Debian。
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{version}
 %patch0 -p1 -b .newnsdirfix
 find -type f -exec sed -i -e 's|usr/lib|usr/libexec|g' {} \;
 

@@ -1,0 +1,62 @@
+From 92d5303c23fcc698233b754fc8f180df1fa2aa9b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Petr=20P=C3=ADsa=C5=99?= <ppisar@redhat.com>
+Date: Thu, 12 Feb 2015 17:37:57 +0100
+Subject: [PATCH] Friend function template defined in a class cannot be used
+ without ADL
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+GCC 5.0 stopped searching friend function templates without ADL.
+
+The Clause_new() function can be kept a friend but must be defined out
+of scope of the Clause class, or the callers must use fully
+qualificated name (Clause::Clause_new()) and the method must be
+changed from friend to static.
+
+So far my poor C++ knowledge.
+
+Signed-off-by: Petr Písař <ppisar@redhat.com>
+---
+ packages/swi-minisat2/C/Solver.C      | 4 ++--
+ packages/swi-minisat2/C/SolverTypes.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/packages/swi-minisat2/C/Solver.C b/packages/swi-minisat2/C/Solver.C
+index 2de3e6d..1bcdbff 100644
+--- a/packages/swi-minisat2/C/Solver.C
++++ b/packages/swi-minisat2/C/Solver.C
+@@ -120,7 +120,7 @@ bool Solver::addClause(vec<Lit>& ps)
+         uncheckedEnqueue(ps[0]);
+         return ok = (propagate() == NULL);
+     }else{
+-        Clause* c = Clause_new(ps, false);
++        Clause* c = Clause::Clause_new(ps, false);
+         clauses.push(c);
+         attachClause(*c);
+     }
+@@ -599,7 +599,7 @@ lbool Solver::search(int nof_conflicts, int nof_learnts)
+             if (learnt_clause.size() == 1){
+                 uncheckedEnqueue(learnt_clause[0]);
+             }else{
+-                Clause* c = Clause_new(learnt_clause, true);
++                Clause* c = Clause::Clause_new(learnt_clause, true);
+                 learnts.push(c);
+                 attachClause(*c);
+                 claBumpActivity(*c);
+diff --git a/packages/swi-minisat2/C/SolverTypes.h b/packages/swi-minisat2/C/SolverTypes.h
+index 47e3023..919b60b 100644
+--- a/packages/swi-minisat2/C/SolverTypes.h
++++ b/packages/swi-minisat2/C/SolverTypes.h
+@@ -119,7 +119,7 @@ public:
+ 
+     // -- use this function instead:
+     template<class V>
+-    friend Clause* Clause_new(const V& ps, bool learnt = false) {
++    static Clause* Clause_new(const V& ps, bool learnt = false) {
+         assert(sizeof(Lit)      == sizeof(uint32_t));
+         assert(sizeof(float)    == sizeof(uint32_t));
+         void* mem = malloc(sizeof(Clause) + sizeof(uint32_t)*(ps.size()));
+-- 
+1.9.3
+

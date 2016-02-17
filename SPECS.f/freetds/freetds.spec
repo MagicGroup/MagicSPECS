@@ -1,16 +1,10 @@
-%define git_commit	0a42888
-
-%ifarch alpha ia64 x86_64 ppc64 sparc64 s390x aarch64 mips64el
-%define bits	64
-%else
-%define bits	32
-%endif
+%define bits	%{?__isa_bits:%{__isa_bits}}%{!?__isa_bits:32}
 
 Name: freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Summary(zh_CN.UTF-8): TDS 协议的实现
-Version: 0.91
-Release: 14.git%{git_commit}%{?dist}
+Version: 0.95.81
+Release: 1%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: LGPLv2+ and GPLv2+
@@ -20,18 +14,17 @@ URL: http://www.freetds.org/
 #   http://gitorious.org/freetds/freetds/archive-tarball/Branch-0_91
 #  then
 #   mv freetds-freetds-Branch-0_91.tar.gz freetds-%{version}-%{git_commit}.tar.gz
-Source0: freetds-%{version}-%{git_commit}.tar.gz
+#Source0: freetds-%{version}-%{git_commit}.tar.gz
 
-#Source0: ftp://ftp.freetds.org/pub/freetds/stable/freetds-%{version}.tar.bz2
+
+Source0: ftp://ftp.freetds.org/pub/freetds/stable/freetds-%{version}.tar.bz2
 Source1: freetds-tds_sysdep_public.h
-Patch1: freetds-0.91-printf.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: unixODBC-devel, readline-devel, gnutls-devel, krb5-devel
 BuildRequires: libgcrypt-devel
 BuildRequires: libtool
 BuildRequires: doxygen, docbook-style-dsssl
-
 
 %description 
 FreeTDS is a project to document and implement the TDS (Tabular
@@ -74,18 +67,13 @@ If you like to develop programs using %{name}, you will need to install
 %{name} 的文档。
 
 %prep 
-%setup -q -n freetds-freetds
-#%setup -q
-%patch1 -p1
+#%setup -q -n freetds-freetds
+%setup -q
 
 #  correct perl path
 sed -i '1 s,#!.*/perl,#!%{__perl},' samples/*.pl
 
 chmod -x samples/*.sh samples/*.pl
-
-find . -name .cvsignore -print | xargs rm -f
-find . -name .gitignore -print | xargs rm -f
-
 
 %build 
 
@@ -141,13 +129,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so.*
 %config(noreplace) %{_sysconfdir}/*.conf
 %doc AUTHORS BUGS COPYING* NEWS README TODO doc/*.html
-%doc doc/doc/freetds-%{version}/userguide doc/images
+%doc doc/images
 %{_mandir}/*/*
 
  
 %files devel 
 %defattr (-, root, root, -) 
-%doc samples
 %{?_with_static: %{_libdir}/*.a}
 %{_libdir}/*.so
 %{_includedir}/*
@@ -155,10 +142,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr (-, root, root, -) 
-%doc doc/doc/freetds-%{version}/reference
 %{_docdir}/freetds/* 
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 0.91-15.git0a42888
+- 为 Magic 3.0 重建
+
 * Sun Nov 08 2015 Liu Di <liudidi@gmail.com> - 0.91-14.git0a42888
 - 为 Magic 3.0 重建
 

@@ -1,4 +1,4 @@
-%global checkout 20141124git
+%global checkout 20150915git
 
 Summary: Basic networking tools
 Summary(zh_CN.UTF-8): 基本的网络工具
@@ -22,32 +22,26 @@ Source7: iptunnel.8
 Source8: ipmaddr.8
 Source9: arp-ethers.service
 
-# adds <delay> option that allows netstat to cycle printing through statistics every delay seconds.
+# a%description -l zh_CN.UTF-8s <delay> option that allows netstat to cycle printing through statistics every delay seconds.
 Patch1: net-tools-cycle.patch
 
-# Fixed incorrect address display for ipx (#46434)
-Patch2: net-tools-ipx.patch
-
 # various man page fixes merged into one patch
-Patch3: net-tools-man.patch
+Patch2: net-tools-man.patch
 
 # netstat: interface option now works as described in the man page (#61113, #115987)
-Patch4: net-tools-interface.patch
+Patch3: net-tools-interface.patch
 
 # filter out duplicate tcp entries (#139407)
-Patch5: net-tools-duplicate-tcp.patch
+Patch4: net-tools-duplicate-tcp.patch
 
 # don't report statistics for virtual devices (#143981)
-Patch6: net-tools-statalias.patch
+Patch5: net-tools-statalias.patch
 
 # clear static buffers in interface.c by Ulrich Drepper (#176714)
-Patch7: net-tools-interface_stack.patch
-
-# statistics for SCTP
-Patch8: net-tools-sctp-statistics.patch
+Patch6: net-tools-interface_stack.patch
 
 # ifconfig crash when interface name is too long (#190703)
-Patch9: net-tools-ifconfig-long-iface-crasher.patch
+Patch7: net-tools-ifconfig-long-iface-crasher.patch
 
 # use all interfaces instead of default (#1003875)
 Patch20: ether-wake-interfaces.patch
@@ -75,8 +69,6 @@ Most of them are obsolete. For replacement check iproute package.
 %patch5 -p1 -b .dup-tcp
 %patch6 -p1 -b .statalias
 %patch7 -p1 -b .stack
-%patch8 -p1 -b .sctp
-%patch9 -p1 -b .long_iface
 
 cp %SOURCE1 ./config.h
 cp %SOURCE2 ./config.make
@@ -140,12 +132,12 @@ rm -rf %{buildroot}%{_mandir}/pt/man1
 # install systemd unit file
 install -D -p -m 644 %{SOURCE9} %{buildroot}%{_unitdir}/arp-ethers.service
 magic_rpm_clean.sh
-%find_lang %{name} --all-name --with-man
+%find_lang %{name} --all-name --with-man || :
 
 %post
 %systemd_post arp-ethers.service
 
-%files -f %{name}.lang
+%files 
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_bindir}/netstat

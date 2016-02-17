@@ -17,9 +17,13 @@ URL: http://p7zip.sourceforge.net/
 # rm -f p7zip_${VERSION}/DOCS/unRarLicense.txt
 # tar --numeric-owner -cjvf p7zip_${VERSION}_src_all-norar.tar.bz2 p7zip_${VERSION}
 Source: http://downloads.sourceforge.net/project/p7zip/p7zip/%{version}/p7zip_%{version}_src_all.tar.bz2
-Patch0: p7zip_9.13-norar.patch
-Patch1: p7zip_9.38-install.patch
-Patch2: p7zip_9.13-nostrip.patch
+Patch0: p7zip_15.09-norar_cmake.patch
+Patch1: p7zip_15.09-s390.patch
+Patch2: p7zip-15.09-CVE-2015-1038.patch
+Patch3: p7zip_15.09-no7zG_and_7zFM.patch
+Patch4: p7zip_15.09-incorrect-fsf-address.patch
+# from Debain
+Patch5: 02_man.patch
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root
 %ifarch %{ix86}
 BuildRequires: nasm
@@ -51,17 +55,23 @@ This package contains also a virtual file system for Midnight Commander.
 
 %prep
 %setup -q -n %{name}_%{version}
-#%patch0 -p1 -b .norar
-%patch1 -p1 -b .install
-%patch2 -p1 -b .nostrip
+#patch0 -p1 -b .norar_cmake
+#Remove backups from DOC directory
+#rm DOC/License.txt.*
+%patch1 -p1 -b .s390
+%patch2 -p1 -b .CVE-2015-1038
+%patch3 -p1 -b .no7zG_and_7zFM.patch
+%patch4 -p1
+%patch5 -p1 -b .man
 # Move docs early so that they don't get installed by "make install" and we
 # can include them in %%doc
-%{__mv} DOC docs
-%{__mv} ChangeLog README TODO docs/
+mv DOC docs
+mv ChangeLog README TODO docs/
+# move license files
+mv docs/License.txt docs/copying.txt .
 # And fix useless executable bit while we're at it
 find docs    -type f -exec chmod -x {} \;
 find contrib -type f -exec chmod -x {} \;
-
 
 %build
 %ifarch %{ix86}

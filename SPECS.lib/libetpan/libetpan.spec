@@ -1,6 +1,6 @@
 Name:           libetpan
 Version: 1.6
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary: Portable, efficient middle-ware for different kinds of mail access
 Summary(zh_CN.UTF-8): 不同类型的邮件访问所用的可移植高效中间件
 
@@ -90,6 +90,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Sun Feb 14 2016 Liu Di <liudidi@gmail.com> - 1.6-6
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.6-5
 - 为 Magic 3.0 重建
 

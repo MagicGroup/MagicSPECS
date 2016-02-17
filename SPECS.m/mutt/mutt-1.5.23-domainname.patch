@@ -1,0 +1,27 @@
+diff -rup mutt-1.5.23/init.c mutt-1.5.23-new/init.c
+--- mutt-1.5.23/init.c	2014-03-12 17:03:45.000000000 +0100
++++ mutt-1.5.23-new/init.c	2015-06-01 12:28:34.178727003 +0200
+@@ -2890,7 +2890,8 @@ void mutt_init (int skip_sys_rc, LIST *c
+ {
+   struct passwd *pw;
+   struct utsname utsname;
+-  char *p, buffer[STRING];
++  char *p;
++  char buffer[STRING] = "";
+   int i, default_rc = 0, need_pause = 0;
+   BUFFER err;
+ 
+@@ -2968,11 +2969,11 @@ void mutt_init (int skip_sys_rc, LIST *c
+ 
+ #ifndef DOMAIN
+ #define DOMAIN buffer
+-  if (!p && getdnsdomainname (buffer, sizeof (buffer)) == -1)
++  if (p == NULL  && getdnsdomainname (buffer, sizeof (buffer)) == -1 && strlen(Hostname) == 0)
+     Fqdn = safe_strdup ("@");
+   else
+ #endif /* DOMAIN */
+-    if (*DOMAIN != '@')
++    if (*DOMAIN != '@' && strlen(DOMAIN) != 0)
+   {
+     Fqdn = safe_malloc (mutt_strlen (DOMAIN) + mutt_strlen (Hostname) + 2);
+     sprintf (Fqdn, "%s.%s", NONULL(Hostname), DOMAIN);	/* __SPRINTF_CHECKED__ */

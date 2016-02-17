@@ -21,6 +21,13 @@ Source0: http://download.kde.org/stable/phonon/%{version}/src/phonon-%{version}.
 
 Patch0: phonon-4.7.0-rpath_use_link_path.patch 
 
+## upstream patches
+Patch1: 0001-rename-phonon-meta-include-file-in-the-source-and-in.patch
+Patch2: 0002-Don-t-allocate-a-char-with-an-undefined-size.patch
+Patch3: 0003-Fix-build-with-Qt-5.4.2.patch
+Patch4: 0004-Specify-_include-dirs-as-INCLUDE_DIRECTORIES.patch
+Patch5: 0005-Yet-another-_include_dirs-fix.patch
+
 BuildRequires: automoc4 >= 0.9.86
 BuildRequires: cmake >= 2.6.9
 BuildRequires: kde4-filesystem
@@ -94,26 +101,25 @@ Requires: %{name}-qt5%{?_isa} = %{version}-%{release}
 
 
 %prep
-%setup -q 
-
-%patch0 -p1 -b .rpath_use_link_path
+%autosetup -p1
 
 %build
-mkdir -p %{_target_platform}
+mkdir %{_target_platform}
 pushd %{_target_platform}
-%{cmake} \
-  -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON \
-  ..
+%{cmake} .. \
+  -DCMAKE_BUILD_TYPE:STRING="Release" \
+  -DPHONON_INSTALL_QT_COMPAT_HEADERS:BOOL=ON \
+  -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}
 
-mkdir -p %{_target_platform}-Qt5
+mkdir %{_target_platform}-Qt5
 pushd %{_target_platform}-Qt5
-%{cmake} \
+%{cmake} .. \
+  -DCMAKE_BUILD_TYPE:STRING="Release" \
   -DPHONON_BUILD_PHONON4QT5:BOOL=ON \
-  -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON \
-  ..
+  -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON
 popd
 
 make %{?_smp_mflags} -C %{_target_platform}-Qt5
@@ -123,14 +129,11 @@ make %{?_smp_mflags} -C %{_target_platform}-Qt5
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}-Qt5
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
-# symlink for qt/phonon compatibility
-ln -s ../KDE/Phonon %{buildroot}%{_includedir}/phonon/Phonon
-
 # own these dirs
 mkdir -p %{buildroot}%{_kde4_libdir}/kde4/plugins/phonon_backend/
 mkdir -p %{buildroot}%{_kde4_datadir}/kde4/services/phononbackends/
 mkdir -p %{buildroot}%{_qt5_plugindir}/phonon4qt5_backend
-magic_rpm_clean.sh
+
 
 %check
 export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
@@ -142,9 +145,8 @@ test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 %postun -p /sbin/ldconfig
 
 %files
-%doc COPYING.LIB
+%license COPYING.LIB
 %{_libdir}/libphonon.so.4*
-%{_datadir}/dbus-1/interfaces/org.kde.Phonon.AudioOutput.xml
 %{_qt4_plugindir}/designer/libphononwidgets.so
 %dir %{_datadir}/phonon/
 %dir %{_kde4_libdir}/kde4/plugins/phonon_backend/
@@ -158,7 +160,17 @@ test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 %endif
 %{_libdir}/libphononexperimental.so.4*
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1223956
+# replacing symlink with a dir
+%pretrans devel -p <lua>
+path = "%{_includedir}/phonon/Phonon"
+st = posix.stat(path)
+if st and st.type == "link" then
+  os.remove(path)
+end
+
 %files devel
+%{_datadir}/dbus-1/interfaces/org.kde.Phonon.AudioOutput.xml
 %{_datadir}/phonon/buildsystem/
 %dir %{_libdir}/cmake/
 %{_libdir}/cmake/phonon/
@@ -182,15 +194,15 @@ test "$(pkg-config --modversion phonon4qt5)" = "%{version}"
 %postun qt5 -p /sbin/ldconfig
 
 %files qt5 
-%doc COPYING.LIB
+%license COPYING.LIB
 %dir %{_datadir}/phonon4qt5
 %{_libdir}/libphonon4qt5.so.4*
 %{_libdir}/libphonon4qt5experimental.so.4*
 %{_qt5_plugindir}/designer/libphononwidgets.so
 %dir %{_qt5_plugindir}/phonon4qt5_backend/
-%{_datadir}/dbus-1/interfaces/org.kde.Phonon4Qt5.AudioOutput.xml
 
 %files qt5-devel
+%{_datadir}/dbus-1/interfaces/org.kde.Phonon4Qt5.AudioOutput.xml
 %{_datadir}/phonon4qt5/buildsystem/
 %dir %{_libdir}/cmake/
 %{_libdir}/cmake/phonon4qt5/

@@ -56,7 +56,7 @@ Patch9:		tigervnc-shebang.patch
 Patch14:	tigervnc-xstartup.patch
 
 # This is tigervnc-%%{version}/unix/xserver116.patch rebased on the latest xorg
-Patch100:       xserver114.patch
+Patch100:       tigervnc-xserver116-rebased.patch
 
 %description
 Virtual Network Computing (VNC) is a remote display system which

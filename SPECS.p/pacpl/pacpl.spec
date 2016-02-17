@@ -1,3 +1,4 @@
+%define debug_package %{nil}
 Name: pacpl
 Summary: A tool for converting multiple audio types from one format to another
 Summary(zh_CN): 一个用于转换多种音频格式的工具

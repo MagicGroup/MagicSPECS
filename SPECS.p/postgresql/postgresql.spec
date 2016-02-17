@@ -35,11 +35,7 @@
 %{!?test:%global test 1}
 %{!?upgrade:%global upgrade 1}
 %{!?plpython:%global plpython 1}
-%if 0%{?fedora} > 12
 %{!?plpython3:%global plpython3 1}
-%else
-%{!?plpython3:%global plpython3 0}
-%endif
 %{!?pltcl:%global pltcl 1}
 %{!?plperl:%global plperl 1}
 %{!?ssl:%global ssl 1}
@@ -50,7 +46,7 @@
 %{!?xml:%global xml 1}
 %{!?pam:%global pam 1}
 %{!?sdt:%global sdt 1}
-%{!?selinux:%global selinux 1}
+%{!?selinux:%global selinux 0}
 %{!?runselftest:%global runselftest 1}
 
 # By default, patch(1) creates backup files when chunks apply with offsets.
@@ -395,6 +391,8 @@ find . -type f -name .gitignore | xargs rm
 
 cd postgresql-setup-%{setup_version}
 
+sed -i 's/redhat-release/magic-release/g' configure
+
 %configure \
     pgdocdir=%{_pkgdocdir} \
     systemdunitsdir=%{_prefix}/lib/systemd/system \
@@ -645,6 +643,7 @@ cd ..
 # For some reason, having '%%doc %%{_pkgdocdir}/README.rpm-dist' in %%files
 # causes FTBFS (at least on RHEL6), see rhbz#1250006.
 cp $RPM_BUILD_ROOT/%{_pkgdocdir}/README.rpm-dist ./
+rm -f $RPM_BUILD_ROOT/%{_pkgdocdir}/README.rpm-dist
 
 cat > $RPM_BUILD_ROOT%{_sysconfdir}/postgresql-setup/upgrade/postgresql.conf <<EOF
 id              postgresql

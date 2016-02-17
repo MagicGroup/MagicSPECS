@@ -5,7 +5,7 @@ Group(zh_CN.UTF-8): 开发/库
 License: LGPLv2
 Name: libnl
 Version: 1.1.4
-Release: 13%{?dist}
+Release: 14%{?dist}
 URL: http://people.suug.ch/~tgr/libnl/
 Source: http://people.suug.ch/~tgr/libnl/files/libnl-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
@@ -73,6 +73,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}-1.pc
 
 %changelog
+* Mon Feb 15 2016 Liu Di <liudidi@gmail.com> - 1.1.4-14
+- 为 Magic 3.0 重建
+
 * Mon Nov 09 2015 Liu Di <liudidi@gmail.com> - 1.1.4-13
 - 为 Magic 3.0 重建
 

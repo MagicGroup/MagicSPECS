@@ -1,8 +1,8 @@
 Name:       nas 
 Summary:    The Network Audio System (NAS)
 Summary(zh_CN.UTF-8): 网络音频系统 (NAS)
-Version: 匹配到二进制文件
-Release: 2%{?dist}
+Version: 1.9.4
+Release: 7%{?dist}
 URL:        http://radscan.com/nas.html
 # README:               MIT (main license)
 # config/aclocal.m4:    FSFULLR
@@ -110,7 +110,7 @@ Development files and the documentation for Network Audio System.
 %patch0 -p1 -b .move_AuErrorDB
 
 # Update config.sub to support aarch64, bug #926196
-cp -p %{_datadir}/automake-1.14/config.{sub,guess} config
+cp -p %{_datadir}/automake-1.15/config.{sub,guess} config
 sed -i -e '/AC_FUNC_SNPRINTF/d' config/configure.ac
 autoreconf -i -f config
 for F in HISTORY; do
@@ -189,8 +189,8 @@ echo '  systemd-sysv-convert --apply %{daemon}'
 
 
 %changelog
-* Sun Nov 01 2015 Liu Di <liudidi@gmail.com>
-- 更新到 匹配到二进制文件 index.html
+* Fri Feb 05 2016 Liu Di <liudidi@gmail.com> - 1.9.4-7
+- 为 Magic 3.0 重建
 
 * Tue Jan 20 2015 Liu Di <liudidi@gmail.com> - 1.9.4-3
 - 为 Magic 3.0 重建

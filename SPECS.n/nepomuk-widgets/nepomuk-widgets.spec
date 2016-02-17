@@ -8,7 +8,7 @@
 #global tests 1
 
 Name:    nepomuk-widgets
-Version: 4.3
+Version: 4.14.3
 Release: 2%{?dist}
 Summary: Nepomuk  Widgets
 Summary(zh_CN.UTF-8): Nepomuk 小工具

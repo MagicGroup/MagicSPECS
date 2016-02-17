@@ -94,7 +94,6 @@ magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
-%doc COPYING README NEWS
 %{python_sitearch}/_smbc.so
 %{python_sitearch}/smbc/*
 %{python_sitearch}/pysmbc*.egg-info
@@ -106,7 +105,6 @@ magic_rpm_clean.sh
 %if 0%{?with_python3}
 %files -n python3-smbc
 %defattr(-,root,root,-)
-%doc COPYING README NEWS
 %{python3_sitearch}/_smbc.cpython-3*.so
 %{python3_sitearch}/smbc/*
 %{python3_sitearch}/pysmbc*.egg-info
