@@ -31,8 +31,6 @@ Patch3: sudo-1.8.14p1-docpassexpire.patch
 # Patch initialize variable before executing sudo_strsplit
 Patch4: sudo-1.8.14p3-initialization.patch
 # Patch resolves deadcode in visudo.c from coverity scan.
-Patch5: sudo-1.8.14p3-deadcode_visudo_c.patch
-Patch6: sudo-1.8.14p3-extra_while.patch
 
 %description
 Sudo (superuser do) allows a system administrator to give certain
@@ -69,8 +67,6 @@ plugins that use %{name}.
 %patch2 -p1 -b .envdebug
 %patch3 -p1 -b .m4path
 %patch4 -p1 -b .pipelist
-%patch5 -p1 -b .CVE-2012-0809
-%patch6 -p1 -b .sssd-support
 
 # Remove execute permission on this script so we don't pull in perl deps
 chmod -x plugins/sudoers/sudoers2ldif

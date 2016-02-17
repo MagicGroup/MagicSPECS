@@ -11,7 +11,6 @@ Release:	2%{?dist}
 License:        LGPLv2 with exceptions or GPLv3 with exceptions
 URL:            https://github.com/mauios/qtconfiguration
 Source0:        http://downloads.sourceforge.net/project/mauios/hawaii/%{qt_module}/%{qt_module}-%{version}.tar.gz
-Patch1:		qtconfiguration-0.3.0-qt55.patch
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
 BuildRequires:  pkgconfig(dconf)
@@ -39,7 +38,6 @@ Requires:       qt5-qtbase-devel%{?_isa}
 
 %prep
 %setup -q -n %{qt_module}-%{version}
-%patch1 -p1
 
 %build
 %cmake .

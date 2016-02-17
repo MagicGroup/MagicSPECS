@@ -1,5 +1,7 @@
 %define desktop_vendor magic
 
+%undefine _hardened_build
+
 Summary: Graphical frontend for APT package manager.
 Summary(zh_CN.UTF-8): APT 包管理器的图形界面
 Name: synaptic

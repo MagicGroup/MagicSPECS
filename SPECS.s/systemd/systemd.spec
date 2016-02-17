@@ -12,8 +12,8 @@
 
 Name:           systemd
 Url:            http://www.freedesktop.org/wiki/Software/systemd
-Version:	226
-Release:	5%{?dist}
+Version:	229
+Release:	2%{?dist}
 # For a breakdown of the licensing, see README
 License:        LGPLv2+ and MIT and GPLv2+
 Summary:        A System and Service Manager
@@ -624,6 +624,7 @@ getent passwd systemd-journal-upload >/dev/null 2>&1 || useradd -r -l -g systemd
 %{_bindir}/systemd-sysusers
 %{_bindir}/systemd-firstboot
 %{_bindir}/systemd-hwdb
+%{_bindir}/systemd-resolve
 %{_bindir}/hostnamectl
 %{_bindir}/localectl
 %{_bindir}/timedatectl
@@ -774,6 +775,9 @@ getent passwd systemd-journal-upload >/dev/null 2>&1 || useradd -r -l -g systemd
 /usr/lib/firewalld/services/*
 
 %changelog
+* Wed Feb 17 2016 Liu Di <liudidi@gmail.com> - 229-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 226-4
 - 为 Magic 3.0 重建
 

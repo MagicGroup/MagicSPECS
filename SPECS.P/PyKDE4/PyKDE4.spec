@@ -4,7 +4,7 @@
 %global python_ver %(%{__python} -c "import sys ; print sys.version[:3]")
 
 Name: PyKDE4 
-Version: 4.3
+Version: 4.14.3
 Release: 3%{?dist}
 Summary: Python bindings for KDE4 
 Summary(zh_CN.UTF-8): KDE4 的 Python 绑定

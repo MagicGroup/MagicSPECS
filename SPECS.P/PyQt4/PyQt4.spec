@@ -30,9 +30,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
 ## upstreamable patches
-# fix multilib conflict because of timestamp
-Patch50:  PyQt-x11-gpl-4.9.5-timestamp_multilib.patch 
-Patch52:  PyQt-x11-gpl-4.10.4-pyuic_shbang.patch
 
 ## upstream patches
 # fix FTBFS on ARM
@@ -62,12 +59,10 @@ Requires: dbus-python
 %{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
 %{?_sip_api:Requires: sip-api(%{_sip_api_major}) >= %{_sip_api}}
 
-%if 0%{?fedora}
 # could theoretically enumerate all the modules built/packaged here, but this
 # should be good start (to ease introduction of -webkit for epel-6+ for example)
 Provides: %{name}-webkit = %{version}-%{release}
 Provides: %{name}-webkit%{?_isa} = %{version}-%{release}
-%endif
 
 Provides: python-qt4 = %{version}-%{release}
 Provides: pyqt4 = %{version}-%{release}
@@ -83,10 +78,8 @@ Summary: Files needed to build other bindings based on Qt4
 Summary(zh_CN.UTF-8): %{name} 的开发包
 Group:	 Development/Languages
 Group(zh_CN.UTF-8): 开发/语言
-%if 0%{?fedora}
 Provides: %{name}-webkit-devel = %{version}-%{release}
 Provides: %{name}-webkit-devel%{?_isa} = %{version}-%{release}
-%endif
 Provides: pyqt4-devel = %{version}-%{release}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt4-devel
@@ -194,9 +187,6 @@ from any of the Qt4 classes (e.g. KDE or your own).
 %prep
 %setup -q -n PyQt-x11-gpl%{?snap:-snapshot}-%{version}%{?snap:-%{snap}} 
 
-%patch50 -p1 -b .timestamp
-# skip -b on this one, so the backup copy doesnt end up packaged too
-%patch52 -p1
 # save orig for comparison later
 cp -a ./sip/QtGui/opengl_types.sip ./sip/QtGui/opengl_types.sip.orig
 %patch60 -p1 -b .arm
@@ -292,10 +282,6 @@ diff -u ./sip/QtGui/opengl_types.sip.orig \
 rm -rf %{buildroot}
 
 %files
-%doc NEWS README
-%doc OPENSOURCE-NOTICE.TXT
-%doc LICENSE.GPL2 GPL_EXCEPTION*.TXT
-%doc LICENSE.GPL3
 %{python2_dbus_dir}/qt.so
 %dir %{python2_sitearch}/PyQt4/
 %{python2_sitearch}/PyQt4/__init__.py*
@@ -350,10 +336,6 @@ rm -rf %{buildroot}
 
 %if 0%{?with_python3}
 %files -n python3-%{name}
-%doc NEWS README
-%doc OPENSOURCE-NOTICE.TXT
-%doc LICENSE.GPL2 GPL_EXCEPTION*.TXT
-%doc LICENSE.GPL3
 %{python3_dbus_dir}/qt.so
 %dir %{python3_sitearch}/PyQt4/
 %{python3_sitearch}/PyQt4/__init__.py*

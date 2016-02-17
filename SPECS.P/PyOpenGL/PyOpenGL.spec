@@ -16,7 +16,7 @@ URL:            http://pyopengl.sourceforge.net/
 Source0:        https://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  python2-devel 
-BuildRequires:  python-setuptools-devel
+BuildRequires:  python-setuptools
 BuildArch:      noarch
 Requires:       numpy python-setuptools freeglut
 # in some other repositories this is named python-opengl

@@ -3,7 +3,7 @@
 %global debug_package %{nil}
 
 Name:           sparsehash
-Version:	2.0.3
+Version:	2.0.2
 Release:	3%{?dist}
 Summary:        Extremely memory-efficient C++ hash_map implementation
 Summary(zh_CN.UTF-8): 极节省内存的 hash_map C++ 实现
@@ -47,15 +47,13 @@ make %{?_smp_mflags}
 make install DESTDIR=$RPM_BUILD_ROOT
 
 # Remove unneeded files
-rm $RPM_BUILD_ROOT%{_defaultdocdir}/sparsehash-%{version}/INSTALL
-rm $RPM_BUILD_ROOT%{_defaultdocdir}/sparsehash-%{version}/README_windows.txt
 magic_rpm_clean.sh
 
 %check
 make check
 
 %files devel
-%doc %{_defaultdocdir}/sparsehash-%{version}/
+%doc %{_pkgdocdir}/
 %{_includedir}/google/
 %{_includedir}/sparsehash/
 %{_libdir}/pkgconfig/libsparsehash.pc

@@ -1,0 +1,30 @@
+diff -ur qpid-cpp-0.34.orig/bindings/CMakeLists.txt qpid-cpp-0.34/bindings/CMakeLists.txt
+--- qpid-cpp-0.34.orig/bindings/CMakeLists.txt	2016-02-17 11:17:48.837522996 +0800
++++ qpid-cpp-0.34/bindings/CMakeLists.txt	2016-02-17 11:18:07.521522517 +0800
+@@ -30,6 +30,7 @@
+     set(SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES}) # Save the suffixes.
+     # Look just for shared libraries.
+     set(CMAKE_FIND_LIBRARY_SUFFIXES ".so")
++    set(PythonLibs_FIND_VERSION 2.7)
+     find_package(PythonLibs)
+     # Restore the suffixes
+     set(CMAKE_FIND_LIBRARY_SUFFIXES ${SUFFIXES})
+@@ -37,6 +38,7 @@
+   # If we are not on a Unix/.so platform or we didn't find the library with the .so search
+   # then do a plain search
+   if (NOT PYTHONLIBS_FOUND)
++    set(PythonLibs_FIND_VERSION 2.7)
+     find_package(PythonLibs)
+   endif()
+ endmacro(find_python_libs)
+diff -ur qpid-cpp-0.34.orig/managementgen/CMakeLists.txt qpid-cpp-0.34/managementgen/CMakeLists.txt
+--- qpid-cpp-0.34.orig/managementgen/CMakeLists.txt	2016-02-17 11:17:48.661523000 +0800
++++ qpid-cpp-0.34/managementgen/CMakeLists.txt	2016-02-17 11:18:15.313522317 +0800
+@@ -22,6 +22,7 @@
+     project(qpidc-qmfgen)
+     cmake_minimum_required(VERSION 2.4.0 FATAL_ERROR)
+ 
++    set(PythonLibs_FIND_VERSION 2.7)
+     find_package(PythonInterp REQUIRED)
+ 
+     execute_process(COMMAND ${PYTHON_EXECUTABLE}

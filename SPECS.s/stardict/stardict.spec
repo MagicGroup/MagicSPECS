@@ -64,6 +64,9 @@ It has powerful features such as "Glob-style pattern matching,"
 find src/sigc++* -name \*.h -or -name \*.cc | xargs rm -f
 
 %build
+CFLAGS="${RPM_OPT_FLAGS} -std=c99"
+CXXFLAGS="${RPM_OPT_FLAGS} -std=c++11"
+
 %configure --disable-schemas-install --disable-festival --disable-espeak --disable-gucharmap  \
 %if ! %{enable_gnome}
 	 --disable-gnome-support

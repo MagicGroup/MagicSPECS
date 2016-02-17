@@ -8,7 +8,7 @@ Summary: qtruby
 Summary(zh_CN.UTF-8): qtruby
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
-Version: 4.3
+Version: 4.14.3
 Release: 6%{?dist}
 License: LGPL
 URL: http://extragear.kde.org/apps/kipi

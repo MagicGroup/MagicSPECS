@@ -23,7 +23,7 @@ License: GPLv2 or GPLv3 and (GPLv3+ with exceptions)
 Url: http://www.riverbankcomputing.com/software/sip/intro 
 #URL: http://sourceforge.net/projects/pyqt/
 #Source0:  http://downloads.sourceforge.net/pyqt/sip-%{version}%{?snap:-snapshot-%{snap}}.tar.gz
-Source0:  http://www.riverbankcomputing.com/static/Downloads/sip4/sip-%{version}.tar.gz
+Source0:  http://sourceforge.net/projects/pyqt/files/sip/sip-4.17/sip-%{version}.tar.gz
 
 ## upstreamable patches
 # make install should not strip (by default), kills -debuginfo

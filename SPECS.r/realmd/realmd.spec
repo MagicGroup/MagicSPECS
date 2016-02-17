@@ -51,7 +51,9 @@ applications that use %{name}.
 %patch3 -p1
 
 %build
-autoreconf -fisv
+automake --add-missing
+autoconf
+
 %configure --disable-silent-rules --with-distro=redhat
 make %{?_smp_mflags}
 

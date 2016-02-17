@@ -1,6 +1,6 @@
 Name:           SDL2_image
-Version:	匹配到二进制文件
-Release:	2%{?dist}
+Version:	2.0.1
+Release:	1%{?dist}
 Summary:        Image loading library for SDL
 Summary(zh_CN.UTF-8): SDL 的图像载入库
 
@@ -9,8 +9,6 @@ Group(zh_CN.UTF-8): 系统环境/库
 License:        LGPLv2+
 URL:            http://www.libsdl.org/projects/SDL_image/
 Source0:        http://www.libsdl.org/projects/SDL_image/release/%{name}-%{version}.tar.gz
-# http://hg.libsdl.org/SDL_image/rev/f0b623bb5570
-Patch0:         SDL2_image-2.0.0-big-endian.patch
 
 BuildRequires:  SDL2-devel
 BuildRequires:  libjpeg-devel
@@ -45,7 +43,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1 -b big-endian
 rm -rf external/
 sed -i -e 's/\r//g' README.txt CHANGES.txt COPYING.txt
 
@@ -84,9 +81,6 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-* Wed Nov 04 2015 Liu Di <liudidi@gmail.com>
-- 更新到 匹配到二进制文件 index.html
-
 * Wed Sep 30 2015 Liu Di <liudidi@gmail.com> - 2.0.0-10
 - 为 Magic 3.0 重建
 

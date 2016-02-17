@@ -23,7 +23,7 @@
 
 Name:		v8
 Version:	%{somajor}.%{sominor}.%{sobuild}.%{sotiny}
-Release:	23%{?dist}
+Release:	24%{?dist}
 Epoch:		1
 Summary:	JavaScript Engine
 Group:		System Environment/Libraries
@@ -337,6 +337,9 @@ rm -rf %{buildroot}
 %{python_sitelib}/j*.py*
 
 %changelog
+* Wed Feb 17 2016 Liu Di <liudidi@gmail.com> - 1:3.14.5.10-24
+- 为 Magic 3.0 重建
+
 * Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1:3.14.5.10-23
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

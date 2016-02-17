@@ -9,7 +9,6 @@ Group(zh_CN.UTF-8): 开发/工具
 URL: http://www.gnu.org/software/rcs/
 Source: http://mirrors.ustc.edu.cn/gnu/rcs/%{name}-%{version}.tar.xz
 Patch0: rcs-5.8-build-tweaks.patch
-Patch2: rcs-5.8-newsvnsyntax.patch
 Provides: bundled(gnulib)
 BuildRequires: autoconf
 BuildRequires: groff
@@ -36,10 +35,15 @@ different versions of files.
 %prep
 %setup -q
 %patch0 -p1 -b .build-tweaks
-%patch2 -p1 -b .newsvnsyntax
 autoconf
 
 %build
+%if "%{version}" <= "5.9.4"
+# FIXME: Package suffers from c11/inline issues
+# Fall back to c99
+# Proper fix would be to fix the source-code
+CFLAGS="${RPM_OPT_FLAGS} -std=c99"
+%endif
 %configure --with-diffutils
 make %{?_smp_mflags}
 

@@ -139,7 +139,7 @@ fi
 %if %{build_client}
 %files client
 %doc COPYING README NEWS
-%{_bindir}/spicec
+#%{_bindir}/spicec
 %ghost %{_libexecdir}/spice-xpi-client
 %{_libexecdir}/spice-xpi-client-spicec
 %endif

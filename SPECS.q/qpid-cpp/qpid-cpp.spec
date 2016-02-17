@@ -15,6 +15,7 @@ Patch0001:     0001-NO-JIRA-qpidd.service-file-for-use-on-Fedora.patch
 Patch0002:     0002-NO-JIRA-Allow-overriding-the-Perl-install-location.patch
 Patch0003:     0003-NO-JIRA-Allow-overriding-the-Ruby-install-location.patch
 Patch4:        qpid-boost-test-message.patch
+Patch5:		qpid-cpp-0.34-usepython27.patch
 
 BuildRequires: gcc-c++
 BuildRequires: cmake
@@ -404,8 +405,6 @@ Provides:  python-qpid_messaging = %{version}-%{release}
 %patch0002 -p3
 %patch0003 -p3
 %patch4 -p1
-
-
 
 %global perftests "qpid-perftest qpid-topic-listener qpid-topic-publisher qpid-latency-test qpid-client-test qpid-txtest qpid-ping qpid-txtest2"
 

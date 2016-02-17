@@ -1,6 +1,4 @@
-%if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
-%global WITH_SELINUX 1
-%endif
+%global WITH_SELINUX 0
 
 %global ALTERNATIVES %{_sbindir}/alternatives
 
@@ -48,7 +46,7 @@ Patch10: star-1.5.3-star-mk.patch
 # ~> downstream
 Patch11: star-1.5.3-pax-X-option.patch
 
-BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
+BuildRequires: libattr-devel libacl-devel libtool 
 BuildRequires: e2fsprogs-devel
 
 %description
@@ -104,11 +102,11 @@ restoring files from a backup), and tar (an archiving program).
 %patch2 -p1 -b .changewarnSegv
 %patch3 -p1 -b .namesoverflow
 %patch4 -p1 -b .references
-%patch5 -p1 -b .selinux-segfault
-%patch6 -p1 -b .crc
+#%patch5 -p1 -b .selinux-segfault
+#%patch6 -p1 -b .crc
 %patch8 -p1 -b .rmt-access-rules
 %patch9 -p1 -b .ssh-by-default
-%patch10 -p1 -b .bug-config-1.5.3
+#%patch10 -p1 -b .bug-config-1.5.3
 %patch11 -p1 -b .pax-X
 
 # disable single "fat" binary

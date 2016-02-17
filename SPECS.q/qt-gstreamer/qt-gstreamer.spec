@@ -6,6 +6,9 @@ Summary(zh_CN.UTF-8): GStreamer 的 Qt 框架的 C++ 绑定
 License:        LGPLv2+
 URL:            http://gstreamer.freedesktop.org/modules/qt-gstreamer.html
 Source0:        http://gstreamer.freedesktop.org/src/%{name}/%{name}-%{version}.tar.xz
+# Ubuntu find_gstconfig_properly.diff patch fixes bug 1234152
+# https://bugzilla.gnome.org/show_bug.cgi?id=751382
+Patch0:         qt-gstreamer-1.2.0-find-gstconfig.patch
 
 BuildRequires:  automoc
 BuildRequires:  boost-devel
@@ -60,6 +63,7 @@ qt5-gstreamer 的开发包。
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 mkdir -p %{_target_platform}
