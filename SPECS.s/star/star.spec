@@ -1,11 +1,13 @@
-%global WITH_SELINUX 0
+%if %{?WITH_SELINUX:0}%{!?WITH_SELINUX:1}
+%global WITH_SELINUX 1
+%endif
 
 %global ALTERNATIVES %{_sbindir}/alternatives
 
 Summary:  An archiving tool with ACL support
 Name: star
 Version: 1.5.3
-Release: 7%{?dist}
+Release: 6%{?dist}
 License: CDDL
 Group: Applications/Archiving
 URL: http://freecode.com/projects/star
@@ -46,10 +48,7 @@ Patch10: star-1.5.3-star-mk.patch
 # ~> downstream
 Patch11: star-1.5.3-pax-X-option.patch
 
-BuildRequires: libattr-devel libacl-devel libtool
-%if 0%{?WITH_SELINUX}
-BuildRequires: libselinux-devel
-%endif
+BuildRequires: libattr-devel libacl-devel libtool libselinux-devel
 BuildRequires: e2fsprogs-devel
 
 %description
@@ -105,15 +104,11 @@ restoring files from a backup), and tar (an archiving program).
 %patch2 -p1 -b .changewarnSegv
 %patch3 -p1 -b .namesoverflow
 %patch4 -p1 -b .references
-%if %{WITH_SELINUX}
 %patch5 -p1 -b .selinux-segfault
-%endif
 %patch6 -p1 -b .crc
 %patch8 -p1 -b .rmt-access-rules
 %patch9 -p1 -b .ssh-by-default
-%if %{WITH_SELINUX}
 %patch10 -p1 -b .bug-config-1.5.3
-%endif
 %patch11 -p1 -b .pax-X
 
 # disable single "fat" binary
@@ -237,11 +232,8 @@ fi
 %{_sysconfdir}/rmt
 
 %changelog
-* Fri Nov 13 2015 Liu Di <liudidi@gmail.com> - 1.5.3-7
-- 为 Magic 3.0 重建
-
-* Tue Sep 29 2015 Liu Di <liudidi@gmail.com> - 1.5.3-6
-- 为 Magic 3.0 重建
+* Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.3-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
