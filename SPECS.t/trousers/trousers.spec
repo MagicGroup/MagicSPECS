@@ -9,6 +9,8 @@ Group(zh_CN.UTF-8): 系统环境/库
 Url: http://trousers.sourceforge.net
 Source0: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1: tcsd.service
+Patch1:  trousers-0.3.13-noinline.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libtool, openssl-devel
 BuildRequires: systemd-units
@@ -58,6 +60,7 @@ applications.
 
 %prep
 %setup -q
+%patch1 -p1
 
 sed -i -e 's|/var/tpm|/var/lib/tpm|g' -e 's|/usr/local/var|/var|g' man/man5/tcsd.conf.5.in man/man8/tcsd.8.in
 

@@ -265,6 +265,7 @@ do
 done
 
 # Get reproducible builds by setting the compiling username
+rm -rf ~/.xemacs
 mkdir ~/.xemacs
 echo >> ~/.xemacs/custom.el << EOF
 (custom-set-variables

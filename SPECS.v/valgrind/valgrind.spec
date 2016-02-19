@@ -4,7 +4,7 @@ Summary: Tool for finding memory management bugs in programs
 Summary(zh_CN.UTF-8): 查找程序中内存管理 bugs 的工具
 Name: %{?scl_prefix}valgrind
 Version: 3.11.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Epoch: 1
 License: GPLv2+
 URL: http://www.valgrind.org/
@@ -364,6 +364,9 @@ echo ===============END TESTING===============
 %endif
 
 %changelog
+* Thu Feb 18 2016 Liu Di <liudidi@gmail.com> - 1:3.11.0-8
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 1:3.11.0-7
 - 为 Magic 3.0 重建
 

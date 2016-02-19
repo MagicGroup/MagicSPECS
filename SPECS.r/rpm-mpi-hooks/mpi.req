@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2015 Sandro Mani <manisandro@gmail.com>
+# Copyright (c) 2015-2016 Sandro Mani <manisandro@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -91,11 +91,11 @@ if [ -x /usr/lib/rpm/elfdeps -a -n "$filelist" ]; then
     # If the scanned binary is inside an mpi dir, for each dependency, check
     # whether the library exists in $MPI_LIB, and if yes, append
     # ($MPI_COMPILER) to each requires string
-    if [ ! -z $mpi_comp ]; then
+    if [ ! -z "$mpi_comp" ]; then
       mpi_lib=${mpi_lib_for_compiler[$mpi_comp]}
       for req in $reqs; do
         lib=$(echo $req | grep -Eo '^.*\.so[^(]*')
-        if [ ! -z $lib ] && ( [ -e $mpi_lib/$lib ] || [ -e $buildroot$mpi_lib/$lib ] ); then
+        if [ ! -z "$lib" ] && ( [ -e "$mpi_lib/$lib" ] || [ -e "$buildroot$mpi_lib/$lib" ] ); then
           req="${req}($mpi_comp)"
         fi
         echo "$req"

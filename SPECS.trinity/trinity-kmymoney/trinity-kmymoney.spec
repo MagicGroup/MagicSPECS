@@ -183,7 +183,8 @@ This package contains development files needed for KMyMoney plugins.
 ##########
 
 %prep
-%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+#%setup -q -n %{name}-%{tde_version}%{?preversion:~%{preversion}}
+%setup -q -n %{name}-14.0.2
 %patch1 -p1
 
 %__install -m644 %{SOURCE1} kmymoney2/widgets/

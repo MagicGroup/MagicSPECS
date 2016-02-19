@@ -1,6 +1,6 @@
 Name:           rpm-mpi-hooks
 Version:        3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        RPM dependency generator hooks for MPI packages
 Summary(zh_CN.UTF-8): MPI 包的 RPM 依赖生成
 
@@ -49,6 +49,9 @@ install -Dpm 0755 %{SOURCE3} %{buildroot}%{_rpmconfigdir}/mpi.req
 
 
 %changelog
+* Thu Feb 18 2016 Liu Di <liudidi@gmail.com> - 3-6
+- 为 Magic 3.0 重建
+
 * Tue Nov 17 2015 Liu Di <liudidi@gmail.com> - 3-5
 - 为 Magic 3.0 重建
 

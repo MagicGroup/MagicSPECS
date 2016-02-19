@@ -51,7 +51,7 @@ Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 Epoch:		2
 Version:	0.1.7
-Release:	%{?!preversion:2}%{?preversion:1_%{preversion}}%{?dist}%{?_variant}.2
+Release:	%{?!preversion:2}%{?preversion:1_%{preversion}}%{?dist}%{?_variant}.3
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
@@ -187,6 +187,9 @@ export PATH="%{tde_bindir}:${PATH}"
 
 
 %Changelog
+* Wed Feb 17 2016 Liu Di <liudidi@gmail.com> - 2:0.1.7-2.opt.3
+- 为 Magic 3.0 重建
+
 * Sat Nov 14 2015 Liu Di <liudidi@gmail.com> - 2:0.1.7-2.opt.2
 - 为 Magic 3.0 重建
 

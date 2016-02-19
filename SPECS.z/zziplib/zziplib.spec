@@ -2,8 +2,8 @@
 Summary: Lightweight library to easily extract data from zip files
 Summary(zh_CN.UTF-8): 简单从 zip 文件中解压数据的轻量库
 Name: zziplib
-Version:	0.13.59
-Release:	2%{?dist}
+Version:	0.13.62
+Release:	3%{?dist}
 License: LGPLv2+ or MPLv1.1
 Group: Applications/Archiving
 Group(zh_CN.UTF-8): 应用程序/归档
@@ -119,8 +119,8 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*
 
 %changelog
-* Wed Oct 28 2015 Liu Di <liudidi@gmail.com> - 0.13.59-2
-- 更新到 0.13.59
+* Fri Feb 19 2016 Liu Di <liudidi@gmail.com> - 0.13.62-3
+- 为 Magic 3.0 重建
 
 * Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.13.62-2
 - 为 Magic 3.0 重建

@@ -70,14 +70,14 @@ make test
 %install
 %{__rm} -rf %{buildroot}
 %makeinstall tccdir="%{buildroot}%{_libdir}/tcc" docdir="%{buildroot}%{_datadir}/doc/tcc"
-%{__mv} %{buildroot}%{_datadir}/doc/tcc rpm-docs
+#%{__mv} %{buildroot}%{_datadir}/doc/tcc rpm-docs
 
 %clean
 %{__rm} -rf %{buildroot}
 
 %files
 %defattr(-, root, root, 0755)
-%doc COPYING README TODO rpm-docs/*
+%doc COPYING README TODO 
 %doc %{_mandir}/man1/tcc.1*
 %{_bindir}/tcc
 %{_libdir}/tcc/

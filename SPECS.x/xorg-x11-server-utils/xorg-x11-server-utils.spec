@@ -37,8 +37,7 @@ Source17: http://www.x.org/pub/individual/app/xinput-1.6.2.tar.bz2
 # iceauth section
 #Patch0: 
 
-# rgb section
-Patch1100: rgb-1.0.0-datadir-rgbpath-fix.patch
+Patch0: sessreg-gcc5.patch
 
 BuildRequires: xorg-x11-util-macros
 
@@ -76,8 +75,7 @@ Utility to perform keystone adjustments on X screens.
 
 %prep
 %setup -q -c %{name}-%{version} -a2 -a3 -a5 -a6 -a7 -a8 -a9 -a10 -a11 -a12 -a13 -a14 -a15 -a16 -a17
-
-#patch1100 -p0 -b .datadir-rgbpath-fix
+%patch0 -p1
 
 %build
 

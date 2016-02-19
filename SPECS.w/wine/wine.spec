@@ -13,7 +13,7 @@
 # binfmt macros for RHEL
 
 Name:           wine
-Version:	1.7.54
+Version:	1.9.3
 Release:        3%{?dist}
 Summary:        A compatibility layer for windows applications
 Summary(zh_CN.UTF-8): windows 程序的兼容层
@@ -62,10 +62,6 @@ Source501:      wine-tahoma.conf
 Source502:      wine-README-tahoma
 
 Patch511:       wine-cjk.patch
-# temporary workaround for GCC 5.0 optimization regressions
-Patch512:       wine-gcc5.patch
-# prelink has been retired, use linker method of base address relocation
-Patch513:       wine-relocate-base.patch
 
 # wine compholio patches for pipelight.
 # pulseaudio-patch is covered by that patch-set, too.
@@ -607,7 +603,6 @@ This package adds the opencl driver for wine.
 %prep
 %setup -q
 %patch511 -p1 -b.cjk
-%patch513 -p1 -b.relocate
 
 # setup and apply compholio-patches or pulseaudio-patch.
 # since the pulse patch is included in the compholio patches use it from
@@ -641,7 +636,7 @@ export CFLAGS="`echo $RPM_OPT_FLAGS | sed -e 's/-Wp,-D_FORTIFY_SOURCE=2//'` -Wno
 %configure \
  --sysconfdir=%{_sysconfdir}/wine \
  --x-includes=%{_includedir} --x-libraries=%{_libdir} \
- --without-hal --with-dbus --without-gstreamer \
+ --without-hal --with-dbus --with-gstreamer \
  --with-x \
  --with-pulse \
 %ifarch x86_64
@@ -1062,6 +1057,7 @@ fi
 %{_libdir}/wine/winemenubuilder.exe.so
 %{_libdir}/wine/winecfg.exe.so
 %{_libdir}/wine/winedevice.exe.so
+%{_libdir}/wine/wmplayer.exe.so
 %{_libdir}/wine/wscript.exe.so
 %{_libdir}/wine/uninstaller.exe.so
 
@@ -1108,6 +1104,7 @@ fi
 %{_libdir}/wine/api-ms-win-core-misc-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-core-namedpipe-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-core-namedpipe-l1-2-0.dll.so
+%{_libdir}/wine/api-ms-win-core-path-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-core-processenvironment-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-core-processenvironment-l1-2-0.dll.so
 %{_libdir}/wine/api-ms-win-core-processthreads-l1-1-0.dll.so
@@ -1162,10 +1159,33 @@ fi
 %{_libdir}/wine/api-ms-win-ntuser-dc-access-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-security-base-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-security-base-l1-2-0.dll.so
+%{_libdir}/wine/api-ms-win-security-lsalookup-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-security-lsalookup-l1-1-1.dll.so
 %{_libdir}/wine/api-ms-win-security-sddl-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-service-core-l1-1-1.dll.so
 %{_libdir}/wine/api-ms-win-service-management-l1-1-0.dll.so
 %{_libdir}/wine/api-ms-win-service-winsvc-l1-2-0.dll.so
+%if 0%{?compholio}
+%{_libdir}/wine/api-ms-win-appmodel-runtime-l1-1-1.dll.so
+%{_libdir}/wine/api-ms-win-core-apiquery-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-core-com-l1-1-1.dll.so
+%{_libdir}/wine/api-ms-win-core-delayload-l1-1-1.dll.so
+%{_libdir}/wine/api-ms-win-core-heap-l2-1-0.dll.so
+%{_libdir}/wine/api-ms-win-core-kernel32-legacy-l1-1-1.dll.so
+%{_libdir}/wine/api-ms-win-core-libraryloader-l1-2-0.dll.so
+%{_libdir}/wine/api-ms-win-core-memory-l1-1-2.dll.so
+%{_libdir}/wine/api-ms-win-core-quirks-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-core-shlwapi-obsolete-l1-2-0.dll.so
+%{_libdir}/wine/api-ms-win-core-threadpool-l1-2-0.dll.so
+%{_libdir}/wine/api-ms-win-core-winrt-registration-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-core-wow64-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-eventing-classicprovider-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-rtcore-ntuser-draw-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-rtcore-ntuser-window-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-shcore-obsolete-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-shcore-stream-l1-1-0.dll.so
+%{_libdir}/wine/api-ms-win-shcore-thread-l1-1-0.dll.so
+%endif
 %{_libdir}/wine/apphelp.dll.so
 %{_libdir}/wine/appwiz.cpl.so
 %{_libdir}/wine/atl.dll.so
@@ -1178,7 +1198,9 @@ fi
 %{_libdir}/wine/avifil32.dll.so
 %{_libdir}/wine/avrt.dll.so
 %{_libdir}/wine/bcrypt.dll.so
+%{_libdir}/wine/bluetoothapis.dll.so
 %{_libdir}/wine/browseui.dll.so
+%{_libdir}/wine/bthprops.cpl.so
 %{_libdir}/wine/cabinet.dll.so
 %{_libdir}/wine/cards.dll.so
 %{_libdir}/wine/cfgmgr32.dll.so
@@ -1256,11 +1278,18 @@ fi
 %{_libdir}/wine/evr.dll.so
 %{_libdir}/wine/explorerframe.dll.so
 %{_libdir}/wine/ext-ms-win-gdi-devcaps-l1-1-0.dll.so
+%if 0%{?compholio}
+%{_libdir}/wine/ext-ms-win-appmodel-usercontext-l1-1-0.dll.so
+%{_libdir}/wine/ext-ms-win-kernel32-package-current-l1-1-0.dll.so
+%{_libdir}/wine/ext-ms-win-ntuser-mouse-l1-1-0.dll.so
+%{_libdir}/wine/ext-ms-win-rtcore-ntuser-syscolors-l1-1-0.dll.so
+%{_libdir}/wine/ext-ms-win-rtcore-ntuser-sysparams-l1-1-0.dll.so
+%{_libdir}/wine/ext-ms-win-uxtheme-themes-l1-1-0.dll.so
+%{_libdir}/wine/ext-ms-win-xaml-pal-l1-1-0.dll.so
+%endif
 %{_libdir}/wine/faultrep.dll.so
 %{_libdir}/wine/fltlib.dll.so
-%if 0%{?compholio}
 %{_libdir}/wine/fltmgr.sys.so
-%endif
 %{_libdir}/wine/fntcache.dll.so
 %{_libdir}/wine/fontsub.dll.so
 %{_libdir}/wine/fusion.dll.so
@@ -1283,6 +1312,9 @@ fi
 %{_libdir}/wine/icinfo.exe.so
 %{_libdir}/wine/icmp.dll.so
 %{_libdir}/wine/ieframe.dll.so
+%if 0%{?compholio}
+%{_libdir}/wine/iertutil.dll.so
+%endif
 %{_libdir}/wine/imaadp32.acm.so
 %{_libdir}/wine/imagehlp.dll.so
 %{_libdir}/wine/imm32.dll.so
@@ -1294,12 +1326,16 @@ fi
 %{_libdir}/wine/inkobj.dll.so
 %{_libdir}/wine/inseng.dll.so
 %{_libdir}/wine/iphlpapi.dll.so
+%{_libdir}/wine/irprops.cpl.so
 %{_libdir}/wine/itircl.dll.so
 %{_libdir}/wine/itss.dll.so
 %{_libdir}/wine/joy.cpl.so
 %{_libdir}/wine/jscript.dll.so
 %{_libdir}/wine/jsproxy.dll.so
 %{_libdir}/wine/kernel32.dll.so
+%if 0%{?compholio}
+%{_libdir}/wine/kernelbase.dll.so
+%endif
 %{_libdir}/wine/ksuser.dll.so
 %{_libdir}/wine/ktmw32.dll.so
 %{_libdir}/wine/loadperf.dll.so
@@ -1337,6 +1373,7 @@ fi
 %{_libdir}/wine/msdaps.dll.so
 %{_libdir}/wine/msdelta.dll.so
 %{_libdir}/wine/msdmo.dll.so
+%{_libdir}/wine/msdrm.dll.so
 %{_libdir}/wine/msftedit.dll.so
 %{_libdir}/wine/msg711.acm.so
 %{_libdir}/wine/msgsm32.acm.so
@@ -1459,6 +1496,9 @@ fi
 %{_libdir}/wine/serialui.dll.so
 %{_libdir}/wine/setupapi.dll.so
 %{_libdir}/wine/sfc_os.dll.so
+%if 0%{?compholio}
+%{_libdir}/wine/shcore.dll.so
+%endif
 %{_libdir}/wine/shdoclc.dll.so
 %{_libdir}/wine/shdocvw.dll.so
 %{_libdir}/wine/schedsvc.dll.so
@@ -1481,6 +1521,9 @@ fi
 %{_libdir}/wine/tapi32.dll.so
 %{_libdir}/wine/taskkill.exe.so
 %{_libdir}/wine/taskschd.dll.so
+%if 0%{?compholio}
+%{_libdir}/wine/tdi.sys.so
+%endif
 %{_libdir}/wine/traffic.dll.so
 %{_libdir}/wine/ucrtbase.dll.so
 %{_libdir}/wine/unicows.dll.so
@@ -1501,6 +1544,7 @@ fi
 %{_libdir}/wine/vcomp90.dll.so
 %{_libdir}/wine/vcomp100.dll.so
 %{_libdir}/wine/vcomp110.dll.so
+%{_libdir}/wine/vcomp120.dll.so
 %{_libdir}/wine/vcruntime140.dll.so
 %{_libdir}/wine/vdmdbg.dll.so
 %{_libdir}/wine/version.dll.so
@@ -1511,11 +1555,13 @@ fi
 %{_libdir}/wine/wer.dll.so
 %{_libdir}/wine/wevtapi.dll.so
 %{_libdir}/wine/wiaservc.dll.so
+%{_libdir}/wine/wimgapi.dll.so
 %{_libdir}/wine/windowscodecs.dll.so
 %{_libdir}/wine/windowscodecsext.dll.so
 %if 0%{?compholio}
 %{_libdir}/wine/wined3d-csmt.dll.so
 %endif
+%{_libdir}/wine/winegstreamer.dll.so
 %{_libdir}/wine/winejoystick.drv.so
 %{_libdir}/wine/winemapi.dll.so
 %{_libdir}/wine/winex11.drv.so
@@ -1523,6 +1569,7 @@ fi
 %{_libdir}/wine/winhttp.dll.so
 %{_libdir}/wine/wininet.dll.so
 %{_libdir}/wine/winmm.dll.so
+%{_libdir}/wine/winemp3.acm.so
 %{_libdir}/wine/winnls32.dll.so
 %{_libdir}/wine/winspool.drv.so
 %{_libdir}/wine/winsta.dll.so
@@ -1554,6 +1601,7 @@ fi
 %{_libdir}/wine/wined3d.dll.so
 %{_libdir}/wine/dnsapi.dll.so
 %{_libdir}/wine/iexplore.exe.so
+%{_libdir}/wine/x3daudio1_0.dll.so
 %{_libdir}/wine/x3daudio1_1.dll.so
 %{_libdir}/wine/x3daudio1_2.dll.so
 %{_libdir}/wine/x3daudio1_3.dll.so
@@ -1562,13 +1610,10 @@ fi
 %{_libdir}/wine/x3daudio1_6.dll.so
 %{_libdir}/wine/x3daudio1_7.dll.so
 %{_libdir}/wine/xapofx1_1.dll.so
+%{_libdir}/wine/xapofx1_2.dll.so
 %{_libdir}/wine/xapofx1_3.dll.so
 %{_libdir}/wine/xapofx1_4.dll.so
 %{_libdir}/wine/xapofx1_5.dll.so
-%{_libdir}/wine/vcomp120.dll.so
-%{_libdir}/wine/winemp3.acm.so
-%{_libdir}/wine/x3daudio1_0.dll.so
-%{_libdir}/wine/xapofx1_2.dll.so
 %{_libdir}/wine/xaudio2_0.dll.so
 %{_libdir}/wine/xaudio2_1.dll.so
 %{_libdir}/wine/xaudio2_2.dll.so
@@ -1578,6 +1623,7 @@ fi
 %{_libdir}/wine/xaudio2_6.dll.so
 %{_libdir}/wine/xaudio2_7.dll.so
 %{_libdir}/wine/xaudio2_8.dll.so
+%{_libdir}/wine/xaudio2_9.dll.so
 %{_libdir}/wine/xcopy.exe.so
 %{_libdir}/wine/xinput1_1.dll.so
 %{_libdir}/wine/xinput1_2.dll.so
@@ -1688,7 +1734,6 @@ fi
 %{_bindir}/wineboot
 %{_bindir}/wineconsole
 %{_bindir}/winecfg
-%{_mandir}/man1/wine.1*
 %{_mandir}/man1/wineserver.1*
 %{_mandir}/man1/msiexec.1*
 %{_mandir}/man1/notepad.1*

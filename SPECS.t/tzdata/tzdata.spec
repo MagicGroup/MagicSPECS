@@ -1,10 +1,10 @@
 Summary: Timezone data
 Summary(zh_CN.UTF-8): 时区数据
 Name: tzdata
-Version:	2015g
-%define tzdata_version 2015g
-%define tzcode_version 2015g
-Release:	2%{?dist}
+Version:	2016a
+%define tzdata_version 2016a
+%define tzcode_version 2016a
+Release:	1%{?dist}
 License: Public Domain
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本

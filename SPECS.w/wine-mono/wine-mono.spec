@@ -12,6 +12,14 @@ Group(zh_CN.UTF-8): 开发/库
 URL:            http://wiki.winehq.org/Mono
 Source0:        http://sourceforge.net/projects/wine/files/Wine%20Mono/%{version}/%{name}-%{version}.tar.gz
 Patch0:         wine-mono-build-msifilename.patch
+# https://github.com/mono/mono/commit/1445d4821c8091c395264542344dca9df22a2c82
+Patch1:         wine-mono-valgrind.patch
+# to statically link in winpthreads
+Patch2:         wine-mono-build-static.patch
+# https://github.com/mono/mono/commit/16ee0252305fbd4f40ea39c3c4421dc7f103f8a0
+Patch3:         wine-mono-tls.patch
+# this function gets optimized out when inlined
+Patch4:         wine-mono-build-inline.patch
 
 # see git://github.com/madewokherd/wine-mono
 
@@ -56,14 +64,13 @@ Wine 需要的 Windows Mono 库。
 %prep
 %setup -q
 %patch0 -p1 -b.msifilename
+%patch1 -dmono -p1 -b.valgrind
+%patch2 -p1 -b.static
+%patch3 -dmono -p1 -b.tls
+%patch4 -p1 -b.inline
 
 %build
-# make sure this builds on x86-64
-if [ -x %{_bindir}/wine ] ; then
-   MAKEOPTS=%{_smp_mflags} MSIFILENAME=wine-mono-%{version}.msi ./build-winemono.sh
-else
-   MAKEOPTS=%{_smp_mflags} WINE=%{_bindir}/wine64 MSIFILENAME=wine-mono-%{version}.msi ./build-winemono.sh
-fi
+MAKEOPTS=%{_smp_mflags} MSIFILENAME=wine-mono-%{version}.msi ./build-winemono.sh
 
 %install
 mkdir -p %{buildroot}%{_datadir}/wine/mono

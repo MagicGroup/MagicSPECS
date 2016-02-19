@@ -2,20 +2,20 @@
 # git clone git://github.com/robclark/xf86-video-omap.git xf86-video-omap
 # git archive --format=tar --prefix=%{name}-%{version}/ %{gittag}-%{version} | bzip2 > ~/%{name}-%{version}.tar.bz2
 
-%define tarfile %{name}-%{version}.tar.bz2
+%define tarfile xf86-video-omap-%{version}.tar.bz2
 %define gittag xf86-video-omap
 %define moduledir %(pkg-config xorg-server --variable=moduledir )
 %define driverdir %{moduledir}/drivers
 
 Summary:   Xorg X11 omapdrm driver
 Name:      xorg-x11-drv-omap
-Version:   0.4.3
-Release:   15%{?dist}
+Version:   0.4.4
+Release:   1%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
 
-Source0:   %{tarfile}
+Source0:   http://xorg.freedesktop.org/releases/individual/driver/%{tarfile}
 Patch0:    xorg-omap-fix-pageflip.patch
 
 ExclusiveArch: %{arm}

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) 2015 Sandro Mani <manisandro@gmail.com>
+# Copyright (c) 2015-2016 Sandro Mani <manisandro@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -65,7 +65,7 @@ if [ -x /usr/lib/rpm/elfdeps -a -n "$filelist" ]; then
 
     # Get the default provides string from elfdeps
     prov=$(echo $file | /usr/lib/rpm/elfdeps --provides $elfdepsargs)
-    if [ -z $prov ]; then
+    if [ -z "$prov" ]; then
       continue
     fi
 

@@ -1,0 +1,12 @@
+--- wine-mono-4.5.6/mono/libgc/win32_threads.c.orig	2015-03-08 00:50:02.940982196 -0600
++++ wine-mono-4.5.6/mono/libgc/win32_threads.c	2015-03-08 00:50:18.624128240 -0600
+@@ -165,9 +165,6 @@
+  * GC_max_thread_index may temporarily be larger than MAX_THREADS.
+  * To avoid subscript errors, we check on access.
+  */
+-#ifdef __GNUC__
+-__inline__
+-#endif
+ LONG GC_get_max_thread_index()
+ {
+   LONG my_max = GC_max_thread_index;

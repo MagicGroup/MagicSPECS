@@ -13,10 +13,8 @@ URL:            http://www.tuxpaint.org/
 Source0:        http://download.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:         tuxpaint-utf8.patch
 Patch1:         tuxpaint-0.9.21-fix-desktop-file.patch
-Patch2:         tuxpaint-0.9.21-link.patch
+Patch2:         tuxpaint-0.9.22-link.patch
 Patch3:         tuxpaint-0.9.21-makej.patch
-Patch4:         tuxpaint-0.9.21-memset.patch
-Patch5:         tuxpaint-0.9.21-png15.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -62,11 +60,9 @@ Development files for tuxpaint extensions/plugins
 %prep
 %setup -q
 %patch0 -p1
-#%patch1 -p0 -b .fixdesktopfile
-#%patch2 -p1 -b .link
-#%patch3 -p1 -b .makej
-#%patch4 -p1 -b .memset
-#%patch5 -p1 -b .png15
+%patch1 -p0 -b .fixdesktopfile
+%patch2 -p0 -b .link
+%patch3 -p1 -b .makej
 
 sed -i -e '/\/gnome\/apps\/Graphics/d' Makefile
 find docs -type f -exec perl -pi -e 's/\r\n/\n/' {} \;

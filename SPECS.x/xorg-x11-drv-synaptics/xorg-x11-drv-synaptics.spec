@@ -20,7 +20,7 @@ Source0:        %{tarball}-%{gitdate}.tar.bz2
 Source1:        make-git-snapshot.sh
 Source2:        commitid
 %else
-Source0:        http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
+Source0:        http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
 Source3:        50-synaptics.conf
 Source4:        70-touchpad-quirks.rules

@@ -8,8 +8,8 @@
 Summary:    Xorg X11 evdev input driver
 Summary(zh_CN.UTF-8): Xorg X11 evdev 输入驱动
 Name:       xorg-x11-drv-evdev
-Version:	2.10.0
-Release:	3%{?dist}
+Version:	2.10.1
+Release:	1%{?dist}
 URL:        http://www.x.org
 License:    MIT
 Group:      User Interface/X Hardware Support
@@ -20,7 +20,7 @@ Source0:    %{tarball}-%{gitdate}.tar.bz2
 Source1:    make-git-snapshot.sh
 Source2:    commitid
 %else
-Source0:    http://ftp.nara.wide.ad.jp/pub/X11/x.org/individual/driver/%{tarball}-%{version}.tar.bz2
+Source0:    http://xorg.freedesktop.org/releases/individual/driver/%{tarball}-%{version}.tar.bz2
 %endif
 
 ExcludeArch: s390 s390x
@@ -81,7 +81,7 @@ X.Org X11 evdev input driver development files.
 %{_libdir}/pkgconfig/xorg-evdev.pc
 %dir %{_includedir}/xorg
 %{_includedir}/xorg/evdev-properties.h
-
+%{_datadir}/X11/xorg.conf.d/10-evdev.conf
 
 %changelog
 * Sun Nov 15 2015 Liu Di <liudidi@gmail.com> - 2.10.0-3

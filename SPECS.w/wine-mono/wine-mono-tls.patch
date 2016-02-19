@@ -1,0 +1,22 @@
+--- a/mono/utils/mono-compiler.h	2015-02-27 16:42:27.000000000 -0600
++++ b/mono/utils/mono-compiler.h	2015-04-23 10:52:44.137887962 -0500
+@@ -13,7 +13,7 @@
+ #define MONO_FAST_TLS_SET(x,y) x = y
+ #define MONO_FAST_TLS_GET(x) x
+ #define MONO_FAST_TLS_INIT(x)
+-#define MONO_FAST_TLS_DECLARE(x) static __thread gpointer x MONO_TLS_FAST;
++#define MONO_FAST_TLS_DECLARE(x) static __thread gpointer __attribute__((used)) x MONO_TLS_FAST;
+ 
+ #if HAVE_TLS_MODEL_ATTR
+ 
+--- a/mono/metadata/sgen-alloc.c	2015-04-23 11:03:09.641290545 -0500
++++ b/mono/metadata/sgen-alloc.c	2015-04-23 11:02:56.601136395 -0500
+@@ -94,7 +94,7 @@
+ static __thread char *tlab_temp_end;
+ static __thread char *tlab_real_end;
+ /* Used by the managed allocator/wbarrier */
+-static __thread char **tlab_next_addr;
++static __thread char __attribute__((used)) **tlab_next_addr;
+ #endif
+ 
+ #ifdef HAVE_KW_THREAD
