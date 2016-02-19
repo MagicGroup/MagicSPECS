@@ -1,5 +1,5 @@
 Name:           perl-DateTime-Locale
-Version:	0.96-TRIAL
+Version:	1.02
 Release:	2%{?dist}
 Summary:        Localization support for DateTime.pm
 # package itself is 'same terms as Perl'
@@ -56,9 +56,6 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Mon Nov 02 2015 Liu Di <liudidi@gmail.com>
-- 更新到 0.96-TRIAL
-
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 0.46-1
 - 更新到 0.46
 

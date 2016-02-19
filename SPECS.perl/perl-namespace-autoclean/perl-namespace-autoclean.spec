@@ -48,7 +48,6 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %files
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 

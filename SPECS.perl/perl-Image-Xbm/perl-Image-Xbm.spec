@@ -6,7 +6,7 @@ Summary:        Load, create, manipulate and save xbm image files in Perl
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://search.cpan.org/dist/Image-Xbm/
-Source0:        http://www.cpan.org/authors/id/S/SU/SUMMER/Image-Xbm-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/S/SR/SREZIC/Image-Xbm-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch

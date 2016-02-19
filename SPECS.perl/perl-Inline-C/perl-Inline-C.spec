@@ -1,6 +1,6 @@
 Name:           perl-Inline-C
 Version:        0.76
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Write Perl subroutines in C
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -84,6 +84,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Feb 19 2016 Liu Di <liudidi@gmail.com> - 0.76-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.76-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

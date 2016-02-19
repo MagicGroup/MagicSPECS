@@ -17,7 +17,7 @@
 
 
 Name:           perlqt
-Version: 4.3
+Version: 4.14.3
 Release:        4%{?dist}
 Summary:        PerlQt kdebindings library
 Summary(zh_CN.UTF-8): Perl 的 Qt 绑定

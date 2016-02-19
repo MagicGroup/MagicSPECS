@@ -6,7 +6,6 @@ License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-Alias/
 Source0:        http://www.cpan.org/authors/id/Z/ZE/ZEFRAM/Data-Alias-%{version}.tar.gz
-Patch1:		perl-Data-Alias-fix-perl522.patch
 
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Exporter)
@@ -29,7 +28,6 @@ reference to both, the two values are the same.
 
 %prep
 %setup -q -n Data-Alias-%{version}
-%patch1 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"

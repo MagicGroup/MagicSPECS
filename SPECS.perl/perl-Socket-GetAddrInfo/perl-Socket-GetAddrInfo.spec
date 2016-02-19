@@ -9,6 +9,8 @@ URL:            http://search.cpan.org/dist/Socket-GetAddrInfo/
 Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PEVANS/Socket-GetAddrInfo-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildArch:	noarch
+
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::CBuilder)
@@ -59,8 +61,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%{perl_vendorarch}/auto/*
-%{perl_vendorarch}/Socket*
+#%{perl_vendorarch}/auto/*
+%{perl_vendorlib}/Socket*
 %{_mandir}/man3/*.3*
 %{_bindir}/getaddrinfo
 %{_bindir}/getnameinfo

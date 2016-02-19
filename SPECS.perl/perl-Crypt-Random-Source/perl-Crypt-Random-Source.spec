@@ -47,7 +47,6 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 

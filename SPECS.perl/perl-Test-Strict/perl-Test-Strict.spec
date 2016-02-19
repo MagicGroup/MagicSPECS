@@ -1,11 +1,11 @@
 Name:       perl-Test-Strict 
-Version:	0.31
+Version:	0.36
 Release:	3%{?dist}
 # see lib/Test/Strict.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Check syntax, presence of use strict/warnings, and test coverage
-Source:     http://search.cpan.org/CPAN/authors/id/S/SZ/SZABGAB/Test-Strict-%{version}.tar.gz
+Source:     http://search.cpan.org/CPAN/authors/id/M/MA/MANWAR/Test-Strict-%{version}.tar.gz
 Url:        http://search.cpan.org/dist/Test-Strict
 Requires:   perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 BuildArch:  noarch

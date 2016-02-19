@@ -35,7 +35,7 @@ cannot be loaded.
 
 # source cleanup
 find . -type f -exec chmod -c -x {} \;
-sed -i 's/\r//' README bug.txt
+sed -i 's/\r//' README 
 
 # hey, you guys shouldn't be here!
 # http://rt.cpan.org/Ticket/Display.html?id=26843
@@ -66,7 +66,6 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 # note: example/ deliberately left out -- useless
-%doc bug.txt Changes MANIFEST.skip README t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 

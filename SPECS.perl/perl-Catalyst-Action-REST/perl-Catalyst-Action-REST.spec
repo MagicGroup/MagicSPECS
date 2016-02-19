@@ -9,7 +9,7 @@ Group(zh_CN.UTF-8): 开发/库
 URL:            http://search.cpan.org/dist/Catalyst-Action-REST/
 # upstream releases tend to flip between these locations
 #Source0:        http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Catalyst-Action-REST-%{version}.tar.gz
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FR/FREW/Catalyst-Action-REST-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/J/JJ/JJNAPIORK/Catalyst-Action-REST-%{version}.tar.gz
 #Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Catalyst-Action-REST-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Catalyst::Runtime) >= 5.80030

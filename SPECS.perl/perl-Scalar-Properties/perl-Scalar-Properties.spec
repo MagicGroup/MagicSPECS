@@ -32,13 +32,11 @@ BuildRequires:  perl(Test::More) >= 0.88
 # (skipped as the Critic test fails in version 1.100860)
 # ===================================================================
 BuildRequires:  perl(English)
-BuildConflicts: perl(Test::Perl::Critic)
 # ===================================================================
 # Release test requirements
 # (Spelling check can't find "versa" in version 1.100860)
 # ===================================================================
 BuildRequires:  perl(Pod::Coverage::TrustPod)
-BuildConflicts: perl(Pod::Wordlist::hanekomu)
 BuildRequires:  perl(Test::CheckChanges)
 BuildRequires:  perl(Test::CPAN::Meta)
 BuildRequires:  perl(Test::DistManifest)

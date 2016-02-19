@@ -9,7 +9,6 @@ Source0:        http://www.cpan.org/authors/id/J/JS/JSWARTZ/Log-Any-Adapter-Disp
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Log::Any::Adapter)
 BuildRequires:  perl(Log::Dispatch) >= 2.26
 BuildRequires:  perl(Test::More)
 Requires:       perl(Log::Dispatch) >= 2.26

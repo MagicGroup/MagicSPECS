@@ -17,7 +17,7 @@
 
 
 Name:           perlkde4
-Version: 4.3
+Version: 4.14.3
 Release:        4%{?dist}
 Summary:        Kdebindings Perl-KDE library
 License:        LGPL-2.1+

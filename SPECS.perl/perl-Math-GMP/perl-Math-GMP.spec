@@ -26,10 +26,6 @@ BuildRequires:	perl(YAML)
 BuildRequires:	hunspell-en
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
-# Critic and Pod Coverage tests fail, so make sure we don't try to run them for now
-BuildConflicts:	perl(Perl::Critic)
-BuildConflicts:	perl(Test::Pod::Coverage)
-
 # Don't "provide" private Perl libs
 %{?perl_default_filter}
 

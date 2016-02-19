@@ -6,7 +6,7 @@ Summary:        Very simple standalone HTTP daemon
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTTP-Server-Simple/
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FA/FALCONE/HTTP-Server-Simple-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BP/BPS/HTTP-Server-Simple-%{version}.tar.gz
 
 BuildArch:      noarch
 BuildRequires:  perl(CGI)

@@ -1,6 +1,6 @@
 Name:           perl-XXX
 Version:        0.29
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        See Your Data in the Nude
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Feb 19 2016 Liu Di <liudidi@gmail.com> - 0.29-5
+- 为 Magic 3.0 重建
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.29-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

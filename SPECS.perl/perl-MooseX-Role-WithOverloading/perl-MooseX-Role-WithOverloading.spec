@@ -49,7 +49,6 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 make test
 
 %files
-%doc Changes LICENSE README 
 %{perl_vendorarch}/auto/MooseX/
 %{perl_vendorarch}/MooseX/
 %{_mandir}/man3/*.3*

@@ -1,0 +1,13 @@
+diff --git a/Parser.pm b/Parser.pm
+index ddcc82f..90cdb1f 100644
+--- a/Parser.pm
++++ b/Parser.pm
+@@ -461,7 +461,7 @@ passive_process_statement :
+ 	process_statement
+ 
+ entity_declaritive_item : 
+-	| signal_declaration 
++	  signal_declaration
+ 	| constant_declaration 
+ 	| type_declaration 
+ 	| subtype_declaration 

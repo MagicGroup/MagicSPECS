@@ -1,6 +1,6 @@
 Name:           perl-Pegex
 Version:        0.60
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Pegex Parser Generator
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -76,6 +76,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Feb 19 2016 Liu Di <liudidi@gmail.com> - 0.60-7
+- 为 Magic 3.0 重建
+
+* Fri Feb 19 2016 Liu Di <liudidi@gmail.com> - 0.60-6
+- 为 Magic 3.0 重建
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.60-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

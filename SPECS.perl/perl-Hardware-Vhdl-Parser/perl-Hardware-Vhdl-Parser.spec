@@ -8,6 +8,9 @@ Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Hardware-Vhdl-Parser/
 Source0:        http://www.cpan.org/authors/id/G/GS/GSLONDON/Hardware-Vhdl-Parser-%{version}.tar.gz
 
+# rt#102452
+Patch0:         Hardware-Vhdl-Parser-0.12-unreachable.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 
@@ -25,11 +28,12 @@ which run through VHDL code and perform specific functions.
 
 %prep
 %setup -q -n Hardware-Vhdl-Parser-%{version}
-
+%patch0 -p1
 find . -type f | xargs %{__perl} -pi -e 's|#! /bin/perl|#! /usr/bin/perl|'
+rm -rf Hardware
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+%{__perl} Makefile.PL INSTALLDIRS=vendor NO_PACKLIST=1
 make %{?_smp_mflags}
 
 %install

@@ -58,7 +58,6 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-%doc Changes README LICENSE t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 

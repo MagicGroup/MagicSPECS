@@ -55,7 +55,6 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 make test
 
 %files
-%doc Changes LICENSE README t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 

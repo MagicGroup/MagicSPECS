@@ -361,7 +361,7 @@ function build()
         SPECNAME=$(ls $DIR/*.spec)
 	NAME=$(basename $SPECNAME)
         echo "正在打包 $DIR ...，可能需要一段时间"
-        if ! (debug_run rpmbuild -ba --clean --rmsource --rmspec $BUILDDEPS $NOCHECK $TOPDIR/SOURCES/$NAME ) ; then
+        if ! (debug_run rpmbuild -ba --clean --rmsource --rmspec $BUILDDEPS $NOCHECK $OPTS $TOPDIR/SOURCES/$NAME ) ; then
                 echo "打包过程出错，请检查 build.log 文件" 
 		touch $DIR/buildfail     
                 exit 3

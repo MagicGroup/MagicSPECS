@@ -31,7 +31,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 ./Build test
 
 %files
-%doc Changes README
+%doc Changes
 %license LICENSE
 %{perl_vendorlib}/Test
 %{_mandir}/man3/*.3*

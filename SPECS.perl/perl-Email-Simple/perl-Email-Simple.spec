@@ -1,5 +1,5 @@
 Name:           perl-Email-Simple
-Version:	2.209-TRIAL
+Version:	2.208
 Release:	2%{?dist}
 Summary:        Simple parsing of RFC2822 message format and headers
 
@@ -62,8 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Nov 02 2015 Liu Di <liudidi@gmail.com>
-- 更新到 2.209-TRIAL
+* Fri Feb 19 2016 Liu Di <liudidi@gmail.com> - 2.208-2
+- 为 Magic 3.0 重建
 
 * Sun Sep 13 2015 Liu Di <liudidi@gmail.com> - 2.208-1
 - 更新到 2.208
