@@ -1,6 +1,6 @@
 Name:           perl-Mojolicious
-Version:        6.18
-Release:        4%{?dist}
+Version:        6.45
+Release:        3%{?dist}
 Summary:        A next generation web framework for Perl
 License:        Artistic 2.0
 
@@ -10,12 +10,13 @@ Source0:        http://search.cpan.org/CPAN/authors/id/S/SR/SRI/Mojolicious-%{ve
 BuildArch:      noarch
 BuildRequires:  perl >= 0:5.010001
 BuildRequires:  perl(Compress::Raw::Zlib)
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.76
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Digest::MD5)
 BuildRequires:  perl(Digest::SHA)
 BuildRequires:  perl(IO::Compress::Gzip)
 BuildRequires:  perl(IO::Socket::IP)
+BuildRequires:  perl(JSON::PP)
 BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::Harness)
 BuildRequires:  perl(Test::More)
@@ -24,6 +25,17 @@ BuildRequires:  perl(Time::Local)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
+# EV is just one supported reactor backend, Mojo can use others, and
+# ithreads-based code actually cannot use EV:
+# http://mojolicio.us/perldoc/Mojolicious/Guides/FAQ#What-does-the-error-EV-does-not-work-with-ithreads-mean
+%global __requires_exclude perl\\(VMS|perl\\(Win32|perl\\(EV
+
+%package -n perl-Test-Mojo
+Summary:        Test::Mojo perl Module
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%description -n perl-Test-Mojo
+%{summary}
 
 %description
 Back in the early days of the web there was this wonderful Perl library
@@ -56,18 +68,79 @@ make test
 %{_bindir}/hypnotoad
 %{_bindir}/morbo
 %{perl_vendorlib}/*
+%exclude %{perl_vendorlib}/Test
 %{_mandir}/man1/*
 %{_mandir}/man3/*
 
+%files -n perl-Test-Mojo
+%{perl_vendorlib}/Test
+
 %changelog
-* Thu Nov 12 2015 Liu Di <liudidi@gmail.com> - 6.18-4
-- 为 Magic 3.0 重建
+* Wed Feb 10 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.45-3
+- Remove BuildRequires for Test::Mojo (BR don't apply to subpackages)
 
-* Tue Nov 03 2015 Liu Di <liudidi@gmail.com> - 6.18-3
-- 为 Magic 3.0 重建
+* Wed Feb 10 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.45-2
+- Add Requires and BuildRequires to the Test::Mojo subpackage (#1306300)
 
-* Thu Sep 17 2015 Liu Di <liudidi@gmail.com> - 6.18-2
-- 为 Magic 3.0 重建
+* Wed Feb 10 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.45-1
+- Update to 6.45
+
+* Sun Feb 07 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.44-1
+- Update to 6.44
+
+* Thu Feb 04 2016 Ralf Corsépius <corsepiu@fedoraproject.org> - 6.42-2
+- Split out Test::Mojo (Avoid runtime dep on Test::More, RHBZ#1304630).
+
+* Sun Jan 31 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.42-1
+- Update to 6.42
+
+* Sun Jan 24 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.41-1
+- Update to 6.41
+
+* Fri Jan 15 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.40-1
+- Update to 6.40
+
+* Fri Jan 08 2016 Emmanuel Seyman <emmanuel@seyman.fr> - 6.39-1
+- Update to 6.39
+
+* Mon Dec 28 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.38-1
+- Update to 6.38
+
+* Mon Dec 21 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.37-1
+- Update to 6.37
+
+* Fri Dec 11 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.36-1
+- Update to 6.36
+
+* Sun Dec 06 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.35-1
+- Update to 6.35
+
+* Sun Nov 29 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.33-1
+- Update to 6.33
+
+* Sun Nov 15 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.31-1
+- Update to 6.31
+
+* Sat Oct 31 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.27-1
+- Update to 6.27
+
+* Thu Oct 22 2015 Adam Williamson <awilliam@redhat.com> - 6.24-2
+- don't require perl(EV) - it's optional and some things *cannot* use it
+
+* Sun Oct 18 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.24-1
+- Update to 6.24
+
+* Fri Oct 09 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.23-1
+- Update to 6.23
+
+* Fri Oct 02 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.22-1
+- Update to 6.22
+
+* Fri Sep 25 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.21-1
+- Update to 6.21
+
+* Fri Sep 18 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.20-1
+- Update to 6.20
 
 * Sun Sep 06 2015 Emmanuel Seyman <emmanuel@seyman.fr> - 6.18-1
 - Update to 6.18
